@@ -10,7 +10,17 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="">
+    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="old project copy">
+      <change afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/Migrations.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/auction.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/interestToken.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/test_caller.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/migrations/1_initial_migration.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/.gitkeep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +53,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1641184531337</updated>
-      <workItem from="1641184532611" duration="1399000" />
+      <workItem from="1641184532611" duration="1672000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -52,7 +62,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641184818680</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="old project copy">
+      <created>1641186302799</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1641186302799</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -71,13 +88,14 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1st test commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="1st test commit" />
+    <MESSAGE value="old project copy" />
+    <option name="LAST_COMMIT_MESSAGE" value="old project copy" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2" timestamp="1641184818036">
+    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2" timestamp="1641186337999">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1641184818036" />
+    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1641186337999" />
     <state x="264" y="110" key="FileChooserDialogImpl" timestamp="1641184661871">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
