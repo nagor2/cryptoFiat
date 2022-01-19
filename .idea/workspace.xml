@@ -10,42 +10,78 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="old project copy">
-      <change afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/Migrations.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/auction.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/interestToken.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/test_caller.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/1_initial_migration.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/.gitkeep" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
+    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/Migrations.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/Oracle.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/auction.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/Oracle.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/trash/dao_test.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/interestToken.sol" beforeDir="false" afterPath="$PROJECT_DIR$/trash/interestToken.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/test_caller.sol" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/1_initial_migration.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/1_initial_migration.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="Solidity Contract" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="23AkyG4XQYrGh95UqzeUkNWqz5Y" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../truffle/tutorials/pet-shop" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\trash" />
+      <recent name="D:\Яндекс.Диск\Работа\ICO\CryptoFiat\repo\trash" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Яндекс.Диск\Работа\ICO\CryptoFiat\repo\test" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="" />
@@ -53,7 +89,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1641184531337</updated>
-      <workItem from="1641184532611" duration="1672000" />
+      <workItem from="1641184532611" duration="23007000" />
+      <workItem from="1641444162063" duration="21669000" />
+      <workItem from="1642131134728" duration="26107000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -69,11 +107,18 @@
       <option name="project" value="LOCAL" />
       <updated>1641186302799</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="old project copy">
+      <created>1641186441244</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1641186441244</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -85,21 +130,32 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="1st test commit" />
     <MESSAGE value="old project copy" />
     <option name="LAST_COMMIT_MESSAGE" value="old project copy" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2" timestamp="1641186337999">
+    <state x="446" y="208" key="#Notifications" timestamp="1641531709744">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1641186337999" />
-    <state x="264" y="110" key="FileChooserDialogImpl" timestamp="1641184661871">
+    <state x="446" y="208" key="#Notifications/0.0.1366.768@0.0.1366.768" timestamp="1641531709744" />
+    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2" timestamp="1641186440792">
       <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1641186440792" />
+    <state x="371" y="149" key="FileChooserDialogImpl" timestamp="1642560031338">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="264" y="110" key="FileChooserDialogImpl/0.0.1366.768@0.0.1366.768" timestamp="1641184661871" />
+    <state x="371" y="149" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1642560031338" />
+    <state x="540" y="262" key="IDE.errors.dialog" timestamp="1642570574148">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="262" key="IDE.errors.dialog/0.0.1920.1040@0.0.1920.1040" timestamp="1642570574148" />
     <state x="0" y="0" key="SettingsEditor" timestamp="1641184899552">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
@@ -108,5 +164,21 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="0" y="40" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1641184977060" />
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1642556038672">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1642556038672" />
+    <state x="0" y="0" width="581" height="768" key="find.popup" timestamp="1641207270028">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state x="0" y="0" width="581" height="768" key="find.popup/0.0.1366.768@0.0.1366.768" timestamp="1641207270028" />
+    <state x="601" y="246" width="700" height="530" key="recent.locations.popup" timestamp="1642133530115">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="601" y="246" width="700" height="530" key="recent.locations.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1642133530115" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1642143016189">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1642143016189" />
   </component>
 </project>

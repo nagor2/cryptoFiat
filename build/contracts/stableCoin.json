@@ -1,0 +1,125 @@
+{
+  "contractName": "stableCoin",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/stableCoin.sol\":\"stableCoin\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/stableCoin.sol\":{\"keccak256\":\"0x0876ea45b766615ec46d67825b3d256cb7c75342c1c49901c0985e10a6c1e531\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://3ee8da1d28317ae8946daba658caaac1a58c8018880fbbe80030ffc6ac447197\",\"dweb:/ipfs/QmRJDu7xvQ5DJzJTyMfT9npZpGGjNwJupYrBdrYLsEnkxB\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212200b0c8381bce308857aa5ca479f0c9eb9541c444a61c0a825ea5b4ee5a51a2ebc64736f6c634300080a0033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212200b0c8381bce308857aa5ca479f0c9eb9541c444a61c0a825ea5b4ee5a51a2ebc64736f6c634300080a0033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "76:26:6:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "76:26:6:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: UNLICENSED\r\npragma solidity >=0.4.22 <0.9.0;\r\n\r\ncontract stableCoin {\r\n\r\n}\r\n",
+  "sourcePath": "C:\\Users\\d.nagornykh\\YandexDisk\\Работа\\ICO\\CryptoFiat\\repo\\contracts\\stableCoin.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/stableCoin.sol",
+    "exportedSymbols": {
+      "stableCoin": [
+        930
+      ]
+    },
+    "id": 931,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 929,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "40:32:6"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "stableCoin",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 930,
+        "linearizedBaseContracts": [
+          930
+        ],
+        "name": "stableCoin",
+        "nameLocation": "85:10:6",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 931,
+        "src": "76:26:6",
+        "usedErrors": []
+      }
+    ],
+    "src": "40:64:6"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/stableCoin.sol",
+    "exportedSymbols": {
+      "stableCoin": [
+        930
+      ]
+    },
+    "id": 931,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 929,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "40:32:6"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "stableCoin",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 930,
+        "linearizedBaseContracts": [
+          930
+        ],
+        "name": "stableCoin",
+        "nameLocation": "85:10:6",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 931,
+        "src": "76:26:6",
+        "usedErrors": []
+      }
+    ],
+    "src": "40:64:6"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.10+commit.fc410830.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-01-19T07:50:14.458Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

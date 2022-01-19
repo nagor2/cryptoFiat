@@ -1,4 +1,6 @@
-pragma solidity >=0.4.22 <0.6.0;
+// SPDX-License-Identifier: UNLICENSED
+/**
+pragma solidity >=0.4.22 <0.9.0;
 
 library SafeMath {
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -47,9 +49,8 @@ contract Collateral {
     function groundAllowedToMint() public;
 }
 
-contract DAO {
-    function getCollateralAddress() public view returns (address);
-    function getDaoAddress() public view returns (address);
+contract INTDAO {
+    function getAddress(string memory addressName) public view returns (address);
 }
 
 contract InterestToken is ERC20{
@@ -61,7 +62,7 @@ contract InterestToken is ERC20{
     string public constant symbol = "INT";
 
     address public DaoAddress = address(0);
-    DAO dao;
+    INTDAO dao = INTDAO(DaoAddress);
 
     mapping (address => uint) balances;
     mapping (address => mapping (address => uint)) allowed;
@@ -98,7 +99,7 @@ contract InterestToken is ERC20{
             emit Transfer(msg.sender, to, value, data);
             return true;
         }
-    */
+
     function transfer(address to, uint value) public returns (bool success){
         if (balances[msg.sender] >= value) {
 
@@ -154,42 +155,42 @@ contract InterestToken is ERC20{
     function setDaoAddress(address daoAddress) public {
         if (DaoAddress == address(0)) {
             DaoAddress = daoAddress;
-            dao = DAO(DaoAddress);
+            dao = INTDAO(DaoAddress);
         }
         else {
-            DaoAddress = dao.getDaoAddress();
-            dao = DAO(DaoAddress);
+            DaoAddress = dao.getAddress("dao");
+            dao = INTDAO(DaoAddress);
         }
     }
 
     function recieve() external payable {
-        msg.sender.transfer(msg.value);// что тут делать?
+        //msg.sender.transfer(msg.value);// что тут делать?
     }
 
     function mintForCollateral() public returns (bool success) {
-        uint amountToMint = Collateral(dao.getCollateralAddress()).getAllowedToMint();
+        uint amountToMint = Collateral(dao.getAddress("colleteralAddress")).getAllowedToMint();
         require (amountToMint>0, 'Minted amount should be positive');
 
         initialSupply = initialSupply.add(amountToMint);
         balances[msg.sender] = balances[msg.sender].add(amountToMint);
         emit mintedForCollateral(amountToMint, msg.sender);
-        Collateral(dao.getCollateralAddress()).groundAllowedToMint();
+        Collateral(dao.getAddress("colleteralAddress")).groundAllowedToMint();
         return true;
     }
 
     function burnFromCollateral() public returns (bool success){ // call only from CDP
-        require(balances[dao.getCollateralAddress()]>0, 'Balance to burn should be posititve');
-        initialSupply = initialSupply.sub(balances[dao.getCollateralAddress()]);
-        emit burnedFromCollateral(balances[dao.getCollateralAddress()]);
-        balances[dao.getCollateralAddress()] = 0;
+        require(balances[dao.getAddress("colleteralAddress")]>0, 'Balance to burn should be posititve');
+        initialSupply = initialSupply.sub(balances[dao.getAddress("colleteralAddress")]);
+        emit burnedFromCollateral(balances[dao.getAddress("colleteralAddress")]);
+        balances[dao.getAddress("colleteralAddress")] = 0;
         return true;
     }
-
+/*
     function authorizedContractTransfer(address contractAddressFrom, address to, uint value) public returns (bool success) {
         require (balances[contractAddressFrom] >= value);
         usingToken _contract = usingToken(contractAddressFrom);
         if (_contract.allowed(to) >= value) {
-            require (_contract.transfered(to, value));
+            require (_contract.transferred(to, value));
             balances[contractAddressFrom] = balances[contractAddressFrom].sub(value);
             balances[to] = balances[to].add(value);
             //bytes memory empty;
@@ -197,14 +198,15 @@ contract InterestToken is ERC20{
             return true;
         }
         return false;
-    }
+    }*/
 }
 
+/*
 contract usingToken{
     function allowed(address to) public view returns (uint _allowedValue) ;
-    function transfered(address to, uint value) public returns (bool success);
+    function transferred(address to, uint value) public view returns (bool success);
 }
-
+*/
 /*
 
 contract ERC223ReceivingContract {
