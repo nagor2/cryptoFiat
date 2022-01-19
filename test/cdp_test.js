@@ -43,7 +43,7 @@ contract('CDP', (accounts) => {
 
             const rate = await dao.params('interestRate');
             expect(rate).to.eql(position.feeRate,"fee rate should be set to dao.params value"); //compare 2 BN
-
+            //just a test
             assert.equal(position.stableCoins_minted, 1, "should mint only 1 stableCoin");
         });
 
