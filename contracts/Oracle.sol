@@ -8,7 +8,7 @@ contract Oracle {
     }
 
     function getPrice(string memory symbol) external virtual view returns (uint256) {
-        return 74;
+        return 75;
     }
 
 }

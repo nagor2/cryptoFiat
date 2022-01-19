@@ -10,29 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/Migrations.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/Oracle.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/auction.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/Oracle.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trash/dao_test.sol" afterDir="false" />
+    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="Testing works">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/interestToken.sol" beforeDir="false" afterPath="$PROJECT_DIR$/trash/interestToken.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/test_caller.sol" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/1_initial_migration.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/1_initial_migration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Oracle.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Oracle.sol" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +28,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="23AkyG4XQYrGh95UqzeUkNWqz5Y" />
@@ -91,7 +76,7 @@
       <updated>1641184531337</updated>
       <workItem from="1641184532611" duration="23007000" />
       <workItem from="1641444162063" duration="21669000" />
-      <workItem from="1642131134728" duration="26107000" />
+      <workItem from="1642131134728" duration="27004000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -114,7 +99,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641186441244</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Testing works">
+      <created>1642583154999</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1642583154999</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,7 +128,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="1st test commit" />
     <MESSAGE value="old project copy" />
-    <option name="LAST_COMMIT_MESSAGE" value="old project copy" />
+    <MESSAGE value="Testing works" />
+    <option name="LAST_COMMIT_MESSAGE" value="Testing works" />
   </component>
   <component name="WindowStateProjectService">
     <state x="446" y="208" key="#Notifications" timestamp="1641531709744">
@@ -160,10 +153,11 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="0" y="0" key="SettingsEditor/0.0.1366.768@0.0.1366.768" timestamp="1641184899552" />
-    <state x="0" y="40" key="Vcs.Push.Dialog.v2" timestamp="1641184977060">
-      <screen x="0" y="0" width="1366" height="768" />
+    <state x="0" y="54" key="Vcs.Push.Dialog.v2" timestamp="1642583571965">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="0" y="40" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1641184977060" />
+    <state x="0" y="54" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1642583571965" />
     <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1642556038672">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -172,6 +166,10 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="0" y="0" width="581" height="768" key="find.popup/0.0.1366.768@0.0.1366.768" timestamp="1641207270028" />
+    <state x="691" y="308" key="git4idea.merge.GitPullDialog" timestamp="1642583559677">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="691" y="308" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1642583559677" />
     <state x="601" y="246" width="700" height="530" key="recent.locations.popup" timestamp="1642133530115">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
