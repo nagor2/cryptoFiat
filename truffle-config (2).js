@@ -114,6 +114,3 @@ module.exports = {
     // }
   // }
 };
-
-const path = require("path");
-contracts_build_directory: path.join(__dirname, "/dapp/src/contracts");

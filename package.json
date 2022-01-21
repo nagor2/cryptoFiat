@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "@drizzle/store": "^1.5.3",
     "web3": "^1.7.0"
+  },
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.15"
   }
 }

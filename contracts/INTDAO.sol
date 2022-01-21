@@ -37,13 +37,14 @@ contract INTDAO {
 
     address public ruleTokenAddress; //The only unchangable address
 
-    constructor (address initalRuleTokenAddress) { //
+    constructor (address initalRuleTokenAddress, address oracleAddress) { //
         ruleTokenAddress = initalRuleTokenAddress;
         ruleToken = Rule(ruleTokenAddress);
 
         params['interestRate'] = 9;
         params['depositRate']=8;
         params['liquidationFee'] = 13;
+        params['collateralDiscount'] = 30;
         params['stabilizationFundPercent'] = 5;
         params['quorum'] = 60;
         params['majority'] = 50;
@@ -56,7 +57,7 @@ contract INTDAO {
         addresses['colleteralContractAddress'] = address(0x0);
         addresses['auctionContractAddress'] = address(0x0);
         addresses['daoAddress'] = address(this);
-        addresses['oracleAddress'] = address(0x0);
+        addresses['oracleAddress'] = oracleAddress;
     }
 
     function addVoting(bool paramOrAddress, string memory name, uint value, address addr) public {
@@ -71,14 +72,6 @@ contract INTDAO {
             emit NewAddressVoteing(name);
     }
 
-    /*
-    function poolControlTokens() public {
-        uint256 controlTokensAllowed = controlToken.allowance(msg.sender, address(this));
-        require(controlToken.transferFrom(msg.sender, address(this),controlTokensAllowed));
-        pooled[msg.sender] += controlTokensAllowed;
-        totalPooled += controlTokensAllowed;
-    }*/
-
     function transfered(address destination, uint value) public returns (bool) {
         require(destination == msg.sender, 'You can take back only your personal tokens');
         require(pooled[msg.sender] > 0, 'You must have pooled tokens');
@@ -89,12 +82,7 @@ contract INTDAO {
         totalPooled -= value;
         return true;
     }
-/*
-    function takeAllFromThePool() public { //This function calls transfered, which lows positive votes
-        require(pooled[msg.sender] > 0, 'You must have pooled tokens');
-        controlToken.authorizedContractTransfer(address(this), msg.sender, pooled[msg.sender]);
-    }
-*/
+
     function vote(uint votingId, bool _vote) public{
         require(activeVoting);
         require(votings[votingID].startTime + params['VotingDuration'] < block.timestamp);
@@ -129,15 +117,15 @@ contract INTDAO {
         }
     }
 
-    function getParam(string memory paramName) public view returns (uint) {
-        return params[paramName];
-    }
-
-    function getAddress(string memory addressName) public view returns (address) {
-        return addresses[addressName];
-    }
-
     function allowed(address to) public view returns (uint _allowedValue) {
         return pooled[to];
     }
+
+    function init (bool paramOrAddress, string memory name, uint value, address addr) public {
+        if (paramOrAddress && params[name]==0)
+            params[name] = value;
+        else if (!paramOrAddress && addresses[name]==address(0x0))
+            addresses[name] = addr;
+    }
+
 }

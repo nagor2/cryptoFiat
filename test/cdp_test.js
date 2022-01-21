@@ -1,23 +1,28 @@
+const { time } = require('@openzeppelin/test-helpers');
+
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
 var Rule = artifacts.require("./Rule.sol");
+var Oracle = artifacts.require("./Oracle.sol");
 
 contract('CDP', (accounts) => {
 
     let dao;
     let cdp;
     let rule;
+    let oracle;
     let expectedOwner;
 
     before('should setup the contracts instance', async () => {
         rule = await Rule.deployed();
-        dao = await INTDAO.deployed(rule.address);
+        oracle = await Oracle.deployed();
+        dao = await INTDAO.deployed(rule.address, oracle.address);
         cdp = await CDP.deployed(dao.address);
     });
 
     describe("creating a CDP and retrieving position fields", async () => {
         before("openCDP using accounts[1] and paying 1 ether", async () => {
-            await cdp.openCDP(8, { from: accounts[1], value:  web3.utils.toWei('1','ether') });
+            await cdp.openCDP(web3.utils.toWei('8000','ether') , { from: accounts[1], value:  web3.utils.toWei('1','ether') });
             expectedOwner = accounts[1];
         });
 
@@ -43,11 +48,34 @@ contract('CDP', (accounts) => {
 
             const rate = await dao.params('interestRate');
             expect(rate).to.eql(position.feeRate,"fee rate should be set to dao.params value"); //compare 2 BN
-            //just a test
-            assert.equal(position.stableCoins_minted, 1, "should mint only 1 stableCoin");
+            assert.equal(position.stableCoins_minted, 2170 * (10**18), "should mint 2170*10^18 stableCoins");
+        });
+
+        it("time rewind", async () => {
+            await time.increase(31535999);//1 year
+            const fee = await cdp.generatedFee(0);
+
+            //console.log (fee.toString());
+            assert.equal(fee, 1953*10**17, "should increase generated fee");
         });
 
     });
+
+
+    describe("max stableCoinsToMint", async () => {
+        it("should mint max 2170 coins per 1 ether", async () => {
+            const coins = await cdp.getMaxStableCoinsToMint(web3.utils.toWei('3000', 'ether'), web3.utils.toWei('1', 'ether'));
+            assert.equal(coins, 2170 * (10**18), "should mint max 2170 coins per 1 ether");
+        });
+
+        it("should mint desirable coins amount per 1 ether", async () => {
+            const coins = await cdp.getMaxStableCoinsToMint(8, web3.utils.toWei('1', 'ether'));
+            assert.equal(coins, 8, "should mint desirable coins amount per 1 ether");
+        });
+    });
+
+
+
 });
 
 

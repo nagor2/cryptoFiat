@@ -53,19 +53,33 @@ contract CDP {
         return posId;
     }
 
+    function generatedFee(uint posId) public view returns (uint256 fee) {
+        Position storage p = positions[posId];
+        fee = p.stableCoins_minted * (block.timestamp - p.lastTimeUpdated) * p.feeRate / 31536000 / 100;
+        return fee;
+    }
+
     function getMaxStableCoinsToMint(uint256 StableCoinsToMint, uint256 ethValue) public view returns (uint256 amount) {
-        return 1;
+        uint256 etherPrice = oracle.getEtherPriceUSD();
+        uint256 maxCoinsToMint = ethValue * etherPrice * (100 - dao.params('collateralDiscount'))/(100);
+
+        if (StableCoinsToMint < maxCoinsToMint)
+            return StableCoinsToMint;
+        else
+            return maxCoinsToMint;
     }
 
     function closeCDP (uint posID) public{ //shows minimum amount of INT you have to own
         //sendEtherToOwner
+        //checkAllowance of RuleTokens
+        //if allowed, transfer on balance, then burn
     }
 
-/*
+
     function updateCDP(uint posID, uint newStableCoinsAmount) payable returns (bool success){
         ethAmountLocked += msg.value;
     }
-*/
+
 
     function withdrawEther (uint posID, uint etherToWithdraw) public{
         //open Auction in the same contract
