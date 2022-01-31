@@ -70,6 +70,8 @@ contract CDP {
     }
 
     function closeCDP (uint posID) public{ //shows minimum amount of INT you have to own
+        // Rule allowed to which address? )
+        //burnFromCollateral from wich addressAllowed?
         //sendEtherToOwner
         //checkAllowance of RuleTokens
         //if allowed, transfer on balance, then burn
