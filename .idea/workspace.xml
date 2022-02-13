@@ -11,44 +11,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="some changes. Figure out at home">
-      <change afterPath="$PROJECT_DIR$/dapp/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/public/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/public/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/public/logo192.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/public/logo512.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/public/manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/public/robots.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/src/App.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/src/App.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/src/App.test.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/src/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/src/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/src/logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/src/reportWebVitals.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dapp/src/setupTests.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/CDP (3).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO (3).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Migrations (3).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Migrations.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Migrations.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Oracle (3).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Oracle.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Oracle.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Rule (3).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Rule.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/auction (3).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/auction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/auction.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin (3).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Rule.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/CDPInterface.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/ERC20.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +118,7 @@
       <workItem from="1644728166627" duration="104000" />
       <workItem from="1644728294548" duration="15000" />
       <workItem from="1644728344106" duration="9000" />
-      <workItem from="1644728502488" duration="7420000" />
+      <workItem from="1644728502488" duration="7896000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -198,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1643611815364</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="some changes. Figure out at home">
+      <created>1644751671148</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1644751671148</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -240,10 +211,10 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="446" y="208" key="#Notifications/0.0.1366.768@0.0.1366.768" timestamp="1641531709744" />
-    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2" timestamp="1644725772972">
+    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2" timestamp="1644751668275">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1644725772972" />
+    <state x="35" y="0" width="737" height="699" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1644751668275" />
     <state x="92" y="92" width="1182" height="584" key="DiffContextDialog" timestamp="1644723308865">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
@@ -265,10 +236,10 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="496" y="81" key="VCS.ChangeListViewerDialog/0.0.1366.768@0.0.1366.768" timestamp="1642599819327" />
-    <state x="0" y="54" key="Vcs.Push.Dialog.v2" timestamp="1643611823557">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="0" y="40" key="Vcs.Push.Dialog.v2" timestamp="1644751680448">
+      <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="0" y="40" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1641184977060" />
+    <state x="0" y="40" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1644751680448" />
     <state x="0" y="54" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1643611823557" />
     <state x="547" y="320" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1644723161058">
       <screen x="0" y="0" width="1366" height="768" />
