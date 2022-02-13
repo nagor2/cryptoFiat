@@ -3,6 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./INTDAO.sol";
 import "./Oracle.sol";
 import "./Rule.sol";
+import "./stableCoin.sol";
 
 
 //previous Interest price is saved during INT auction - no need or make auction longer in time
@@ -14,11 +15,12 @@ contract CDP {
     address INTDAOaddress = address(0);
     INTDAO dao;
     Oracle oracle;
+    stableCoin coin;
 
     address auctionAddress;
 
     mapping(uint => Position) public positions;
-    mapping (address => uint) allowedToMint; //???
+    mapping (address => uint) public allowedToMint; //???
 
     struct Position {
         bool onLiquidation;
@@ -36,13 +38,29 @@ contract CDP {
         INTDAOaddress = _INTDAOaddress;
         dao = INTDAO(INTDAOaddress);
         oracle = Oracle(dao.addresses('oracleAddress'));
+        coin = stableCoin(dao.addresses('stableCoinAddress'));
+    }
+
+    function allowed (address to) public view returns (uint256 amount) {
+        return allowedToMint[to];
+    }
+
+    function decreaseAllowed() public returns (bool success) {
+        allowedToMint[msg.sender] = 0;
+        return true;
     }
 
     function openCDP (uint StableCoinsToMint) external payable returns (uint256 posId){
         posId = numPositions++;
         Position storage p = positions[posId];
 
-        p.stableCoins_minted = getMaxStableCoinsToMint(StableCoinsToMint, msg.value);
+        uint coinsToMint = getMaxStableCoinsToMint(StableCoinsToMint, msg.value);
+        if (StableCoinsToMint <= coinsToMint)
+            coinsToMint = StableCoinsToMint;
+
+        allowedToMint[msg.sender] = coinsToMint;
+
+        p.stableCoins_minted = coinsToMint;
         p.ethAmountLocked = msg.value;
         p.owner = msg.sender;
         p.timeOpened = block.timestamp;
@@ -78,10 +96,42 @@ contract CDP {
     }
 
 
-    function updateCDP(uint posID, uint newStableCoinsAmount) payable returns (bool success){
-        ethAmountLocked += msg.value;
+    function updateCDP(uint posID, uint newStableCoinsAmount) public payable returns (bool success){
+        Position storage p = positions[posID];
+        require(p.owner == msg.sender, 'Only owner may update the position');
+        uint256 maxCoinsToMint;
+
+        p.lastTimeUpdated = block.timestamp;
+        p.feeGenerated = generatedFee(posID);
+        p.feeRate = dao.params('interestRate');
+
+        if (msg.value>0)
+            p.ethAmountLocked += msg.value;
+
+        maxCoinsToMint = getMaxStableCoinsToMint(newStableCoinsAmount, p.ethAmountLocked);
+        require(maxCoinsToMint >= newStableCoinsAmount);
+
+        if (newStableCoinsAmount > p.stableCoins_minted) {
+
+            uint256 difference = newStableCoinsAmount - p.stableCoins_minted;
+            allowedToMint[msg.sender] = difference;
+            return true;
+        }
+
+        if (newStableCoinsAmount < p.stableCoins_minted) {
+            uint256 difference = p.stableCoins_minted - newStableCoinsAmount;
+
+            require(coin.allowance(msg.sender, address(this)) >= difference);
+
+            coin.burn(difference, address(this));
+            //mint(difference);
+            //return true;
+        }
     }
 
+    function mintAllowed () public{
+        coin.mint();
+    }
 
     function withdrawEther (uint posID, uint etherToWithdraw) public{
         //open Auction in the same contract

@@ -37,7 +37,7 @@ contract INTDAO {
 
     address public ruleTokenAddress; //The only unchangable address
 
-    constructor (address initalRuleTokenAddress, address oracleAddress) { //
+    constructor (address initalRuleTokenAddress, address oracleAddress, address stableCoinAddress) { //
         ruleTokenAddress = initalRuleTokenAddress;
         ruleToken = Rule(ruleTokenAddress);
 
@@ -56,6 +56,7 @@ contract INTDAO {
 
         addresses['colleteralContractAddress'] = address(0x0);
         addresses['auctionContractAddress'] = address(0x0);
+        addresses['stableCoinAddress'] = stableCoinAddress;
         addresses['daoAddress'] = address(this);
         addresses['oracleAddress'] = oracleAddress;
     }

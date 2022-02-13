@@ -28,7 +28,7 @@ contract Rule {
         return balances[tokenHolder];
     }
 
-    function allowance(address owner, address spender) public constant returns (uint256) {
+    function allowance(address owner, address spender) public view returns (uint256) {
         return allowed[owner][spender];
     }
 
