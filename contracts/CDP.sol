@@ -103,7 +103,7 @@ contract CDP {
 
         p.lastTimeUpdated = block.timestamp;
         p.feeGenerated = generatedFee(posID);
-        p.feeRate = dao.params('interestRate');
+        p.feeRate = dao.params('interestRate'); //do we need to renew percent? I guess yes, but it is controversial
 
         if (msg.value>0)
             p.ethAmountLocked += msg.value;
@@ -112,7 +112,6 @@ contract CDP {
         require(maxCoinsToMint >= newStableCoinsAmount);
 
         if (newStableCoinsAmount > p.stableCoins_minted) {
-
             uint256 difference = newStableCoinsAmount - p.stableCoins_minted;
             allowedToMint[msg.sender] = difference;
             return true;
@@ -120,12 +119,8 @@ contract CDP {
 
         if (newStableCoinsAmount < p.stableCoins_minted) {
             uint256 difference = p.stableCoins_minted - newStableCoinsAmount;
-
             require(coin.allowance(msg.sender, address(this)) >= difference);
-
             coin.burn(difference, address(this));
-            //mint(difference);
-            //return true;
         }
     }
 

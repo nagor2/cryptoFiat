@@ -95,8 +95,8 @@ contract stableCoin is ERC20{
     }
 
     function burn(uint256 amount, address from) public returns (bool success) {
-        require(allowance(msg.sender, from) > amount, 'Should allow first');
-        require(balances[msg.sender] > amount, 'Should have coins');
+        require(allowance(msg.sender, from) >= amount, 'Should allow first');
+        require(balances[msg.sender] >= amount, 'Should have coins');
 
         initialSupply -= amount;
         balances[msg.sender] -= amount;
