@@ -80,13 +80,16 @@ contract('CDP', (accounts) => {
     });
 
     describe("update CDP", async () => {
-        let posId;
-        before("update CDP should open CDP then approve some coins and then decrease amount", async () => {
-            posId = await cdp.openCDP(web3.utils.toWei('8000','ether') , { from: accounts[1], value:  web3.utils.toWei('1','ether') });
-            await stableCoin.approve(cdp.address, web3.utils.toWei('1170','ether'), {from: accounts[1]});
 
-            //ошибка тут, нужно разбить update на часть и протестировать их. Кроме этого, нужно сделать два апдейта - на изменение количества стэйблов и на вывод эфира
-            await cdp.updateCDP(posId, web3.utils.toWei('1000','ether'), {from: accounts[1], value:  web3.utils.toWei('1','ether') });
+        before("update CDP should open CDP then approve some coins and then decrease amount", async () => {
+            await cdp.openCDP.call(web3.utils.toWei('8000','ether') , { from: accounts[2], value:  web3.utils.toWei('1','ether') });
+            const posId = await cdp.openCDP.call(web3.utils.toWei('8000','ether') , { from: accounts[2], value:  web3.utils.toWei('1','ether') });
+            await stableCoin.approve(cdp.address, web3.utils.toWei('1170','ether'), {from: accounts[2]});
+            console.log (posId.toNumber());
+            const position = await cdp.positions.call(posId.toNumber());
+            console.log(position.owner);
+            console.log(accounts[2]);
+            await cdp.updateCDP.call(posId.toNumber(), web3.utils.toWei('1000','ether'), {from: accounts[1], value:  web3.utils.toWei('1','ether') });
         });
 
         it("should decrease coins minted", async () => {
