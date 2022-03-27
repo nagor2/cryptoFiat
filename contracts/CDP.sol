@@ -21,6 +21,8 @@ contract CDP {
 
     mapping(uint => Position) public positions;
     mapping (address => uint) public allowedToMint; //???
+    event PositionOpened (address owner, uint256 posId);
+    event PositionUpdated (address owner, uint256 newStableCoinsAmount);
 
     struct Position {
         bool onLiquidation;
@@ -38,7 +40,7 @@ contract CDP {
         INTDAOaddress = _INTDAOaddress;
         dao = INTDAO(INTDAOaddress);
         oracle = Oracle(dao.addresses('oracleAddress'));
-        coin = stableCoin(dao.addresses('stableCoinAddress'));
+        coin = stableCoin(payable(dao.addresses('stableCoinAddress')));
     }
 
     function allowed (address to) public view returns (uint256 amount) {
@@ -67,6 +69,10 @@ contract CDP {
         p.lastTimeUpdated = block.timestamp;
         p.feeGenerated = 0;
         p.feeRate = dao.params('interestRate');
+
+        coin.mint();
+
+        emit PositionOpened(p.owner, posId);
 
         return posId;
     }
@@ -114,6 +120,7 @@ contract CDP {
         if (newStableCoinsAmount > p.stableCoins_minted) {
             uint256 difference = newStableCoinsAmount - p.stableCoins_minted;
             allowedToMint[msg.sender] = difference;
+            emit PositionUpdated(p.owner, newStableCoinsAmount);
             return true;
         }
 
@@ -121,6 +128,8 @@ contract CDP {
             uint256 difference = p.stableCoins_minted - newStableCoinsAmount;
             require(coin.allowance(msg.sender, address(this)) >= difference);
             coin.burn(difference, address(this));
+            emit PositionUpdated(p.owner, newStableCoinsAmount);
+            return true;
         }
     }
 

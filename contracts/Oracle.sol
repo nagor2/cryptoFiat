@@ -7,11 +7,11 @@ contract Oracle {
 
     }
 
-    function getPrice(string memory symbol) external view returns (uint256) {
+    function getPrice(string memory) external pure returns (uint256) {
         return 75;
     }
 
-    function getEtherPriceUSD() external view returns (uint256){
+    function getEtherPriceUSD() external pure returns (uint256){
         return 3100;
     }
 

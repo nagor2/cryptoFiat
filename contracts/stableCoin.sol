@@ -74,7 +74,7 @@ contract stableCoin is ERC20{
         return true;
     }
 
-    function receive() external payable {
+    receive() external payable {
         //topup stablilization Fund
         //.transfer(msg.value);
     }
@@ -85,13 +85,14 @@ contract stableCoin is ERC20{
         cdp = CDPInterface (cdpAddress);
     }
 
-    function mint() public returns (bool success) {
+    function mint() public returns (bool) {
         uint toMint = cdp.allowed(msg.sender);
         require(toMint>0);
 
         balances[msg.sender] += toMint;
         initialSupply += toMint;
         require(cdp.decreaseAllowed());
+        return true;
     }
 
     function burn(uint256 amount, address from) public returns (bool success) {
