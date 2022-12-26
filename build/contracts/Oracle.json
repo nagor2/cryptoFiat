@@ -23,7 +23,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -36,7 +37,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"getEtherPriceUSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"getPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Oracle.sol\":\"Oracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Oracle.sol\":{\"keccak256\":\"0xa3898ca195e4691bb7bc4d76199fdb601a34d8e2fb8734e0815f9f406d7e1c77\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://9f7441a1b85b75c4c84c20fd6f93693e374f34436f9865db999ce32a61176a04\",\"dweb:/ipfs/QmfGF41UdsuCrt6RjCZQZdUt4toKSEMwgBewFQE3XRJ4yn\"]}},\"version\":1}",
@@ -1819,7 +1821,7 @@
   "sourceMap": "76:251:4:-:0;;;101:23;;;;;;;;;;76:251;;;;;;",
   "deployedSourceMap": "76:251:4:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;132:93;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;233:89;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;132:93;188:7;215:2;208:9;;132:93;;;:::o;233:89::-;284:7;310:4;303:11;;233:89;:::o;7:75:7:-;40:6;73:2;67:9;57:19;;7:75;:::o;88:117::-;197:1;194;187:12;211:117;320:1;317;310:12;334:117;443:1;440;433:12;457:117;566:1;563;556:12;580:102;621:6;672:2;668:7;663:2;656:5;652:14;648:28;638:38;;580:102;;;:::o;688:180::-;736:77;733:1;726:88;833:4;830:1;823:15;857:4;854:1;847:15;874:281;957:27;979:4;957:27;:::i;:::-;949:6;945:40;1087:6;1075:10;1072:22;1051:18;1039:10;1036:34;1033:62;1030:88;;;1098:18;;:::i;:::-;1030:88;1138:10;1134:2;1127:22;917:238;874:281;;:::o;1161:129::-;1195:6;1222:20;;:::i;:::-;1212:30;;1251:33;1279:4;1271:6;1251:33;:::i;:::-;1161:129;;;:::o;1296:308::-;1358:4;1448:18;1440:6;1437:30;1434:56;;;1470:18;;:::i;:::-;1434:56;1508:29;1530:6;1508:29;:::i;:::-;1500:37;;1592:4;1586;1582:15;1574:23;;1296:308;;;:::o;1610:154::-;1694:6;1689:3;1684;1671:30;1756:1;1747:6;1742:3;1738:16;1731:27;1610:154;;;:::o;1770:412::-;1848:5;1873:66;1889:49;1931:6;1889:49;:::i;:::-;1873:66;:::i;:::-;1864:75;;1962:6;1955:5;1948:21;2000:4;1993:5;1989:16;2038:3;2029:6;2024:3;2020:16;2017:25;2014:112;;;2045:79;;:::i;:::-;2014:112;2135:41;2169:6;2164:3;2159;2135:41;:::i;:::-;1854:328;1770:412;;;;;:::o;2202:340::-;2258:5;2307:3;2300:4;2292:6;2288:17;2284:27;2274:122;;2315:79;;:::i;:::-;2274:122;2432:6;2419:20;2457:79;2532:3;2524:6;2517:4;2509:6;2505:17;2457:79;:::i;:::-;2448:88;;2264:278;2202:340;;;;:::o;2548:509::-;2617:6;2666:2;2654:9;2645:7;2641:23;2637:32;2634:119;;;2672:79;;:::i;:::-;2634:119;2820:1;2809:9;2805:17;2792:31;2850:18;2842:6;2839:30;2836:117;;;2872:79;;:::i;:::-;2836:117;2977:63;3032:7;3023:6;3012:9;3008:22;2977:63;:::i;:::-;2967:73;;2763:287;2548:509;;;;:::o;3063:77::-;3100:7;3129:5;3118:16;;3063:77;;;:::o;3146:118::-;3233:24;3251:5;3233:24;:::i;:::-;3228:3;3221:37;3146:118;;:::o;3270:222::-;3363:4;3401:2;3390:9;3386:18;3378:26;;3414:71;3482:1;3471:9;3467:17;3458:6;3414:71;:::i;:::-;3270:222;;;;:::o",
   "source": "// SPDX-License-Identifier: UNLICENSED\r\npragma solidity >=0.4.22 <0.9.0;\r\n\r\ncontract Oracle {\r\n\r\n    constructor(){\r\n\r\n    }\r\n\r\n    function getPrice(string memory) external pure returns (uint256) {\r\n        return 75;\r\n    }\r\n\r\n    function getEtherPriceUSD() external pure returns (uint256){\r\n        return 3100;\r\n    }\r\n\r\n}\r\n",
-  "sourcePath": "D:\\Яндекс.Диск\\Работа\\ICO\\CryptoFiat\\repo\\contracts\\Oracle.sol",
+  "sourcePath": "C:\\Users\\d.nagornykh\\YandexDisk\\Работа\\ICO\\CryptoFiat\\repo\\contracts\\Oracle.sol",
   "ast": {
     "absolutePath": "project:/contracts/Oracle.sol",
     "exportedSymbols": {
@@ -2380,12 +2382,13 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x929b8a9728aaB9D84BD8D8315f5629574B6d339A",
-      "transactionHash": "0x56c15bc2cee0faeb4a21ea34074f0f85d8d9bf72d2b8267f33e7bae94030230c"
+      "address": "0x769e4ccED6f68d2fa5e4D9082f9896C9c1Db8720",
+      "transactionHash": "0x94432837fa705191d2cbc4959ce8baab5062ab28af6e90dd78e61d87f9099f8f"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-03-27T07:26:57.458Z",
+  "updatedAt": "2022-12-12T03:20:06.868Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},
