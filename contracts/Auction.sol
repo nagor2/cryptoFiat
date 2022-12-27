@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
 
+import "./INTDAO.sol";
 
 //started at 11.30 25/05/2020
 
@@ -28,7 +29,8 @@ contract auction {
 
     event liquidateColleteral(uint posID, uint liquidateColleteral, uint startPrice);
 
-    constructor() {
-
+    constructor(address _INTDAOaddress){
+        INTDAO dao = INTDAO(_INTDAOaddress);
+        dao.setAddressOnce("auction", address(this));
     }
 }

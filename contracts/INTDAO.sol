@@ -35,12 +35,7 @@ contract INTDAO {
     event NewParamVoteing (string name);
     event NewAddressVoteing (string name);
 
-    address public ruleTokenAddress; //The only unchangable address
-
-    constructor (address initalRuleTokenAddress, address oracleAddress, address stableCoinAddress) { //
-        ruleTokenAddress = initalRuleTokenAddress;
-        ruleToken = Rule(ruleTokenAddress);
-
+    constructor () {
         params['interestRate'] = 9;
         params['depositRate']=8;
         params['liquidationFee'] = 13;
@@ -54,15 +49,22 @@ contract INTDAO {
 
         params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
 
-        addresses['colleteralContractAddress'] = address(0x0);
-        addresses['auctionContractAddress'] = address(0x0);
-        addresses['stableCoinAddress'] = stableCoinAddress;
-        addresses['daoAddress'] = address(this);
-        addresses['oracleAddress'] = oracleAddress;
+        addresses['cdp'] = address(0x0);
+        addresses['auction'] = address(0x0);
+        addresses['stableCoin'] = address(0x0);
+        addresses['dao'] = address(this);
+        addresses['oracle'] = address(0x0);
+        addresses['rule'] = address(0x0);
+    }
+
+    function setAddressOnce(string memory addressName, address addr) public{ //a certain pool of names, check not to expand addresses
+        require(addresses[addressName] == address (0x0), 'address can be set only once');
+        addresses[addressName] = addr;
     }
 
     function addVoting(bool paramOrAddress, string memory name, uint value, address addr) public {
         require(!activeVoting);
+        ruleToken = Rule(addresses['rule']);
         require (pooled[msg.sender]>ruleToken.totalSupply()*params['minSharesToInitVoting']/100);
         votingID ++;
         votings[votingID] = Voting(0, paramOrAddress, name, value, addr, block.timestamp);

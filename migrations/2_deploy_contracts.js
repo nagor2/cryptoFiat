@@ -6,10 +6,10 @@ var cdp = artifacts.require("CDP");
 
 module.exports = function(deployer) {
 
-    deployer.deploy(Rule).then(function() {
-        return deployer.deploy(oracle).then(function () {
-            return deployer.deploy(stableCoin).then(function () {
-                return deployer.deploy(INTDAO, Rule.address, oracle.address, stableCoin.address).then(function () {
+    deployer.deploy(INTDAO).then(function() {
+        return deployer.deploy(oracle, INTDAO.address).then(function () {
+            return deployer.deploy(stableCoin, INTDAO.address).then(function () {
+                return deployer.deploy(Rule, INTDAO.address).then(function () {
                     return deployer.deploy(cdp, INTDAO.address);
                 });
             });

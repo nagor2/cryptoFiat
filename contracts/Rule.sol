@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
 
+import "./INTDAO.sol";
+
 contract Rule {
 
     string public constant name = "Rule token";
@@ -14,10 +16,11 @@ contract Rule {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Burned(address from, uint256 value);
 
-    constructor(){
+    constructor(address _INTDAOaddress){
         initialSupply += 10**9*10**18;
         balances[msg.sender] = initialSupply;
-
+        INTDAO dao = INTDAO(_INTDAOaddress);
+        dao.setAddressOnce("rule", address(this));
     }
 
     function totalSupply() external virtual view returns (uint supply) {

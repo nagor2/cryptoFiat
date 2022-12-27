@@ -17,10 +17,11 @@ contract('CDP', (accounts) => {
     let stableCoin;
 
     before('should setup the contracts instance', async () => {
-        rule = await Rule.deployed();
-        oracle = await Oracle.deployed();
-        stableCoin = await StableCoin.deployed();
-        dao = await INTDAO.deployed(rule.address, oracle.address, stableCoin.address);
+
+        dao = await INTDAO.deployed();
+        rule = await Rule.deployed(dao.address);
+        oracle = await Oracle.deployed(dao.address);
+        stableCoin = await StableCoin.deployed(dao.address);
         cdp = await CDP.deployed(dao.address);
     });
 

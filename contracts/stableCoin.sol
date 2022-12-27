@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
-
-interface CDPInterface {
-    function allowed (address to) external view returns (uint256 amount);
-    function decreaseAllowed() external returns (bool success);
-}
+import "./INTDAO.sol";
 
 interface ERC20 {
     function totalSupply() external view returns (uint supply);
@@ -28,10 +24,15 @@ contract stableCoin is ERC20{
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
-    event Burned(address from, uint256 value);
 
-    CDPInterface cdp;
-    address cdpAddress;
+    event Burned(address from, uint256 value);
+    event Mint(address to, uint256 value);
+    INTDAO dao;
+
+    constructor(address _INTDAOaddress){
+        dao = INTDAO(_INTDAOaddress);
+        dao.setAddressOnce("stableCoin", address(this));
+    }
 
     function totalSupply() public view returns (uint256) {
         return initialSupply;
@@ -79,30 +80,19 @@ contract stableCoin is ERC20{
         //.transfer(msg.value);
     }
 
-    function setCPDAddressOnce(address initAddress) public{
-        require(cdpAddress == address (0), 'cdp can be set only once');
-        cdpAddress = initAddress;
-        cdp = CDPInterface (cdpAddress);
-    }
-
-    function mint() public returns (bool) {
-        uint toMint = cdp.allowed(msg.sender);
-        require(toMint>0);
-
-        balances[msg.sender] += toMint;
-        initialSupply += toMint;
-        require(cdp.decreaseAllowed());
+    function mint(address to, uint256 amount) public returns (bool) {
+        require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to mint');
+        balances[to] += amount;
+        initialSupply += amount;
+        emit Mint(to, amount);
         return true;
     }
 
-    function burn(uint256 amount, address from) public returns (bool success) {
-        require(allowance(msg.sender, from) >= amount, 'Should allow first');
-        require(balances[msg.sender] >= amount, 'Should have coins');
-
+    function burn(address from, uint256 amount) public returns (bool success) {
+        require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to burn');
         initialSupply -= amount;
-        balances[msg.sender] -= amount;
-        allowed[msg.sender][from] -= amount;
-        emit Burned(address(this), amount);
+        balances[from] -= amount;
+        emit Burned(address(from), amount);
         return true;
     }
 }

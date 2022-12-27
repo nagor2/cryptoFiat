@@ -5,7 +5,6 @@ import "./Oracle.sol";
 import "./Rule.sol";
 import "./stableCoin.sol";
 
-
 //previous Interest price is saved during INT auction - no need or make auction longer in time
 //started at 11.30 25/05/2020
 
@@ -20,9 +19,8 @@ contract CDP {
     address auctionAddress;
 
     mapping(uint => Position) public positions;
-    mapping (address => uint) public allowedToMint; //???
     event PositionOpened (address owner, uint256 posId);
-    event PositionUpdated (address owner, uint256 newStableCoinsAmount);
+    event PositionUpdated (uint256 posID, uint256 newStableCoinsAmount);
 
     struct Position {
         bool onLiquidation;
@@ -39,17 +37,9 @@ contract CDP {
     constructor(address _INTDAOaddress) {
         INTDAOaddress = _INTDAOaddress;
         dao = INTDAO(INTDAOaddress);
-        oracle = Oracle(dao.addresses('oracleAddress'));
-        coin = stableCoin(payable(dao.addresses('stableCoinAddress')));
-    }
-
-    function allowed (address to) public view returns (uint256 amount) {
-        return allowedToMint[to];
-    }
-
-    function decreaseAllowed() public returns (bool success) {
-        allowedToMint[msg.sender] = 0;
-        return true;
+        dao.setAddressOnce('cdp',address(this));
+        oracle = Oracle(dao.addresses('oracle'));
+        coin = stableCoin(payable(dao.addresses('stableCoin')));
     }
 
     function openCDP (uint StableCoinsToMint) external payable returns (uint256 posId){
@@ -60,8 +50,6 @@ contract CDP {
         if (StableCoinsToMint <= coinsToMint)
             coinsToMint = StableCoinsToMint;
 
-        allowedToMint[msg.sender] = coinsToMint;
-
         p.stableCoins_minted = coinsToMint;
         p.ethAmountLocked = msg.value;
         p.owner = msg.sender;
@@ -70,7 +58,7 @@ contract CDP {
         p.feeGenerated = 0;
         p.feeRate = dao.params('interestRate');
 
-        coin.mint();
+        coin.mint(msg.sender, coinsToMint);
 
         emit PositionOpened(p.owner, posId);
 
@@ -101,40 +89,38 @@ contract CDP {
         //if allowed, transfer on balance, then burn
     }
 
+    function claim_margin_call(uint posID) public returns (bool success) {
+
+    }
 
     function updateCDP(uint posID, uint newStableCoinsAmount) public payable returns (bool success){
         Position storage p = positions[posID];
         require(p.owner == msg.sender, 'Only owner may update the position');
         uint256 maxCoinsToMint;
 
-        p.lastTimeUpdated = block.timestamp;
         p.feeGenerated = generatedFee(posID);
-        p.feeRate = dao.params('interestRate'); //do we need to renew percent? I guess yes, but it is controversial
+        p.lastTimeUpdated = block.timestamp;
 
         if (msg.value>0)
             p.ethAmountLocked += msg.value;
 
         maxCoinsToMint = getMaxStableCoinsToMint(newStableCoinsAmount, p.ethAmountLocked);
-        require(maxCoinsToMint >= newStableCoinsAmount);
+        require(maxCoinsToMint <= newStableCoinsAmount, 'not enough collateral to mint amount');
 
         if (newStableCoinsAmount > p.stableCoins_minted) {
             uint256 difference = newStableCoinsAmount - p.stableCoins_minted;
-            allowedToMint[msg.sender] = difference;
-            emit PositionUpdated(p.owner, newStableCoinsAmount);
+            coin.mint(p.owner, difference);
+            emit PositionUpdated(posID, newStableCoinsAmount);
             return true;
         }
 
         if (newStableCoinsAmount < p.stableCoins_minted) {
             uint256 difference = p.stableCoins_minted - newStableCoinsAmount;
-            require(coin.allowance(msg.sender, address(this)) >= difference);
-            coin.burn(difference, address(this));
-            emit PositionUpdated(p.owner, newStableCoinsAmount);
+            require(coin.balanceOf(p.owner)>=difference);
+            coin.burn(p.owner, difference);
+            emit PositionUpdated(posID, newStableCoinsAmount);
             return true;
         }
-    }
-
-    function mintAllowed () public{
-        coin.mint();
     }
 
     function withdrawEther (uint posID, uint etherToWithdraw) public{

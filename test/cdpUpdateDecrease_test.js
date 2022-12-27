@@ -7,7 +7,7 @@ var StableCoin = artifacts.require("./stableCoin.sol");
 
 const truffleAssert = require('truffle-assertions');
 
-contract('CDP Update Increase', (accounts) => {
+contract('CDP Update Decrease', (accounts) => {
     let dao;
     let cdp;
     let oracle;
@@ -15,6 +15,7 @@ contract('CDP Update Increase', (accounts) => {
     let position;
     let positionID;
     let positionUpdate;
+    const ownerId = 2;
 
     before('should setup the contracts instance', async () => {
         dao = await INTDAO.deployed();
@@ -23,47 +24,35 @@ contract('CDP Update Increase', (accounts) => {
         cdp = await CDP.deployed(dao.address);
 
         positionID = await cdp.openCDP(web3.utils.toWei('2000', 'ether'), {
-            from: accounts[2],
+            from: accounts[ownerId],
             value: web3.utils.toWei('1', 'ether')
         });
 
         posId = 0;
 
-        expectedOwner = accounts[2];
+        expectedOwner = accounts[ownerId];
+
+        await time.increase(31536000);//1 year in seconds. It may sometimes fail
 
         position = await cdp.positions(posId);
 
-        console.log(expectedOwner);
-        console.log(position.owner);
-
-        positionUpdate = await cdp.updateCDP(posId, web3.utils.toWei('2100', 'ether'), {from: accounts[2],value: web3.utils.toWei('1', 'ether')});
+        positionUpdate = await cdp.updateCDP(posId, web3.utils.toWei('100', 'ether'), {from: accounts[ownerId]});
     });
 
     it("should emit PositionUpdated", async () => {
         truffleAssert.eventEmitted(positionUpdate, 'PositionUpdated', async (ev) => {
-            //expect(ev.posID).to.eql(0,"positionID is wrong");
             assert.equal(ev.posID, posId, 'positionID is wrong');
-            assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('2100', 'ether'), 'amount is wrong');
+            assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('100', 'ether'), 'amount is wrong');
         });
     });
 
-    it("should increase ethAmount locked", async () => {
+    it("should not change ethAmount locked", async () => {
         position = await cdp.positions(posId);
-        assert.equal(position.ethAmountLocked, web3.utils.toWei('2','ether'), "ethAmountLocked should be 2 ethers");
+        assert.equal(position.ethAmountLocked, web3.utils.toWei('1','ether'), "ethAmountLocked should be 1 ether");
     });
 
-    it("should put 1 ether on contract's balance", async () => {
-        const contractBalance = await web3.eth.getBalance(cdp.address);
-        assert.equal(contractBalance, web3.utils.toWei('2','ether'), "contract's balance should be 2 ethers");
-    });
-
-    it("should increase owner balance", async () => {
+    it("should decrease owner's balance", async () => {
         const balance = await stableCoin.balanceOf(position.owner);
-        assert.equal(balance, web3.utils.toWei('2100', 'ether'), "owner's balance should be 2100 stableCoin");
-    });
-
-    it("burn coins if needed", async () => {
-        //const contractBalance = await web3.eth.getBalance(cdp.address);
-        //assert.equal(contractBalance, web3.utils.toWei('1','ether'), "contract's balance should be 1 ether");
+        assert.equal(balance, web3.utils.toWei('100', 'ether'), "owner's balance should be 100 stableCoin");
     });
 });
