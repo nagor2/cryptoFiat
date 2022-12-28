@@ -14,7 +14,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/~$TODO.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/~$TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/~$TODO.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpUpdateDecrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateDecrease_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +163,7 @@
       <workItem from="1670915441753" duration="16862000" />
       <workItem from="1671017798197" duration="941000" />
       <workItem from="1671071083330" duration="30923000" />
-      <workItem from="1671508920370" duration="16368000" />
+      <workItem from="1671508920370" duration="16695000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
