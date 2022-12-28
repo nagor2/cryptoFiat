@@ -23,7 +23,7 @@ contract('CDP Update Decrease', (accounts) => {
         stableCoin = await StableCoin.deployed(dao.address);
         cdp = await CDP.deployed(dao.address);
 
-        positionID = await cdp.openCDP(web3.utils.toWei('2000', 'ether'), {
+        positionID = await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
             from: accounts[ownerId],
             value: web3.utils.toWei('1', 'ether')
         });

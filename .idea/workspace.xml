@@ -12,28 +12,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/CDPInterface.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/CDPInterface.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ERC20.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ERC20.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Migrations.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Migrations.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Oracle.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Oracle.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Rule.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/auction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/auction.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Oracle.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Oracle.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Rule.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpUpdateDecrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateDecrease_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/stableCoin_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/stableCoin_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trash/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/trash/cdp_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/~$TODO.docx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +161,7 @@
       <workItem from="1670915441753" duration="16862000" />
       <workItem from="1671017798197" duration="941000" />
       <workItem from="1671071083330" duration="30923000" />
-      <workItem from="1671508920370" duration="11400000" />
+      <workItem from="1671508920370" duration="16368000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>

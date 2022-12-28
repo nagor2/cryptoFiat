@@ -4,6 +4,7 @@ import "./INTDAO.sol";
 import "./Oracle.sol";
 import "./Rule.sol";
 import "./stableCoin.sol";
+import "./Auction.sol";
 
 //previous Interest price is saved during INT auction - no need or make auction longer in time
 //started at 11.30 25/05/2020
@@ -15,8 +16,7 @@ contract CDP {
     INTDAO dao;
     Oracle oracle;
     stableCoin coin;
-
-    address auctionAddress;
+    Auction auction;
 
     mapping(uint => Position) public positions;
     event PositionOpened (address owner, uint256 posId);
@@ -40,6 +40,7 @@ contract CDP {
         dao.setAddressOnce('cdp',address(this));
         oracle = Oracle(dao.addresses('oracle'));
         coin = stableCoin(payable(dao.addresses('stableCoin')));
+        auction = Auction(dao.addresses('auction'));
     }
 
     function openCDP (uint StableCoinsToMint) external payable returns (uint256 posId){
@@ -81,12 +82,24 @@ contract CDP {
             return maxCoinsToMint;
     }
 
-    function closeCDP (uint posID) public{ //shows minimum amount of INT you have to own
+    function closeCDP(uint posID) public returns (bool success){ //shows minimum amount of INT you have to own
         // Rule allowed to which address? )
         //burnFromCollateral from wich addressAllowed?
         //sendEtherToOwner
         //checkAllowance of RuleTokens
         //if allowed, transfer on balance, then burn
+    }
+
+    function transferFee(uint posID) public returns (bool success){
+        Position storage p = positions[posID];
+        p.feeGenerated = generatedFee(posID);
+        require(p.feeGenerated > 10**18, 'No or little fee generated');
+        require(coin.burn(p.owner, p.feeGenerated)&&coin.mint(address(this), p.feeGenerated), 'Was not able to transfer fee');
+        if (coin.balanceOf(address(this))>dao.params('stabilizationFundPercent')*coin.totalSupply()) {
+            uint256 difference = coin.balanceOf(address(this))-dao.params('stabilizationFundPercent')*coin.totalSupply();
+            coin.transfer(dao.addresses('auction'), difference);
+            require(auction.initRuleBuyOut(), 'Rule token buyout must be initialized');
+        }
     }
 
     function claim_margin_call(uint posID) public returns (bool success) {
@@ -104,8 +117,8 @@ contract CDP {
         if (msg.value>0)
             p.ethAmountLocked += msg.value;
 
-        maxCoinsToMint = getMaxStableCoinsToMint(newStableCoinsAmount, p.ethAmountLocked);
-        require(maxCoinsToMint <= newStableCoinsAmount, 'not enough collateral to mint amount');
+        maxCoinsToMint = getMaxStableCoinsToMint(newStableCoinsAmount, p.ethAmountLocked) - p.feeGenerated;
+        require(maxCoinsToMint>0 && maxCoinsToMint <= newStableCoinsAmount, 'not enough collateral to mint amount');
 
         if (newStableCoinsAmount > p.stableCoins_minted) {
             uint256 difference = newStableCoinsAmount - p.stableCoins_minted;

@@ -5,7 +5,7 @@ import "./INTDAO.sol";
 
 //started at 11.30 25/05/2020
 
-contract auction {
+contract Auction {
     uint auctionID;
 
     mapping(uint => auctionEntity) public auctions;
@@ -32,5 +32,10 @@ contract auction {
     constructor(address _INTDAOaddress){
         INTDAO dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("auction", address(this));
+    }
+
+    function initRuleBuyOut() public returns (bool success){
+        //берет весь баланс монет, и пытается выкупить максимальное количество Rule. После покупки сжигает Rule;
+        return true;
     }
 }
