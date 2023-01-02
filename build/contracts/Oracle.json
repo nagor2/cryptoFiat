@@ -29,8 +29,7 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -43,13 +42,12 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function",
-      "constant": true
+      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_INTDAOaddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"getEtherPriceUSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"getPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Oracle.sol\":\"Oracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/INTDAO.sol\":{\"keccak256\":\"0x90387d631394c7316a62feef8f0de9d18ac01b26c37ad63244baa938609b571f\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://28dfc197469ea9276f217f3083e2acc90dd71b8effc20e293c2650b9f733fcde\",\"dweb:/ipfs/QmS1mJqa1iFVPWARuPCBxYfWuadM6Rbra6ebZLqwSYLSGx\"]},\"project:/contracts/Oracle.sol\":{\"keccak256\":\"0x796d521e351ff16dda502e92bf4aed8c3a574e19b308659dadb7e1d15c00a2fc\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://4a12396d64c4bc0c5505a439a24c269b2e501b7e6d18b0791cd66125e555f6b2\",\"dweb:/ipfs/QmdGsWJe6gGr8KXUxoBUkKofrW1CECrBbUS3fQSLEWhdCH\"]},\"project:/contracts/Rule.sol\":{\"keccak256\":\"0x7c145bb5647b19e91572d6e4991dedbf65188bbe202670256e8b93d57d3c7fc0\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://68779c617d2c893b7583380b87088e5f3846ab0b2dcb9fc63c4c0495ddcad980\",\"dweb:/ipfs/QmPnfCbJKurkKUbML8Y8ucLh6gc2UfW1QqvK5oWn5WqAAy\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5060405161048d38038061048d8339818101604052810190610032919061010c565b60008190508073ffffffffffffffffffffffffffffffffffffffff16632abdf04e306040518263ffffffff1660e01b815260040161007091906101a5565b600060405180830381600087803b15801561008a57600080fd5b505af115801561009e573d6000803e3d6000fd5b5050505050506101d3565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006100d9826100ae565b9050919050565b6100e9816100ce565b81146100f457600080fd5b50565b600081519050610106816100e0565b92915050565b600060208284031215610122576101216100a9565b5b6000610130848285016100f7565b91505092915050565b600082825260208201905092915050565b7f6f7261636c650000000000000000000000000000000000000000000000000000600082015250565b6000610180600683610139565b915061018b8261014a565b602082019050919050565b61019f816100ce565b82525050565b600060408201905081810360008301526101be81610173565b90506101cd6020830184610196565b92915050565b6102ab806101e26000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063524f38891461003b578063aa309fef1461006b575b600080fd5b610055600480360381019061005091906101f8565b610089565b604051610062919061025a565b60405180910390f35b610073610094565b604051610080919061025a565b60405180910390f35b6000604b9050919050565b6000610c1c905090565b6000604051905090565b600080fd5b600080fd5b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610105826100bc565b810181811067ffffffffffffffff82111715610124576101236100cd565b5b80604052505050565b600061013761009e565b905061014382826100fc565b919050565b600067ffffffffffffffff821115610163576101626100cd565b5b61016c826100bc565b9050602081019050919050565b82818337600083830152505050565b600061019b61019684610148565b61012d565b9050828152602081018484840111156101b7576101b66100b7565b5b6101c2848285610179565b509392505050565b600082601f8301126101df576101de6100b2565b5b81356101ef848260208601610188565b91505092915050565b60006020828403121561020e5761020d6100a8565b5b600082013567ffffffffffffffff81111561022c5761022b6100ad565b5b610238848285016101ca565b91505092915050565b6000819050919050565b61025481610241565b82525050565b600060208201905061026f600083018461024b565b9291505056fea2646970667358221220f865168a0a5bd37574e58f245db2d5b824c8dc4acae01433774ea5a309ddd6b564736f6c634300080a0033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063524f38891461003b578063aa309fef1461006b575b600080fd5b610055600480360381019061005091906101f8565b610089565b604051610062919061025a565b60405180910390f35b610073610094565b604051610080919061025a565b60405180910390f35b6000604b9050919050565b6000610c1c905090565b6000604051905090565b600080fd5b600080fd5b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610105826100bc565b810181811067ffffffffffffffff82111715610124576101236100cd565b5b80604052505050565b600061013761009e565b905061014382826100fc565b919050565b600067ffffffffffffffff821115610163576101626100cd565b5b61016c826100bc565b9050602081019050919050565b82818337600083830152505050565b600061019b61019684610148565b61012d565b9050828152602081018484840111156101b7576101b66100b7565b5b6101c2848285610179565b509392505050565b600082601f8301126101df576101de6100b2565b5b81356101ef848260208601610188565b91505092915050565b60006020828403121561020e5761020d6100a8565b5b600082013567ffffffffffffffff81111561022c5761022b6100ad565b5b610238848285016101ca565b91505092915050565b6000819050919050565b61025481610241565b82525050565b600060208201905061026f600083018461024b565b9291505056fea2646970667358221220f865168a0a5bd37574e58f245db2d5b824c8dc4acae01433774ea5a309ddd6b564736f6c634300080a0033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_INTDAOaddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"getEtherPriceUSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"getPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Oracle.sol\":\"Oracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/INTDAO.sol\":{\"keccak256\":\"0x5b6453290e39e79388c9dc57b90d51a58c6080d1ee97a365cb9fbc9c0ae70886\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://11eee49bb701c883fd3f3e750d2c81ac43bb6098230bde5974a69998a3f16994\",\"dweb:/ipfs/QmVjXo65iFcdrLw6t9NwwpoBgZayZvpi66vtt3H86uEYef\"]},\"project:/contracts/Oracle.sol\":{\"keccak256\":\"0x796d521e351ff16dda502e92bf4aed8c3a574e19b308659dadb7e1d15c00a2fc\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://4a12396d64c4bc0c5505a439a24c269b2e501b7e6d18b0791cd66125e555f6b2\",\"dweb:/ipfs/QmdGsWJe6gGr8KXUxoBUkKofrW1CECrBbUS3fQSLEWhdCH\"]},\"project:/contracts/Rule.sol\":{\"keccak256\":\"0x7c145bb5647b19e91572d6e4991dedbf65188bbe202670256e8b93d57d3c7fc0\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://68779c617d2c893b7583380b87088e5f3846ab0b2dcb9fc63c4c0495ddcad980\",\"dweb:/ipfs/QmPnfCbJKurkKUbML8Y8ucLh6gc2UfW1QqvK5oWn5WqAAy\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161048d38038061048d8339818101604052810190610032919061010c565b60008190508073ffffffffffffffffffffffffffffffffffffffff16632abdf04e306040518263ffffffff1660e01b815260040161007091906101a5565b600060405180830381600087803b15801561008a57600080fd5b505af115801561009e573d6000803e3d6000fd5b5050505050506101d3565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006100d9826100ae565b9050919050565b6100e9816100ce565b81146100f457600080fd5b50565b600081519050610106816100e0565b92915050565b600060208284031215610122576101216100a9565b5b6000610130848285016100f7565b91505092915050565b600082825260208201905092915050565b7f6f7261636c650000000000000000000000000000000000000000000000000000600082015250565b6000610180600683610139565b915061018b8261014a565b602082019050919050565b61019f816100ce565b82525050565b600060408201905081810360008301526101be81610173565b90506101cd6020830184610196565b92915050565b6102ab806101e26000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063524f38891461003b578063aa309fef1461006b575b600080fd5b610055600480360381019061005091906101f8565b610089565b604051610062919061025a565b60405180910390f35b610073610094565b604051610080919061025a565b60405180910390f35b6000604b9050919050565b6000610c1c905090565b6000604051905090565b600080fd5b600080fd5b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610105826100bc565b810181811067ffffffffffffffff82111715610124576101236100cd565b5b80604052505050565b600061013761009e565b905061014382826100fc565b919050565b600067ffffffffffffffff821115610163576101626100cd565b5b61016c826100bc565b9050602081019050919050565b82818337600083830152505050565b600061019b61019684610148565b61012d565b9050828152602081018484840111156101b7576101b66100b7565b5b6101c2848285610179565b509392505050565b600082601f8301126101df576101de6100b2565b5b81356101ef848260208601610188565b91505092915050565b60006020828403121561020e5761020d6100a8565b5b600082013567ffffffffffffffff81111561022c5761022b6100ad565b5b610238848285016101ca565b91505092915050565b6000819050919050565b61025481610241565b82525050565b600060208201905061026f600083018461024b565b9291505056fea26469706673582212209f6cb15dee2e3fa091b2c2e94463dd62b9fb03bcc6605864494b9007b4d554d264736f6c634300080a0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063524f38891461003b578063aa309fef1461006b575b600080fd5b610055600480360381019061005091906101f8565b610089565b604051610062919061025a565b60405180910390f35b610073610094565b604051610080919061025a565b60405180910390f35b6000604b9050919050565b6000610c1c905090565b6000604051905090565b600080fd5b600080fd5b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610105826100bc565b810181811067ffffffffffffffff82111715610124576101236100cd565b5b80604052505050565b600061013761009e565b905061014382826100fc565b919050565b600067ffffffffffffffff821115610163576101626100cd565b5b61016c826100bc565b9050602081019050919050565b82818337600083830152505050565b600061019b61019684610148565b61012d565b9050828152602081018484840111156101b7576101b66100b7565b5b6101c2848285610179565b509392505050565b600082601f8301126101df576101de6100b2565b5b81356101ef848260208601610188565b91505092915050565b60006020828403121561020e5761020d6100a8565b5b600082013567ffffffffffffffff81111561022c5761022b6100ad565b5b610238848285016101ca565b91505092915050565b6000819050919050565b61025481610241565b82525050565b600060208201905061026f600083018461024b565b9291505056fea26469706673582212209f6cb15dee2e3fa091b2c2e94463dd62b9fb03bcc6605864494b9007b4d554d264736f6c634300080a0033",
   "immutableReferences": {},
   "generatedSources": [
     {
@@ -2967,21 +2965,21 @@
     "absolutePath": "project:/contracts/Oracle.sol",
     "exportedSymbols": {
       "INTDAO": [
-        1175
+        1290
       ],
       "Oracle": [
-        1253
+        1368
       ],
       "Rule": [
-        1585
+        1700
       ]
     },
-    "id": 1254,
+    "id": 1369,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1210,
+        "id": 1325,
         "literals": [
           "solidity",
           ">=",
@@ -2997,11 +2995,11 @@
       {
         "absolutePath": "project:/contracts/INTDAO.sol",
         "file": "./INTDAO.sol",
-        "id": 1211,
+        "id": 1326,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 1254,
-        "sourceUnit": 1176,
+        "scope": 1369,
+        "sourceUnit": 1291,
         "src": "76:22:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3013,9 +3011,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 1253,
+        "id": 1368,
         "linearizedBaseContracts": [
-          1253
+          1368
         ],
         "name": "Oracle",
         "nameLocation": "111:6:4",
@@ -3023,59 +3021,59 @@
         "nodes": [
           {
             "body": {
-              "id": 1233,
+              "id": 1348,
               "nodeType": "Block",
               "src": "162:108:4",
               "statements": [
                 {
                   "assignments": [
-                    1218
+                    1333
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1218,
+                      "id": 1333,
                       "mutability": "mutable",
                       "name": "dao",
                       "nameLocation": "180:3:4",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1233,
+                      "scope": 1348,
                       "src": "173:10:4",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_INTDAO_$1175",
+                        "typeIdentifier": "t_contract$_INTDAO_$1290",
                         "typeString": "contract INTDAO"
                       },
                       "typeName": {
-                        "id": 1217,
+                        "id": 1332,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 1216,
+                          "id": 1331,
                           "name": "INTDAO",
                           "nodeType": "IdentifierPath",
-                          "referencedDeclaration": 1175,
+                          "referencedDeclaration": 1290,
                           "src": "173:6:4"
                         },
-                        "referencedDeclaration": 1175,
+                        "referencedDeclaration": 1290,
                         "src": "173:6:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_INTDAO_$1175",
+                          "typeIdentifier": "t_contract$_INTDAO_$1290",
                           "typeString": "contract INTDAO"
                         }
                       },
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1222,
+                  "id": 1337,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 1220,
+                        "id": 1335,
                         "name": "_INTDAOaddress",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1213,
+                        "referencedDeclaration": 1328,
                         "src": "193:14:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -3090,18 +3088,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 1219,
+                      "id": 1334,
                       "name": "INTDAO",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1175,
+                      "referencedDeclaration": 1290,
                       "src": "186:6:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_type$_t_contract$_INTDAO_$1175_$",
+                        "typeIdentifier": "t_type$_t_contract$_INTDAO_$1290_$",
                         "typeString": "type(contract INTDAO)"
                       }
                     },
-                    "id": 1221,
+                    "id": 1336,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3112,7 +3110,7 @@
                     "src": "186:22:4",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_INTDAO_$1175",
+                      "typeIdentifier": "t_contract$_INTDAO_$1290",
                       "typeString": "contract INTDAO"
                     }
                   },
@@ -3124,7 +3122,7 @@
                     "arguments": [
                       {
                         "hexValue": "6f7261636c65",
-                        "id": 1226,
+                        "id": 1341,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -3141,14 +3139,14 @@
                       {
                         "arguments": [
                           {
-                            "id": 1229,
+                            "id": 1344,
                             "name": "this",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 4294967268,
                             "src": "256:4:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Oracle_$1253",
+                              "typeIdentifier": "t_contract$_Oracle_$1368",
                               "typeString": "contract Oracle"
                             }
                           }
@@ -3156,11 +3154,11 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Oracle_$1253",
+                              "typeIdentifier": "t_contract$_Oracle_$1368",
                               "typeString": "contract Oracle"
                             }
                           ],
-                          "id": 1228,
+                          "id": 1343,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3172,14 +3170,14 @@
                             "typeString": "type(address)"
                           },
                           "typeName": {
-                            "id": 1227,
+                            "id": 1342,
                             "name": "address",
                             "nodeType": "ElementaryTypeName",
                             "src": "248:7:4",
                             "typeDescriptions": {}
                           }
                         },
-                        "id": 1230,
+                        "id": 1345,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3207,32 +3205,32 @@
                         }
                       ],
                       "expression": {
-                        "id": 1223,
+                        "id": 1338,
                         "name": "dao",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1218,
+                        "referencedDeclaration": 1333,
                         "src": "219:3:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_INTDAO_$1175",
+                          "typeIdentifier": "t_contract$_INTDAO_$1290",
                           "typeString": "contract INTDAO"
                         }
                       },
-                      "id": 1225,
+                      "id": 1340,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "setAddressOnce",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 779,
+                      "referencedDeclaration": 894,
                       "src": "219:18:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_address_$returns$__$",
                         "typeString": "function (string memory,address) external"
                       }
                     },
-                    "id": 1231,
+                    "id": 1346,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3247,13 +3245,13 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1232,
+                  "id": 1347,
                   "nodeType": "ExpressionStatement",
                   "src": "219:43:4"
                 }
               ]
             },
-            "id": 1234,
+            "id": 1349,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -3261,17 +3259,17 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1214,
+              "id": 1329,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1213,
+                  "id": 1328,
                   "mutability": "mutable",
                   "name": "_INTDAOaddress",
                   "nameLocation": "147:14:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1234,
+                  "scope": 1349,
                   "src": "139:22:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3280,7 +3278,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1212,
+                    "id": 1327,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "139:7:4",
@@ -3296,12 +3294,12 @@
               "src": "138:24:4"
             },
             "returnParameters": {
-              "id": 1215,
+              "id": 1330,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "162:0:4"
             },
-            "scope": 1253,
+            "scope": 1368,
             "src": "127:143:4",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -3309,14 +3307,14 @@
           },
           {
             "body": {
-              "id": 1243,
+              "id": 1358,
               "nodeType": "Block",
               "src": "343:28:4",
               "statements": [
                 {
                   "expression": {
                     "hexValue": "3735",
-                    "id": 1241,
+                    "id": 1356,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -3330,15 +3328,15 @@
                     },
                     "value": "75"
                   },
-                  "functionReturnParameters": 1240,
-                  "id": 1242,
+                  "functionReturnParameters": 1355,
+                  "id": 1357,
                   "nodeType": "Return",
                   "src": "354:9:4"
                 }
               ]
             },
             "functionSelector": "524f3889",
-            "id": 1244,
+            "id": 1359,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -3346,17 +3344,17 @@
             "nameLocation": "287:8:4",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1237,
+              "id": 1352,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1236,
+                  "id": 1351,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1244,
+                  "scope": 1359,
                   "src": "296:13:4",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -3365,7 +3363,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 1235,
+                    "id": 1350,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "296:6:4",
@@ -3380,17 +3378,17 @@
               "src": "295:15:4"
             },
             "returnParameters": {
-              "id": 1240,
+              "id": 1355,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1239,
+                  "id": 1354,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1244,
+                  "scope": 1359,
                   "src": "334:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3399,7 +3397,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1238,
+                    "id": 1353,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "334:7:4",
@@ -3413,7 +3411,7 @@
               ],
               "src": "333:9:4"
             },
-            "scope": 1253,
+            "scope": 1368,
             "src": "278:93:4",
             "stateMutability": "pure",
             "virtual": false,
@@ -3421,14 +3419,14 @@
           },
           {
             "body": {
-              "id": 1251,
+              "id": 1366,
               "nodeType": "Block",
               "src": "438:30:4",
               "statements": [
                 {
                   "expression": {
                     "hexValue": "33313030",
-                    "id": 1249,
+                    "id": 1364,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -3442,15 +3440,15 @@
                     },
                     "value": "3100"
                   },
-                  "functionReturnParameters": 1248,
-                  "id": 1250,
+                  "functionReturnParameters": 1363,
+                  "id": 1365,
                   "nodeType": "Return",
                   "src": "449:11:4"
                 }
               ]
             },
             "functionSelector": "aa309fef",
-            "id": 1252,
+            "id": 1367,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -3458,23 +3456,23 @@
             "nameLocation": "388:16:4",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1245,
+              "id": 1360,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "404:2:4"
             },
             "returnParameters": {
-              "id": 1248,
+              "id": 1363,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1247,
+                  "id": 1362,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1252,
+                  "scope": 1367,
                   "src": "430:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3483,7 +3481,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1246,
+                    "id": 1361,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "430:7:4",
@@ -3497,14 +3495,14 @@
               ],
               "src": "429:9:4"
             },
-            "scope": 1253,
+            "scope": 1368,
             "src": "379:89:4",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 1254,
+        "scope": 1369,
         "src": "102:371:4",
         "usedErrors": []
       }
@@ -3515,21 +3513,21 @@
     "absolutePath": "project:/contracts/Oracle.sol",
     "exportedSymbols": {
       "INTDAO": [
-        1175
+        1290
       ],
       "Oracle": [
-        1253
+        1368
       ],
       "Rule": [
-        1585
+        1700
       ]
     },
-    "id": 1254,
+    "id": 1369,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1210,
+        "id": 1325,
         "literals": [
           "solidity",
           ">=",
@@ -3545,11 +3543,11 @@
       {
         "absolutePath": "project:/contracts/INTDAO.sol",
         "file": "./INTDAO.sol",
-        "id": 1211,
+        "id": 1326,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 1254,
-        "sourceUnit": 1176,
+        "scope": 1369,
+        "sourceUnit": 1291,
         "src": "76:22:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3561,9 +3559,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 1253,
+        "id": 1368,
         "linearizedBaseContracts": [
-          1253
+          1368
         ],
         "name": "Oracle",
         "nameLocation": "111:6:4",
@@ -3571,59 +3569,59 @@
         "nodes": [
           {
             "body": {
-              "id": 1233,
+              "id": 1348,
               "nodeType": "Block",
               "src": "162:108:4",
               "statements": [
                 {
                   "assignments": [
-                    1218
+                    1333
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1218,
+                      "id": 1333,
                       "mutability": "mutable",
                       "name": "dao",
                       "nameLocation": "180:3:4",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1233,
+                      "scope": 1348,
                       "src": "173:10:4",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_INTDAO_$1175",
+                        "typeIdentifier": "t_contract$_INTDAO_$1290",
                         "typeString": "contract INTDAO"
                       },
                       "typeName": {
-                        "id": 1217,
+                        "id": 1332,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 1216,
+                          "id": 1331,
                           "name": "INTDAO",
                           "nodeType": "IdentifierPath",
-                          "referencedDeclaration": 1175,
+                          "referencedDeclaration": 1290,
                           "src": "173:6:4"
                         },
-                        "referencedDeclaration": 1175,
+                        "referencedDeclaration": 1290,
                         "src": "173:6:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_INTDAO_$1175",
+                          "typeIdentifier": "t_contract$_INTDAO_$1290",
                           "typeString": "contract INTDAO"
                         }
                       },
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1222,
+                  "id": 1337,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 1220,
+                        "id": 1335,
                         "name": "_INTDAOaddress",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1213,
+                        "referencedDeclaration": 1328,
                         "src": "193:14:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -3638,18 +3636,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 1219,
+                      "id": 1334,
                       "name": "INTDAO",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1175,
+                      "referencedDeclaration": 1290,
                       "src": "186:6:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_type$_t_contract$_INTDAO_$1175_$",
+                        "typeIdentifier": "t_type$_t_contract$_INTDAO_$1290_$",
                         "typeString": "type(contract INTDAO)"
                       }
                     },
-                    "id": 1221,
+                    "id": 1336,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3660,7 +3658,7 @@
                     "src": "186:22:4",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_INTDAO_$1175",
+                      "typeIdentifier": "t_contract$_INTDAO_$1290",
                       "typeString": "contract INTDAO"
                     }
                   },
@@ -3672,7 +3670,7 @@
                     "arguments": [
                       {
                         "hexValue": "6f7261636c65",
-                        "id": 1226,
+                        "id": 1341,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -3689,14 +3687,14 @@
                       {
                         "arguments": [
                           {
-                            "id": 1229,
+                            "id": 1344,
                             "name": "this",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 4294967268,
                             "src": "256:4:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Oracle_$1253",
+                              "typeIdentifier": "t_contract$_Oracle_$1368",
                               "typeString": "contract Oracle"
                             }
                           }
@@ -3704,11 +3702,11 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Oracle_$1253",
+                              "typeIdentifier": "t_contract$_Oracle_$1368",
                               "typeString": "contract Oracle"
                             }
                           ],
-                          "id": 1228,
+                          "id": 1343,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3720,14 +3718,14 @@
                             "typeString": "type(address)"
                           },
                           "typeName": {
-                            "id": 1227,
+                            "id": 1342,
                             "name": "address",
                             "nodeType": "ElementaryTypeName",
                             "src": "248:7:4",
                             "typeDescriptions": {}
                           }
                         },
-                        "id": 1230,
+                        "id": 1345,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3755,32 +3753,32 @@
                         }
                       ],
                       "expression": {
-                        "id": 1223,
+                        "id": 1338,
                         "name": "dao",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1218,
+                        "referencedDeclaration": 1333,
                         "src": "219:3:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_INTDAO_$1175",
+                          "typeIdentifier": "t_contract$_INTDAO_$1290",
                           "typeString": "contract INTDAO"
                         }
                       },
-                      "id": 1225,
+                      "id": 1340,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "setAddressOnce",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 779,
+                      "referencedDeclaration": 894,
                       "src": "219:18:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_address_$returns$__$",
                         "typeString": "function (string memory,address) external"
                       }
                     },
-                    "id": 1231,
+                    "id": 1346,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3795,13 +3793,13 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1232,
+                  "id": 1347,
                   "nodeType": "ExpressionStatement",
                   "src": "219:43:4"
                 }
               ]
             },
-            "id": 1234,
+            "id": 1349,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -3809,17 +3807,17 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1214,
+              "id": 1329,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1213,
+                  "id": 1328,
                   "mutability": "mutable",
                   "name": "_INTDAOaddress",
                   "nameLocation": "147:14:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1234,
+                  "scope": 1349,
                   "src": "139:22:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3828,7 +3826,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1212,
+                    "id": 1327,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "139:7:4",
@@ -3844,12 +3842,12 @@
               "src": "138:24:4"
             },
             "returnParameters": {
-              "id": 1215,
+              "id": 1330,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "162:0:4"
             },
-            "scope": 1253,
+            "scope": 1368,
             "src": "127:143:4",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -3857,14 +3855,14 @@
           },
           {
             "body": {
-              "id": 1243,
+              "id": 1358,
               "nodeType": "Block",
               "src": "343:28:4",
               "statements": [
                 {
                   "expression": {
                     "hexValue": "3735",
-                    "id": 1241,
+                    "id": 1356,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -3878,15 +3876,15 @@
                     },
                     "value": "75"
                   },
-                  "functionReturnParameters": 1240,
-                  "id": 1242,
+                  "functionReturnParameters": 1355,
+                  "id": 1357,
                   "nodeType": "Return",
                   "src": "354:9:4"
                 }
               ]
             },
             "functionSelector": "524f3889",
-            "id": 1244,
+            "id": 1359,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -3894,17 +3892,17 @@
             "nameLocation": "287:8:4",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1237,
+              "id": 1352,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1236,
+                  "id": 1351,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1244,
+                  "scope": 1359,
                   "src": "296:13:4",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -3913,7 +3911,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 1235,
+                    "id": 1350,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "296:6:4",
@@ -3928,17 +3926,17 @@
               "src": "295:15:4"
             },
             "returnParameters": {
-              "id": 1240,
+              "id": 1355,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1239,
+                  "id": 1354,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1244,
+                  "scope": 1359,
                   "src": "334:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3947,7 +3945,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1238,
+                    "id": 1353,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "334:7:4",
@@ -3961,7 +3959,7 @@
               ],
               "src": "333:9:4"
             },
-            "scope": 1253,
+            "scope": 1368,
             "src": "278:93:4",
             "stateMutability": "pure",
             "virtual": false,
@@ -3969,14 +3967,14 @@
           },
           {
             "body": {
-              "id": 1251,
+              "id": 1366,
               "nodeType": "Block",
               "src": "438:30:4",
               "statements": [
                 {
                   "expression": {
                     "hexValue": "33313030",
-                    "id": 1249,
+                    "id": 1364,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -3990,15 +3988,15 @@
                     },
                     "value": "3100"
                   },
-                  "functionReturnParameters": 1248,
-                  "id": 1250,
+                  "functionReturnParameters": 1363,
+                  "id": 1365,
                   "nodeType": "Return",
                   "src": "449:11:4"
                 }
               ]
             },
             "functionSelector": "aa309fef",
-            "id": 1252,
+            "id": 1367,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -4006,23 +4004,23 @@
             "nameLocation": "388:16:4",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1245,
+              "id": 1360,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "404:2:4"
             },
             "returnParameters": {
-              "id": 1248,
+              "id": 1363,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1247,
+                  "id": 1362,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1252,
+                  "scope": 1367,
                   "src": "430:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -4031,7 +4029,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1246,
+                    "id": 1361,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "430:7:4",
@@ -4045,14 +4043,14 @@
               ],
               "src": "429:9:4"
             },
-            "scope": 1253,
+            "scope": 1368,
             "src": "379:89:4",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 1254,
+        "scope": 1369,
         "src": "102:371:4",
         "usedErrors": []
       }
@@ -4063,17 +4061,9 @@
     "name": "solc",
     "version": "0.8.10+commit.fc410830.Emscripten.clang"
   },
-  "networks": {
-    "5777": {
-      "events": {},
-      "links": {},
-      "address": "0xed84d4C88107EE47B0a3d29d775c1F49B233877E",
-      "transactionHash": "0x3d59a851fc455cd022e7bf5be957e1fa1759959546578b44ce3779a0c3bbf421"
-    }
-  },
+  "networks": {},
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-12-14T05:23:33.202Z",
-  "networkType": "ethereum",
+  "updatedAt": "2023-01-02T06:46:55.980Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
