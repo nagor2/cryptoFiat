@@ -29,7 +29,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -42,7 +43,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_INTDAOaddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"getEtherPriceUSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"getPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Oracle.sol\":\"Oracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/INTDAO.sol\":{\"keccak256\":\"0x5b6453290e39e79388c9dc57b90d51a58c6080d1ee97a365cb9fbc9c0ae70886\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://11eee49bb701c883fd3f3e750d2c81ac43bb6098230bde5974a69998a3f16994\",\"dweb:/ipfs/QmVjXo65iFcdrLw6t9NwwpoBgZayZvpi66vtt3H86uEYef\"]},\"project:/contracts/Oracle.sol\":{\"keccak256\":\"0x796d521e351ff16dda502e92bf4aed8c3a574e19b308659dadb7e1d15c00a2fc\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://4a12396d64c4bc0c5505a439a24c269b2e501b7e6d18b0791cd66125e555f6b2\",\"dweb:/ipfs/QmdGsWJe6gGr8KXUxoBUkKofrW1CECrBbUS3fQSLEWhdCH\"]},\"project:/contracts/Rule.sol\":{\"keccak256\":\"0x7c145bb5647b19e91572d6e4991dedbf65188bbe202670256e8b93d57d3c7fc0\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://68779c617d2c893b7583380b87088e5f3846ab0b2dcb9fc63c4c0495ddcad980\",\"dweb:/ipfs/QmPnfCbJKurkKUbML8Y8ucLh6gc2UfW1QqvK5oWn5WqAAy\"]}},\"version\":1}",
@@ -4061,9 +4063,17 @@
     "name": "solc",
     "version": "0.8.10+commit.fc410830.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0xc61bF7fACf8B6991FE4d3D2cEB11701e0BDE3d3e",
+      "transactionHash": "0xa38226045d6e75d5f83cfabaa6af0aa3a39e07026fa852d5ed3c8004028d16f3"
+    }
+  },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2023-01-02T06:46:55.980Z",
+  "updatedAt": "2023-01-02T06:49:51.272Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

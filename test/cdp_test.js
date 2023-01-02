@@ -59,7 +59,7 @@ contract('CDP', (accounts) => {
     });
 
     it("should mint max 2170 coins per 1 ether", async () => {
-        const coins = await cdp.getMaxStableCoinsToMint(web3.utils.toWei('3000', 'ether'), web3.utils.toWei('1', 'ether'));
+        const coins = await cdp.getMaxStableCoinsToMint(web3.utils.toWei('1', 'ether'));
         assert.equal(coins, 2170 * (10 ** 18), "should mint max 2170 coins per 1 ether");
     });
 
@@ -69,11 +69,6 @@ contract('CDP', (accounts) => {
         const coinsMinted = await position.stableCoins_minted;
         const ballance = await stableCoin.balanceOf(owner);
         assert.equal(coinsMinted.toString(), ballance.toString(), "notEqual mint coins");
-    });
-
-    it("should mint desirable coins amount per 1 ether", async () => {
-        const coins = await cdp.getMaxStableCoinsToMint(8, web3.utils.toWei('1', 'ether'));
-        assert.equal(coins, 8, "should mint desirable coins amount per 1 ether");
     });
 
     it("time rewind", async () => {

@@ -13,6 +13,7 @@ contract CDP {
     uint256 public numPositions;
 
     address INTDAOaddress = address(0);
+
     INTDAO dao;
     Oracle oracle;
     stableCoin coin;
@@ -47,7 +48,8 @@ contract CDP {
         posId = numPositions++;
         Position storage p = positions[posId];
 
-        uint coinsToMint = getMaxStableCoinsToMint(StableCoinsToMint, msg.value);
+        uint coinsToMint = getMaxStableCoinsToMint(msg.value);
+
         if (StableCoinsToMint <= coinsToMint)
             coinsToMint = StableCoinsToMint;
 
@@ -72,14 +74,15 @@ contract CDP {
         return fee;
     }
 
-    function getMaxStableCoinsToMint(uint256 StableCoinsToMint, uint256 ethValue) public view returns (uint256 amount) {
+    function getMaxStableCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
         uint256 etherPrice = oracle.getEtherPriceUSD();
-        uint256 maxCoinsToMint = ethValue * etherPrice * (100 - dao.params('collateralDiscount'))/(100);
+        return ethValue * etherPrice * (100 - dao.params('collateralDiscount'))/(100);
+    }
 
-        if (StableCoinsToMint < maxCoinsToMint)
-            return StableCoinsToMint;
-        else
-            return maxCoinsToMint;
+    function getMaxStableCoinsToMintForPos(uint256 posID) public view returns (uint256 maxAmount){
+        Position storage p = positions[posID];
+        uint256 etherPrice = oracle.getEtherPriceUSD();
+        return p.ethAmountLocked * etherPrice * (100 - dao.params('collateralDiscount'))/100 - p.feeGenerated;
     }
 
     function closeCDP(uint posID) public returns (bool success){ //shows minimum amount of INT you have to own
@@ -92,9 +95,10 @@ contract CDP {
 
     function transferFee(uint posID) public returns (bool success){
         Position storage p = positions[posID];
-        p.feeGenerated = generatedFee(posID);
-        require(p.feeGenerated > 10**18, 'No or little fee generated');
-        require(coin.burn(p.owner, p.feeGenerated)&&coin.mint(address(this), p.feeGenerated), 'Was not able to transfer fee');
+        uint256 fee = p.feeGenerated;
+        require(fee > 10**18, 'No or little fee generated');
+        require(coin.balanceOf(p.owner) >= fee, 'insufficient funds on owners balance');
+        require(coin.burn(p.owner, fee)&&coin.mint(address(this), fee), 'Was not able to transfer fee');
         if (coin.balanceOf(address(this))>dao.params('stabilizationFundPercent')*coin.totalSupply()) {
             uint256 difference = coin.balanceOf(address(this))-dao.params('stabilizationFundPercent')*coin.totalSupply();
             coin.transfer(dao.addresses('auction'), difference);
@@ -117,8 +121,8 @@ contract CDP {
         if (msg.value>0)
             p.ethAmountLocked += msg.value;
 
-        maxCoinsToMint = getMaxStableCoinsToMint(newStableCoinsAmount, p.ethAmountLocked) - p.feeGenerated;
-        require(maxCoinsToMint>0 && maxCoinsToMint <= newStableCoinsAmount, 'not enough collateral to mint amount');
+        maxCoinsToMint = getMaxStableCoinsToMint(p.ethAmountLocked) - p.feeGenerated;
+        require(maxCoinsToMint>0 && maxCoinsToMint >= newStableCoinsAmount, 'not enough collateral to mint amount');
 
         if (newStableCoinsAmount > p.stableCoins_minted) {
             uint256 difference = newStableCoinsAmount - p.stableCoins_minted;
