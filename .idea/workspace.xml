@@ -10,20 +10,23 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="">
+    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="Not working code. Check later">
+      <change afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Auction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Auction.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ERC20.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ERC20.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Migrations.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Migrations.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Oracle.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Oracle.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Rule.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Auction.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/ERC20.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Migrations.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Oracle.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Rule.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/~$TODO.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,19 +43,12 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <excluded-from-favorite>
-      <branch-storage>
-        <map>
-          <entry type="LOCAL">
-            <value>
-              <list>
-                <branch-info repo="$PROJECT_DIR$" source="master" />
-              </list>
-            </value>
-          </entry>
-        </map>
-      </branch-storage>
-    </excluded-from-favorite>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Oracle" />
+      </map>
+    </option>
     <favorite-branches>
       <branch-storage>
         <map>
@@ -66,33 +62,88 @@
         </map>
       </branch-storage>
     </favorite-branches>
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="Oracle" />
-      </map>
-    </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/dapp/node_modules" />
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="292" />
+    <option name="y" value="137" />
+    <option name="width" value="1346" />
+    <option name="height" value="728" />
   </component>
   <component name="ProjectId" id="23AkyG4XQYrGh95UqzeUkNWqz5Y" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="repo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="repo" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+    </panes>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;B:/YandexDisk/Работа/ICO/CryptoFiat/repo&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\test" />
@@ -107,13 +158,8 @@
     <configuration name="cdp_test.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/trash/cdp_test.js" working-dir="$PROJECT_DIR$/test">
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Node.js.cdp_test.js" />
-      </list>
-    </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -173,7 +219,12 @@
       <workItem from="1671071083330" duration="30923000" />
       <workItem from="1671508920370" duration="24462000" />
       <workItem from="1672636928027" duration="3409000" />
-      <workItem from="1672641976877" duration="700000" />
+      <workItem from="1672641976877" duration="1074000" />
+      <workItem from="1672801448734" duration="329000" />
+      <workItem from="1672802778547" duration="257000" />
+      <workItem from="1672805823459" duration="1251000" />
+      <workItem from="1672814636523" duration="157000" />
+      <workItem from="1672814990663" duration="12502000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -255,8 +306,32 @@
     <option name="localTasksCounter" value="12" />
     <servers />
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="586000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-9" y="-9" width="1698" height="1020" extended-state="6" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25347012" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32912844" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -278,10 +353,8 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="1st test commit" />
     <MESSAGE value="old project copy" />
     <MESSAGE value="Testing works" />
@@ -292,16 +365,6 @@
     <MESSAGE value="Some problems with open CDP" />
     <MESSAGE value="Not working code. Check later" />
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="461" y="164" key="SettingsEditor" timestamp="1672032503419">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1672032503419" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1671095810774">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1671095810774" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -98,12 +98,30 @@ contract CDP {
         uint256 fee = p.feeGenerated;
         require(fee > 10**18, 'No or little fee generated');
         require(coin.balanceOf(p.owner) >= fee, 'insufficient funds on owners balance');
+
+        uint256 stabilizationFundAmount = dao.params('stabilizationFundPercent')*coin.totalSupply()/100;
+
+        if (coin.balanceOf(address(this)) + fee <= stabilizationFundAmount) {
+            require(coin.burn(p.owner, fee)&&coin.mint(address(this), fee), 'Was not able to transfer fee');
+            return true;
+        }
+        else {
+            uint256 surplus = coin.balanceOf(address(this)) + fee - stabilizationFundAmount;
+            uint toCDP = fee - surplus;
+            require (toCDP>=0, 'Should not steal from CDP');
+            require(coin.burn(p.owner, fee) && coin.mint(address(this), toCDP) && coin.mint(dao.addresses('auction'), surplus) , 'Was not able to transfer fee');
+            //minAuctionBalanceToInitBuyOut
+            //coin.balanceOf()
+        }
+/*
         require(coin.burn(p.owner, fee)&&coin.mint(address(this), fee), 'Was not able to transfer fee');
+        //need to calculate the accurate amount to transfer to auction (stabFund + fee)
         if (coin.balanceOf(address(this))>dao.params('stabilizationFundPercent')*coin.totalSupply()) {
             uint256 difference = coin.balanceOf(address(this))-dao.params('stabilizationFundPercent')*coin.totalSupply();
             coin.transfer(dao.addresses('auction'), difference);
             require(auction.initRuleBuyOut(), 'Rule token buyout must be initialized');
         }
+*/
     }
 
     function claim_margin_call(uint posID) public returns (bool success) {

@@ -63,6 +63,12 @@ contract('CDP', (accounts) => {
         assert.equal(coins, 2170 * (10 ** 18), "should mint max 2170 coins per 1 ether");
     });
 
+    it("should put 1 ether on contract's balance", async () => {
+        const contractBalance = await web3.eth.getBalance(cdp.address);
+        assert.equal(contractBalance, web3.utils.toWei('1', 'ether'), "contract's balance should be 1 ether");
+    });
+
+
     it("should mint coins", async () => {
         const position = await cdp.positions(posNumber);
         const owner = await position.owner;
@@ -89,10 +95,7 @@ contract('CDP', (accounts) => {
         assert.equal(numPos, parseInt(posNumber) + 1, "number of positions should increase while opening");
     });
 
-    it("should put 1 ether on contract's balance", async () => {
-        const contractBalance = await web3.eth.getBalance(cdp.address);
-        assert.equal(contractBalance, web3.utils.toWei('1', 'ether'), "contract's balance should be 1 ether");
-    });
+
 
     it("should throw if update from another account", async () => {
         const wrongAccount = accounts[9];

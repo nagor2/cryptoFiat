@@ -43,6 +43,7 @@ contract INTDAO {
         params['stabilizationFundPercent'] = 5;
         params['quorum'] = 60;
         params['majority'] = 50;
+        params['minAuctionBalanceToInitBuyOut'] = 10**19;
         params['absoluteMajority'] = 80;
         params['minRuleTokensToInitVoting'] = 10;
         params['VotingDuration'] = 1 weeks;
