@@ -6,9 +6,6 @@ import "./Rule.sol";
 import "./stableCoin.sol";
 import "./Auction.sol";
 
-//previous Interest price is saved during INT auction - no need or make auction longer in time
-//started at 11.30 25/05/2020
-
 contract CDP {
     uint256 public numPositions;
 
@@ -95,7 +92,7 @@ contract CDP {
 
     function transferFee(uint posID) public returns (bool success){
         Position storage p = positions[posID];
-        uint256 fee = p.feeGenerated;
+        uint256 fee = p.feeGenerated + generatedFee(posID);
         require(fee > 10**18, 'No or little fee generated');
         require(coin.balanceOf(p.owner) >= fee, 'insufficient funds on owners balance');
 
@@ -109,19 +106,9 @@ contract CDP {
             uint256 surplus = coin.balanceOf(address(this)) + fee - stabilizationFundAmount;
             uint toCDP = fee - surplus;
             require (toCDP>=0, 'Should not steal from CDP');
+            require increase allowed, allowed to CDP from owner!! and transferFrom, not burn/mint. - i eto super
             require(coin.burn(p.owner, fee) && coin.mint(address(this), toCDP) && coin.mint(dao.addresses('auction'), surplus) , 'Was not able to transfer fee');
-            //minAuctionBalanceToInitBuyOut
-            //coin.balanceOf()
         }
-/*
-        require(coin.burn(p.owner, fee)&&coin.mint(address(this), fee), 'Was not able to transfer fee');
-        //need to calculate the accurate amount to transfer to auction (stabFund + fee)
-        if (coin.balanceOf(address(this))>dao.params('stabilizationFundPercent')*coin.totalSupply()) {
-            uint256 difference = coin.balanceOf(address(this))-dao.params('stabilizationFundPercent')*coin.totalSupply();
-            coin.transfer(dao.addresses('auction'), difference);
-            require(auction.initRuleBuyOut(), 'Rule token buyout must be initialized');
-        }
-*/
     }
 
     function claim_margin_call(uint posID) public returns (bool success) {
@@ -162,9 +149,7 @@ contract CDP {
         //open Auction in the same contract
     }
 
-
     function recieveInterestAfterAuction() public {
         //INT.mintForCDP();
     }
-
 }

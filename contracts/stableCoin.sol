@@ -19,8 +19,8 @@ contract stableCoin is ERC20{
     uint8 public constant decimals = 18;
     uint256 initialSupply = 0;
 
-    string public constant name = "USD Avatar";
-    string public constant symbol = "aUSD";
+    string public constant name = "stableCoin";
+    string public constant symbol = "S";
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;

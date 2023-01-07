@@ -31,24 +31,16 @@ contract('CDP Update Increase', (accounts) => {
         });
 
         posId = 0; // Костыль, хотя, если clean room...
-
-
-
         expectedOwner = accounts[ownerId];
-
         positionBefore = await cdp.positions(posId);
-
         await time.increase(31536000);//1 year in seconds. It may sometimes fail
         fee = await cdp.generatedFee(posId);
-
         positionUpdate = await cdp.updateCDP(posId, web3.utils.toWei('2100', 'ether'), {from: accounts[ownerId],value: web3.utils.toWei('1', 'ether')});
-
         positionAfter = await cdp.positions(posId);
     });
 
     it("should emit PositionUpdated with right parameters", async () => {
         truffleAssert.eventEmitted(positionUpdate, 'PositionUpdated', async (ev) => {
-            //expect(ev.posID).to.eql(0,"positionID is wrong");
             assert.equal(ev.posID, posId, 'positionID is wrong');
             assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('2100', 'ether'), 'amount is wrong');
         });
@@ -73,8 +65,10 @@ contract('CDP Update Increase', (accounts) => {
         assert.equal(parseFloat(ownerBalance/10**18).toFixed(4), parseFloat(1920).toFixed(4), "owner's balance should be 1920 stableCoins after");
 
         const balanceAfter = await stableCoin.balanceOf(cdp.address);
+        const supply = await stableCoin.totalSupply();
+        const stubFund = await dao.params('stabilizationFundPercent');
         assert.equal(parseFloat(balanceBefore/10**18).toFixed(4), parseFloat(0).toFixed(4), "should be empty CDP contract balance");
-        assert.equal(parseFloat(balanceAfter/10**18).toFixed(4), parseFloat(fee/10**18).toFixed(4), "should put fee on CDP contract balance");
+        assert.equal(parseFloat(balanceAfter/10**18).toFixed(4), parseFloat(supply*stubFund/100/10**18).toFixed(4), "should put fee on CDP contract balance");
     });
 
     it("should increase ethAmount locked", async () => {
@@ -92,8 +86,6 @@ contract('CDP Update Increase', (accounts) => {
     });
 
     it("should not allow to mint coins due to feeGenerated", async () => {
-
-
         let account = accounts[3];
 
         let pos = await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
@@ -122,9 +114,5 @@ contract('CDP Update Increase', (accounts) => {
             assert.equal(ev.posID.toString(), id.toString(), 'positionID is wrong');
             assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('2079', 'ether'), 'amount is wrong');
         });
-
-        //assert.equal(parseFloat(positionAfter.feeGenerated/10**18).toFixed(4), parseFloat(180).toFixed(4), "should increase generated fee");
     });
-
-
 });

@@ -46,7 +46,8 @@ contract INTDAO {
         params['minAuctionBalanceToInitBuyOut'] = 10**19;
         params['absoluteMajority'] = 80;
         params['minRuleTokensToInitVoting'] = 10;
-        params['VotingDuration'] = 1 weeks;
+        params['votingDuration'] = 1 weeks;
+        params['auctionDuration'] = 15 minutes;
 
         params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
 
@@ -89,7 +90,7 @@ contract INTDAO {
 
     function vote(uint votingId, bool _vote) public{
         require(activeVoting);
-        require(votings[votingID].startTime + params['VotingDuration'] < block.timestamp);
+        require(votings[votingID].startTime + params['votingDuration'] < block.timestamp);
         require(pooled[msg.sender]>0);
 
         if (_vote) {
@@ -115,7 +116,7 @@ contract INTDAO {
     function claimToFinalizeVoting(uint votingId) public {
         if (votings[votingId].totalPositive > ruleToken.totalSupply() * params['absoluteMajority'] / 100)
             finalizeVoting(votingId);
-        else if (votings[votingId].startTime + params['VotingDuration'] < block.timestamp) {
+        else if (votings[votingId].startTime + params['votingDuration'] < block.timestamp) {
             if (totalPooled > params['quorum'] * ruleToken.totalSupply() / 100 && votings[votingId].totalPositive > (totalPooled - votings[votingId].totalPositive))
                 finalizeVoting(votingId);
         }
