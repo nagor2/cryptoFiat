@@ -17,25 +17,29 @@ contract INTDAO {
 
     struct Voting {
         uint totalPositive;
-        bool paramOrAddress;
+        uint256 voteingType;
         string name;
         uint value;
         address addr;
         uint startTime;
+        bool paused;
     }
 
     bool public activeVoting;
 
     mapping (string => uint) public params;
     mapping (string => address) public addresses;
+    mapping (address => bool) public paused;
+    mapping (address => address) public convert; //TODO: for exchange operations to convert old tokens to newer once if needed
 
     mapping (address => uint) pooled;
     uint public totalPooled;
 
     event NewParamVoteing (string name);
     event NewAddressVoteing (string name);
+    event NewPauseVoteing (string name);
 
-    constructor () {
+    constructor (address WETH) {
         params['interestRate'] = 9;
         params['depositRate']=8;
         params['liquidationFee'] = 13;
@@ -47,10 +51,11 @@ contract INTDAO {
         params['absoluteMajority'] = 80;
         params['minRuleTokensToInitVoting'] = 10;
         params['votingDuration'] = 1 weeks;
-        params['auctionDuration'] = 15 minutes;
+        params['auctionTurnDuration'] = 15 minutes;
 
         params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
 
+        addresses['WETH'] = WETH;
         addresses['cdp'] = address(0x0);
         addresses['auction'] = address(0x0);
         addresses['stableCoin'] = address(0x0);
@@ -62,19 +67,22 @@ contract INTDAO {
     function setAddressOnce(string memory addressName, address addr) public{ //a certain pool of names, check not to expand addresses
         require(addresses[addressName] == address (0x0), 'address can be set only once');
         addresses[addressName] = addr;
+        paused[addr] = false;
     }
 
-    function addVoting(bool paramOrAddress, string memory name, uint value, address addr) public {
+    function addVoting(uint256 voteingType, string memory name, uint value, address addr, bool paused) public {
         require(!activeVoting);
         ruleToken = Rule(addresses['rule']);
         require (pooled[msg.sender]>ruleToken.totalSupply()*params['minSharesToInitVoting']/100);
         votingID ++;
-        votings[votingID] = Voting(0, paramOrAddress, name, value, addr, block.timestamp);
+        votings[votingID] = Voting(0, voteingType, name, value, addr, block.timestamp, paused);
 
-        if (paramOrAddress)
+        if (voteingType == 1)
             emit NewParamVoteing(name);
-        else
+        if (voteingType == 2)
             emit NewAddressVoteing(name);
+        if (voteingType == 3)
+            emit NewPauseVoteing(name);
     }
 
     function transfered(address destination, uint value) public returns (bool) {
@@ -107,10 +115,12 @@ contract INTDAO {
     }
 
     function finalizeVoting(uint votingId) internal {
-        if (votings[votingId].paramOrAddress)
+        if (votings[votingId].voteingType == 1)
             params[votings[votingId].name] = votings[votingId].value;
-        else
+        if (votings[votingId].voteingType == 2)
             addresses[votings[votingId].name] = votings[votingId].addr;
+        if (votings[votingId].voteingType == 3)
+            paused[votings[votingId].addr] = votings[votingId].paused;
     }
 
     function claimToFinalizeVoting(uint votingId) public {

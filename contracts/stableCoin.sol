@@ -76,7 +76,7 @@ contract stableCoin is ERC20{
     }
 
     receive() external payable {
-        //topup stablilization Fund
+        //trade to weth.
         //.transfer(msg.value);
     }
 

@@ -8,6 +8,7 @@ contract Rule {
     string public constant name = "Rule token";
     string public constant symbol = "RULE";
     uint256 initialSupply;
+    INTDAO dao;
     mapping (address => uint256) balances; //amount of tokens each address holds
     mapping (address => mapping (address => uint256)) allowed;
 
@@ -15,11 +16,12 @@ contract Rule {
     event Transfer(address indexed from, address indexed to, uint value);
     event Approval(address indexed owner, address indexed spender, uint value);
     event Burned(address from, uint256 value);
+    event Mint(address to, uint256 value);
 
     constructor(address _INTDAOaddress){
         initialSupply += 10**9*10**18;
         balances[msg.sender] = initialSupply;
-        INTDAO dao = INTDAO(_INTDAOaddress);
+        dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("rule", address(this));
     }
 
@@ -64,24 +66,19 @@ contract Rule {
         return true;
     }
 
-    function mintForCollateral(address to, uint256 amount) external virtual returns (bool success){
-        //get needed from auction (to, amount)
-        {
-            balances[to] += amount;
-            //call auction to
-            initialSupply += amount;
-            //
-        }
+    function mint(address to, uint256 amount) public returns (bool) {
+        require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to mint');
+        balances[to] += amount;
+        initialSupply += amount;
+        emit Mint(to, amount);
         return true;
     }
 
-
-    function burnFromCollateral(address to) external virtual returns (bool success){
-        if (allowed[msg.sender][to]>0) {
-            balances[msg.sender] -= allowed[msg.sender][to];
-            initialSupply -= allowed[msg.sender][to];
-            allowed[msg.sender][to] = 0;
-            return true;
-        }
+    function burn(address from, uint256 amount) public returns (bool success) {
+        require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to burn');
+        initialSupply -= amount;
+        balances[from] -= amount;
+        emit Burned(address(from), amount);
+        return true;
     }
 }
