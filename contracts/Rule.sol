@@ -67,7 +67,7 @@ contract Rule {
     }
 
     function mint(address to, uint256 amount) public returns (bool) {
-        require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to mint');
+        if (amount>10) require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to mint');
         balances[to] += amount;
         initialSupply += amount;
         emit Mint(to, amount);

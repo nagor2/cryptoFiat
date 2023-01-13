@@ -11,9 +11,17 @@ import "./CDP.sol";
         address lotToken;
         uint lotAmount;
         address paymentToken;
-        uint initTime;
-        uint lastTimeUpdated;
-        uint bestBidId;
+        uint256 initTime;
+        uint256 lastTimeUpdated;
+        uint256 bestBidId;
+    }
+
+    struct Bid {
+        address owner;
+        uint256 auctionID;
+        uint256 bidAmount;
+        uint256 time;
+        bool canceled;
     }
 
 contract Auction {
@@ -24,18 +32,12 @@ contract Auction {
     CDP cdp;
 
     mapping(uint256 => auctionEntity) public auctions;
-    mapping (uint => Bid) public bids;
+    mapping (uint256 => Bid) public bids;
 
-    event buyOutInit (uint256 auctionID, uint256 lotAmount, address lotAddress);
-    event buyOutFinished (uint256 auctionID, uint256 stableCoinAmount, uint256 ruleBurned);
-
-    struct Bid {
-        address owner;
-        uint256 auctionID;
-        uint256 bidAmount;
-        uint256 time;
-        bool canceled;
-    }
+    event buyOutInit(uint256 auctionID, uint256 lotAmount, address lotAddress);
+    event buyOutFinished(uint256 auctionID, uint256 stableCoinAmount, uint256 rulePassedToCDP);
+    event newBid(uint256 auctionID, uint256 bidAmount);
+    event bidCanceled(uint256 bidId);
 
     event liquidateCollateral(uint posID, uint liquidateColleteral, uint startPrice);
 
@@ -51,9 +53,9 @@ contract Auction {
         cdp = CDP(dao.addresses('cdp'));
     }
 
-    function initRuleBuyOut(uint256 stableCoinAmount) public returns (uint256 auctionID){
+    function initRuleBuyOut() public returns (uint256 auctionID){
         uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));
-        require (coin.transferFrom(dao.addresses('cdp'), address(this), allowed));
+        require (coin.transferFrom(dao.addresses('cdp'), address(this), allowed), "Can not transfer surplus from CDP");
         auctionID = auctionNum++;
         auctionEntity storage a = auctions[auctionID];
 
@@ -66,7 +68,7 @@ contract Auction {
         a.initTime = block.timestamp;
         a.bestBidId = 0;
 
-        emit buyOutInit (auctionID, a.lotAmount, a.lotToken);
+        emit buyOutInit(auctionID, a.lotAmount, a.lotToken);
         return auctionID;
     }
 
@@ -74,7 +76,10 @@ contract Auction {
         auctionEntity storage a = auctions[auctionId];
         require(a.initialized&&!a.finalized, "auctionId is wrong or it is already finished");
         Bid storage bestBid = bids[a.bestBidId];
-        require(a.bestBidId==0||bestBid.bidAmount<bidAmount, "your bid is not higher than the best bid");
+        if (a.lotToken == dao.addresses('stableCoin'))
+            require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100<bidAmount, "your bid is not higher than the best bid");
+        if (a.lotToken == dao.addresses('rule'))
+            require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100>bidAmount, "your bid is not better than the best bid");
 
         ERC20 paymentToken = ERC20(address(a.paymentToken));
         require(paymentToken.transferFrom(msg.sender, address(this), bidAmount), "You should first approve bidAmount to auction contract address");
@@ -89,6 +94,7 @@ contract Auction {
 
         a.bestBidId = bidId;
         a.lastTimeUpdated = block.timestamp;
+        emit newBid(auctionId, bidAmount);
     }
 
     function cancelBid(uint256 bidId) public{
@@ -96,9 +102,10 @@ contract Auction {
         require (b.owner==msg.sender && !b.canceled, "Only bid owner may cancel it, if it wasn't canceled earlier");
         auctionEntity storage a = auctions[b.auctionID];
         require(a.initialized, "the bid is made on non-existent auction");
-        require(a.bestBidId!=bidId, "You can not cancel a bid if it is a highest one");
+        require(a.bestBidId!=bidId, "You can not cancel a bid if it is a best one");
         ERC20 paymentToken = ERC20(address(a.paymentToken));
         require(paymentToken.transfer(msg.sender, b.bidAmount), "we were not able to transfer your bid back");
+        emit bidCanceled(bidId);
         b.canceled = true;
     }
 
@@ -109,11 +116,17 @@ contract Auction {
         require(a.bestBidId!=0 && a.initTime!=a.lastTimeUpdated, "there should be at least one bid");
         Bid storage bestBid = bids[a.bestBidId];
         ERC20 lotToken = ERC20(address(a.lotToken));
-        require(lotToken.transfer(bestBid.owner, a.lotAmount));
+        ERC20 paymentToken = ERC20(address(a.paymentToken));
+        if (a.lotToken == dao.addresses('stableCoin') && a.paymentToken == dao.addresses('rule')) {
+            require(lotToken.transfer(bestBid.owner, a.lotAmount));
+            require(paymentToken.transfer(dao.addresses('cdp'), bestBid.bidAmount));
+            emit buyOutFinished(auctionId, a.lotAmount, bestBid.bidAmount);
+        }
+        if (a.lotToken == dao.addresses('rule') && a.paymentToken == dao.addresses('stableCoin')){
+            require(cdp.mintRule(bestBid.owner, bestBid.bidAmount));
+            require(coin.transfer(dao.addresses('cdp'), a.lotAmount));
+        }
         a.finalized = true;
-        //что делать с полученными активами?
-
-        //require(cdp.finalizeAuction(auctionId), "Can not finilize auction, CDP contract failiar");
     }
 
     function finalizeAuction (uint256 auctionId) public returns (bool success){

@@ -60,15 +60,15 @@ contract('CDP Update Increase', (accounts) => {
         const balanceBefore = await stableCoin.balanceOf(cdp.address);
         var ownerBalance = await stableCoin.balanceOf(positionBefore.owner);
         assert.equal(ownerBalance, web3.utils.toWei('2100', 'ether'), "owner's balance should be 2100 stableCoins before");
+        await stableCoin.approve(cdp.address, fee+1000, {from: accounts[ownerId]});
         await cdp.transferFee(posId);
         ownerBalance = await stableCoin.balanceOf(positionBefore.owner);
+
         assert.equal(parseFloat(ownerBalance/10**18).toFixed(4), parseFloat(1920).toFixed(4), "owner's balance should be 1920 stableCoins after");
 
         const balanceAfter = await stableCoin.balanceOf(cdp.address);
-        const supply = await stableCoin.totalSupply();
-        const stubFund = await dao.params('stabilizationFundPercent');
         assert.equal(parseFloat(balanceBefore/10**18).toFixed(4), parseFloat(0).toFixed(4), "should be empty CDP contract balance");
-        assert.equal(parseFloat(balanceAfter/10**18).toFixed(4), parseFloat(supply*stubFund/100/10**18).toFixed(4), "should put fee on CDP contract balance");
+        assert.equal(parseFloat(balanceAfter/10**18).toFixed(4), parseFloat(fee/10**18).toFixed(4), "should put fee on CDP contract balance");
     });
 
     it("should increase ethAmount locked", async () => {

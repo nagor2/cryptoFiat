@@ -22,7 +22,7 @@ contract INTDAO {
         uint value;
         address addr;
         uint startTime;
-        bool paused;
+        bool toPause;
     }
 
     bool public activeVoting;
@@ -52,6 +52,7 @@ contract INTDAO {
         params['minRuleTokensToInitVoting'] = 10;
         params['votingDuration'] = 1 weeks;
         params['auctionTurnDuration'] = 15 minutes;
+        params['minAuctionPriceMove'] = 5;
 
         params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
 
@@ -70,12 +71,12 @@ contract INTDAO {
         paused[addr] = false;
     }
 
-    function addVoting(uint256 voteingType, string memory name, uint value, address addr, bool paused) public {
+    function addVoting(uint256 voteingType, string memory name, uint value, address addr, bool toPause) public {
         require(!activeVoting);
         ruleToken = Rule(addresses['rule']);
         require (pooled[msg.sender]>ruleToken.totalSupply()*params['minSharesToInitVoting']/100);
         votingID ++;
-        votings[votingID] = Voting(0, voteingType, name, value, addr, block.timestamp, paused);
+        votings[votingID] = Voting(0, voteingType, name, value, addr, block.timestamp, toPause);
 
         if (voteingType == 1)
             emit NewParamVoteing(name);
@@ -120,7 +121,7 @@ contract INTDAO {
         if (votings[votingId].voteingType == 2)
             addresses[votings[votingId].name] = votings[votingId].addr;
         if (votings[votingId].voteingType == 3)
-            paused[votings[votingId].addr] = votings[votingId].paused;
+            paused[votings[votingId].addr] = votings[votingId].toPause;
     }
 
     function claimToFinalizeVoting(uint votingId) public {

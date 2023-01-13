@@ -5,7 +5,7 @@ import "./Oracle.sol";
 import "./Rule.sol";
 import "./stableCoin.sol";
 import "./Auction.sol";
-import "./Auction.sol";
+
 
 contract CDP {
     uint256 public numPositions;
@@ -16,6 +16,7 @@ contract CDP {
     Oracle oracle;
     stableCoin coin;
     Auction auction;
+    Rule rule;
 
     mapping(uint => Position) public positions;
     event PositionOpened (address owner, uint256 posId);
@@ -41,6 +42,7 @@ contract CDP {
         coin = stableCoin(payable(dao.addresses('stableCoin')));
         oracle = Oracle(dao.addresses('oracle'));
         auction = Auction(dao.addresses('auction'));
+        rule = Rule(dao.addresses('rule'));
     }
 
     function renewContracts() public {
@@ -105,18 +107,12 @@ contract CDP {
     function transferFee(uint posID) public returns (bool success){
         Position storage p = positions[posID];
         require(!p.lockedByMarginCall, "This position is on liquidation");
-
         uint256 fee = p.feeGenerated + generatedFee(posID);
         require(fee > 10**18, 'No or little fee generated');
         require(coin.balanceOf(p.owner) >= fee, 'insufficient funds on owners balance');
         require(coin.allowance(p.owner, address(this)) >= fee, 'allow spending first');
-
-        uint256 stabilizationFundAmount = dao.params('stabilizationFundPercent')*coin.totalSupply()/100;
-
-        if (coin.balanceOf(address(this)) + fee <= stabilizationFundAmount) {
-            require(coin.transferFrom(p.owner, address(this), fee), 'Was not able to transfer fee');
-            return true;
-        }
+        require(coin.transferFrom(p.owner, address(this), fee), 'Was not able to transfer fee');
+        return true;
     }
 
     function allowSurplusToAuction() public returns (bool success) {
@@ -163,8 +159,6 @@ contract CDP {
         }
     }
 
-
-
     function withdrawEther (uint256 posID, uint256 etherToWithdraw) public{
         Position storage p = positions[posID];
         require(!p.lockedByMarginCall, "This position is on liquidation");
@@ -173,5 +167,15 @@ contract CDP {
 
     function recieveInterestAfterAuction() public {
         //INT.mintForCDP();
+    }
+
+    function burnRule() public{
+        rule.burn(address(this), rule.balanceOf(address(this)));
+    }
+
+    function mintRule(address to, uint256 amount) public returns (bool success){
+        require (msg.sender == dao.addresses('auction'), "Only auction is allowed to claim mint");
+        rule.mint(to, amount);
+        return true;
     }
 }
