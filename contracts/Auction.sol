@@ -43,7 +43,7 @@ contract Auction {
 
     constructor(address _INTDAOaddress){
         dao = INTDAO(_INTDAOaddress);
-        dao.setAddressOnce("auction", address(this));
+        dao.setAddressOnce("auction", payable(address(this)));
         cdp = CDP(dao.addresses('cdp'));
         coin = stableCoin(payable(dao.addresses('stableCoin')));
     }
@@ -70,6 +70,10 @@ contract Auction {
 
         emit buyOutInit(auctionID, a.lotAmount, a.lotToken);
         return auctionID;
+    }
+
+    function initCoinsBuyOut() public returns (bool success){
+        //require
     }
 
     function makeBid(uint256 auctionId, uint256 bidAmount) public{
@@ -130,7 +134,6 @@ contract Auction {
     }
 
     function finalizeAuction (uint256 auctionId) public returns (bool success){
-
         auctionEntity storage a = auctions[auctionId];
         require(a.finalized, "Auction is not finished yet");
         if (a.paymentToken == dao.addresses('stableCoin')){

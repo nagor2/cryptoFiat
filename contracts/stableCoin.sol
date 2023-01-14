@@ -31,7 +31,7 @@ contract stableCoin is ERC20{
 
     constructor(address _INTDAOaddress){
         dao = INTDAO(_INTDAOaddress);
-        dao.setAddressOnce("stableCoin", address(this));
+        dao.setAddressOnce("stableCoin", payable(this));
     }
 
     function totalSupply() public view returns (uint256) {

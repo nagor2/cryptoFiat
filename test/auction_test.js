@@ -37,7 +37,7 @@ contract('Auction', (accounts) => {
             value: web3.utils.toWei('1', 'ether')
         });
         await time.increase(31536000);//1 year in seconds. It may sometimes fail
-        let feeToAllow = await cdp.generatedFee(0);
+        let feeToAllow = await cdp.totalCurrentFee(0);
         await stableCoin.approve(cdp.address, web3.utils.toWei(feeToAllow+0.0001, 'ether'), {from:accounts[2]});
         await cdp.transferFee(0);
         let cdpBalance = await stableCoin.balanceOf(cdp.address);

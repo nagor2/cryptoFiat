@@ -11,15 +11,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="Not working code. Check later">
+      <change afterPath="$PROJECT_DIR$/test/exchangeRate_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Oracle.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Rule.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpFee_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,7 +171,8 @@
       <workItem from="1673141579503" duration="1196000" />
       <workItem from="1673231040672" duration="11266000" />
       <workItem from="1673347423223" duration="2594000" />
-      <workItem from="1673571736226" duration="17293000" />
+      <workItem from="1673571736226" duration="20361000" />
+      <workItem from="1673685347067" duration="8709000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>

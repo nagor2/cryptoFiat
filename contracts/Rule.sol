@@ -22,7 +22,7 @@ contract Rule {
         initialSupply += 10**9*10**18;
         balances[msg.sender] = initialSupply;
         dao = INTDAO(_INTDAOaddress);
-        dao.setAddressOnce("rule", address(this));
+        dao.setAddressOnce("rule", payable(address(this)));
     }
 
     function totalSupply() external virtual view returns (uint supply) {

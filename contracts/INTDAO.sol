@@ -20,7 +20,7 @@ contract INTDAO {
         uint256 voteingType;
         string name;
         uint value;
-        address addr;
+        address payable addr;
         uint startTime;
         bool toPause;
     }
@@ -28,7 +28,7 @@ contract INTDAO {
     bool public activeVoting;
 
     mapping (string => uint) public params;
-    mapping (string => address) public addresses;
+    mapping (string => address payable) public addresses;
     mapping (address => bool) public paused;
     mapping (address => address) public convert; //TODO: for exchange operations to convert old tokens to newer once if needed
 
@@ -53,25 +53,25 @@ contract INTDAO {
         params['votingDuration'] = 1 weeks;
         params['auctionTurnDuration'] = 15 minutes;
         params['minAuctionPriceMove'] = 5;
-
+        params['marginCallFee'] = 13;
         params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
 
-        addresses['WETH'] = WETH;
-        addresses['cdp'] = address(0x0);
-        addresses['auction'] = address(0x0);
-        addresses['stableCoin'] = address(0x0);
-        addresses['dao'] = address(this);
-        addresses['oracle'] = address(0x0);
-        addresses['rule'] = address(0x0);
+        addresses['WETH'] = payable(WETH);
+        addresses['cdp'] = payable(0x0);
+        addresses['auction'] = payable(0x0);
+        addresses['stableCoin'] = payable(0x0);
+        addresses['dao'] = payable(address(this));
+        addresses['oracle'] = payable(0x0);
+        addresses['rule'] = payable(0x0);
     }
 
-    function setAddressOnce(string memory addressName, address addr) public{ //a certain pool of names, check not to expand addresses
+    function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses
         require(addresses[addressName] == address (0x0), 'address can be set only once');
         addresses[addressName] = addr;
         paused[addr] = false;
     }
 
-    function addVoting(uint256 voteingType, string memory name, uint value, address addr, bool toPause) public {
+    function addVoting(uint256 voteingType, string memory name, uint value, address payable addr, bool toPause) public {
         require(!activeVoting);
         ruleToken = Rule(addresses['rule']);
         require (pooled[msg.sender]>ruleToken.totalSupply()*params['minSharesToInitVoting']/100);
@@ -137,7 +137,7 @@ contract INTDAO {
         return pooled[to];
     }
 
-    function init (bool paramOrAddress, string memory name, uint value, address addr) public {
+    function init (bool paramOrAddress, string memory name, uint value, address payable addr) public {
         if (paramOrAddress && params[name]==0)
             params[name] = value;
         else if (!paramOrAddress && addresses[name]==address(0x0))

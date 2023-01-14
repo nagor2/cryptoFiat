@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
 import "./INTDAO.sol";
-import "./Oracle.sol";
+import "./exchangeRateContract.sol";
 import "./Rule.sol";
 import "./stableCoin.sol";
 import "./Auction.sol";
@@ -9,11 +9,11 @@ import "./Auction.sol";
 
 contract CDP {
     uint256 public numPositions;
-
+    uint256 overallStableCoinsDemand;
     address INTDAOaddress = address(0);
 
     INTDAO dao;
-    Oracle oracle;
+    exchangeRateContract oracle;
     stableCoin coin;
     Auction auction;
     Rule rule;
@@ -26,71 +26,78 @@ contract CDP {
         bool onLiquidation;
         bool liquidated;
         address owner;
-        uint stableCoins_minted;
-        uint ethAmountLocked;
-        uint feeGenerated;
-        uint timeOpened;
-        uint lastTimeUpdated;
-        uint feeRate;
+        uint256 coinsMinted;
+        uint256 ethAmountLocked;
+        uint256 feeGeneratedRecorded;
+        uint256 timeOpened;
+        uint256 lastTimeUpdated;
+        uint256 feeRate;
+        uint256 coinsDemand;
         bool lockedByMarginCall;
     }
 
     constructor(address _INTDAOaddress) {
         INTDAOaddress = _INTDAOaddress;
         dao = INTDAO(INTDAOaddress);
-        dao.setAddressOnce('cdp',address(this));
+        dao.setAddressOnce('cdp',payable(address(this)));
         coin = stableCoin(payable(dao.addresses('stableCoin')));
-        oracle = Oracle(dao.addresses('oracle'));
+        oracle = exchangeRateContract(dao.addresses('oracle'));
         auction = Auction(dao.addresses('auction'));
         rule = Rule(dao.addresses('rule'));
+        overallStableCoinsDemand = 0;
     }
 
     function renewContracts() public {
         coin = stableCoin(payable(dao.addresses('stableCoin')));
-        oracle = Oracle(dao.addresses('oracle'));
+        oracle = exchangeRateContract(dao.addresses('oracle'));
         auction = Auction(dao.addresses('auction'));
     }
 
-    function openCDP (uint StableCoinsToMint) external payable returns (uint256 posId){
-        posId = numPositions++;
-        Position storage p = positions[posId];
+    function openCDP (uint StableCoinsToMint) external payable returns (uint256 posID){
+        posID = numPositions++;
+        Position storage p = positions[posID];
 
         uint coinsToMint = getMaxStableCoinsToMint(msg.value);
 
         if (StableCoinsToMint <= coinsToMint)
             coinsToMint = StableCoinsToMint;
 
-        p.stableCoins_minted = coinsToMint;
+        p.coinsMinted = coinsToMint;
         p.ethAmountLocked = msg.value;
         p.owner = msg.sender;
         p.timeOpened = block.timestamp;
         p.lastTimeUpdated = block.timestamp;
-        p.feeGenerated = 0;
+        p.feeGeneratedRecorded = 0;
         p.feeRate = dao.params('interestRate');
         p.lockedByMarginCall = false;
+        p.coinsDemand = 0;
 
         coin.mint(msg.sender, coinsToMint);
 
-        emit PositionOpened(p.owner, posId);
+        emit PositionOpened(p.owner, posID);
 
-        return posId;
+        return posID;
     }
 
-    function generatedFee(uint posId) public view returns (uint256 fee) {
-        Position storage p = positions[posId];
-        fee = p.stableCoins_minted * (block.timestamp - p.lastTimeUpdated) * p.feeRate / 31536000 / 100;
-        return fee;
+    function generatedFeeUnrecorded(uint256 posID) public view returns (uint256 fee) {
+        Position storage p = positions[posID];
+        return p.coinsMinted * (block.timestamp - p.lastTimeUpdated) * p.feeRate / 31536000 / 100;
+    }
+
+    function totalCurrentFee(uint256 posID) public view returns (uint256 fee){
+        Position storage p = positions[posID];
+        return p.feeGeneratedRecorded + generatedFeeUnrecorded(posID);
     }
 
     function getMaxStableCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
-        uint256 etherPrice = oracle.getEtherPriceUSD();
-        return ethValue * etherPrice * (100 - dao.params('collateralDiscount'))/(100);
+        uint256 etherPrice = oracle.getPrice('eth');
+        return ethValue * etherPrice * (100 - dao.params('collateralDiscount'))/(100)/100;
     }
 
     function getMaxStableCoinsToMintForPos(uint256 posID) public view returns (uint256 maxAmount){
         Position storage p = positions[posID];
-        uint256 etherPrice = oracle.getEtherPriceUSD();
-        return p.ethAmountLocked * etherPrice * (100 - dao.params('collateralDiscount'))/100 - p.feeGenerated;
+        uint256 etherPrice = oracle.getPrice('eth');
+        return p.ethAmountLocked * etherPrice * (100 - dao.params('collateralDiscount'))/100/100 - totalCurrentFee(posID);
     }
 
     function closeCDP(uint posID) public returns (bool success){
@@ -107,7 +114,7 @@ contract CDP {
     function transferFee(uint posID) public returns (bool success){
         Position storage p = positions[posID];
         require(!p.lockedByMarginCall, "This position is on liquidation");
-        uint256 fee = p.feeGenerated + generatedFee(posID);
+        uint256 fee = p.feeGeneratedRecorded + generatedFeeUnrecorded(posID);
         require(fee > 10**18, 'No or little fee generated');
         require(coin.balanceOf(p.owner) >= fee, 'insufficient funds on owners balance');
         require(coin.allowance(p.owner, address(this)) >= fee, 'allow spending first');
@@ -124,7 +131,10 @@ contract CDP {
         return true;
     }
 
-    function claim_margin_call(uint posID) public returns (bool success) {
+    function claimMarginCall(uint posID) public returns (bool success) {
+        Position storage p = positions[posID];
+        //uint256 currentMaxCoins = getMaxStableCoinsToMintForPos(getMaxStableCoinsToMintForPos);
+        //if (currentMaxCoins<p.coinsMinted)
 
     }
 
@@ -134,24 +144,24 @@ contract CDP {
         require(p.owner == msg.sender, 'Only owner may update the position');
         uint256 maxCoinsToMint;
 
-        p.feeGenerated = generatedFee(posID);
+        p.feeGeneratedRecorded = generatedFeeUnrecorded(posID);
         p.lastTimeUpdated = block.timestamp;
 
         if (msg.value>0)
             p.ethAmountLocked += msg.value;
 
-        maxCoinsToMint = getMaxStableCoinsToMint(p.ethAmountLocked) - p.feeGenerated;
+        maxCoinsToMint = getMaxStableCoinsToMint(p.ethAmountLocked) - totalCurrentFee(posID);
         require(maxCoinsToMint>0 && maxCoinsToMint >= newStableCoinsAmount, 'not enough collateral to mint amount');
 
-        if (newStableCoinsAmount > p.stableCoins_minted) {
-            uint256 difference = newStableCoinsAmount - p.stableCoins_minted;
+        if (newStableCoinsAmount > p.coinsMinted) {
+            uint256 difference = newStableCoinsAmount - p.coinsMinted;
             coin.mint(p.owner, difference);
             emit PositionUpdated(posID, newStableCoinsAmount);
             return true;
         }
 
-        if (newStableCoinsAmount < p.stableCoins_minted) {
-            uint256 difference = p.stableCoins_minted - newStableCoinsAmount;
+        if (newStableCoinsAmount < p.coinsMinted) {
+            uint256 difference = p.coinsMinted - newStableCoinsAmount;
             require(coin.balanceOf(p.owner)>=difference);
             coin.burn(p.owner, difference);
             emit PositionUpdated(posID, newStableCoinsAmount);

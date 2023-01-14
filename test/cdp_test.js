@@ -3,7 +3,7 @@ const { time } = require('@openzeppelin/test-helpers');
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
 var Rule = artifacts.require("./Rule.sol");
-var Oracle = artifacts.require("./Oracle.sol");
+var Oracle = artifacts.require("./exchangeRateContract.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
 const truffleAssert = require('truffle-assertions');
 
@@ -48,12 +48,12 @@ contract('CDP', (accounts) => {
             const block = await web3.eth.getBlock(blockNum);
             const now = block.timestamp;
             assert.equal(position.timeOpened, now, "time of the position should be set to now");
-            assert.equal(position.feeGenerated, 0, "fee generated should be set to 0");
+            assert.equal(position.feeGeneratedRecorded, 0, "fee generated should be set to 0");
 
             const rate = await dao.params('interestRate');
 
             expect(rate).to.eql(position.feeRate, "fee rate should be set to dao.params value"); //compare 2 BN
-            assert.equal(position.stableCoins_minted, 2170 * (10 ** 18), "should mint 2170*10^18 stableCoins");
+            assert.equal(position.coinsMinted, 2170 * (10 ** 18), "should mint 2170*10^18 stableCoins");
         });
 
     });
@@ -72,14 +72,14 @@ contract('CDP', (accounts) => {
     it("should mint coins", async () => {
         const position = await cdp.positions(posNumber);
         const owner = await position.owner;
-        const coinsMinted = await position.stableCoins_minted;
+        const coinsMinted = await position.coinsMinted;
         const ballance = await stableCoin.balanceOf(owner);
         assert.equal(coinsMinted.toString(), ballance.toString(), "notEqual mint coins");
     });
 
     it("time rewind", async () => {
         await time.increase(31536000);//1 year in seconds. It may sometimes fail
-        const fee = await cdp.generatedFee(0);
+        const fee = await cdp.generatedFeeUnrecorded(0);
         assert.equal(parseFloat(fee/10**18).toFixed(4), parseFloat(195.3).toFixed(4), "should increase generated fee. It may sometimes fail due to time rewind (not precise)");
     });
 

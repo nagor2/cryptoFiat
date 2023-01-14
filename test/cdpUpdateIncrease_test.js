@@ -34,7 +34,7 @@ contract('CDP Update Increase', (accounts) => {
         expectedOwner = accounts[ownerId];
         positionBefore = await cdp.positions(posId);
         await time.increase(31536000);//1 year in seconds. It may sometimes fail
-        fee = await cdp.generatedFee(posId);
+        fee = await cdp.generatedFeeUnrecorded(posId);
         positionUpdate = await cdp.updateCDP(posId, web3.utils.toWei('2100', 'ether'), {from: accounts[ownerId],value: web3.utils.toWei('1', 'ether')});
         positionAfter = await cdp.positions(posId);
     });
@@ -81,8 +81,8 @@ contract('CDP Update Increase', (accounts) => {
     });
 
     it("should increase generated fee", async () => {
-        assert.equal(parseFloat(positionAfter.feeGenerated/10**18).toFixed(4), parseFloat(180).toFixed(4), "should increase generated fee");
-        assert.equal(parseFloat(positionAfter.feeGenerated/10**18).toFixed(4), parseFloat(fee/10**18).toFixed(4), "should increase generated fee");
+        assert.equal(parseFloat(positionAfter.feeGeneratedRecorded/10**18).toFixed(4), parseFloat(180).toFixed(4), "should increase generated fee");
+        assert.equal(parseFloat(positionAfter.feeGeneratedRecorded/10**18).toFixed(4), parseFloat(fee/10**18).toFixed(4), "should increase generated fee");
     });
 
     it("should not allow to mint coins due to feeGenerated", async () => {
