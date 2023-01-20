@@ -5,6 +5,7 @@ var INTDAO = artifacts.require("./INTDAO.sol");
 var Rule = artifacts.require("./Rule.sol");
 var Oracle = artifacts.require("./exchangeRateContract.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
+var Weth = artifacts.require("./WETH9.sol");
 const truffleAssert = require('truffle-assertions');
 
 contract('CDP', (accounts) => {
@@ -12,6 +13,7 @@ contract('CDP', (accounts) => {
     let dao;
     let cdp;
     let rule;
+    let weth;
     let oracle;
     let expectedOwner;
     let stableCoin;
@@ -20,7 +22,8 @@ contract('CDP', (accounts) => {
     let positionID;
 
     before('should setup the contracts instance', async () => {
-        dao = await INTDAO.deployed();
+        weth = await Weth.deployed();
+        dao = await INTDAO.deployed(weth.address);
         rule = await Rule.deployed(dao.address);
         oracle = await Oracle.deployed(dao.address);
         stableCoin = await StableCoin.deployed(dao.address);
@@ -43,11 +46,9 @@ contract('CDP', (accounts) => {
             positionID = ev.posId.toNumber();
             const position = await cdp.positions(positionID);
             assert.equal(position.owner, expectedOwner, "position.owner should be " + expectedOwner);
-            assert.equal(position.ethAmountLocked, web3.utils.toWei('1', 'ether'), "ethAmountLocked should be 1 ether");
-            const blockNum = await web3.eth.getBlockNumber();
-            const block = await web3.eth.getBlock(blockNum);
-            const now = block.timestamp;
-            assert.equal(position.timeOpened, now, "time of the position should be set to now");
+            assert.equal(position.wethAmountLocked, web3.utils.toWei('1', 'ether'), "ethAmountLocked should be 1 ether");
+            const block = await web3.eth.getBlock("latest");
+            assert.equal(position.timeOpened, block.timestamp, "time of the position should be set to now");
             assert.equal(position.feeGeneratedRecorded, 0, "fee generated should be set to 0");
 
             const rate = await dao.params('interestRate');
@@ -64,7 +65,7 @@ contract('CDP', (accounts) => {
     });
 
     it("should put 1 ether on contract's balance", async () => {
-        const contractBalance = await web3.eth.getBalance(cdp.address);
+        const contractBalance = await weth.balanceOf(cdp.address);
         assert.equal(contractBalance, web3.utils.toWei('1', 'ether'), "contract's balance should be 1 ether");
     });
 
@@ -94,8 +95,6 @@ contract('CDP', (accounts) => {
         const numPos = await cdp.numPositions();
         assert.equal(numPos, parseInt(posNumber) + 1, "number of positions should increase while opening");
     });
-
-
 
     it("should throw if update from another account", async () => {
         const wrongAccount = accounts[9];

@@ -55,8 +55,9 @@ contract INTDAO {
         params['minAuctionPriceMove'] = 5;
         params['marginCallFee'] = 13;
         params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
+        params['marginCallTimeLimit'] = 1 days;
 
-        addresses['WETH'] = payable(WETH);
+        addresses['weth'] = payable(WETH);
         addresses['cdp'] = payable(0x0);
         addresses['auction'] = payable(0x0);
         addresses['stableCoin'] = payable(0x0);

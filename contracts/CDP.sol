@@ -5,11 +5,12 @@ import "./exchangeRateContract.sol";
 import "./Rule.sol";
 import "./stableCoin.sol";
 import "./Auction.sol";
+import "./weth.sol";
+
 
 
 contract CDP {
     uint256 public numPositions;
-    uint256 overallStableCoinsDemand;
     address INTDAOaddress = address(0);
 
     INTDAO dao;
@@ -17,23 +18,25 @@ contract CDP {
     stableCoin coin;
     Auction auction;
     Rule rule;
+    ERC20 weth;
 
     mapping(uint => Position) public positions;
     event PositionOpened (address owner, uint256 posId);
     event PositionUpdated (uint256 posID, uint256 newStableCoinsAmount);
+    event markedOnLiquidation (uint256 posID, uint256 timestamp);
+    event OnLiquidation (uint256 posID, uint256 timestamp);
 
     struct Position {
         bool onLiquidation;
         bool liquidated;
         address owner;
         uint256 coinsMinted;
-        uint256 ethAmountLocked;
+        uint256 wethAmountLocked;
         uint256 feeGeneratedRecorded;
         uint256 timeOpened;
         uint256 lastTimeUpdated;
         uint256 feeRate;
-        uint256 coinsDemand;
-        bool lockedByMarginCall;
+        uint256 markedOnLiquidation;
     }
 
     constructor(address _INTDAOaddress) {
@@ -44,13 +47,14 @@ contract CDP {
         oracle = exchangeRateContract(dao.addresses('oracle'));
         auction = Auction(dao.addresses('auction'));
         rule = Rule(dao.addresses('rule'));
-        overallStableCoinsDemand = 0;
+        weth = ERC20(dao.addresses('weth'));
     }
 
     function renewContracts() public {
         coin = stableCoin(payable(dao.addresses('stableCoin')));
         oracle = exchangeRateContract(dao.addresses('oracle'));
         auction = Auction(dao.addresses('auction'));
+        weth = ERC20(dao.addresses('weth'));
     }
 
     function openCDP (uint StableCoinsToMint) external payable returns (uint256 posID){
@@ -63,14 +67,14 @@ contract CDP {
             coinsToMint = StableCoinsToMint;
 
         p.coinsMinted = coinsToMint;
-        p.ethAmountLocked = msg.value;
+        p.wethAmountLocked = msg.value;
+        dao.addresses('weth').call{value: msg.value}("");
         p.owner = msg.sender;
         p.timeOpened = block.timestamp;
         p.lastTimeUpdated = block.timestamp;
         p.feeGeneratedRecorded = 0;
         p.feeRate = dao.params('interestRate');
-        p.lockedByMarginCall = false;
-        p.coinsDemand = 0;
+        p.onLiquidation = false;
 
         coin.mint(msg.sender, coinsToMint);
 
@@ -91,18 +95,19 @@ contract CDP {
 
     function getMaxStableCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
         uint256 etherPrice = oracle.getPrice('eth');
-        return ethValue * etherPrice * (100 - dao.params('collateralDiscount'))/(100)/100;
+        uint256 etherDecimals = oracle.getDecimals('eth');
+        return ethValue * etherPrice * (100 - dao.params('collateralDiscount'))/(10**etherDecimals)/100;
     }
 
     function getMaxStableCoinsToMintForPos(uint256 posID) public view returns (uint256 maxAmount){
         Position storage p = positions[posID];
         uint256 etherPrice = oracle.getPrice('eth');
-        return p.ethAmountLocked * etherPrice * (100 - dao.params('collateralDiscount'))/100/100 - totalCurrentFee(posID);
+        return p.wethAmountLocked * etherPrice * (100 - dao.params('collateralDiscount'))/100/100 - totalCurrentFee(posID);
     }
 
     function closeCDP(uint posID) public returns (bool success){
         Position storage p = positions[posID];
-        require(!p.lockedByMarginCall, "This position is on liquidation");
+        require(!p.onLiquidation, "This position is on liquidation");
         //shows minimum amount of INT you have to own
         // Rule allowed to which address? )
         //burnFromCollateral from wich addressAllowed?
@@ -113,7 +118,7 @@ contract CDP {
 
     function transferFee(uint posID) public returns (bool success){
         Position storage p = positions[posID];
-        require(!p.lockedByMarginCall, "This position is on liquidation");
+        require(!p.onLiquidation, "This position is on liquidation");
         uint256 fee = p.feeGeneratedRecorded + generatedFeeUnrecorded(posID);
         require(fee > 10**18, 'No or little fee generated');
         require(coin.balanceOf(p.owner) >= fee, 'insufficient funds on owners balance');
@@ -133,24 +138,65 @@ contract CDP {
 
     function claimMarginCall(uint posID) public returns (bool success) {
         Position storage p = positions[posID];
-        //uint256 currentMaxCoins = getMaxStableCoinsToMintForPos(getMaxStableCoinsToMintForPos);
-        //if (currentMaxCoins<p.coinsMinted)
+        require (p.markedOnLiquidation>0 && block.timestamp - p.markedOnLiquidation > dao.params('marginCallTimeLimit'), "Position is not marked to be opened or owner still has time");
+        require(!p.onLiquidation, "Position is already on liquidation");
+        uint256 maxCoinsForPos = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
+        if (maxCoinsForPos < p.coinsMinted) {
+            p.onLiquidation = true;
 
+            weth.approve(dao.addresses('auction'), p.wethAmountLocked);
+
+            //Отправляем на аукцион. Если выкупаем нужное количество монет - ок, разницу отправляем владельцу. Если не выкупаем - берем из стабфонда. Если в стабфонде нет - выпускаем Рул.
+
+            emit OnLiquidation (posID, block.timestamp);
+            return true;
+        }
+        else {
+            p.markedOnLiquidation = 0;
+            return false;
+        }
+    }
+
+    function finishMarginCall(uint256 posID, uint256 auctionID) public {
+
+    }
+
+    function markToLiquidate(uint posID) public returns (bool success){
+        Position storage p = positions[posID];
+        require (p.markedOnLiquidation==0 && !p.onLiquidation, "This position is on liquidation or already marked");
+        uint256 maxCoinsForPos = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
+        if (maxCoinsForPos < p.coinsMinted) {
+            p.markedOnLiquidation = block.timestamp;
+            emit markedOnLiquidation (posID, block.timestamp);
+            return true;
+        }
+        return false;
+    }
+
+    function eraseMarkToLiquidate(uint posID) public{
+        Position storage p = positions[posID];
+        require (p.markedOnLiquidation>0 && !p.onLiquidation && !p.liquidated, "This position is not marked or locked/liquidated");
+        uint256 maxCoinsForPos = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
+        if (maxCoinsForPos > p.coinsMinted) {
+            p.markedOnLiquidation = 0;
+        }
     }
 
     function updateCDP(uint posID, uint newStableCoinsAmount) public payable returns (bool success){
         Position storage p = positions[posID];
-        require(!p.lockedByMarginCall, "This position is on liquidation");
+        require(!p.onLiquidation, "This position is on liquidation");
         require(p.owner == msg.sender, 'Only owner may update the position');
         uint256 maxCoinsToMint;
 
         p.feeGeneratedRecorded = generatedFeeUnrecorded(posID);
         p.lastTimeUpdated = block.timestamp;
 
-        if (msg.value>0)
-            p.ethAmountLocked += msg.value;
+        if (msg.value>0) {
+            p.wethAmountLocked += msg.value;
+            dao.addresses('weth').call{value: msg.value}("");
+        }
 
-        maxCoinsToMint = getMaxStableCoinsToMint(p.ethAmountLocked) - totalCurrentFee(posID);
+        maxCoinsToMint = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
         require(maxCoinsToMint>0 && maxCoinsToMint >= newStableCoinsAmount, 'not enough collateral to mint amount');
 
         if (newStableCoinsAmount > p.coinsMinted) {
@@ -171,7 +217,7 @@ contract CDP {
 
     function withdrawEther (uint256 posID, uint256 etherToWithdraw) public{
         Position storage p = positions[posID];
-        require(!p.lockedByMarginCall, "This position is on liquidation");
+        require(!p.onLiquidation, "This position is on liquidation");
         //open Auction in the same contract
     }
 

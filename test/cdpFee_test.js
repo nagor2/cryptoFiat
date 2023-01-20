@@ -6,7 +6,7 @@ contract('CDP transfer fee', (accounts) => {
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
 var Rule = artifacts.require("./Rule.sol");
-var Oracle = artifacts.require("./Oracle.sol");
+var Oracle = artifacts.require("./exchangeRateContract.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
 var Auction = artifacts.require("./Auction.sol");
 

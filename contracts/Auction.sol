@@ -39,7 +39,7 @@ contract Auction {
     event newBid(uint256 auctionID, uint256 bidAmount);
     event bidCanceled(uint256 bidId);
 
-    event liquidateCollateral(uint posID, uint liquidateColleteral, uint startPrice);
+    event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 liquidateColleteral);
 
     constructor(address _INTDAOaddress){
         dao = INTDAO(_INTDAOaddress);
@@ -72,7 +72,7 @@ contract Auction {
         return auctionID;
     }
 
-    function initCoinsBuyOut() public returns (bool success){
+    function initCoinsBuyOut(uint256 posID) public returns (bool success){
         //require
     }
 
@@ -140,7 +140,7 @@ contract Auction {
 
             return true;
         }
-        if (a.paymentToken == dao.addresses('WETH')) {
+        if (a.paymentToken == dao.addresses('weth')) {
             //
             return true;
         }

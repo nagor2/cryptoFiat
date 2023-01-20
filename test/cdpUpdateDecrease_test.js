@@ -2,7 +2,7 @@ const { time } = require('@openzeppelin/test-helpers');
 
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
-var Oracle = artifacts.require("./Oracle.sol");
+var Oracle = artifacts.require("./exchangeRateContract.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
 
 const truffleAssert = require('truffle-assertions');
@@ -48,7 +48,7 @@ contract('CDP Update Decrease', (accounts) => {
 
     it("should not change ethAmount locked", async () => {
         position = await cdp.positions(posId);
-        assert.equal(position.ethAmountLocked, web3.utils.toWei('1','ether'), "ethAmountLocked should be 1 ether");
+        assert.equal(position.wethAmountLocked, web3.utils.toWei('1','ether'), "ethAmountLocked should be 1 ether");
     });
 
     it("should decrease owner's balance", async () => {

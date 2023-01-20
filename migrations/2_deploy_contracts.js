@@ -4,18 +4,19 @@ var exchangeRateContract = artifacts.require("exchangeRateContract");
 var INTDAO = artifacts.require("INTDAO");
 var cdp = artifacts.require("CDP");
 var auction = artifacts.require("Auction");
+var weth = artifacts.require("WETH9");
 
-module.exports = function(deployer) {
-    deployer.deploy(INTDAO, '0xE13cbE98FD0f617336690E4e20b6985bE418D523').then(function() {
-        return deployer.deploy(exchangeRateContract, INTDAO.address).then(async function () {
-            await exchangeRateContract.addInstrument("eth", "Ethereum", 2);
-            await exchangeRateContract.updateSinglePrice(0x0, "eth", 0, 310000);
-            return deployer.deploy(stableCoin, INTDAO.address).then(function () {
-                return deployer.deploy(Rule, INTDAO.address).then(function () {
-                    deployer.deploy(auction, INTDAO.address);
-                    return deployer.deploy(cdp, INTDAO.address);
-                });
-            });
-        });
-    });
+module.exports = async function(deployer) {
+    let accounts = await web3.eth.getAccounts();
+    const exRAuthour = accounts[5];
+    await deployer.deploy(weth);
+    await deployer.deploy(INTDAO, weth.address);
+    await deployer.deploy(exchangeRateContract, INTDAO.address, {from: exRAuthour, value:"1000000000000000000"});
+    const eRC = await exchangeRateContract.deployed();
+    await eRC.addInstrument("eth", "Ethereum", 2, {from: exRAuthour});
+    await eRC.updateSinglePrice(exRAuthour, "eth", 0, 310000, {from: exRAuthour});
+    await deployer.deploy(stableCoin, INTDAO.address);
+    await deployer.deploy(Rule, INTDAO.address);
+    await deployer.deploy(auction, INTDAO.address);
+    await deployer.deploy(cdp, INTDAO.address);
 };

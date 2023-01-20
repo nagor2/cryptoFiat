@@ -54,15 +54,15 @@ Please, visit https://exchangeRate.io for more information.
         string name;    // full name of an instrument or pair
         uint256 price;     // price of an instrument in US dollars
         uint256 decimals;  // to use the price in your smart contracts or elsewhere, you need to divide it by 10^decimals
-        uint256 timeStamp; // time of last price update
-        uint256 block;     // block number of last price update
+        uint256 timeStamp; // block.timeStamp
+        uint256 time;     // time from updater
     }
 
 import "./INTDAO.sol";
 
 contract exchangeRateContract {
 
-    constructor(address _INTDAOaddress){
+    constructor(address _INTDAOaddress) payable{
         INTDAO dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("oracle", payable(this));
         author = payable(msg.sender);
@@ -93,7 +93,7 @@ contract exchangeRateContract {
     bool public finalized;
 
     mapping(string => Instrument) public instruments;
-    mapping(uint => string) public dictinary;
+    mapping(uint => string) public dictionary;
 
     modifier onlyAuthor{
         require(msg.sender == author, "This function is for author only");
@@ -107,7 +107,7 @@ contract exchangeRateContract {
 
     event priceUpdateRequest (uint256 block, string symbol, uint256 gasPrice);
     event updateSeveralPricesRequest (uint256 block, string[] symbols, uint256 gasPrice);
-    event priceUpdated (address payer, string symbol, uint256 newPrice, uint256 timeStamp, uint256 block);
+    event priceUpdated (address payer, string symbol, uint256 newPrice, uint256 timeStamp, uint256 time);
     event Donation (address donator, uint256 value, uint256 blockNumber);
     event SubscriptionPayed (address subscirber, uint256 subscriptionID);
     event ProfitEvent (uint256 profit);
@@ -147,7 +147,6 @@ contract exchangeRateContract {
         require (msg.value > 2 * minSubscrTxNum * (updSeveralPricesCost + updAdditionalPrice * s.symbols.length) * tx.gasprice, "Too little transactions ordered");
         if (discounts[s.payer] == 0)
             discounts[s.payer] = 100;
-
         if (discounts[s.payer] > 50)
             discounts[s.payer] -=5;
         s.remainingBalance += msg.value;
@@ -177,10 +176,6 @@ contract exchangeRateContract {
         s.index = subscriptions.length;
 
         emit SubscriptionPayed (msg.sender,s.id);
-    }
-
-    function getInstrument(string memory symbol) public view returns (Instrument memory inst) {
-        return instruments[symbol];
     }
 
     function requestPriceUpdate(string memory symbol) public payable {
@@ -251,31 +246,25 @@ contract exchangeRateContract {
     }
 
     function updPrice(address payer, string memory symbol, uint256 newPrice, uint256 tickTimeStamp) internal {
-        require (instruments[symbol].block > 0, "Symbol not found in the dictinary. For more information visit webSite");
-        instruments[symbol].timeStamp = tickTimeStamp;
+        require (instruments[symbol].timeStamp > 0, "Symbol not found in the dictinary. For more information visit webSite");
+        instruments[symbol].time = tickTimeStamp;
+        instruments[symbol].timeStamp = block.timestamp;
         instruments[symbol].price = newPrice;
-        instruments[symbol].block = block.number;
-        emit priceUpdated (payer, symbol, newPrice, tickTimeStamp, block.number);
+        emit priceUpdated (payer, symbol, newPrice, block.timestamp, tickTimeStamp);
     }
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!onlyUpdater
-    function addInstrument(string memory symbol, string memory name, uint256 decimals) public {
-        require (instruments[symbol].block == 0, "Symbol already exist, use updateInstrument");
-        dictinary[instrumentsCount] = symbol;
+    function addInstrument(string memory symbol, string memory name, uint256 decimals) public onlyUpdater{
+        require (instruments[symbol].timeStamp == 0, "Symbol already exist, use updateInstrument");
+        dictionary[instrumentsCount] = symbol;
         instruments[symbol].name = name;
+        instruments[symbol].timeStamp = block.timestamp;
         instruments[symbol].decimals = decimals;
-        instruments[symbol].block = 1;
         instrumentsCount++;
     }
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!onlyUpdater
-    function updateInstrument(string memory symbol, string memory name, uint decimals) public {
+    function updateInstrument(string memory symbol, string memory name, uint decimals) public onlyUpdater{
         instruments[symbol].name = name;
         instruments[symbol].decimals = decimals;
-    }
-
-    function getDictonarySymbol(uint256 id) public view returns (string memory symbol) {
-        return dictinary[id];
     }
 
     function getPrice(string memory symbol) public view returns (uint256) {
@@ -286,12 +275,8 @@ contract exchangeRateContract {
         return instruments[symbol].timeStamp;
     }
 
-    function getDecimals(string memory symbol) public view returns (uint decimals) {
+    function getDecimals(string memory symbol) public view returns (uint256 decimals) {
         return instruments[symbol].decimals;
-    }
-
-    function getBlockNumber(string memory symbol) public view returns (uint blockNumber) {
-        return instruments[symbol].block;
     }
 
     receive() external payable {
