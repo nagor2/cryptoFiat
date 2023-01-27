@@ -32,7 +32,7 @@ contract('CDP Update Decrease', (accounts) => {
 
         expectedOwner = accounts[ownerId];
 
-        await time.increase(31536000);//1 year in seconds. It may sometimes fail
+        await time.increase(time.duration.years(1));
 
         position = await cdp.positions(posId);
 

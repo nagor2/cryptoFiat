@@ -19,7 +19,7 @@ contract Rule {
     event Mint(address to, uint256 value);
 
     constructor(address _INTDAOaddress){
-        initialSupply += 10**9*10**18;
+        initialSupply += 10**6*10**18;
         balances[msg.sender] = initialSupply;
         dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("rule", payable(address(this)));

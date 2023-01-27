@@ -16,7 +16,7 @@ module.exports = async function(deployer) {
     await eRC.addInstrument("eth", "Ethereum", 2, {from: exRAuthour});
     await eRC.updateSinglePrice(exRAuthour, "eth", 0, 310000, {from: exRAuthour});
     await deployer.deploy(stableCoin, INTDAO.address);
-    await deployer.deploy(Rule, INTDAO.address);
+    await deployer.deploy(Rule, INTDAO.address, {from: accounts[7]});
     await deployer.deploy(auction, INTDAO.address);
     await deployer.deploy(cdp, INTDAO.address);
 };

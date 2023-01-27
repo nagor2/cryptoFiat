@@ -35,7 +35,7 @@ contract Auction {
     mapping (uint256 => Bid) public bids;
 
     event buyOutInit(uint256 auctionID, uint256 lotAmount, address lotAddress);
-    event buyOutFinished(uint256 auctionID, uint256 stableCoinAmount, uint256 rulePassedToCDP);
+    event buyOutFinished(uint256 auctionID, uint256 lotAmount, uint256 bestBid);
     event newBid(uint256 auctionID, uint256 bidAmount);
     event bidCanceled(uint256 bidId);
 
@@ -72,19 +72,65 @@ contract Auction {
         return auctionID;
     }
 
-    function initCoinsBuyOut(uint256 posID) public returns (bool success){
-        //require
+    function getBestBidAmount (uint256 auctionID) public view returns (uint256){
+        auctionEntity storage a = auctions[auctionID];
+        if (a.bestBidId >0) {
+            Bid storage b = bids[a.bestBidId];
+            return b.bidAmount;
+        }
+        else return 0;
+    }
+
+    function initCoinsBuyOutForStabilization(uint coinsAmountNedded) public returns (uint256 auctionID){
+        auctionID = auctionNum++;
+        auctionEntity storage a = auctions[auctionID];
+
+        a.initialized = true;
+        a.finalized = false;
+        a.lotToken = dao.addresses('rule');
+        a.paymentToken = dao.addresses('stableCoin');
+        a.lastTimeUpdated = block.timestamp;
+        a.initTime = block.timestamp;
+        a.bestBidId = 0;
+        emit buyOutInit(auctionID, 0, a.lotToken);
+        return auctionID;
+    }
+
+    function initCoinsBuyOut(uint256 posID) public returns (uint256 auctionID){
+
+        require(cdp.isOnLiquidation(posID), "position is not on liquidation");
+        ERC20 weth = ERC20(dao.addresses('weth'));
+        uint256 wethLocked = cdp.wethLocked(posID);
+        require(weth.transferFrom(dao.addresses('cdp'), address(this), wethLocked), "could not transfer weth for some reason");
+
+        auctionID = auctionNum++;
+        auctionEntity storage a = auctions[auctionID];
+
+        a.initialized = true;
+        a.finalized = false;
+        a.lotToken = dao.addresses('weth');
+        a.lotAmount = wethLocked;
+        a.paymentToken = dao.addresses('stableCoin');
+        a.lastTimeUpdated = block.timestamp;
+        a.initTime = block.timestamp;
+        a.bestBidId = 0;
+
+        emit liquidateCollateral(auctionID, posID, wethLocked);
+        return auctionID;
     }
 
     function makeBid(uint256 auctionId, uint256 bidAmount) public{
         auctionEntity storage a = auctions[auctionId];
         require(a.initialized&&!a.finalized, "auctionId is wrong or it is already finished");
-        Bid storage bestBid = bids[a.bestBidId];
-        if (a.lotToken == dao.addresses('stableCoin'))
-            require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100<bidAmount, "your bid is not higher than the best bid");
-        if (a.lotToken == dao.addresses('rule'))
-            require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100>bidAmount, "your bid is not better than the best bid");
 
+        if (a.bestBidId!=0){
+            Bid storage bestBid = bids[a.bestBidId];
+            if (a.lotToken == dao.addresses('stableCoin') || a.lotToken == dao.addresses('weth'))
+                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100<bidAmount, "your bid is not high enough");
+            if (a.lotToken == dao.addresses('rule'))
+                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100>bidAmount, "your bid is not high enough");
+        }
+        require(bidAmount>0, "your bid is not high enough");
         ERC20 paymentToken = ERC20(address(a.paymentToken));
         require(paymentToken.transferFrom(msg.sender, address(this), bidAmount), "You should first approve bidAmount to auction contract address");
 
@@ -113,7 +159,7 @@ contract Auction {
         b.canceled = true;
     }
 
-    function claimToFinalizeAuction(uint256 auctionId) public{
+    function claimToFinalizeAuction(uint256 auctionId) public returns (bool success){
         auctionEntity storage a = auctions[auctionId];
         require(a.initialized && !a.finalized, "the auction is finished or non-existent");
         require(block.timestamp-a.lastTimeUpdated>=dao.params('auctionTurnDuration'), "it is too early to finalize, wait a bit");
@@ -130,7 +176,13 @@ contract Auction {
             require(cdp.mintRule(bestBid.owner, bestBid.bidAmount));
             require(coin.transfer(dao.addresses('cdp'), a.lotAmount));
         }
+        if (a.lotToken == dao.addresses('weth') && a.paymentToken == dao.addresses('stableCoin')){
+            require(lotToken.transfer(bestBid.owner, a.lotAmount));
+            require(paymentToken.transfer(dao.addresses('cdp'), bestBid.bidAmount));
+            emit buyOutFinished(auctionId, a.lotAmount, bestBid.bidAmount);
+        }
         a.finalized = true;
+        return true;
     }
 
     function finalizeAuction (uint256 auctionId) public returns (bool success){

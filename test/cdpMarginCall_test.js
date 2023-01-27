@@ -60,4 +60,5 @@ contract('CDP margin call', (accounts) => {
         await oracle.updateSinglePrice(author, "eth", 0, 310000, {from: author});
     });
 
+
 });

@@ -33,7 +33,7 @@ it("should transfer fee to the auction to create buyOut", async () => {
     let actualBalance = await stableCoin.balanceOf(position.owner);
     assert.equal(actualBalance.toString(),web3.utils.toWei(String(coinsMintAmount), 'ether'),"smth wrong");
 
-    await time.increase(31536000);
+    await time.increase(time.duration.years(1));
 
     await stableCoin.transfer(recipient, web3.utils.toWei('950', 'ether'), {from:owner});
 

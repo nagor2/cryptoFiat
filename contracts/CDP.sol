@@ -7,12 +7,22 @@ import "./stableCoin.sol";
 import "./Auction.sol";
 import "./weth.sol";
 
-
+    struct Position {
+        address owner;
+        uint256 coinsMinted;
+        uint256 wethAmountLocked;
+        uint256 feeGeneratedRecorded;
+        uint256 timeOpened;
+        uint256 lastTimeUpdated;
+        uint256 feeRate;
+        uint256 markedOnLiquidation;
+        bool onLiquidation;
+        bool liquidated;
+        uint256 liquidationAuctionID;
+    }
 
 contract CDP {
     uint256 public numPositions;
-    address INTDAOaddress = address(0);
-
     INTDAO dao;
     exchangeRateContract oracle;
     stableCoin coin;
@@ -26,21 +36,7 @@ contract CDP {
     event markedOnLiquidation (uint256 posID, uint256 timestamp);
     event OnLiquidation (uint256 posID, uint256 timestamp);
 
-    struct Position {
-        bool onLiquidation;
-        bool liquidated;
-        address owner;
-        uint256 coinsMinted;
-        uint256 wethAmountLocked;
-        uint256 feeGeneratedRecorded;
-        uint256 timeOpened;
-        uint256 lastTimeUpdated;
-        uint256 feeRate;
-        uint256 markedOnLiquidation;
-    }
-
-    constructor(address _INTDAOaddress) {
-        INTDAOaddress = _INTDAOaddress;
+    constructor(address INTDAOaddress) {
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('cdp',payable(address(this)));
         coin = stableCoin(payable(dao.addresses('stableCoin')));
@@ -132,7 +128,8 @@ contract CDP {
         require (coin.balanceOf(address(this)) >= stabilizationFundAmount, "insufficient funds on CDP contract");
         uint256 surplus = coin.balanceOf(address(this)) - stabilizationFundAmount;
         require (surplus >= dao.params('minAuctionBalanceToInitBuyOut'), "not enough surplus to start buyOut");
-        require (coin.approve(dao.addresses('auction'), surplus));
+        uint256 currentAllowance = coin.allowance(dao.addresses('cdp'), dao.addresses('auction'));
+        require (coin.approve(dao.addresses('auction'), currentAllowance+surplus), "could not approve coins for some reason");
         return true;
     }
 
@@ -143,11 +140,8 @@ contract CDP {
         uint256 maxCoinsForPos = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
         if (maxCoinsForPos < p.coinsMinted) {
             p.onLiquidation = true;
-
-            weth.approve(dao.addresses('auction'), p.wethAmountLocked);
-
-            //Отправляем на аукцион. Если выкупаем нужное количество монет - ок, разницу отправляем владельцу. Если не выкупаем - берем из стабфонда. Если в стабфонде нет - выпускаем Рул.
-
+            uint256 currentAllowance = weth.allowance(dao.addresses('cdp'), dao.addresses('auction'));
+            require(weth.approve(dao.addresses('auction'), currentAllowance+p.wethAmountLocked), "could not approve weth for some reason");
             emit OnLiquidation (posID, block.timestamp);
             return true;
         }
@@ -157,8 +151,30 @@ contract CDP {
         }
     }
 
-    function finishMarginCall(uint256 posID, uint256 auctionID) public {
+    function startCoinsBuyOut(uint256 posID) public{
+        Position storage p = positions[posID];
+        p.liquidationAuctionID = auction.initCoinsBuyOut(posID);
+    }
 
+    function finishMarginCall(uint256 posID) public {
+        Position storage p = positions[posID];
+        require(auction.claimToFinalizeAuction(p.liquidationAuctionID), "could not finalize auction");
+        uint256 bidAmount = auction.getBestBidAmount(p.liquidationAuctionID);
+
+        if (bidAmount>p.coinsMinted + p.coinsMinted * dao.params('liquidationFee') / 100){
+            uint256 difference = bidAmount - p.coinsMinted - p.coinsMinted * dao.params('liquidationFee') / 100;
+            coin.transfer(p.owner, difference);
+            coin.burn(address(this), p.coinsMinted);
+        }
+
+        if (bidAmount<=p.coinsMinted){
+            if (coin.balanceOf(address(this)) >= p.coinsMinted)
+                coin.burn(address(this), p.coinsMinted);
+            else {
+                uint256 difference = p.coinsMinted - coin.balanceOf(address(this));
+                auction.initCoinsBuyOutForStabilization(difference);
+            }
+        }
     }
 
     function markToLiquidate(uint posID) public returns (bool success){
@@ -221,8 +237,14 @@ contract CDP {
         //open Auction in the same contract
     }
 
-    function recieveInterestAfterAuction() public {
-        //INT.mintForCDP();
+    function wethLocked(uint256 posID) public view returns (uint256 amount) {
+        Position storage p = positions[posID];
+        return p.wethAmountLocked;
+    }
+
+    function isOnLiquidation(uint256 posID) public view returns (bool result){
+        Position storage p = positions[posID];
+        return p.onLiquidation;
     }
 
     function burnRule() public{

@@ -12,7 +12,7 @@ contract INTDAO {
     Rule ruleToken;
     mapping (uint => mapping(address => uint)) votes;
 
-    mapping (uint=>Voting) votings;
+    mapping (uint=>Voting) public votings;
     uint votingID;
 
     struct Voting {
@@ -21,7 +21,7 @@ contract INTDAO {
         string name;
         uint value;
         address payable addr;
-        uint startTime;
+        uint256 startTime;
         bool toPause;
     }
 
@@ -32,12 +32,12 @@ contract INTDAO {
     mapping (address => bool) public paused;
     mapping (address => address) public convert; //TODO: for exchange operations to convert old tokens to newer once if needed
 
-    mapping (address => uint) pooled;
-    uint public totalPooled;
+    mapping (address => uint) public pooled;
+    uint256 public totalPooled;
 
-    event NewParamVoteing (string name);
-    event NewAddressVoteing (string name);
-    event NewPauseVoteing (string name);
+    event NewVoting (uint256 id, string name);
+    event VotingSucceed (uint256 id);
+    event VotingFailed (uint256 id);
 
     constructor (address WETH) {
         params['interestRate'] = 9;
@@ -49,8 +49,8 @@ contract INTDAO {
         params['majority'] = 50;
         params['minAuctionBalanceToInitBuyOut'] = 10**19;
         params['absoluteMajority'] = 80;
-        params['minRuleTokensToInitVoting'] = 10;
-        params['votingDuration'] = 1 weeks;
+        params['minRuleTokensToInitVotingPercent'] = 1;
+        params['votingDuration'] = 1 days;
         params['auctionTurnDuration'] = 15 minutes;
         params['minAuctionPriceMove'] = 5;
         params['marginCallFee'] = 13;
@@ -72,36 +72,43 @@ contract INTDAO {
         paused[addr] = false;
     }
 
-    function addVoting(uint256 voteingType, string memory name, uint value, address payable addr, bool toPause) public {
-        require(!activeVoting);
-        ruleToken = Rule(addresses['rule']);
-        require (pooled[msg.sender]>ruleToken.totalSupply()*params['minSharesToInitVoting']/100);
-        votingID ++;
-        votings[votingID] = Voting(0, voteingType, name, value, addr, block.timestamp, toPause);
-
-        if (voteingType == 1)
-            emit NewParamVoteing(name);
-        if (voteingType == 2)
-            emit NewAddressVoteing(name);
-        if (voteingType == 3)
-            emit NewPauseVoteing(name);
+    function addVoting(uint256 votingType, string memory name, uint value, address payable addr, bool toPause) public {
+        require(!activeVoting, "There is an active voting");
+        require(votingType>0&&votingType<4, "Incorrect voteing type");
+        require (pooled[msg.sender]>=ruleToken.totalSupply()*params['minRuleTokensToInitVotingPercent']/100, "Too little tokens to init voting");
+        votingID++;
+        votings[votingID] = Voting(0, votingType, name, value, addr, block.timestamp, toPause);
+        emit NewVoting(votingID, name);
+        activeVoting = true;
     }
 
-    function transfered(address destination, uint value) public returns (bool) {
-        require(destination == msg.sender, 'You can take back only your personal tokens');
+    function renewRule() public{
+        ruleToken = Rule(addresses['rule']);
+    }
+
+    function poolTokens() public returns (bool success){
+        uint256 amount = ruleToken.allowance(msg.sender, address(this));
+        require (amount>0, "allow tokens first");
+        require(ruleToken.transferFrom(msg.sender, address(this), amount), "Could not pool tokens for some reason");
+        pooled[msg.sender] += amount;
+        totalPooled += amount;
+    }
+
+    function returnTokens() public returns (bool) {
         require(pooled[msg.sender] > 0, 'You must have pooled tokens');
         if (activeVoting && votes[votingID][msg.sender]>0){
             votings[votingID].totalPositive -= votes[votingID][msg.sender];
         }
-        pooled[msg.sender] -= value;
-        totalPooled -= value;
+        ruleToken.transfer(msg.sender, pooled[msg.sender]);
+        totalPooled -= pooled[msg.sender];
+        pooled[msg.sender] = 0;
         return true;
     }
 
-    function vote(uint votingId, bool _vote) public{
-        require(activeVoting);
-        require(votings[votingID].startTime + params['votingDuration'] < block.timestamp);
-        require(pooled[msg.sender]>0);
+    function vote(uint256 votingId, bool _vote) public{
+        require(activeVoting, "No active voting found");
+        require(votings[votingId].startTime + params['votingDuration'] >= block.timestamp, "Voting is already inactive");
+        require(pooled[msg.sender]>0, "You dont have pooled tokens to vote");
 
         if (_vote) {
             uint _votesToAdd = pooled[msg.sender] - votes[votingId][msg.sender];
@@ -123,26 +130,23 @@ contract INTDAO {
             addresses[votings[votingId].name] = votings[votingId].addr;
         if (votings[votingId].voteingType == 3)
             paused[votings[votingId].addr] = votings[votingId].toPause;
+        emit VotingSucceed(votingId);
+        activeVoting = false;
     }
 
     function claimToFinalizeVoting(uint votingId) public {
-        if (votings[votingId].totalPositive > ruleToken.totalSupply() * params['absoluteMajority'] / 100)
+        if (votings[votingId].totalPositive >= ruleToken.totalSupply() * params['absoluteMajority'] / 100) {
             finalizeVoting(votingId);
+            return;
+        }
         else if (votings[votingId].startTime + params['votingDuration'] < block.timestamp) {
-            if (totalPooled > params['quorum'] * ruleToken.totalSupply() / 100 && votings[votingId].totalPositive > (totalPooled - votings[votingId].totalPositive))
+            if (totalPooled >= params['quorum'] * ruleToken.totalSupply() / 100 && votings[votingId].totalPositive > (totalPooled - votings[votingId].totalPositive)) {
                 finalizeVoting(votingId);
+                return;
+            }
+            emit VotingFailed(votingId);
+            activeVoting = false;
+            return;
         }
     }
-
-    function allowed(address to) public view returns (uint _allowedValue) {
-        return pooled[to];
-    }
-
-    function init (bool paramOrAddress, string memory name, uint value, address payable addr) public {
-        if (paramOrAddress && params[name]==0)
-            params[name] = value;
-        else if (!paramOrAddress && addresses[name]==address(0x0))
-            addresses[name] = addr;
-    }
-
 }

@@ -36,7 +36,7 @@ contract('CDP Update Increase', (accounts) => {
         posId = 0; // Костыль, хотя, если clean room...
         expectedOwner = accounts[ownerId];
         positionBefore = await cdp.positions(posId);
-        await time.increase(31536000);//1 year in seconds. It may sometimes fail
+        await time.increase(time.duration.years(1));
         fee = await cdp.generatedFeeUnrecorded(posId);
         positionUpdate = await cdp.updateCDP(posId, web3.utils.toWei('2100', 'ether'), {from: accounts[ownerId],value: web3.utils.toWei('1', 'ether')});
         positionAfter = await cdp.positions(posId);
@@ -104,7 +104,7 @@ contract('CDP Update Increase', (accounts) => {
             id = ev.posId;
         });
 
-        await time.increase(31536000);//1 year in seconds. It may sometimes fail
+        await time.increase(time.duration.years(1));//1 year in seconds. It may sometimes fail
 
         await truffleAssert.fails(
             cdp.updateCDP(id, web3.utils.toWei('2100', 'ether'), {from: account}),

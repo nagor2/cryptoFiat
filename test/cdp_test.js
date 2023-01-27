@@ -79,7 +79,7 @@ contract('CDP', (accounts) => {
     });
 
     it("time rewind", async () => {
-        await time.increase(31536000);//1 year in seconds. It may sometimes fail
+        await time.increase(time.duration.years(1));
         const fee = await cdp.generatedFeeUnrecorded(0);
         assert.equal(parseFloat(fee/10**18).toFixed(4), parseFloat(195.3).toFixed(4), "should increase generated fee. It may sometimes fail due to time rewind (not precise)");
     });

@@ -36,7 +36,7 @@ contract('Auction', (accounts) => {
             from: accounts[2],
             value: web3.utils.toWei('1', 'ether')
         });
-        await time.increase(31536000);//1 year in seconds. It may sometimes fail
+        await time.increase(time.duration.years(1));//1 year in seconds. It may sometimes fail
         let feeToAllow = await cdp.totalCurrentFee(0);
         await stableCoin.approve(cdp.address, web3.utils.toWei(feeToAllow+0.0001, 'ether'), {from:accounts[2]});
         await cdp.transferFee(0);
@@ -62,10 +62,11 @@ contract('Auction', (accounts) => {
     });
 
     it("should not allow to make a little bid", async () => {
+        await rule.approve(auction.address, 1, {from: accounts[2]});
         await truffleAssert.fails(
             auction.makeBid(0, 0),
             truffleAssert.ErrorType.REVERT,
-            "your bid is not higher than the best bid");
+            "your bid is not high enough");
     });
 
     it("should make a bid", async () => {
@@ -155,8 +156,8 @@ contract('Auction', (accounts) => {
 
         truffleAssert.eventEmitted(auFinishTx, 'buyOutFinished', async (ev) => {
             assert.equal(ev.auctionID, auctionToFinish, "id should be correct");
-            assert.equal(parseFloat(ev.stableCoinAmount/10**18).toFixed(0), 84, "stableCoinAmount should be correct");
-            expect(ev.rulePassedToCDP).to.eql(b.bidAmount, "rulePassedToCDP should be correct");
+            assert.equal(parseFloat(ev.lotAmount/10**18).toFixed(0), 84, "stableCoinAmount should be correct");
+            expect(ev.bestBid).to.eql(b.bidAmount, "rulePassedToCDP should be correct");
         });
 
         let cdpRuleBalanceAfter = await rule.balanceOf(cdp.address);
