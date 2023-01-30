@@ -114,6 +114,8 @@ contract CDP {
     }
 
     function closeCDP(uint posID) public returns (bool success){
+        //TODO: closeCDP
+
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         //shows minimum amount of INT you have to own

@@ -2,12 +2,6 @@
 pragma solidity >=0.4.22 <0.9.0;
 import "./Rule.sol";
 
-/*
-
-Polls for parameters and important contract addresses for INTDAO
-
-*/
-
 contract INTDAO {
     Rule ruleToken;
     mapping (uint => mapping(address => uint)) votes;
@@ -128,21 +122,6 @@ contract INTDAO {
         }
     }
 
-    function finalizeVoting(uint votingId) internal {
-        if (votings[votingId].voteingType == 1)
-            params[votings[votingId].name] = votings[votingId].value;
-        if (votings[votingId].voteingType == 2)
-            addresses[votings[votingId].name] = votings[votingId].addr;
-        //TODO: Написать тест на паузу контракта (зачем нужен этот функционал, не помню, но пусть будет)
-        if (votings[votingId].voteingType == 3)
-            paused[votings[votingId].addr] = votings[votingId].decision;
-        //TODO: проводить голосования на авторизаци контракта и написать тесты. Вроде должно работать и так.
-        if (votings[votingId].voteingType == 4)
-            authorized[votings[votingId].addr] = votings[votingId].decision;
-        emit VotingSucceed(votingId);
-        activeVoting = false;
-    }
-
     function claimToFinalizeVoting(uint votingId) public {
         if (votings[votingId].totalPositive >= ruleToken.totalSupply() * params['absoluteMajority'] / 100) {
             finalizeVoting(votingId);
@@ -157,5 +136,20 @@ contract INTDAO {
             activeVoting = false;
             return;
         }
+    }
+
+    function finalizeVoting(uint votingId) internal {
+        if (votings[votingId].voteingType == 1)
+            params[votings[votingId].name] = votings[votingId].value;
+        if (votings[votingId].voteingType == 2)
+            addresses[votings[votingId].name] = votings[votingId].addr;
+        //TODO: Написать тест на паузу контракта (зачем нужен этот функционал, не помню, но пусть будет)
+        if (votings[votingId].voteingType == 3)
+            paused[votings[votingId].addr] = votings[votingId].decision;
+        //TODO: проводить голосования на авторизаци контракта и написать тесты. Вроде должно работать и так.
+        if (votings[votingId].voteingType == 4)
+            authorized[votings[votingId].addr] = votings[votingId].decision;
+        emit VotingSucceed(votingId);
+        activeVoting = false;
     }
 }

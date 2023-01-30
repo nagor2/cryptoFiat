@@ -11,17 +11,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="Not working code. Check later">
-      <change afterPath="$PROJECT_DIR$/test/deposit_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Deposit.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Deposit.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Migrations.sol" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/1_initial_migration.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,7 +181,7 @@
       <workItem from="1674798953843" duration="7646000" />
       <workItem from="1674888678800" duration="7000" />
       <workItem from="1674888718577" duration="8000" />
-      <workItem from="1675042593782" duration="17663000" />
+      <workItem from="1675042593782" duration="18287000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
