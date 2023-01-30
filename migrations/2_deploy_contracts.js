@@ -5,6 +5,7 @@ var INTDAO = artifacts.require("INTDAO");
 var cdp = artifacts.require("CDP");
 var auction = artifacts.require("Auction");
 var weth = artifacts.require("WETH9");
+var deposit = artifacts.require("DepositContract");
 
 module.exports = async function(deployer) {
     let accounts = await web3.eth.getAccounts();
@@ -19,4 +20,5 @@ module.exports = async function(deployer) {
     await deployer.deploy(Rule, INTDAO.address, {from: accounts[7]});
     await deployer.deploy(auction, INTDAO.address);
     await deployer.deploy(cdp, INTDAO.address);
+    await deployer.deploy(deposit, INTDAO.address);
 };

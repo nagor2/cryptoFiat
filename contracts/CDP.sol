@@ -98,7 +98,19 @@ contract CDP {
     function getMaxStableCoinsToMintForPos(uint256 posID) public view returns (uint256 maxAmount){
         Position storage p = positions[posID];
         uint256 etherPrice = oracle.getPrice('eth');
-        return p.wethAmountLocked * etherPrice * (100 - dao.params('collateralDiscount'))/100/100 - totalCurrentFee(posID);
+        uint256 decimals = oracle.getDecimals('eth');
+        return p.wethAmountLocked * etherPrice * (100 - dao.params('collateralDiscount'))/(10**decimals)/100 - totalCurrentFee(posID);
+    }
+
+    function claimInterest(uint256 amount, address beneficiary) public{
+        require(dao.authorized(msg.sender), "only authorized address may do this");
+        if (coin.balanceOf(address(this))>amount)
+            coin.transfer(beneficiary, amount);
+        else {
+            uint256 difference = amount - coin.balanceOf(address(this));
+            coin.transfer(beneficiary, coin.balanceOf(address(this)));
+            coin.approve(beneficiary, difference+coin.allowance(address(this), beneficiary));
+        }
     }
 
     function closeCDP(uint posID) public returns (bool success){

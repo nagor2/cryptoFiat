@@ -81,7 +81,14 @@ contract Auction {
         else return 0;
     }
 
-    function initCoinsBuyOutForStabilization(uint coinsAmountNedded) public returns (uint256 auctionID){
+    function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) public returns (uint256 auctionID){
+        uint256 actualStabilizationFund = coin.balanceOf(address(cdp));
+        uint256 preferableStabilizationFund = coin.totalSupply() * dao.params("stabilizationFundPercent")/100;
+
+        require (actualStabilizationFund<preferableStabilizationFund/5, "not so low to init Rule emission");
+        if (coinsAmountNeeded > preferableStabilizationFund - actualStabilizationFund)
+            coinsAmountNeeded = preferableStabilizationFund - actualStabilizationFund;
+
         auctionID = auctionNum++;
         auctionEntity storage a = auctions[auctionID];
 
@@ -198,4 +205,6 @@ contract Auction {
         }
         return false;
     }
+
+    //TODO: decrease positive votes if tokens returned
 }

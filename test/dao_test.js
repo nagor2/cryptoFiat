@@ -14,7 +14,7 @@ contract('DAO', (accounts) => {
         dao = await INTDAO.deployed();
         ruleHolder = accounts[7];
         ruleToken = await Rule.deployed();
-        await dao.renewRule();
+        await dao.renewContracts();
     });
 
     it('deploys successfully', async () => {
