@@ -7,15 +7,19 @@ contract('CDP withdraw and close position', (accounts) => {
     var INTDAO = artifacts.require("./INTDAO.sol");
     var Oracle = artifacts.require("./exchangeRateContract.sol");
     var Weth = artifacts.require("./WETH9.sol");
+    var StableCoin = artifacts.require("./stableCoin.sol");
 
     let posId;
     const owner = accounts[6];
+
+    let coin;
 
     before('should setup the contracts and open pos', async () => {
         weth = await Weth.deployed();
         dao = await INTDAO.deployed(weth.address);
         oracle = await Oracle.deployed(dao.address);
         cdp = await CDP.deployed(dao.address);
+        coin = await StableCoin.deployed(dao.address);
 
         let posTx = await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
             from: owner,
@@ -63,15 +67,31 @@ contract('CDP withdraw and close position', (accounts) => {
         let posTx = await cdp.withdrawEther(posId, web3.utils.toWei('0.4', 'ether'), {from:owner});
 
         truffleAssert.eventEmitted(posTx, 'PositionUpdated', async (ev) => {
-            //uint256 posID, uint256 newStableCoinsAmount, uint256 wethLocked
             assert.equal(posId, ev.posID.toNumber(), "id is wrong");
             assert.equal(web3.utils.toWei('1000', 'ether'), ev.newStableCoinsAmount, "newStableCoinsAmount is wrong");
             assert.equal(web3.utils.toWei('0.5', 'ether'), ev.wethLocked, "wethLocked is wrong");
         });
 
         assert.equal(await weth.balanceOf(owner), web3.utils.toWei('0.5', 'ether'), "wethLocked is wrong");
-
     });
 
+    it("should close position", async () => {
 
+        await cdp.openCDP(web3.utils.toWei('200', 'ether'), {
+            from: accounts[3],
+            value: web3.utils.toWei('0.2', 'ether')
+        });
+
+        coin.transfer(owner, web3.utils.toWei('100', 'ether'), {from:accounts[3]});
+
+        coin.approve(cdp.address, web3.utils.toWei('1100', 'ether'),{from:owner});
+
+        assert.equal(await coin.totalSupply(), web3.utils.toWei('1200', 'ether'), "wrong totalSupply");
+
+        await cdp.closeCDP(posId,{from:owner});
+
+        assert.equal(await weth.balanceOf(owner), web3.utils.toWei('1', 'ether'), "weth on balance is wrong");
+
+        assert.equal(parseFloat(await coin.totalSupply()/10**18).toFixed(4), 110.0000, "wrong totalSupply")
+    });
 });

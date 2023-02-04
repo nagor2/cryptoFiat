@@ -114,16 +114,16 @@ contract CDP {
     }
 
     function closeCDP(uint posID) public returns (bool success){
-        //TODO: closeCDP
-
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
-        //shows minimum amount of INT you have to own
-        // Rule allowed to which address? )
-        //burnFromCollateral from wich addressAllowed?
-        //sendEtherToOwner
-        //checkAllowance of RuleTokens
-        //if allowed, transfer on balance, then burn
+        uint256 overallDebt = totalCurrentFee(posID)+p.coinsMinted;
+        require(coin.allowance(p.owner, address(this))>=overallDebt, "You have to allow coins first");
+        require(coin.transferFrom(p.owner, address(this), overallDebt), "Could not transfer coins for some reason");
+        require (weth.transfer(p.owner, p.wethAmountLocked), "Could not transfer collateral for some reason");
+        p.wethAmountLocked = 0;
+        require (coin.burn(address(this), overallDebt), "Could not burn coins for some reason");
+        p.coinsMinted = 0;
+        p.lastTimeUpdated = block.timestamp;
     }
 
     function transferFee(uint posID) public returns (bool success){

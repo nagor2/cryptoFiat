@@ -158,7 +158,7 @@ contract('DAO', (accounts) => {
 
         assert.equal(valueBefore, 0, "wrong valueBefore");
 
-        truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
+        await truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
             assert.equal(ev.id, 2, "wrong id");
         });
 
