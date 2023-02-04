@@ -76,7 +76,8 @@ contract stableCoin is ERC20{
     }
 
     receive() external payable {
-        //TODO: trade to weth. -> .transfer(msg.value);
+        //TODO: trade to weth. -> .transfer(msg.value); and send where?
+
     }
 
     function mint(address to, uint256 amount) public returns (bool) {

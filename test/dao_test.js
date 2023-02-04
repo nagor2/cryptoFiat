@@ -90,7 +90,7 @@ contract('DAO', (accounts) => {
     });
 
     it('should fail if voting duration expired', async () => {
-        await time.increase(time.duration.days(1));
+        await time.increase(time.duration.days(2));
 
         await truffleAssert.fails(
             dao.vote(1, true,{from: ruleHolder}),

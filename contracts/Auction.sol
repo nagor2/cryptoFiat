@@ -104,7 +104,6 @@ contract Auction {
     }
 
     function initCoinsBuyOut(uint256 posID) public returns (uint256 auctionID){
-
         require(cdp.isOnLiquidation(posID), "position is not on liquidation");
         ERC20 weth = ERC20(dao.addresses('weth'));
         uint256 wethLocked = cdp.wethLocked(posID);
@@ -193,6 +192,7 @@ contract Auction {
     }
 
     function finalizeAuction (uint256 auctionId) public returns (bool success){
+        //TODO: Check this out, if it is needed for some purpose
         auctionEntity storage a = auctions[auctionId];
         require(a.finalized, "Auction is not finished yet");
         if (a.paymentToken == dao.addresses('stableCoin')){
@@ -205,6 +205,4 @@ contract Auction {
         }
         return false;
     }
-
-    //TODO: decrease positive votes if tokens returned
 }

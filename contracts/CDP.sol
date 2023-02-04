@@ -32,7 +32,7 @@ contract CDP {
 
     mapping(uint => Position) public positions;
     event PositionOpened (address owner, uint256 posId);
-    event PositionUpdated (uint256 posID, uint256 newStableCoinsAmount);
+    event PositionUpdated (uint256 posID, uint256 newStableCoinsAmount, uint256 wethLocked);
     event markedOnLiquidation (uint256 posID, uint256 timestamp);
     event OnLiquidation (uint256 posID, uint256 timestamp);
 
@@ -232,7 +232,7 @@ contract CDP {
         if (newStableCoinsAmount > p.coinsMinted) {
             uint256 difference = newStableCoinsAmount - p.coinsMinted;
             coin.mint(p.owner, difference);
-            emit PositionUpdated(posID, newStableCoinsAmount);
+            emit PositionUpdated(posID, newStableCoinsAmount, p.wethAmountLocked);
             return true;
         }
 
@@ -240,7 +240,7 @@ contract CDP {
             uint256 difference = p.coinsMinted - newStableCoinsAmount;
             require(coin.balanceOf(p.owner)>=difference);
             coin.burn(p.owner, difference);
-            emit PositionUpdated(posID, newStableCoinsAmount);
+            emit PositionUpdated(posID, newStableCoinsAmount, p.wethAmountLocked);
             return true;
         }
     }
@@ -248,7 +248,14 @@ contract CDP {
     function withdrawEther (uint256 posID, uint256 etherToWithdraw) public{
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
-        //open Auction in the same contract
+        require(p.owner == msg.sender, 'Only owner may update the position');
+        require (etherToWithdraw<p.wethAmountLocked, "You dont have enough weth locked on this pos");
+        uint256 wethToLeave = p.wethAmountLocked - etherToWithdraw;
+        uint256 maxCoins = getMaxStableCoinsToMint(wethToLeave) - totalCurrentFee(posID);
+        require (maxCoins>p.coinsMinted, "you want to keep not enough weth to cover emission and current fee");
+        p.wethAmountLocked -= etherToWithdraw;
+        weth.transfer(msg.sender, etherToWithdraw);
+        emit PositionUpdated (posID, p.coinsMinted, p.wethAmountLocked);
     }
 
     function wethLocked(uint256 posID) public view returns (uint256 amount) {
