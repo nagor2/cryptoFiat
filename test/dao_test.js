@@ -13,7 +13,7 @@ contract('DAO', (accounts) => {
     before(async () => {
         dao = await INTDAO.deployed();
         ruleHolder = accounts[7];
-        ruleToken = await Rule.deployed();
+        ruleToken = await Rule.deployed(dao.address);
         await dao.renewContracts();
     });
 
@@ -190,5 +190,53 @@ contract('DAO', (accounts) => {
 
         assert.equal(valueAfter, accounts[1], "wrong valueAfter");
     });
+
+    it('should authorize address', async () => {
+        let votingType = 4; // authorize contract
+        let addressToAuthorize = accounts[1];
+        await dao.addVoting(votingType, "some address", 0, addressToAuthorize, true,{from: ruleHolder});
+
+        let votingId = 4; // incremented id
+
+        await dao.vote(votingId, true,{from: ruleHolder});
+
+        let valueBefore = await dao.authorized(addressToAuthorize);
+        assert.equal(valueBefore, false, "wrong valueBefore");
+
+        let tx = await dao.claimToFinalizeVoting(votingId);
+
+        truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
+            assert.equal(ev.id, votingId, "wrong id");
+        });
+
+        let valueAfter = await dao.authorized(addressToAuthorize);
+
+        assert.equal(valueAfter, true, "wrong valueAfter");
+    });
+
+    it('should unauthorize address', async () => {
+        let votingType = 4; // authorize contract
+        let addressToAuthorize = accounts[1];
+        await dao.addVoting(votingType, "some address", 0, addressToAuthorize, false,{from: ruleHolder});
+
+        let votingId = 5; // incremented id
+
+        await dao.vote(votingId, true,{from: ruleHolder});
+
+        let valueBefore = await dao.authorized(addressToAuthorize);
+        assert.equal(valueBefore, true, "wrong valueBefore");
+
+        let tx = await dao.claimToFinalizeVoting(votingId);
+
+        truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
+            assert.equal(ev.id, votingId, "wrong id");
+        });
+
+        let valueAfter = await dao.authorized(addressToAuthorize);
+
+        assert.equal(valueAfter, false, "wrong valueAfter");
+    });
+
+
 
 });

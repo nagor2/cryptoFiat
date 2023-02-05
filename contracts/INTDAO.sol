@@ -146,7 +146,6 @@ contract INTDAO {
         //TODO: Написать тест на паузу контракта (зачем нужен этот функционал, не помню, но пусть будет)
         if (votings[votingId].voteingType == 3)
             paused[votings[votingId].addr] = votings[votingId].decision;
-        //TODO: проводить голосования на авторизаци контракта и написать тесты. Вроде должно работать и так.
         if (votings[votingId].voteingType == 4)
             authorized[votings[votingId].addr] = votings[votingId].decision;
         emit VotingSucceed(votingId);
