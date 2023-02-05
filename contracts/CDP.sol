@@ -39,6 +39,7 @@ contract CDP {
     constructor(address INTDAOaddress) {
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('cdp',payable(address(this)));
+        dao.setAddressOnce('inflationSpender',payable(address(this)));
         coin = stableCoin(payable(dao.addresses('stableCoin')));
         oracle = exchangeRateContract(dao.addresses('oracle'));
         auction = Auction(dao.addresses('auction'));
@@ -111,6 +112,11 @@ contract CDP {
             coin.transfer(beneficiary, coin.balanceOf(address(this)));
             coin.approve(beneficiary, difference+coin.allowance(address(this), beneficiary));
         }
+    }
+
+    function claimEmission(uint256 amount, address beneficiary) public{
+        require(dao.authorized(msg.sender), "only authorized address may do this");
+        coin.mint(beneficiary,amount);
     }
 
     function closeCDP(uint posID) public returns (bool success){

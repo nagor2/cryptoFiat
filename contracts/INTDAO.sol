@@ -50,7 +50,7 @@ contract INTDAO {
         params['marginCallFee'] = 13;
         params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
         params['marginCallTimeLimit'] = 1 days;
-
+        params['annualInflationPercent'] = 1;
         params['defaultDepositPeriod'] = 91 days;
 
         addresses['weth'] = payable(WETH);
@@ -61,6 +61,8 @@ contract INTDAO {
         addresses['oracle'] = payable(0x0);
         addresses['rule'] = payable(0x0);
         addresses['deposit'] = payable(0x0);
+        addresses['inflationFund'] = payable(0x0);
+        addresses['inflationSpender'] = payable(0x0);
     }
 
     function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses
@@ -68,6 +70,8 @@ contract INTDAO {
         addresses[addressName] = addr;
         paused[addr] = false;
         if (keccak256(bytes(addressName)) == keccak256(bytes("deposit")))
+            authorized[addr] = true;
+        if (keccak256(bytes(addressName)) == keccak256(bytes("inflationFund")))
             authorized[addr] = true;
     }
 
