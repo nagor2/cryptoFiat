@@ -82,9 +82,9 @@ contract('CDP withdraw and close position', (accounts) => {
             value: web3.utils.toWei('0.2', 'ether')
         });
 
-        coin.transfer(owner, web3.utils.toWei('100', 'ether'), {from:accounts[3]});
+        await coin.transfer(owner, web3.utils.toWei('100', 'ether'), {from:accounts[3]});
 
-        coin.approve(cdp.address, web3.utils.toWei('1100', 'ether'),{from:owner});
+        await coin.approve(cdp.address, web3.utils.toWei('1100', 'ether'),{from:owner});
 
         assert.equal(await coin.totalSupply(), web3.utils.toWei('1200', 'ether'), "wrong totalSupply");
 
@@ -92,6 +92,6 @@ contract('CDP withdraw and close position', (accounts) => {
 
         assert.equal(await weth.balanceOf(owner), web3.utils.toWei('1', 'ether'), "weth on balance is wrong");
 
-        assert.equal(parseFloat(await coin.totalSupply()/10**18).toFixed(4), 110.0000, "wrong totalSupply")
+        assert.equal(parseFloat(await coin.totalSupply()/10**18).toFixed(4), 110.0000, "wrong totalSupply");
     });
 });

@@ -6,6 +6,7 @@ var cdp = artifacts.require("CDP");
 var auction = artifacts.require("Auction");
 var weth = artifacts.require("WETH9");
 var deposit = artifacts.require("DepositContract");
+var InflationFund = artifacts.require("inflationFund.sol");
 
 module.exports = async function(deployer) {
     let accounts = await web3.eth.getAccounts();
@@ -21,4 +22,5 @@ module.exports = async function(deployer) {
     await deployer.deploy(auction, INTDAO.address);
     await deployer.deploy(cdp, INTDAO.address);
     await deployer.deploy(deposit, INTDAO.address);
+    await deployer.deploy(InflationFund, INTDAO.address);
 };

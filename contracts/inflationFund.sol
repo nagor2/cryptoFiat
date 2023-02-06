@@ -25,14 +25,16 @@ contract InflationFund {
     }
 
     function claimEmission() public{
-        uint256 amount = (block.timestamp - lastEmission)/365 days*dao.params("annualInflationPercent")*coin.totalSupply()/100;
+        uint256 period = block.timestamp - lastEmission;
+        require (period>=363 days, "too early to claim");
+        uint256 amount = period/365 days*dao.params("annualInflationPercent")*coin.totalSupply()/100;
+        lastEmission = block.timestamp;
         require (amount>0, "nothing to emit");
         cdp.claimEmission(amount,address(this));
-        lastEmission = block.timestamp;
         emit inflationEmission(amount);
     }
 
-    function claimTransfer(uint256 amount) public{
-        coin.transfer(dao.addresses("inflationSpender"), amount);
+    function claimTransfer() public{
+        coin.transfer(dao.addresses("inflationSpender"), coin.balanceOf(address(this)));
     }
 }

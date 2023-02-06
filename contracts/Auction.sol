@@ -190,19 +190,4 @@ contract Auction {
         a.finalized = true;
         return true;
     }
-
-    function finalizeAuction (uint256 auctionId) public returns (bool success){
-        //TODO: Check this out, if it is needed for some purpose
-        auctionEntity storage a = auctions[auctionId];
-        require(a.finalized, "Auction is not finished yet");
-        if (a.paymentToken == dao.addresses('stableCoin')){
-
-            return true;
-        }
-        if (a.paymentToken == dao.addresses('weth')) {
-            //
-            return true;
-        }
-        return false;
-    }
 }
