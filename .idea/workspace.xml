@@ -12,11 +12,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/inflationFund.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/inflationFund.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/inflation_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/inflation_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
