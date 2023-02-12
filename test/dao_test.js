@@ -8,6 +8,7 @@ contract('DAO', (accounts) => {
     let dao;
     let ruleHolder;
     let ruleToken;
+    const sleep = ms => new Promise(res => setTimeout(res, ms));
 
 
     before(async () => {
@@ -172,6 +173,7 @@ contract('DAO', (accounts) => {
 
     it('should be able to finalize voting with absolute majority', async () => {
         await ruleToken.approve(dao.address, web3.utils.toWei('600000', "ether"), {from: ruleHolder});
+        sleep(1000);
         await dao.poolTokens({from: ruleHolder});
 
         await dao.addVoting(2, "some address", 0, accounts[1], false,{from: ruleHolder});

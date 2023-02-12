@@ -30,7 +30,7 @@ contract CDP {
     Rule rule;
     ERC20 weth;
 
-    mapping(uint => Position) public positions;
+    mapping(uint256 => Position) public positions;
     event PositionOpened (address owner, uint256 posId);
     event PositionUpdated (uint256 posID, uint256 newStableCoinsAmount, uint256 wethLocked);
     event markedOnLiquidation (uint256 posID, uint256 timestamp);
@@ -41,7 +41,7 @@ contract CDP {
         dao.setAddressOnce('cdp',payable(address(this)));
         dao.setAddressOnce('inflationSpender',payable(address(this)));
         coin = stableCoin(payable(dao.addresses('stableCoin')));
-        oracle = exchangeRateContract(dao.addresses('oracle'));
+        oracle = exchangeRateContract(dao.addresses('cart'));
         auction = Auction(dao.addresses('auction'));
         rule = Rule(dao.addresses('rule'));
         weth = ERC20(dao.addresses('weth'));
@@ -49,7 +49,7 @@ contract CDP {
 
     function renewContracts() public {
         coin = stableCoin(payable(dao.addresses('stableCoin')));
-        oracle = exchangeRateContract(dao.addresses('oracle'));
+        oracle = exchangeRateContract(dao.addresses('cart'));
         auction = Auction(dao.addresses('auction'));
         weth = ERC20(dao.addresses('weth'));
     }
@@ -58,7 +58,7 @@ contract CDP {
         posID = numPositions++;
         Position storage p = positions[posID];
 
-        uint coinsToMint = getMaxStableCoinsToMint(msg.value);
+        uint256 coinsToMint = getMaxStableCoinsToMint(msg.value);
 
         if (StableCoinsToMint <= coinsToMint)
             coinsToMint = StableCoinsToMint;
@@ -91,16 +91,14 @@ contract CDP {
     }
 
     function getMaxStableCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
-        uint256 etherPrice = oracle.getPrice('eth');
-        uint256 etherDecimals = oracle.getDecimals('eth');
-        return ethValue * etherPrice * (100 - dao.params('collateralDiscount'))/(10**etherDecimals)/100;
+        uint256 price = oracle.getPrice('stb');
+        uint256 decimals = oracle.getDecimals('stb');
+        return ethValue * price * (100 - dao.params('collateralDiscount'))/(10**decimals)/100;
     }
 
     function getMaxStableCoinsToMintForPos(uint256 posID) public view returns (uint256 maxAmount){
         Position storage p = positions[posID];
-        uint256 etherPrice = oracle.getPrice('eth');
-        uint256 decimals = oracle.getDecimals('eth');
-        return p.wethAmountLocked * etherPrice * (100 - dao.params('collateralDiscount'))/(10**decimals)/100 - totalCurrentFee(posID);
+        return getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
     }
 
     function claimInterest(uint256 amount, address beneficiary) public{
