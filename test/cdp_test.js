@@ -54,14 +54,14 @@ contract('CDP', (accounts) => {
             const rate = await dao.params('interestRate');
 
             expect(rate).to.eql(position.feeRate, "fee rate should be set to dao.params value"); //compare 2 BN
-            assert.equal(position.coinsMinted, 2170 * (10 ** 18), "should mint 2170*10^18 stableCoins");
+            assert.equal(position.coinsMinted.toString(), 2170 * (10 ** 18), "should mint 2170*10^18 stableCoins");
         });
 
     });
 
     it("should mint max 2170 coins per 1 ether", async () => {
         const coins = await cdp.getMaxStableCoinsToMint(web3.utils.toWei('1', 'ether'));
-        assert.equal(coins, 2170 * (10 ** 18), "should mint max 2170 coins per 1 ether");
+        assert.equal(coins.toString(), 2170 * (10 ** 18), "should mint max 2170 coins per 1 ether");
     });
 
     it("should put 1 ether on contract's balance", async () => {
