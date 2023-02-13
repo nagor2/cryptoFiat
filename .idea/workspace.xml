@@ -10,9 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="Not working code. Check later">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="Not working code. Check later" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -295,5 +293,11 @@
     <MESSAGE value="Some problems with open CDP" />
     <MESSAGE value="Not working code. Check later" />
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1676255854856">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1676255854856" />
   </component>
 </project>
