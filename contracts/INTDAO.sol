@@ -63,6 +63,8 @@ contract INTDAO {
         addresses['deposit'] = payable(0x0);
         addresses['inflationFund'] = payable(0x0);
         addresses['inflationSpender'] = payable(0x0);
+
+        authorized[msg.sender] = true;
     }
 
     function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses

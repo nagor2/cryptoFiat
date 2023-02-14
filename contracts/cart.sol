@@ -9,12 +9,12 @@ contract cartContract{
     struct cartItem {
         string symbol;
         uint256 share;
+        uint256 initialPrice;
     }
 
     INTDAO dao;
     exchangeRateContract oracle;
 
-    uint256 public initialPriceOfCartSharePerStableCoin;
     uint256 public itemsCount;
     uint256 public sharesCount;
     uint256 public decimals = 6;
@@ -34,50 +34,43 @@ contract cartContract{
         oracle = exchangeRateContract(dao.addresses('oracle'));
     }
 
-    function addItem(string memory symbol, uint256 share) public{
+    function addItem(string memory symbol, uint256 share, uint256 initialPrice) public{
         require(dao.authorized(msg.sender), "only authorized address may do this");
         uint256 itemId = itemsCount++;
         cartItem storage c = items[itemId];
         c.share = share;
         c.symbol = symbol;
+        c.initialPrice = initialPrice;
         sharesCount += share;
-        initialPriceOfCartSharePerStableCoin += c.share * oracle.getPrice(c.symbol) * (10**(decimals-oracle.getDecimals(c.symbol)))/sharesCount;
         emit instrumentAdded(itemId);
     }
 
     function setShare(uint256 id, uint256 share) public{
         require(dao.authorized(msg.sender), "only authorized address may do this");
         cartItem storage c = items[id];
+        sharesCount -= c.share;
+        sharesCount += share;
         c.share = share;
         emit shareChanged(id);
     }
 
-    function setInitialPriceOnce() public{
-        if (initialPriceOfCartSharePerStableCoin == 0)
-            initialPriceOfCartSharePerStableCoin = getCurrentSharePrice();
-    }
-
     function getCurrentSharePrice() public view returns (uint256 price){
-        uint256 totalShares;
-        uint256 overallCartPrice;
-        for (uint256 j = 0; j <= itemsCount; j ++) {
+        uint256 overallCartPrice = 0;
+        for (uint256 j = 0; j < itemsCount; j ++) {
             cartItem storage c = items[j];
-            totalShares += c.share;
-            overallCartPrice += c.share * oracle.getPrice(c.symbol) * (10**(decimals-oracle.getDecimals(c.symbol)));
+            overallCartPrice += c.share * 10**6 * oracle.getPrice(c.symbol) * (10**(decimals-oracle.getDecimals(c.symbol)))/c.initialPrice;
         }
-        return overallCartPrice/totalShares;
+        return overallCartPrice/sharesCount;
     }
-
 
     function getPrice(string memory symbol) public view returns (uint256) {
+        //TODO: переписать
         if (keccak256(bytes(symbol)) == keccak256(bytes('stb')))
-            return oracle.getPrice('eth') * 10**4;
+            return oracle.getPrice('eth') * 10**6 / getCurrentSharePrice();
         return 0;
     }
 
     function getDecimals(string memory symbol) public view returns (uint256 _decimals) {
-        if (keccak256(bytes(symbol)) == keccak256(bytes('stb')))
-            return decimals;
-        return 0;
+        return 6;
     }
 }

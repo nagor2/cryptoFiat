@@ -4,7 +4,6 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./INTDAO.sol";
 
 contract Rule {
-
     string public constant name = "Rule token";
     string public constant symbol = "RULE";
     uint256 initialSupply;

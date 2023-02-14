@@ -194,8 +194,9 @@ contract('DAO', (accounts) => {
     });
 
     it('should authorize address', async () => {
+
         let votingType = 4; // authorize contract
-        let addressToAuthorize = accounts[1];
+        let addressToAuthorize = accounts[9];
         await dao.addVoting(votingType, "some address", 0, addressToAuthorize, true,{from: ruleHolder});
 
         let votingId = 4; // incremented id
@@ -218,7 +219,7 @@ contract('DAO', (accounts) => {
 
     it('should unauthorize address', async () => {
         let votingType = 4; // authorize contract
-        let addressToAuthorize = accounts[1];
+        let addressToAuthorize = accounts[9];
         await dao.addVoting(votingType, "some address", 0, addressToAuthorize, false,{from: ruleHolder});
 
         let votingId = 5; // incremented id
