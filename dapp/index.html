@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INTDAO</title>
+    <script src="js/web3.min.js"></script>
+    <script src="js/stat.js"></script>
+</head>
+<body>
+
+<table border="1" width="100%">
+    <tr>
+        <td>
+            <h2>StableCoin</h2>
+            <p>address: <span style="font-weight: bold;" id="stableCoinLink"></span></p>
+            <p>total supply: <span style="font-weight: bold;" id="stableCoinSupply"></span></p>
+            <p>N of transactions (iterate transfers): <span style="font-weight: bold;" id="stableTxCount"></span></p>
+            <p>N of holders (iterate addresses): <span style="font-weight: bold;" id="stableHolders"></span></p>
+            <p>price vs USD (pool):</p>
+            <p>price vs USD (indicative):</p>
+            <p>overall collateral: <span style="font-weight: bold;" id="overallCollateral"></span></p>
+            <p>stabilization fund:<span style="font-weight: bold;" id="stabFund"></span></p>
+            <p>pool volume:</p>
+            <input type="button" value="Buy from pool">
+        </td>
+        <td>
+            <h2>Invest</h2>
+            <p>top projects:</p>
+            <input type="button" value="Buy tokens">
+            <p>top commodities:</p>
+            <input type="button" value="Buy commodities">
+        </td>
+        <td>
+            <h2>Rule</h2>
+            <p>address: <span style="font-weight: bold;" id="ruleLink"></span></p>
+            <p>total supply: <span style="font-weight: bold;" id="ruleSupply"></span></p>
+            <p>N of transactions (iterate transfers): <span style="font-weight: bold;" id="ruleTxCount"></span></p>
+            <p>N of holders: <span style="font-weight: bold;" id="ruleHolders"></span></p>
+            <p>price in stableCoins (from pool):</p>
+            <p>marketCap: <span style="font-weight: bold;" id="ruleMarketCap"></span></p>
+            <p>pool volume:</p>
+            <input type="button" value="Buy from pool">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h2>Deposit</h2>
+            <p>address: <span style="font-weight: bold;" id="depositLink"></span></p>
+            <p>N of deposits: <span style="font-weight: bold;" id="depositsCount"></span></p>
+            <p>overall fee payed: <span style="font-weight: bold;" id="overallDepositFeePayed"></span></p>
+            <p>overall volume: <span style="font-weight: bold;" id="overallDeposits"></span></p>
+            <p>interest rate: <span style="font-weight: bold;" id="depositRate"></span></p>
+            <input type="button" value="Deposit">
+            <h3>My deposit</h3>
+            <p>opened:</p>
+            <p>updated:</p>
+            <p>volume:</p>
+            <p>rate:</p>
+            <p>accumulated interest:</p>
+            <input type="button" value="topUp">
+            <input type="button" value="withdraw">
+            <input type="button" value="claim interest">
+
+        </td>
+        <td>
+            <h2>Borrow</h2>
+            <p>address: <span style="font-weight: bold;" id="cdpLink"></span></p>
+            <p>positions count: <span style="font-weight: bold;" id="positionsCount"></span></p>
+            <p>overall fee earned: <span style="font-weight: bold;" id="overallCDPFeeEarned"></span></p>
+            <p>overall fee payed: <span style="font-weight: bold;" id="overallCDPFeePayed"></span></p>
+            <p>collateral discount: <span style="font-weight: bold;" id="collateralDiscount"></span></p>
+            <p>interest rate: <span style="font-weight: bold;" id="interestRate"></span></p>
+            <input type="button" value="Borrow">
+            <h3>My dept position:</h3>
+            <p>opened:</p>
+            <p>updated:</p>
+            <p>volume:</p>
+            <p>accumulated interest:</p>
+            <input type="button" value="pay interest">
+            <input type="button" value="withdraw collateral">
+            <input type="button" value="update">
+            <input type="button" value="close">
+
+        </td>
+        <td>
+            <h2>Cart</h2>
+            <p>address: <span style="font-weight: bold;" id="cartLink"></span></p>
+            <p>instruments: (actual price, blockchain price, share, last time updated)</p>
+            <input type="button" value="claim update">
+            <input type="button" value="buy oracle tokens">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h2>Auction</h2>
+            <p>address: <span style="font-weight: bold;" id="auctionLink"></span></p>
+            <p>current auctions:</p>
+            <input type="button" value="bid">
+            <p>last bids:</p>
+            <p>last auctions:</p>
+        </td>
+        <td>
+            <h2>INTDAO</h2>
+            <p>address: <span style="font-weight: bold;" id="daoLink"></span></p>
+            <p>WETH address:<span style="font-weight: bold;" id="wethLink"></span></p>
+            <p>authorized:</p>
+            <p>params:</p>
+            <h3>Active votings:</h3>
+            <input type="button" value="pool tokens">
+            <input type="button" value="vote">
+        </td>
+        <td>
+            <h2>Inflation:</h2>
+            <p>address: <span style="font-weight: bold;" id="inflationLink"></span></p>
+            <p>annual percent: <span style="font-weight: bold;" id="annualInflation"></span></p>
+            <p>accumulated volume:</p>
+            <p>last emission: <span style="font-weight: bold;" id="lastEmission"></span></p>
+            <p>spender address:</p>
+            <input type="button" value="claim emission">
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

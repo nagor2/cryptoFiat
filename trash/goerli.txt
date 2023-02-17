@@ -1,0 +1,167 @@
+Starting migrations...
+======================
+> Network name:    'dashboard'
+> Network id:      5
+> Block gas limit: 30000000 (0x1c9c380)
+
+
+2_deploy_contracts.js
+=====================
+
+   Deploying 'WETH9'
+   -----------------
+   > transaction hash:    0xb94925d44759c72079062faf327e778492830f98fde087fea0be081c62bc9d76sage.
+   > Blocks: 1            Seconds: 16
+   > contract address:    0x953bA648e3b57ab7100C848C5ed77860A71b664f
+   > block number:        8500018
+   > block timestamp:     1676524992
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.195248089960083956
+   > gas used:            950382 (0xe806e)
+   > gas price:           2.500000017 gwei
+   > value sent:          0 ETH
+   > total cost:          0.002375955016156494 ETH
+
+
+   Deploying 'INTDAO'
+   ------------------
+   > transaction hash:    0x42fcf0d39ab1bd851d7dee3606ad8333ae2078517a497e8eaa1bf80a5c0d57c5sage.
+   > Blocks: 0            Seconds: 20
+   > contract address:    0xAFB159B19bf46b50d37a2Ee0d985Eb9163F7cd7A
+   > block number:        8500019
+   > block timestamp:     1676525016
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.187685274905631688
+   > gas used:            3025126 (0x2e28e6)
+   > gas price:           2.500000034 gwei
+   > value sent:          0 ETH
+   > total cost:          0.007562815102854284 ETH
+
+
+   Deploying 'exchangeRateContract'
+   --------------------------------
+   > transaction hash:    0x18e00d5573fc712d4f931382136585e3870f63a41c2cd678bb43d00f3bb77369sage.
+   > Blocks: 1            Seconds: 20
+   > contract address:    0x09b022332a991f35991Ed5a83F93fBc284590d73
+   > block number:        8500021
+   > block timestamp:     1676525040
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.178680999841520908
+   > gas used:            3561710 (0x3658ee)
+   > gas price:           2.500000036 gwei
+   > value sent:          0.0001 ETH
+   > total cost:          0.00900427512822156 ETH
+
+
+   Deploying 'cartContract'
+   ------------------------
+   > transaction hash:    0xfc5af1256f98f5eec2ad5aabfae1a91950e231fa5e4739ea303ec14c175d4afasage.
+   > Blocks: 1            Seconds: 24
+   > contract address:    0x30233bDa91934AEF3B13FD8df342657C6F962445
+   > block number:        8500023
+   > block timestamp:     1676525064
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.175329222318728821
+   > gas used:            1340711 (0x147527)
+   > gas price:           2.500000036 gwei
+   > value sent:          0 ETH
+   > total cost:          0.003351777548265596 ETH
+
+
+   Deploying 'stableCoin'
+   ----------------------
+   > transaction hash:    0x10232add75cfd98a195691a50ce1a32318703775762d1ca26278c3367da672e2sage.
+   > Blocks: 1            Seconds: 20
+   > contract address:    0x12F0b5F3899e2D8A936b89DF6CA020eBa180A743
+   > block number:        8500030
+   > block timestamp:     1676525148
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.17125346729018673
+   > gas used:            1156594 (0x11a5f2)
+   > gas price:           2.500000018 gwei
+   > value sent:          0 ETH
+   > total cost:          0.002891485020818692 ETH
+
+
+   Deploying 'Rule'
+   ----------------
+   > transaction hash:    0xce0ea01d3bfa10908f4de497f92844a92cade362397fcdc022945cdbbef2894fsage.
+   > Blocks: 1            Seconds: 32
+   > contract address:    0xaE8E31D229fE7e3D52433a4aF01A3cC55302028e
+   > block number:        8500032
+   > block timestamp:     1676525184
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.168372302269442342
+   > gas used:            1152466 (0x1195d2)
+   > gas price:           2.500000018 gwei
+   > value sent:          0 ETH
+   > total cost:          0.002881165020744388 ETH
+
+
+   Deploying 'Auction'
+   -------------------
+   > transaction hash:    0xebb76399a5b9f34e66daf12045fa18b5ca80fff9bbdb8f937eeb18aa3e91d0d3sage.
+   > Blocks: 4            Seconds: 51
+   > contract address:    0x62061C59aee11191ba7Fb01089362F80a12Ec705
+   > block number:        8500038
+   > block timestamp:     1676525256
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.159088692206313794
+   > gas used:            3713444 (0x38a9a4)
+   > gas price:           2.500000017 gwei
+   > value sent:          0 ETH
+   > total cost:          0.009283610063128548 ETH
+
+
+   Deploying 'CDP'
+   ---------------
+   > transaction hash:    0x370ffd3cdcf7ace2ff829bc8ac8f6d83e87e15ce7f8b12be9aee36f30770a967sage.
+   > Blocks: 1            Seconds: 16
+   > contract address:    0xf56c0d004f20401e3EEA53924EFB911c902Dc01F
+   > block number:        8500042
+   > block timestamp:     1676525304
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.145470724613711615
+   > gas used:            5447187 (0x531e13)
+   > gas price:           2.500000017 gwei
+   > value sent:          0 ETH
+   > total cost:          0.013617967592602179 ETH
+
+
+   Deploying 'DepositContract'
+   ---------------------------
+   > transaction hash:    0xcbd4c84edf114d4502a3c5cc855fbe0862a81f79a1304887cb6bf644065efba2sage.
+   > Blocks: 3            Seconds: 29
+   > contract address:    0x42cDad321e7217eFDD9CFea9Fd56dc0634EC3Dbe
+   > block number:        8500045
+   > block timestamp:     1676525340
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.141534669588520863
+   > gas used:            1574422 (0x180616)
+   > gas price:           2.500000016 gwei
+   > value sent:          0 ETH
+   > total cost:          0.003936055025190752 ETH
+
+
+   Deploying 'InflationFund'
+   -------------------------
+   > transaction hash:    0x56a1c8794411a17fc12cc0cf69b971226278b1800f2ce567dfae726b3d30f498sage.
+   > Blocks: 2            Seconds: 17
+   > contract address:    0xa69bf21617468C9c2D484AE825CA394Bc91eefaf
+   > block number:        8500047
+   > block timestamp:     1676525364
+   > account:             0x7f4bE98ADDD585ea251AeD1a21Db09C8D813B0f5
+   > balance:             0.139151614573269311
+   > gas used:            953222 (0xe8b86)
+   > gas price:           2.500000016 gwei
+   > value sent:          0 ETH
+   > total cost:          0.002383055015251552 ETH
+
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.057288160533234045 ETH
+
+Summary
+=======
+> Total deployments:   10
+> Final cost:          0.057288160533234045 ETH

@@ -11,16 +11,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="Not working code. Check later">
-      <change afterPath="$PROJECT_DIR$/test/cart_test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dapp/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dapp/js/hash.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dapp/js/stat.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dapp/js/web3.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/trash/goerli.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Rule.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/cart.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/cart.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/public/logo192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/public/logo512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/App.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/App.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/components/LoadingContainer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/drizzle/drizzleContext.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/drizzle/drizzleOptions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/reportWebVitals.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/src/setupTests.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpMarginCall_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpMarginCall_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +52,7 @@
       <list>
         <option value="Solidity Contract" />
         <option value="JavaScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -82,11 +103,14 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../oracle" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../hashtoken" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\dapp\js" />
+      <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\dapp\client\src\contracts" />
       <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\test" />
       <recent name="D:\Яндекс.Диск\Работа\ICO\CryptoFiat\repo\test" />
     </key>
@@ -191,7 +215,9 @@
       <workItem from="1674888718577" duration="8000" />
       <workItem from="1675042593782" duration="18287000" />
       <workItem from="1675598120713" duration="3566000" />
-      <workItem from="1676335701817" duration="9380000" />
+      <workItem from="1676335701817" duration="14589000" />
+      <workItem from="1676518525720" duration="8429000" />
+      <workItem from="1676595107086" duration="16518000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -311,10 +337,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1676336288141">
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1676609005757">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1676336288141" />
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1676609005757" />
     <state x="848" y="387" width="389" height="265" key="MultipleFileMergeDialog" timestamp="1676256106026">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -323,5 +349,21 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1676256100199" />
+    <state x="666" y="255" width="587" height="530" key="find.popup" timestamp="1676537835262">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="666" y="255" width="587" height="530" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1676537835262" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/dapp/js/stat.js</url>
+          <line>2373</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
