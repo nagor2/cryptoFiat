@@ -1,61 +1,24 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
-/*
-Market Data Oracle
-
-It is a kind of oracle to bring market data to the Ethereum blockchain.
-
-The prices renewed once a day. A list of current instruments available at a website or
-through the contract dictionary with the last time and block the price was renewed.
-New requests for price updates are checked every second.
-
-If you need the prlllllllllllllllllllice to be renewed more often, you can do the following:*
-- send transaction to the contract just before you need it to be updated using
-function requestPriceUpdate (see the contract code or use it on our website)
-- top up the balance of smart contract to pay before for the transactions to renew the price with the frequency
-you need, or on a significant price change using payForSubscription function (find more info on the website)
-- if you top up your previous subscription, you get an additional 5% discount each time till you pay only half of contract's comission.
-
-Note: topping up the contract balance by just sending ether directly will be considered as a donation.
-By the way, donations are always appreciated and mentioned on the website.
-Beneficiary address is public and can be viewed in the contract.
-If 'finalized' flag is up, there is no possibility to change it even for the author.
-All profits are shared amoung tokenHolders of this service.
-If you want to earn profits of this service, check beneficiary address contract or our website.
-
-Examples:
-
-exchangeRate er = exchangeRate(contractAdress);
-
-uint eth = er.getPrice('eth');        // returns price of Ether in USD cents.
-uint btc = er.getPrice('btc')         // returns price of Bitcoin in USD cents.
-uint brent = er.getPrice('brent')     // returns price of Brent in USD cents.
-
-Please, visit https://exchangeRate.io for more information.
-
-@author Nagornykh Dmitry
-*My cat helped to type this line (the word "prlllllllllllllllllllice"). It's name is Liquid.
-*/
-
     struct subscription{
         uint256 index;
         uint256 id;
         string email;
-        string[] symbols;     // symbols to update
-        uint256[] frequencies;  // how often proceed updates
-        uint256[] priceDifferences; // update price, if it changed significantly (in percent)
+        string[] symbols;
+        uint256[] frequencies;
+        uint256[] priceDifferences;
         address payer;
         uint256 remainingBalance;
         uint256 txSpeed;
-        uint256 timeStamp; // time of creation
+        uint256 timeStamp;
     }
 
     struct Instrument {
-        string name;    // full name of an instrument or pair
-        uint256 price;     // price of an instrument in US dollars
-        uint256 decimals;  // to use the price in your smart contracts or elsewhere, you need to divide it by 10^decimals
-        uint256 timeStamp; // block.timeStamp
-        uint256 time;     // time from updater
+        string name;
+        uint256 price;
+        uint256 decimals;
+        uint256 timeStamp;
+        uint256 time;
     }
 
 import "./INTDAO.sol";
@@ -74,10 +37,8 @@ contract exchangeRateContract {
     uint256 public subscriptionsCount;
     uint256 public instrumentsCount;
 
-    //================== discounts =====================
     mapping(address => uint) public discounts;
 
-    //================== discounts =====================
     uint256 constant public updOnePriceGasCost = 84928;
     uint256 constant public updSeveralPricesCost = 87742;
     uint256 constant public updAdditionalPrice = 22700;
@@ -162,7 +123,7 @@ contract exchangeRateContract {
         subscription storage s = subscriptions[id];
 
         for (uint i = 0; i<priceDifferences.length; i++)
-            require (priceDifferences[i]<100, "priceDifferences should be less then 100");
+                require (priceDifferences[i]<100, "priceDifferences should be less then 100");
 
         s.id = id;
         s.email = email;
@@ -201,7 +162,7 @@ contract exchangeRateContract {
         delete subscriptions[subscriptions.length-1];
     }
 
-    function updateSeveralPrices(address payer, uint256[] memory timeStamps, string[] memory symbols, uint256[] memory prices, uint256[3] memory currentGasPrices, uint256 subscriptionID) public onlyUpdater{
+    function updateSeveralPricesSubscription(address payer, uint256[] memory timeStamps, string[] memory symbols, uint256[] memory prices, uint256[3] memory currentGasPrices, uint256 subscriptionID) public onlyUpdater{
         uint256 cost = (updSeveralPricesCost + symbols.length * updAdditionalPrice) * tx.gasprice;
         require (timeStamps.length == symbols.length &&  symbols.length == prices.length, "Symbols, timeStamps and prices arrays have different size. For more information visit webSite");
         require (address(this).balance > 2 * cost,"Contract has insufficient balance. For more information visit webSite");
@@ -225,6 +186,15 @@ contract exchangeRateContract {
             updPrice (payer, symbols[i], prices[i], timeStamps[i]);
     }
 
+    function updateSeveralPrices(string[] memory symbols, uint256[] memory timeStamps, uint256[] memory prices) public onlyUpdater{
+        uint256 cost = (updSeveralPricesCost + symbols.length * updAdditionalPrice) * tx.gasprice;
+        require (timeStamps.length == symbols.length &&  symbols.length == prices.length, "Symbols, timeStamps and prices arrays have different size. For more information visit webSite");
+        require (address(this).balance > 2 * cost,"Contract has insufficient balance. For more information visit webSite");
+
+        for (uint i=0; i<symbols.length; i++)
+            updPrice (updater, symbols[i], prices[i], timeStamps[i]);
+    }
+
     function transferProfit (address payer, uint cost) internal returns (uint profit){
         uint prof = cost;
         if (discounts[payer]>0)
@@ -237,11 +207,11 @@ contract exchangeRateContract {
     }
 
     function updateSinglePrice(address payer, string memory symbol, uint256 tickTimeStamp, uint256 newPrice) public onlyUpdater returns (bool success){
-        uint256 cost = updOnePriceGasCost*tx.gasprice;
-        require(address(this).balance > 2 * cost ,"Contract has insufficient balance. For more information visit webSite");
+        //uint256 cost = updOnePriceGasCost*tx.gasprice;
+        //require(address(this).balance > 2 * cost ,"Contract has insufficient balance. For more information visit webSite");
         updPrice (payer, symbol, newPrice, tickTimeStamp);
-        transferProfit (payer, cost);
-        updater.transfer(cost);
+        //transferProfit (payer, cost);
+        //updater.transfer(cost);
         return true;
     }
 

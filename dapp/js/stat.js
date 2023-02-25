@@ -2,7 +2,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.
 
 
 var wethAddress;
-var daoAddress = '0xAFB159B19bf46b50d37a2Ee0d985Eb9163F7cd7A';
+var daoAddress = '0xF85366a7eD78c51A60A2a06Bc666c63240dAfB96';
 
 var stableCoinABI = [
     {

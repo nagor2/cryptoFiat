@@ -45,5 +45,23 @@ contract('Exchange Rate', (accounts) => {
         ethPrice = ethPrice/ (10**ethInstrument.decimals);
         assert.equal (ethPrice, 1100.21, "wrong eth price");
     });
+
+    it("should change price", async () => {
+        await exRate.updateSinglePrice(author, "eth2", 0, 110021, {from: author});
+        let ethPrice = await exRate.getPrice('eth2');
+        ethInstrument = await exRate.instruments("eth2");
+        ethPrice = ethPrice/ (10**ethInstrument.decimals);
+        assert.equal (ethPrice, 1100.21, "wrong eth price");
+    });
+
+    it("should change several price", async () => {
+        await exRate.updateSeveralPrices(["eth", "Gold", "Lumber"], [0,0,0], [100,100,100], {from: author});
+        let price = await exRate.getPrice("Lumber");
+        assert.equal (price, 100, "wrong price");
+        price = await exRate.getPrice("Gold");
+        assert.equal (price, 100, "wrong price");
+        price = await exRate.getPrice("eth");
+        assert.equal (price, 100, "wrong price");
+    });
 });
 

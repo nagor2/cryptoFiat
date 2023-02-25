@@ -8,7 +8,7 @@ contract Rule {
     string public constant symbol = "RULE";
     uint256 initialSupply;
     INTDAO dao;
-    mapping (address => uint256) balances; //amount of tokens each address holds
+    mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
 
 
@@ -20,6 +20,7 @@ contract Rule {
     constructor(address _INTDAOaddress){
         initialSupply += 10**6*10**18;
         balances[msg.sender] = initialSupply;
+        emit Transfer(msg.sender, msg.sender, initialSupply);
         dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("rule", payable(address(this)));
     }

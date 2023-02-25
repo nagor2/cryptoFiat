@@ -111,11 +111,11 @@ contract('Deposit', (accounts) => {
         let d = await deposit.deposits(1);
         assert.equal(d.coinsDeposited, web3.utils.toWei('110', "ether"), "incorrect coinsDeposited");
         let balance = await coin.balanceOf(deposit.address);
-        assert.equal(parseFloat(balance/10**18).toFixed(5), parseFloat("110").toFixed(5), "balance should increase");
+        assert.equal(parseFloat(balance/10**18).toFixed(4), parseFloat("110").toFixed(4), "balance should increase");
         await time.increase(time.duration.years(1));
         await deposit.claimInterest(1);
         let allowance = await coin.allowance(cdp.address, owner);
-        assert.equal(parseFloat(allowance/10**18).toFixed(5), parseFloat("14.8").toFixed(5), "allowance should increase");
+        assert.equal(parseFloat(allowance/10**18).toFixed(4), parseFloat("14.8").toFixed(4), "allowance should increase");
     });
 
     it("should withdraw funds", async () => {

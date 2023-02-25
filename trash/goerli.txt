@@ -165,3 +165,39 @@ Summary
 =======
 > Total deployments:   10
 > Final cost:          0.057288160533234045 ETH
+
+
+Gold
+XAU/USD
+Silver
+XAG/USD
+Copper
+Platinum
+Palladium
+Crude Oil WTI
+Brent Oil
+Natural Gas
+Heating Oil
+Gasoline RBOB
+London Gas Oil
+Aluminium
+Zinc
+Nickel
+Copper London
+US Wheat
+Rough Rice
+US Corn
+US Soybeans
+US Soybean Oil
+US Soybean Meal
+US Cotton
+US Cocoa
+US Coffee C
+London Coffee
+US Sugar
+Orange Juice
+Live Cattle
+Lean Hogs
+Feeder Cattle
+Lumber
+Oats

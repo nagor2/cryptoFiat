@@ -68,13 +68,14 @@ contract INTDAO {
     }
 
     function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses
-        require(addresses[addressName] == address (0x0), 'address can be set only once');
-        addresses[addressName] = addr;
-        paused[addr] = false;
-        if (keccak256(bytes(addressName)) == keccak256(bytes("deposit")))
-            authorized[addr] = true;
-        if (keccak256(bytes(addressName)) == keccak256(bytes("inflationFund")))
-            authorized[addr] = true;
+        if (addresses[addressName] == address (0x0)) {
+            addresses[addressName] = addr;
+            paused[addr] = false;
+            if (keccak256(bytes(addressName)) == keccak256(bytes("deposit")))
+                authorized[addr] = true;
+            if (keccak256(bytes(addressName)) == keccak256(bytes("inflationFund")))
+                authorized[addr] = true;
+        }
     }
 
     function addVoting(uint256 votingType, string memory name, uint value, address payable addr, bool _decision) public {

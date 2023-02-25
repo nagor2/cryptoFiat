@@ -1,12 +1,40 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>INTDAO</title>
     <script src="js/web3.min.js"></script>
     <script src="js/stat.js"></script>
+    <script src="js/dao.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type='text/javascript' >
+        $(document).ready(function(){
+            $("#unlockDiv").hide();
+        })
+    </script>
 </head>
 <body>
+<a href="#" onclick="$('#unlockDiv').slideToggle();">show/hide</a>
+<div class="body flex-container">
+    <div id = "getMetaMask" style="visibility: hidden;" align="center">
+
+        <h3>To interact with blockchain application, please install MetaMask for your platform<br></h3>
+        <a href = "https://chrome.google.com/webstore/detail/nkbihfbeogaeaoehlefnkodbefgpgknn"><img
+                src="img/chrome.png" height="50" width="50"/></a>
+        <a href = "https://play.google.com/store/apps/details?id=io.metamask">
+            <img src="img/android.png" height="50" width="50"/></a>
+        <a href = "http://testflight.apple.com/join/4cYoRF4M"><img src="img/ios.png" height="50" width="50"/></a>
+
+    </div>
+
+    <div id="unlockDiv" >
+    <table style="background-color :white">
+        <tr>
+            <td width="100px"><a href="#" onclick="alert('metamask');"><img src = "/img/metamask.png"></a></td>
+        </tr>
+
+    </table>
+</div>
+</div>
 
 <table border="1" width="100%">
     <tr>
