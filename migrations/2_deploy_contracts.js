@@ -57,6 +57,19 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(deposit, daoAddress);
         await deployer.deploy(InflationFund, daoAddress);*/
     }
+    else if (network == "development"){
+        const author = accounts[0];
+        await deployer.deploy(weth);
+        await deployer.deploy(INTDAO, weth.address, {from: author});
+        await deployer.deploy(exchangeRateContract, INTDAO.address, {from: author, value:"1000000000000000000"});
+        await deployer.deploy(cartContract, INTDAO.address);
+        await deployer.deploy(stableCoin, INTDAO.address);
+        await deployer.deploy(Rule, INTDAO.address, {from: author});
+        await deployer.deploy(auction, INTDAO.address);
+        await deployer.deploy(cdp, INTDAO.address);
+        await deployer.deploy(deposit, INTDAO.address);
+        await deployer.deploy(InflationFund, INTDAO.address);
+    }
     else{
         const exRAuthour = accounts[5];
         await deployer.deploy(weth);

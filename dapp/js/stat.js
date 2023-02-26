@@ -1,8 +1,10 @@
-var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/7005259595814e4185411127fb00ecf4'));
+//var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/7005259595814e4185411127fb00ecf4'));
+
+var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
 
 var wethAddress;
-var daoAddress = '0x578A8A64D614eBAaAc2d0ADEb998dF2cfE7B8131';
+var daoAddress = '0x0a04d70B9b62e4A6472B4A1E2D9566f2E58837ed';
 
 var stableCoinABI = [
     {
@@ -2326,11 +2328,12 @@ var cartABI = [
 ];
 
 var daoStatic = new localWeb3.eth.Contract(daoABI,daoAddress);
-
+var wethStatic;
 var stableCoinStatic;
 var ruleStatic;
 var ruleAddress;
 var stableCoinAddress;
+var cdpStatic;
 
 async function drawStatic(){
     await daoStatic.methods.addresses('rule').call().then(function (result) {
@@ -2358,13 +2361,15 @@ async function drawStatic(){
 
     daoStatic.methods.addresses('weth').call().then(function (result) {
         wethAddress = result;
-        var weth = new localWeb3.eth.Contract(wethABI,wethAddress);
+        wethStatic = new localWeb3.eth.Contract(wethABI,wethAddress);
+
 
         document.getElementById('wethLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + wethAddress + '>'+wethAddress+'</a>';
 
         daoStatic.methods.addresses('cdp').call().then(function (result) {
-            weth.methods.balanceOf(result).call().then(function (result) {
-                document.getElementById('overallCollateral').innerText = (result/(10**18)).toFixed(2);
+            cdpStatic = new localWeb3.eth.Contract(cdpABI,result);
+            wethStatic.methods.balanceOf(result).call().then(function (result) {
+                document.getElementById('cdpWethBalance').innerText = (result/(10**18)).toFixed(2);
             });
         });
     });

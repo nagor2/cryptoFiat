@@ -7,6 +7,7 @@ import "./exchangeRateContract.sol";
 contract cartContract{
 
     struct cartItem {
+        bool exists;
         string symbol;
         uint256 share;
         uint256 initialPrice;
@@ -37,14 +38,15 @@ contract cartContract{
 
     function addItem(string memory symbol, uint256 share, uint256 initialPrice) public{
         require(dao.authorized(msg.sender), "only authorized address may do this");
-        cartItem storage prevItem = items[dictionary['symbol']];
-        require (prevItem.initialPrice == 0, "instrument already exists, please, use setShare")
+        require (dictionary[symbol]==0, "instrument already exists, please, use setShare");
         uint256 itemId = itemsCount++;
         cartItem storage c = items[itemId];
         c.share = share;
+        c.exists = true;
         c.symbol = symbol;
         c.initialPrice = initialPrice;
         sharesCount += share;
+        dictionary[symbol] = itemId;
         emit instrumentAdded(itemId);
     }
 
@@ -66,13 +68,12 @@ contract cartContract{
         return overallCartPrice/sharesCount;
     }
 
-    //TODO: написать функцию, которая читает из оракла только значение индекса
+    //TODO: code a function, that reads only index value from oracle
 
     function getPrice(string memory symbol) public view returns (uint256) {
-        //TODO: переписать целиком! Нельзя возвращать 0
         if (keccak256(bytes(symbol)) == keccak256(bytes('stb')))
             return oracle.getPrice('eth') * 10**6 / getCurrentSharePrice();
-        return 0;
+        return oracle.getPrice(symbol);
     }
 
     function getDecimals(string memory symbol) public view returns (uint256 _decimals) {

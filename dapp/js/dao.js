@@ -8,6 +8,7 @@ var cart;
 var cdp;
 var deposit;
 var votingId;
+var weth;
 
 
 
@@ -61,12 +62,22 @@ function initGlobals() {
 
     rule = new web3.eth.Contract(ruleABI,ruleAddress);
     dao = new web3.eth.Contract(daoABI,daoAddress);
+    daoStatic.methods.addresses("cdp").call().then(function (result) {
+        cdp = new web3.eth.Contract(cdpABI,result);
+        getMyDebtPositions();
+    });
+
     daoStatic.methods.addresses("cart").call().then(function (result) {
         cart = new web3.eth.Contract(cartABI,result);
     });
 
+    daoStatic.methods.addresses("weth").call().then(function (result) {
+        weth = new web3.eth.Contract(wethABI,result);
+    });
+
 
     subscribeToMetamaskEvents();
+
 
     ruleStatic.methods.balanceOf(userAddress).call().then(function (result) {
         document.getElementById('ruleBalance').innerText = (result/(10**18)).toFixed(2);});
@@ -165,6 +176,12 @@ function initGlobals() {
     console.log ('You use '+ chain[0])
     document.getElementById('network').innerHTML = 'Вы используете <a href="'+chain[1]+'" target="_blank">'+chain[0]+'</a>';
 }
+function openCDP(){
+    let collateral = document.getElementById('ethCollateral').value;
+    cdp.methods.openCDP(daoAddress, localWeb3.utils.toWei(amount)).send({from:userAddress, value: web3.utils.toWei(collateral)}).then(function (result) {
+        window.location.reload();
+    });
+}
 
 function allowRuleTokensToDao(){
     let amount = document.getElementById('tokensToPool').value;
@@ -241,14 +258,46 @@ function getChain (chainId) {
     }
 }
 
+function getMyDebtPositions(){
+    cdp.getPastEvents('PositionOpened', {fromBlock: 0,toBlock: 'latest'}).then(function(event){
+        if (event[1]==userAddress){
+            console.log(event);
+            let posId = event[0];
+            printDebtPosition(posId).then(function (){
+                cdpStatic.methods.totalCurrentFee(posId).call().then(function (result) {
+                    document.getElementById('accInterest-id-'+id).innerText = localWeb3.utils.fromWei(result);
+                });
+            });
+        }
+    });
+}
+
+function printDebtPosition(id){
+    let html;
+cdpStatic.methods.positions(id).call().then(function(position){
+    html = "<div id='position-"+id+"'>" +
+        "<p>opened: "+dateFromTimestamp(position.timeOpened)+"</p>" +
+        "<p>updated: "+dateFromTimestamp(position.lastTimeUpdated)+"</p>" +
+        "<p>coinsMinted: "+localWeb3.utils.fromWei(position.coinsMinted)+"</p>"+
+        "<p>accumulated interest:  <span style='font-weight: bold;' id='accInterest-id-"+id+"'></span></p>"+
+        "</div>"
+    return html;
+});
+
+}
+
 async function subscribeToDaoEvents() {
     let votingEvents = await daoStatic.getPastEvents('NewVoting', {
         fromBlock: 0,
         toBlock: 'latest'
     });
-    let lastEvent = votingEvents[votingEvents.length -1];
-    votingId = lastEvent.returnValues[0];
-    fillVoting(votingId);
+
+    if (votingEvents.length>0){
+        let lastEvent = votingEvents[votingEvents.length -1];
+        votingId = lastEvent.returnValues[0];
+        fillVoting(votingId);
+    }
+
 
     //    event VotingSucceed (uint256 id);
     //     event VotingFailed (uint256 id);
@@ -300,7 +349,7 @@ function est() {
 
 function claim() {
       hash.methods.claimDividends().send({from:userAddress}).then(function ( result) {
-          alert ('dividends arrived, jucy feedback')
+          alert ('dividends arrived, juicy feedback')
     });
 
 }
