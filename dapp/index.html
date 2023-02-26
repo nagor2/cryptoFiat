@@ -9,6 +9,10 @@
     <script type='text/javascript' >
         $(document).ready(function(){
             $("#unlockDiv").hide();
+            $("#voting").hide();
+            $("#votingParams").hide();
+            $("#vote").hide();
+
         })
     </script>
 </head>
@@ -25,16 +29,32 @@
         <a href = "http://testflight.apple.com/join/4cYoRF4M"><img src="img/ios.png" height="50" width="50"/></a>
 
     </div>
-
     <div id="unlockDiv" >
     <table style="background-color :white">
         <tr>
-            <td width="100px"><a href="#" onclick="alert('metamask');"><img src = "/img/metamask.png"></a></td>
+            <td width="100px"><a href="#" onclick=""><img src = "/img/metamask.png"></a></td>
         </tr>
-
     </table>
 </div>
 </div>
+
+<table style="background-color :white">
+    <tr>
+        <td width="100px">
+            Your address: <span style="font-weight: bold;" id="userAddress"></span>
+        </td>
+    </tr>
+    <tr>
+        <td width="100px">
+            <span style="font-weight: bold;" id="network"></span>
+        </td>
+    </tr>
+    <tr>
+        <td width="100px">
+            ETH balance: <span style="font-weight: bold;" id="ethValue"></span>
+        </td>
+    </tr>
+</table>
 
 <table border="1" width="100%">
     <tr>
@@ -42,6 +62,7 @@
             <h2>StableCoin</h2>
             <p>address: <span style="font-weight: bold;" id="stableCoinLink"></span></p>
             <p>total supply: <span style="font-weight: bold;" id="stableCoinSupply"></span></p>
+            <p>your balance: <span style="font-weight: bold;" id="stableCoinBalance"></span></p>
             <p>N of transactions (iterate transfers): <span style="font-weight: bold;" id="stableTxCount"></span></p>
             <p>N of holders (iterate addresses): <span style="font-weight: bold;" id="stableHolders"></span></p>
             <p>price vs USD (pool):</p>
@@ -52,16 +73,60 @@
             <input type="button" value="Buy from pool">
         </td>
         <td>
-            <h2>Invest</h2>
-            <p>top projects:</p>
-            <input type="button" value="Buy tokens">
-            <p>top commodities:</p>
-            <input type="button" value="Buy commodities">
+            <h2>INTDAO</h2> <input type="button" value="renew contracts" onclick="dao.methods.renewContracts().send({from:userAddress});">
+            <p>address: <span style="font-weight: bold;" id="daoLink"></span></p>
+            <p>WETH address:<span style="font-weight: bold;" id="wethLink"></span></p>
+            <p>authorized:</p>
+
+            <h3>Is active voting: <span style="font-weight: bold;" id="activeVoting"></span></h3>
+            <a href="#" onclick="$('#votingParams').slideToggle();">last/current voting</a>
+            <div id="votingParams">
+                <p>
+                totalPositive: <span style="font-weight: bold;" id="totalPositive"></span><br>
+                voteingType: <span style="font-weight: bold;" id="voteingType"></span><br>
+                name: <span style="font-weight: bold;" id="voteingName"></span><br>
+                value: <span style="font-weight: bold;" id="voteingValue"></span><br>
+                addr: <span style="font-weight: bold;" id="voteingAddress"></span><br>
+                startTime: <span style="font-weight: bold;" id="voteingStartTime"></span><br>
+                decision: <span style="font-weight: bold;" id="voteingDecision"></span><br>
+                </p>
+                <input type="button" id="claimToFinalizeButton" value="claimToFinalize" onclick="claimToFinalize();">
+            </div>
+            <a href="#" onclick="$('#voting').slideToggle();">add voting</a>
+            <div id = "voting">
+                <select id="votingType">
+                    <option value="1">Param</option>
+                    <option value="2">Address</option>
+                    <option value="3">Pause (on/off)</option>
+                    <option value="4">Authorize (on/off)</option>
+                </select>
+                <input type="text" id="name" value="name">
+                <input type="text" id="value" value="value">
+                <input type="text" id="addr" value="addr">
+                <input type="checkbox" id="decision">
+                <input type="button" value="add voting" onclick="newVoting();">
+            </div>
+            <a href="#" onclick="$('#vote').slideToggle();">Vote</a>
+            <div id = "vote">
+                <input type="checkbox" id="VoteDecision">
+                <input type="button" value="vote" onclick="sendVote();">
+            </div>
+            <p>ruleBalanceOf DAO: <span style="font-weight: bold;" id="ruleBalanceOfDAO"></span></p>
+            <p>Pooled tokens: <span style="font-weight: bold;" id="overallPooled"></span></p>
+            <p>Your allowed tokens: <span style="font-weight: bold;" id="allowed"></span></p>
+            <p>Your pooled tokens: <span style="font-weight: bold;" id="pooled"></span></p>
+            <input type="text" value="100" id="tokensToPool">
+            <input type="button" value="allow tokens" onclick="allowRuleTokensToDao();">
+            <input type="button" value="pool tokens" onclick="poolTokens();">
+            <input type="button" value="return tokens" onclick="returnTokens();">
+            <input type="button" value="vote">
         </td>
+
         <td>
             <h2>Rule</h2>
             <p>address: <span style="font-weight: bold;" id="ruleLink"></span></p>
             <p>total supply: <span style="font-weight: bold;" id="ruleSupply"></span></p>
+            <p>your balance: <span style="font-weight: bold;" id="ruleBalance"></span></p>
             <p>N of transactions (iterate transfers): <span style="font-weight: bold;" id="ruleTxCount"></span></p>
             <p>N of holders: <span style="font-weight: bold;" id="ruleHolders"></span></p>
             <p>price in stableCoins (from pool):</p>
@@ -111,7 +176,7 @@
 
         </td>
         <td>
-            <h2>Cart</h2>
+            <h2>Cart</h2><input type="button" value="renew contracts" onclick="cart.methods.renewContracts().send({from:userAddress});">
             <p>address: <span style="font-weight: bold;" id="cartLink"></span></p>
             <p>instruments: (actual price, blockchain price, share, last time updated)</p>
             <input type="button" value="claim update">
@@ -128,14 +193,11 @@
             <p>last auctions:</p>
         </td>
         <td>
-            <h2>INTDAO</h2>
-            <p>address: <span style="font-weight: bold;" id="daoLink"></span></p>
-            <p>WETH address:<span style="font-weight: bold;" id="wethLink"></span></p>
-            <p>authorized:</p>
-            <p>params:</p>
-            <h3>Active votings:</h3>
-            <input type="button" value="pool tokens">
-            <input type="button" value="vote">
+            <h2>Invest</h2>
+            <p>top projects:</p>
+            <input type="button" value="Buy tokens">
+            <p>top commodities:</p>
+            <input type="button" value="Buy commodities">
         </td>
         <td>
             <h2>Inflation:</h2>

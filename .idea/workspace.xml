@@ -10,21 +10,17 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/trash/sepolia.txt" afterDir="false" />
+    <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Rule.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/cart.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/cart.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dapp/js/hash.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/dao.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/js/dao.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/dao.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dapp/js/stat.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/stat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/deposit_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/deposit_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/exchangeRate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/exchangeRate_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trash/goerli.txt" beforeDir="false" afterPath="$PROJECT_DIR$/trash/goerli.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,10 +82,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../TakeMyEther/repo" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "B:/YandexDisk/Работа/ICO/CryptoFiat/repo",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "B:\\WebStorm 2022.2\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\dapp\js" />
@@ -115,13 +116,13 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="d6831e29-4d2c-423e-bc5f-e9a97ec61c95" name="Default Changelist" comment="" />
+      <changelist id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later" />
       <created>1641184531337</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -204,6 +205,10 @@
       <workItem from="1676783085446" duration="1691000" />
       <workItem from="1676884858842" duration="6112000" />
       <workItem from="1677040437916" duration="7805000" />
+      <workItem from="1677305695237" duration="6458000" />
+      <workItem from="1677330212096" duration="1838000" />
+      <workItem from="1677335605410" duration="252000" />
+      <workItem from="1677379969140" duration="19904000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -286,7 +291,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -320,22 +325,5 @@
     <MESSAGE value="Some problems with open CDP" />
     <MESSAGE value="Not working code. Check later" />
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1677062226949">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1677062226949" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/dapp/js/stat.js</url>
-          <line>2373</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

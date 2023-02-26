@@ -2,7 +2,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.
 
 
 var wethAddress;
-var daoAddress = '0xF85366a7eD78c51A60A2a06Bc666c63240dAfB96';
+var daoAddress = '0x578A8A64D614eBAaAc2d0ADEb998dF2cfE7B8131';
 
 var stableCoinABI = [
     {
@@ -2118,138 +2118,348 @@ var inflationABI = [
         "type": "function"
     }
 ];
+var cartABI = [
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "INTDAOaddress",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            }
+        ],
+        "name": "instrumentAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            }
+        ],
+        "name": "shareChanged",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "decimals",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "items",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "share",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "initialPrice",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "itemsCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "sharesCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renewContracts",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "share",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "initialPrice",
+                "type": "uint256"
+            }
+        ],
+        "name": "addItem",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "share",
+                "type": "uint256"
+            }
+        ],
+        "name": "setShare",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCurrentSharePrice",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            }
+        ],
+        "name": "getPrice",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            }
+        ],
+        "name": "getDecimals",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_decimals",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+];
 
-var dao = new localWeb3.eth.Contract(daoABI,daoAddress);
+var daoStatic = new localWeb3.eth.Contract(daoABI,daoAddress);
 
-var stableCoin;
-var rule;
+var stableCoinStatic;
+var ruleStatic;
+var ruleAddress;
+var stableCoinAddress;
 
-dao.methods.addresses('rule').call().then(function (result) {
-    ruleAddress = result;
-    rule = new localWeb3.eth.Contract(ruleABI,ruleAddress);
+async function drawStatic(){
+    await daoStatic.methods.addresses('rule').call().then(function (result) {
+        ruleAddress = result;
+        ruleStatic = new localWeb3.eth.Contract(ruleABI,ruleAddress);
 
-    getTransfers(rule).then(function (result) {
-        document.getElementById('ruleTxCount').innerText = result.length;
-        //console.log(result);
-    });
+        getTransfers(ruleStatic).then(function (result) {
+            document.getElementById('ruleTxCount').innerText = result.length;
+            //console.log(result);
+        });
 
 
-    getHolders(rule).then(function (result) {
-        document.getElementById('ruleHolders').innerText = result.length;
-        //console.log(result);
-    });
+        getHolders(ruleStatic).then(function (result) {
+            document.getElementById('ruleHolders').innerText = result.length;
+            //console.log(result);
+        });
 
-    document.getElementById('ruleLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + ruleAddress + '>'+ruleAddress+'</a>';
-    rule.methods.totalSupply().call().then(function (result) {
-        document.getElementById('ruleSupply').innerText = (result/(10**18)).toFixed(2);
-    });
-});
-
-dao.methods.addresses('weth').call().then(function (result) {
-    wethAddress = result;
-    var weth = new localWeb3.eth.Contract(wethABI,wethAddress);
-
-    document.getElementById('wethLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + wethAddress + '>'+wethAddress+'</a>';
-
-    dao.methods.addresses('cdp').call().then(function (result) {
-        weth.methods.balanceOf(result).call().then(function (result) {
-            document.getElementById('overallCollateral').innerText = (result/(10**18)).toFixed(2);
+        document.getElementById('ruleLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + ruleAddress + '>'+ruleAddress+'</a>';
+        ruleStatic.methods.totalSupply().call().then(function (result) {
+            document.getElementById('ruleSupply').innerText = (result/(10**18)).toFixed(2);
         });
     });
-});
 
-dao.methods.addresses('inflationFund').call().then(function (result) {
-    var inflationAddress = result;
-    var inflation = new localWeb3.eth.Contract(inflationABI,inflationAddress);
 
-    document.getElementById('inflationLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + inflationAddress + '>'+inflationAddress+'</a>';
 
-    inflation.methods.lastEmission().call().then(function (result) {
+    daoStatic.methods.addresses('weth').call().then(function (result) {
+        wethAddress = result;
+        var weth = new localWeb3.eth.Contract(wethABI,wethAddress);
+
+        document.getElementById('wethLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + wethAddress + '>'+wethAddress+'</a>';
+
+        daoStatic.methods.addresses('cdp').call().then(function (result) {
+            weth.methods.balanceOf(result).call().then(function (result) {
+                document.getElementById('overallCollateral').innerText = (result/(10**18)).toFixed(2);
+            });
+        });
+    });
+
+    daoStatic.methods.addresses('inflationFund').call().then(function (result) {
+        var inflationAddress = result;
+        var inflation = new localWeb3.eth.Contract(inflationABI,inflationAddress);
+
+        document.getElementById('inflationLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + inflationAddress + '>'+inflationAddress+'</a>';
+
+        inflation.methods.lastEmission().call().then(function (result) {
             document.getElementById('lastEmission').innerText = dateFromTimestamp(result);
-    });
-});
-
-dao.methods.addresses('cart').call().then(function (result) {
-    var cartAddress = result;
-
-    document.getElementById('cartLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + cartAddress + '>'+cartAddress+'</a>';
-
-});
-
-dao.methods.addresses('auction').call().then(function (result) {
-    var auctionAddress = result;
-
-    document.getElementById('auctionLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + auctionAddress + '>'+auctionAddress+'</a>';
-
-});
-
-
-
-dao.methods.addresses('stableCoin').call().then(function (result) {
-    stableCoinAddress = result;
-    stableCoin = new localWeb3.eth.Contract(stableCoinABI,stableCoinAddress);
-    getTransfers(stableCoin).then(function (result) {
-        document.getElementById('stableTxCount').innerText = result.length;
-        //console.log(result);
-    });
-
-
-    getHolders(stableCoin).then(function (result) {
-        document.getElementById('stableHolders').innerText = result.length;
-        //console.log(result);
-    });
-
-    document.getElementById('stableCoinLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + stableCoinAddress + '>'+stableCoinAddress+'</a>';
-    stableCoin.methods.totalSupply().call().then(function (result) {
-        document.getElementById('stableCoinSupply').innerText = (result/(10**18)).toFixed(2);
-    });
-
-
-    dao.methods.addresses('cdp').call().then(function (result) {
-        var cdpAddress = result;
-        document.getElementById('cdpLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + cdpAddress + '>'+cdpAddress+'</a>';
-
-        stableCoin.methods.balanceOf(cdpAddress).call().then(function (result) {
-            document.getElementById('stabFund').innerText = (result/(10**18)).toFixed(2);
-        });
-
-        var cdp = new localWeb3.eth.Contract(cdpABI,cdpAddress);
-
-        cdp.methods.numPositions().call().then(function (result) {
-            document.getElementById('positionsCount').innerText = result;
         });
     });
 
-    dao.methods.addresses('deposit').call().then(function (result) {
-        var depositAddress = result;
-        document.getElementById('depositLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + depositAddress + '>'+depositAddress+'</a>';
-        stableCoin.methods.balanceOf(depositAddress).call().then(function (result) {
-            document.getElementById('overallDeposits').innerText = (result/(10**18)).toFixed(2);
+    daoStatic.methods.addresses('cart').call().then(function (result) {
+        var cartAddress = result;
+
+        document.getElementById('cartLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + cartAddress + '>'+cartAddress+'</a>';
+
+    });
+
+    daoStatic.methods.addresses('auction').call().then(function (result) {
+        var auctionAddress = result;
+
+        document.getElementById('auctionLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + auctionAddress + '>'+auctionAddress+'</a>';
+
+    });
+
+    await daoStatic.methods.addresses('stableCoin').call().then(function (result) {
+        stableCoinAddress = result;
+        stableCoinStatic = new localWeb3.eth.Contract(stableCoinABI,stableCoinAddress);
+        getTransfers(stableCoinStatic).then(function (result) {
+            document.getElementById('stableTxCount').innerText = result.length;
+            //console.log(result);
         });
 
-        var deposit = new localWeb3.eth.Contract(depositABI,depositAddress);
 
-        deposit.methods.counter().call().then(function (result) {
-            document.getElementById('depositsCount').innerText = result;
+        getHolders(stableCoinStatic).then(function (result) {
+            document.getElementById('stableHolders').innerText = result.length;
+            //console.log(result);
+        });
+
+        document.getElementById('stableCoinLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + stableCoinAddress + '>'+stableCoinAddress+'</a>';
+        stableCoinStatic.methods.totalSupply().call().then(function (result) {
+            document.getElementById('stableCoinSupply').innerText = (result/(10**18)).toFixed(2);
+        });
+
+
+        daoStatic.methods.addresses('cdp').call().then(function (result) {
+            var cdpAddress = result;
+            document.getElementById('cdpLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + cdpAddress + '>'+cdpAddress+'</a>';
+
+            stableCoinStatic.methods.balanceOf(cdpAddress).call().then(function (result) {
+                document.getElementById('stabFund').innerText = (result/(10**18)).toFixed(2);
+            });
+
+            var cdp = new localWeb3.eth.Contract(cdpABI,cdpAddress);
+
+            cdp.methods.numPositions().call().then(function (result) {
+                document.getElementById('positionsCount').innerText = result;
+            });
+        });
+
+        daoStatic.methods.addresses('deposit').call().then(function (result) {
+            var depositAddress = result;
+            document.getElementById('depositLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + depositAddress + '>'+depositAddress+'</a>';
+            stableCoinStatic.methods.balanceOf(depositAddress).call().then(function (result) {
+                document.getElementById('overallDeposits').innerText = (result/(10**18)).toFixed(2);
+            });
+
+            var deposit = new localWeb3.eth.Contract(depositABI,depositAddress);
+
+            deposit.methods.counter().call().then(function (result) {
+                document.getElementById('depositsCount').innerText = result;
+            });
         });
     });
-});
 
-dao.methods.params("annualInflationPercent").call().then(function (result) {
-    document.getElementById('annualInflation').innerText = result + "%";
-});
+    daoStatic.methods.params("annualInflationPercent").call().then(function (result) {
+        document.getElementById('annualInflation').innerText = result + "%";
+    });
 
-dao.methods.params("interestRate").call().then(function (result) {
-    document.getElementById('interestRate').innerText = result + "%";
-});
+    daoStatic.methods.params("interestRate").call().then(function (result) {
+        document.getElementById('interestRate').innerText = result + "%";
+    });
 
-dao.methods.params("depositRate").call().then(function (result) {
-    document.getElementById('depositRate').innerText = result + "%";
-});
+    daoStatic.methods.params("depositRate").call().then(function (result) {
+        document.getElementById('depositRate').innerText = result + "%";
+    });
 
-dao.methods.params("collateralDiscount").call().then(function (result) {
-    document.getElementById('collateralDiscount').innerText = result + "%";
-});
+    daoStatic.methods.params("collateralDiscount").call().then(function (result) {
+        document.getElementById('collateralDiscount').innerText = result + "%";
+    });
+}
 
 /*
 dao.methods.params().call().then(function (result) {
@@ -2388,8 +2598,12 @@ hashToken.methods.daysFromStart().call().then(function (result) {
 });
 
 */
-window.onload = function() {
+window.onload = async function() {
     document.getElementById('daoLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + daoAddress + '>'+daoAddress+'</a>';
+    await drawStatic();
+
+
+    unlock();
 };
 
 

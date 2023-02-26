@@ -1,377 +1,36 @@
-var DAOAbi = [
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "WETH",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            }
-        ],
-        "name": "NewVoting",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
-        ],
-        "name": "VotingFailed",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
-        ],
-        "name": "VotingSucceed",
-        "type": "event"
-    },
-    {
-        "inputs": [],
-        "name": "activeVoting",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "name": "addresses",
-        "outputs": [
-            {
-                "internalType": "address payable",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "authorized",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "name": "params",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "paused",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "pooled",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "totalPooled",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "votings",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "totalPositive",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "voteingType",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address payable",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "startTime",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "decision",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "addressName",
-                "type": "string"
-            },
-            {
-                "internalType": "address payable",
-                "name": "addr",
-                "type": "address"
-            }
-        ],
-        "name": "setAddressOnce",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "votingType",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address payable",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "internalType": "bool",
-                "name": "_decision",
-                "type": "bool"
-            }
-        ],
-        "name": "addVoting",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "renewContracts",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "poolTokens",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "success",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "returnTokens",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "votingId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "_vote",
-                "type": "bool"
-            }
-        ],
-        "name": "vote",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "votingId",
-                "type": "uint256"
-            }
-        ],
-        "name": "claimToFinalizeVoting",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }
-];
-var daoAddress = "0xAFB159B19bf46b50d37a2Ee0d985Eb9163F7cd7A";
-
 var userAddress;
-var masterChef;
-var lp;
-
 const decimals = 18;
 var ethereum;
+var dao;
+var rule;
+var stableCoin;
+var cart;
+var cdp;
+var deposit;
+var votingId;
 
-unlock();
+
 
 async function unlock(){
-    alert('unlock');
     if (typeof web3 !== 'undefined') {
         // Use the browser's ethereum provider
         window.web3 = new Web3(web3.currentProvider);
         ethereum = window.ethereum;
-
-        if (ethereum !== 'undefined' && ethereum.isConnected()) {
+        if (ethereum !== 'undefined' || !ethereum.isConnected()) {
             try {
                 await ethereum.enable();
                 console.log ('Connected ' + ethereum.selectedAddress)
 
-                userAddress = ethereum.selectedAddress;
+                userAddress = await ethereum.selectedAddress;
                 console.log (userAddress);
-                //initGlobals();
+                initGlobals();
                 //misoBalance(userAddress);
                 //misoTotalSupply();
                 //pendingMiso(userAddress);
             }
             catch(error){
+
+                console.dir (error);
                 console.log ('Message: ' + error.message);
                 if (error.code==4001)
                     alert('You have to connect')
@@ -387,9 +46,60 @@ async function unlock(){
 
 }
 
-function initGlobals() {
-    hashAddress = '0x8338b13F0bd40bcD452bD34ffD2f729a04aeD035';
+function handleAccountsChanged(accounts) {
+    if (accounts.length === 0) {
+        // MetaMask is locked or the user has not connected any accounts
+        console.log('Please connect to MetaMask.');
+    } else if (accounts[0] !== userAddress) {
+        userAddress = accounts[0];
+        alert (userAddress);
+        // Do any other work!
+    }
+}
 
+function initGlobals() {
+
+    rule = new web3.eth.Contract(ruleABI,ruleAddress);
+    dao = new web3.eth.Contract(daoABI,daoAddress);
+    daoStatic.methods.addresses("cart").call().then(function (result) {
+        cart = new web3.eth.Contract(cartABI,result);
+    });
+
+
+    subscribeToMetamaskEvents();
+
+    ruleStatic.methods.balanceOf(userAddress).call().then(function (result) {
+        document.getElementById('ruleBalance').innerText = (result/(10**18)).toFixed(2);});
+    ruleStatic.methods.allowance(userAddress, daoAddress).call().then(function (result) {
+        document.getElementById('allowed').innerText = (result/(10**18)).toFixed(2);
+    });
+    ruleStatic.methods.balanceOf(daoAddress).call().then(function (result) {
+        document.getElementById('ruleBalanceOfDAO').innerText = (result/(10**18)).toFixed(2);
+    });
+    daoStatic.methods.totalPooled().call().then(function (result) {
+        document.getElementById('overallPooled').innerText = (result/(10**18)).toFixed(2);
+    });
+
+    stableCoinStatic.methods.balanceOf(userAddress).call().then(function (result) {
+        document.getElementById('stableCoinBalance').innerText = (result/(10**18)).toFixed(2);
+    });
+
+    daoStatic.methods.pooled(userAddress).call().then(function ( result) {
+        var pooledTokens = (result/10**18).toFixed(2);
+        console.log('pooled: '+pooledTokens);
+        printStr('pooled', pooledTokens);
+    });
+
+    daoStatic.methods.activeVoting().call().then(function (result) {
+        document.getElementById('activeVoting').innerText = result;
+        if (result.toString()=='true') {
+            $('#votingParams').slideToggle();
+            document.getElementById("claimToFinalizeButton").disabled = false;
+        }
+        else document.getElementById("claimToFinalizeButton").disabled = true;
+    });
+
+/*
     hash  = new window.web3.eth.Contract(hashABI,hashAddress);
 
     hash.methods.poolAddress().call().then(function (result) {
@@ -435,25 +145,72 @@ function initGlobals() {
         });
     });
 
-    lpDecimals = 18;
-
+    lpDecimals = 18;*/
+/*
     hashBalance(userAddress);
     dividends(userAddress);
     pooledTokens(userAddress);
 
+*/
 
-
-    web3.eth.getBalance(userAddress).then(function (result) {
-        document.getElementById('ethValue').value = ((result/10**11).toFixed(10)/10**7).toFixed(4);
-        est();
+    window.web3.eth.getBalance(userAddress).then(function (result) {
+        document.getElementById('userAddress').innerText = userAddress;
+        document.getElementById('ethValue').innerText = ((result/10**11).toFixed(10)/10**7).toFixed(4);
+        //est();
 
     });
-    //subscribeToMisoTransfer();
+    subscribeToDaoEvents();
 
     var chain = getChain(ethereum.chainId);
     console.log ('You use '+ chain[0])
     document.getElementById('network').innerHTML = 'Вы используете <a href="'+chain[1]+'" target="_blank">'+chain[0]+'</a>';
 }
+
+function allowRuleTokensToDao(){
+    let amount = document.getElementById('tokensToPool').value;
+    rule.methods.approve(daoAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function poolTokens(){
+        dao.methods.poolTokens().send({from:userAddress}).then(function (result) {
+            window.location.reload();
+        });
+}
+
+function newVoting(){
+    let votingType = document.getElementById('votingType').value
+    let name = document.getElementById('name').value
+    let value = document.getElementById('value').value
+    let addr = document.getElementById('addr').value
+    let decision = document.getElementById('decision').value;
+
+    dao.methods.addVoting(votingType, name, value, addr, decision).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function sendVote(){
+    let decision = document.getElementById('VoteDecision').checked;
+    console.log(decision);
+
+    dao.methods.vote(votingId, decision).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function claimToFinalize(){
+    dao.methods.claimToFinalizeVoting(votingId).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });}
+
+function returnTokens(){
+    dao.methods.returnTokens().send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
 
 function printStr(id, str) {
     document.getElementById(id).innerHTML = str;
@@ -484,9 +241,45 @@ function getChain (chainId) {
     }
 }
 
-function subscribeToMisoTransfer() {
-    miso.events.Transfer({}, {fromBlock: 'latest'},function (result) {
-        console.log(result)}).on('data', function(event){
+async function subscribeToDaoEvents() {
+    let votingEvents = await daoStatic.getPastEvents('NewVoting', {
+        fromBlock: 0,
+        toBlock: 'latest'
+    });
+    let lastEvent = votingEvents[votingEvents.length -1];
+    votingId = lastEvent.returnValues[0];
+    fillVoting(votingId);
+
+    //    event VotingSucceed (uint256 id);
+    //     event VotingFailed (uint256 id);
+}
+
+function fillVoting(id) {
+    daoStatic.methods.votings(id).call().then(function (result) {
+
+        document.getElementById('totalPositive').innerText = result[0];
+        document.getElementById('voteingType').innerText = result[1];
+        document.getElementById('voteingName').innerText = result[2];
+        document.getElementById('voteingValue').innerText = result[3];
+        document.getElementById('voteingAddress').innerText = result[4];
+        document.getElementById('voteingStartTime').innerText = dateFromTimestamp(result[5]);
+        document.getElementById('voteingDecision').innerText = result[6];
+        console.log(result);
+    });
+}
+
+function subscribeToMetamaskEvents(){
+    ethereum.on('chainChanged', (chainId) => {
+        // Handle the new chain.
+        // Correctly handling chain changes can be complicated.
+        // We recommend reloading the page unless you have good reason not to.
+        window.location.reload();
+    });
+
+    ethereum.on('accountsChanged', handleAccountsChanged);
+
+    ethereum.on('connect', (ConnectInfo) => {
+        console.log (ConnectInfo);
     });
 
 }
@@ -510,22 +303,6 @@ function claim() {
           alert ('dividends arrived, jucy feedback')
     });
 
-}
-
-function pooledTokens(address){
-    hash.methods.getPooledTokens(address).call().then(function ( result) {
-        var pooledTokens = (result/10**18).toFixed(2);
-        console.log('getPooledTokens: '+pooledTokens);
-        printStr('getPooledTokens', pooledTokens);
-
-    });
-
-    hash.methods.getLockedTokens(address).call().then(function ( result) {
-        var lockedTokens = (result/10**18).toFixed(2)
-        console.log('getLockedTokens: '+lockedTokens);
-        printStr('getLockedTokens', lockedTokens);
-
-    });
 }
 
 //user MISO Balance

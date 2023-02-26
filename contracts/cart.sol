@@ -19,6 +19,7 @@ contract cartContract{
     uint256 public sharesCount;
     uint256 public decimals = 6;
     mapping(uint256 => cartItem) public items;
+    mapping (string => uint256) public dictionary;
 
     event instrumentAdded(uint256 id);
     event shareChanged(uint256 id);
@@ -36,6 +37,8 @@ contract cartContract{
 
     function addItem(string memory symbol, uint256 share, uint256 initialPrice) public{
         require(dao.authorized(msg.sender), "only authorized address may do this");
+        cartItem storage prevItem = items[dictionary['symbol']];
+        require (prevItem.initialPrice == 0, "instrument already exists, please, use setShare")
         uint256 itemId = itemsCount++;
         cartItem storage c = items[itemId];
         c.share = share;
@@ -63,8 +66,10 @@ contract cartContract{
         return overallCartPrice/sharesCount;
     }
 
+    //TODO: написать функцию, которая читает из оракла только значение индекса
+
     function getPrice(string memory symbol) public view returns (uint256) {
-        //TODO: переписать
+        //TODO: переписать целиком! Нельзя возвращать 0
         if (keccak256(bytes(symbol)) == keccak256(bytes('stb')))
             return oracle.getPrice('eth') * 10**6 / getCurrentSharePrice();
         return 0;

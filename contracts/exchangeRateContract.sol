@@ -255,4 +255,7 @@ contract exchangeRateContract {
             emit Donation (msg.sender, msg.value, block.number);
         }
     }
+
+    //TODO: написать функцию, которая обновляет цены по массиву индексов, а не по массиву стрингов. Для этого уже есть dictionary. Лучше даже хранить инстументы по id, а по dictionary определять стрингу из view функции!
+
 }

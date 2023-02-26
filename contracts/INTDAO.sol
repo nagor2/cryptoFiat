@@ -7,6 +7,7 @@ contract INTDAO {
     mapping (uint => mapping(address => uint)) votes;
 
     mapping (uint=>Voting) public votings;
+    //TODO: add public and 256 ↓
     uint votingID;
 
     struct Voting {
@@ -65,6 +66,7 @@ contract INTDAO {
         addresses['inflationSpender'] = payable(0x0);
 
         authorized[msg.sender] = true;
+        //TODO: убрать эту (↑) фигню (нужна была, по всей видимости, для тестов)
     }
 
     function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses
@@ -151,6 +153,7 @@ contract INTDAO {
         if (votings[votingId].voteingType == 2)
             addresses[votings[votingId].name] = votings[votingId].addr;
         //TODO: Написать тест на паузу контракта (зачем нужен этот функционал, не помню, но пусть будет)
+        //TODO: Если это deposit или inflationFund - автоматически авторизовать.
         if (votings[votingId].voteingType == 3)
             paused[votings[votingId].addr] = votings[votingId].decision;
         if (votings[votingId].voteingType == 4)
