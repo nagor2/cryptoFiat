@@ -56,6 +56,7 @@
             <p>price vs USD (indicative): <span style="font-weight: bold;" id="indicativePrice"></span></p>
             <p>overall collateral: <span style="font-weight: bold;" id="overallCollateral"></span></p>
             <p>stabilization fund: <span style="font-weight: bold;" id="stabFund"></span></p>
+            <input type="button" value="initCoinsBuyOut" onclick="initCoinsBuyOut()">
             <p>pool volume:</p>
             <input type="button" value="Buy from pool">
         </td>
@@ -124,7 +125,6 @@
     <tr>
         <td>
             <h2>Deposit</h2>
-            /*initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) */
             <p>your stable coin allowance to Deposit contract: <span style="font-weight: bold;" id="depositAllowance"></span></p>
             <p>you are approved to withdraw from CDP: <span style="font-weight: bold;" id="myCDPAllowance"></span></p>
             <p>address: <span style="font-weight: bold;" id="depositLink"></span></p>
@@ -173,6 +173,7 @@
             <h2>Auction</h2>
             <p>address: <span style="font-weight: bold;" id="auctionLink"></span></p>
             <p>current auctions:</p>
+            <div id="activeAuctions"></div>
             <input type="button" value="bid">
             <p>last bids:</p>
             <p>last auctions:</p>

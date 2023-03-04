@@ -25,8 +25,8 @@ import "./CDP.sol";
     }
 
 contract Auction {
-    uint256 auctionNum;
-    uint256 bidsNum;
+    uint256 public auctionNum;
+    uint256 public bidsNum;
     stableCoin coin;
     INTDAO dao;
     CDP cdp;
@@ -82,6 +82,7 @@ contract Auction {
     }
 
     function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) public returns (uint256 auctionID){
+        //TODO: похоже, здесь ошибка, потому что coinsAmountNeeded в аукционе далее нигде не фиксируется. Надо узнавать у оракла цену?
         uint256 actualStabilizationFund = coin.balanceOf(address(cdp));
         uint256 preferableStabilizationFund = coin.totalSupply() * dao.params("stabilizationFundPercent")/100;
 

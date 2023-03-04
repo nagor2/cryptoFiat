@@ -11,6 +11,7 @@ var votingId;
 var weth;
 var cdpAddress;
 var depositAddress;
+var auction;
 
 async function unlock(){
     if (typeof web3 !== 'undefined') {
@@ -70,9 +71,6 @@ function initGlobals() {
 
     });
 
-
-
-
     daoStatic.methods.addresses("cdp").call().then(function (result) {
         cdpAddress = result;
         cdp = new web3.eth.Contract(cdpABI,result);
@@ -105,9 +103,11 @@ function initGlobals() {
         })
     });
 
+    daoStatic.methods.addresses("auction").call().then(function (result) {
+        auction = new web3.eth.Contract(auctionABI,result);
+    });
 
     subscribeToMetamaskEvents();
-
 
     ruleStatic.methods.balanceOf(userAddress).call().then(function (result) {
         document.getElementById('ruleBalance').innerText = (result/(10**18)).toFixed(2);});
@@ -140,66 +140,13 @@ function initGlobals() {
         else document.getElementById("claimToFinalizeButton").disabled = true;
     });
 
-/*
-    hash  = new window.web3.eth.Contract(hashABI,hashAddress);
-
-    hash.methods.poolAddress().call().then(function (result) {
-        lp = new window.web3.eth.Contract(lpABI,result);
-
-        lp.methods.totalSupply().call().then(function (result3) {
-            var total = result3;
-            console.log('total LP: '+ result3);
-
-            hash.methods.unlockTimeStamp(userAddress).call().then(function ( result) {
-                var date = new Date(result * 1000);
-                console.log (date);
-
-            });
-
-            lp.methods.balanceOf(userAddress).call().then(function (result) {
-                console.log('balance: '+ result);
-                var lpBalance = parseInt(result);
-
-                hash.methods.lockedBalances(userAddress).call().then(function ( result) {
-                    var locked = parseInt(result);
-                    console.log('locked LP: '+ locked);
-
-                    var sum = locked+lpBalance;
-
-                    console.log (sum);
-
-
-                    var share2 = (100*sum/total).toFixed(2);
-                    console.log ('poolShare: '+ share2);
-
-
-                    printStr('poolShare', share2);
-                    lp.methods.getReserves().call().then (function (result) {
-                        var userPooledUsd = ((share2/100)*(result[1]/(10**18))).toFixed(2);
-                        document.getElementById('userPooledUsd').innerText = userPooledUsd;
-                        console.dir ('userPooledUsd: '+userPooledUsd);
-                    });
-                });
-            });
-
-
-        });
-    });
-
-    lpDecimals = 18;*/
-/*
-    hashBalance(userAddress);
-    dividends(userAddress);
-    pooledTokens(userAddress);
-
-*/
-
     window.web3.eth.getBalance(userAddress).then(function (result) {
         document.getElementById('userAddress').innerText = userAddress;
         document.getElementById('ethValue').innerText = ((result/10**11).toFixed(10)/10**7).toFixed(4);
         //est();
 
     });
+
     subscribeToDaoEvents();
 
     var chain = getChain(ethereum.chainId);
@@ -265,7 +212,6 @@ function returnTokens(){
         window.location.reload();
     });
 }
-
 
 function printStr(id, str) {
     document.getElementById(id).innerHTML = str;
@@ -355,6 +301,31 @@ function printDeposit(id){
     });
 }
 
+function printAuction(id){
+    let html='';
+    auctionStatic.methods.auctions(id).call().then(function (auction) {
+        auctionStatic.methods.bids(auction.bestBidId).call().then(function(bid){
+            if (!auction.finalized)
+                html = "<div id='auction-"+id+"'>" +
+                    "<p>initTime: "+dateFromTimestamp(auction.initTime)+"</p>" +
+                    "<p>updated: "+dateFromTimestamp(auction.lastTimeUpdated)+"</p>" +
+                    "<p>lotToken: "+auction.lotToken+"</p>" +
+                    "<p>lotAmount: "+localWeb3.utils.fromWei(auction.lotAmount)+"</p>" +
+                    "<p>paymentToken: "+auction.paymentToken+"</p>" +
+
+                    "<p>best bid: "+bid.owner+"</p>" +
+                    "<p>bidAmount: "+localWeb3.utils.fromWei(bid.bidAmount)+"</p>" +
+                    "<p>bid time: "+dateFromTimestamp(bid.time)+"</p>" +
+
+                    "<input type=\"button\" value=\"topUp\" onclick=\"topUp("+id+")\">"+
+                    "<input type=\"button\" value=\"withdraw\" onclick=\"withdrawFromDeposit("+id+")\">"+
+                    "<input type=\"button\" value=\"close\" onclick=\"closeDeposit("+id+");\">"+
+                    "</div>";
+            document.getElementById("activeAuctions").innerHTML += html;
+        });
+    });
+}
+
 function withdrawFromDeposit(id){
     let amount = document.getElementById("stableCoinsToDeposit").value;
     deposit.methods.withdraw(id,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
@@ -406,6 +377,18 @@ function getMyDeposits(){
     });
 }
 
+
+function getMyDeposits(){
+    deposit.getPastEvents('DepositOpened', {fromBlock: 0,toBlock: 'latest'}).then(function(events){
+        for (let i =0; i<events.length; i++) {
+            let event = events[i];
+            if (event.returnValues.owner.toLowerCase()==userAddress.toLowerCase()){
+                printDeposit(event.returnValues.id);
+            }
+        }
+    });
+}
+
 function allowToDeposit (){
     let amount = document.getElementById('stableCoinsToDeposit').value;
     stableCoin.methods.approve(depositAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
@@ -443,6 +426,20 @@ async function subscribeToDaoEvents() {
 
     //    event VotingSucceed (uint256 id);
     //     event VotingFailed (uint256 id);
+}
+
+function initCoinsBuyOut(){
+    daoStatic.methods.addresses('cdp').call().then(function (add){
+        stableCoinStatic.methods.totalSupply().call().then(function (supply){
+            stableCoinStatic.methods.balanceOf(add).call().then(function (stabFund){
+                dao.methods.params('stabilizationFundPercent').call().then(function (percent){
+                    let coinsNeeded = localWeb3.utils.fromWei(supply)*percent/100 - stabFund;
+                    if (coinsNeeded>0)
+                        auction.methods.initCoinsBuyOutForStabilization(localWeb3.utils.toWei(coinsNeeded.toString())).send({from:userAddress});
+                })
+            });
+        });
+    });
 }
 
 function fillVoting(id) {

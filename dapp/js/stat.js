@@ -3120,6 +3120,349 @@ var oracleABI =  [
         "constant": true
     }
 ];
+var auctionABI =  [
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_INTDAOaddress",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "bidId",
+                "type": "uint256"
+            }
+        ],
+        "name": "bidCanceled",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "lotAmount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "bestBid",
+                "type": "uint256"
+            }
+        ],
+        "name": "buyOutFinished",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "lotAmount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "lotAddress",
+                "type": "address"
+            }
+        ],
+        "name": "buyOutInit",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "posID",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "liquidateColleteral",
+                "type": "uint256"
+            }
+        ],
+        "name": "liquidateCollateral",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "bidAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "newBid",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "auctions",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "initialized",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "finalized",
+                "type": "bool"
+            },
+            {
+                "internalType": "address",
+                "name": "lotToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "lotAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "paymentToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "initTime",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "lastTimeUpdated",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "bestBidId",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "bids",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "bidAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "time",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "canceled",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "renewContracts",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "initRuleBuyOut",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            }
+        ],
+        "name": "getBestBidAmount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "coinsAmountNeeded",
+                "type": "uint256"
+            }
+        ],
+        "name": "initCoinsBuyOutForStabilization",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "posID",
+                "type": "uint256"
+            }
+        ],
+        "name": "initCoinsBuyOut",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "auctionID",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "auctionId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "bidAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "makeBid",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "bidId",
+                "type": "uint256"
+            }
+        ],
+        "name": "cancelBid",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "auctionId",
+                "type": "uint256"
+            }
+        ],
+        "name": "claimToFinalizeAuction",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "success",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+];
 
 var daoStatic = new localWeb3.eth.Contract(daoABI,daoAddress);
 var wethStatic;
@@ -3131,29 +3474,27 @@ var cdpStatic;
 var cartStatic;
 var oracleStatic;
 var depositStatic;
+var auctionStatic;
 
 async function drawStatic(){
     await daoStatic.methods.addresses('rule').call().then(function (result) {
         ruleAddress = result;
-        ruleStatic = new localWeb3.eth.Contract(ruleABI,ruleAddress);
+        ruleStatic = new localWeb3.eth.Contract(ruleABI, ruleAddress);
 
-        getTransfers(ruleStatic).then(function (result) {
-            document.getElementById('ruleTxCount').innerText = result.length;
-            //console.log(result);
+        ruleStatic.methods.totalSupply().call().then(function (supply){
+            document.getElementById('ruleSupply').innerText = localWeb3.utils.fromWei(supply);
         });
-
 
         getHolders(ruleStatic).then(function (result) {
             document.getElementById('ruleHolders').innerText = result.length;
-            //console.log(result);
         });
 
         document.getElementById('ruleLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + ruleAddress + '>'+ruleAddress+'</a>';
-        ruleStatic.methods.totalSupply().call().then(function (result) {
-            document.getElementById('ruleSupply').innerText = (result/(10**18)).toFixed(2);
+
+        getTransfers(ruleStatic).then(function (result) {
+            document.getElementById('ruleTxCount').innerText = result.length;
         });
     });
-
     daoStatic.methods.addresses('inflationSpender').call().then(function (result) {
         document.getElementById('inflationSpender').innerText = result;
     });
@@ -3234,10 +3575,19 @@ async function drawStatic(){
     });
 
     daoStatic.methods.addresses('auction').call().then(function (result) {
-        var auctionAddress = result;
+        auctionStatic = new localWeb3.eth.Contract(auctionABI,result);
+        document.getElementById('auctionLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + result + '>'+result+'</a>';
 
-        document.getElementById('auctionLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + auctionAddress + '>'+auctionAddress+'</a>';
 
+
+        auctionStatic.getPastEvents('buyOutInit', {
+            fromBlock: 0,
+            toBlock: 'latest'
+        }).then(function (events){
+            for (let i =0; i<events.length; i++) {
+                    printAuction(events[i].returnValues.auctionID);
+            }
+        });
     });
 
     await daoStatic.methods.addresses('stableCoin').call().then(function (result) {
@@ -3307,11 +3657,6 @@ async function drawStatic(){
     });
 }
 
-/*
-dao.methods.params().call().then(function (result) {
-    document.getElementById('stableCoinSupply').innerText = (result/(10**18)).toFixed(2);
-});*/
-
 function dateFromTimestamp(timeStamp){
     var d = new Date(timeStamp * 1000);
     return ("0" + d.getDate()).slice(-2) + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" +
@@ -3342,113 +3687,9 @@ async function getHolders(contract){
     return holders;
 }
 
-
-
-
-
-/*
-hashToken.methods.poolAddress().call().then(function (result) {
-
-    console.log('poolAddress ' + result);
-
-    pool = new localWeb3.eth.Contract(lpABI,result);
-
-    pool.methods.getReserves().call().then (function (result) {
-        var pooledUsd = (result[1]/(10**18)).toFixed(2);
-        var pooledTokens = (result[0]/(10**18)).toFixed(2);
-
-        document.getElementById('pooledUsd').innerText = pooledUsd;
-        document.getElementById('pooledTokens').innerText = pooledTokens;
-
-        console.dir ('pooledUsd: '+pooledUsd);
-        console.dir ('pooledTokens: '+pooledTokens);
-    });
-
-    pool.methods.price0CumulativeLast().call().then (function (result) {
-        console.dir ('price0CumulativeLast: '+(result/(10**18)).toFixed(2));
-    });
-    pool.methods.price0CumulativeLast().call().then (function (result) {
-        console.dir ('price0CumulativeLast: '+(result/(10**18)).toFixed(2));
-    });
-
-});
-
-
-hashToken.methods.currentPrice().call().then(function (result) {
-    var price = (result/(10**5)).toFixed(2);
-    document.getElementById('currentPrice').innerText = price;
-    console.log("currentPrice: " + price);
-
-    hashToken.methods.totalSupply().call().then(function (result) {
-        var supply = (result/(10**18)).toFixed(2);
-        document.getElementById('totalSupply').innerText = supply;
-        console.log("totalSupply: "+ supply);
-
-        var marketCap = (supply*price).toFixed(2);
-        document.getElementById('marketCap').innerText = marketCap;
-        console.log("marketCap: "+ marketCap);
-    });
-
-
-    hashToken.methods.latestUSDPrice().call().then(function (result) {
-        var usdPrice = (result/(10**8)).toFixed(2);
-        document.getElementById('latestUSDPrice').innerText = usdPrice;
-        console.log("latestUSDPrice: " + usdPrice);
-
-        hashToken.methods.currentDividendsRound().call().then(function (result) {
-            var round = result;
-            document.getElementById('currentDividendsRound').innerText = round;
-            console.log("currentDividendsRound: " + round);
-
-            hashToken.methods.secondsBetweenLastRounds().call().then(function (result) {
-                var seconds = result;
-                document.getElementById('secondsBetweenLastRounds').innerText = seconds;
-                console.log("secondsBetweenLastRounds: " +  seconds);
-
-                hashToken.methods.dividendsRounds(round).call().then(function (result) {
-
-                    var perToken = result;
-                    var perTokenUSD = (usdPrice*result/10**18).toFixed(2);
-
-
-                    document.getElementById('perToken').innerText = perTokenUSD;
-                    console.log("perToken: " +  perTokenUSD);
-
-                    var yearly = (usdPrice*(result/seconds)*31536000/10**16/price).toFixed(2);
-
-                    document.getElementById('yearly').innerText = yearly;
-                    console.log("yearly: " +  yearly);
-                });
-
-            });
-
-        });
-    });
-
-});
-
-hashToken.methods.totalDividends().call().then(function (result) {
-    document.getElementById('totalDividends').innerText = (result/(10**18)).toFixed(5);
-    console.log("totalDividends: " +  (result/(10**18)).toFixed(5));
-});
-
-
-localWeb3.eth.getBalance(hashAddress).then(function (result) {
-    document.getElementById('avaliableDividends').innerText = (result/(10**18)).toFixed(5);
-    console.log("avaliableDividends: " + (result/(10**18)).toFixed(5));
-});
-
-hashToken.methods.daysFromStart().call().then(function (result) {
-    document.getElementById('daysFromStart').innerText = result;
-    console.log("daysFromStart: " + result);
-});
-
-*/
 window.onload = async function() {
     document.getElementById('daoLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + daoAddress + '>'+daoAddress+'</a>';
     await drawStatic();
-
-
     unlock();
 };
 
