@@ -58,7 +58,7 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(InflationFund, daoAddress);*/
     }
     else if (network == "development"){
-        const author = accounts[0];
+        const author = accounts[1];
         await deployer.deploy(weth);
         await deployer.deploy(INTDAO, weth.address, {from: author});
         await deployer.deploy(exchangeRateContract, INTDAO.address, {from: author, value:"1000000000000000000"});

@@ -138,17 +138,35 @@ contract('DAO', (accounts) => {
         let voter = accounts[5];
         await ruleToken.transfer(voter,web3.utils.toWei('400000', "ether"), {from: ruleHolder});
 
-        await ruleToken.approve(dao.address, web3.utils.toWei('400000', "ether"), {from: voter});
-        await dao.poolTokens({from: voter});
+        let tx = await ruleToken.approve(dao.address, web3.utils.toWei('400000', "ether"), {from: voter});
+
+        await truffleAssert.eventEmitted(tx, 'Approval', async (ev) => {
+            assert.equal(ev.owner, voter, "wrong owner");
+            assert.equal(ev.spender, dao.address, "wrong spender");
+            assert.equal(ev.value, web3.utils.toWei('400000'), "wrong value");
+        });
+
+
+        let res = await dao.poolTokens({from: voter});
+        //assert.equal(res, true, "wrong to");
+        //console.log (tx2);
+
+        /*
+        truffleAssert.eventEmitted(tx2, 'Transfer', async (ev) => {
+            assert.equal(ev.from, voter, "wrong from");
+            assert.equal(ev.to, dao.address, "wrong to");
+            assert.equal(ev.value, web3.utils.toWei('400000'), "wrong value");
+        });*/
 
         await ruleToken.approve(dao.address, web3.utils.toWei('200000', "ether"), {from: ruleHolder});
+
         await dao.poolTokens({from: ruleHolder});
 
         await dao.addVoting(1, "some string", 10, accounts[1], false,{from: ruleHolder});
         await dao.vote(2, false,{from: ruleHolder});
         await dao.vote(2, true,{from: voter});
 
-        let tx = await dao.claimToFinalizeVoting(2);
+        tx = await dao.claimToFinalizeVoting(2);
         truffleAssert.eventNotEmitted(tx, 'VotingSucceed');
 
         await time.increase(time.duration.days(1));
@@ -172,19 +190,32 @@ contract('DAO', (accounts) => {
     });
 
     it('should be able to finalize voting with absolute majority', async () => {
-        await ruleToken.approve(dao.address, web3.utils.toWei('600000', "ether"), {from: ruleHolder});
-        sleep(1000);
-        await dao.poolTokens({from: ruleHolder});
+        let tx = await ruleToken.approve(dao.address, web3.utils.toWei('600000', "ether"), {from: ruleHolder});
 
+        await truffleAssert.eventEmitted(tx, 'Approval', async (ev) => {
+            assert.equal(ev.owner, ruleHolder, "wrong owner");
+            assert.equal(ev.spender, dao.address, "wrong spender");
+            assert.equal(ev.value, web3.utils.toWei('600000'), "wrong value");
+        });
+
+
+        tx = await dao.poolTokens({from: ruleHolder});
+/*
+        await truffleAssert.eventEmitted(tx, 'Transfer', async (ev) => {
+            assert.equal(ev.from, ruleHolder, "wrong from");
+            assert.equal(ev.to, dao.address, "wrong to");
+            assert.equal(ev.value, web3.utils.toWei('600000'), "wrong value");
+        });
+*/
         await dao.addVoting(2, "some address", 0, accounts[1], false,{from: ruleHolder});
         await dao.vote(3, true,{from: ruleHolder});
 
         let valueBefore = await dao.addresses("some address");
         assert.equal(valueBefore, 0, "wrong valueBefore");
 
-        let tx = await dao.claimToFinalizeVoting(3);
+        tx = await dao.claimToFinalizeVoting(3);
 
-        truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
+        await truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
             assert.equal(ev.id, 3, "wrong id");
         });
 

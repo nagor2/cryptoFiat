@@ -100,6 +100,7 @@ contract INTDAO {
         require(ruleToken.transferFrom(msg.sender, address(this), amount), "Could not pool tokens for some reason");
         pooled[msg.sender] += amount;
         totalPooled += amount;
+        return true;
     }
 
     function returnTokens() public returns (bool) {
