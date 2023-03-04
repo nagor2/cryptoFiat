@@ -9,6 +9,8 @@ var cdp;
 var deposit;
 var votingId;
 var weth;
+var cdpAddress;
+
 
 
 
@@ -62,9 +64,22 @@ function initGlobals() {
 
     rule = new web3.eth.Contract(ruleABI,ruleAddress);
     dao = new web3.eth.Contract(daoABI,daoAddress);
+
+
+    daoStatic.methods.addresses("stableCoin").call().then(function (result) {
+        stableCoin = new web3.eth.Contract(stableCoinABI,result);
+        stableCoinBalance();
+
+    });
+
+
     daoStatic.methods.addresses("cdp").call().then(function (result) {
+        cdpAddress = result;
         cdp = new web3.eth.Contract(cdpABI,result);
         getMyDebtPositions();
+        stableCoin.methods.allowance(userAddress, cdpAddress).call().then(function (result) {
+            document.getElementById('cdpAllowance').innerText = (result/(10**18)).toFixed(5);
+        });
     });
 
     daoStatic.methods.addresses("cart").call().then(function (result) {
@@ -73,6 +88,9 @@ function initGlobals() {
 
     daoStatic.methods.addresses("weth").call().then(function (result) {
         weth = new web3.eth.Contract(wethABI,result);
+        weth.methods.balanceOf(userAddress).call().then (function (result){
+            document.getElementById('wethBalance').innerText = (result/(10**18)).toFixed(6);
+        })
     });
 
 
@@ -173,14 +191,21 @@ function initGlobals() {
     subscribeToDaoEvents();
 
     var chain = getChain(ethereum.chainId);
-    console.log ('You use '+ chain[0])
-    document.getElementById('network').innerHTML = 'Вы используете <a href="'+chain[1]+'" target="_blank">'+chain[0]+'</a>';
+    //console.log ('You use '+ chain[0])
+    //document.getElementById('network').innerHTML = 'Вы используете <a href="'+chain[1]+'" target="_blank">'+chain[0]+'</a>';
 }
 function openCDP(){
     let collateral = document.getElementById('ethCollateral').value;
-    cdp.methods.openCDP(daoAddress, localWeb3.utils.toWei(amount)).send({from:userAddress, value: web3.utils.toWei(collateral)}).then(function (result) {
+    let amount = document.getElementById('stableCoinsAmount').value;
+    cdp.methods.openCDP(localWeb3.utils.toWei(amount)).send({from:userAddress, value: web3.utils.toWei(collateral)}).then(function (result) {
         window.location.reload();
     });
+}
+
+function stableCoinBalance(){
+stableCoin.methods.balanceOf(userAddress).call().then(function (result){
+    document.getElementById("stableCoinBalance").innerText = parseFloat(result/10**18).toFixed(2);
+});
 }
 
 function allowRuleTokensToDao(){
@@ -259,31 +284,83 @@ function getChain (chainId) {
 }
 
 function getMyDebtPositions(){
-    cdp.getPastEvents('PositionOpened', {fromBlock: 0,toBlock: 'latest'}).then(function(event){
-        if (event[1]==userAddress){
-            console.log(event);
-            let posId = event[0];
-            printDebtPosition(posId).then(function (){
-                cdpStatic.methods.totalCurrentFee(posId).call().then(function (result) {
-                    document.getElementById('accInterest-id-'+id).innerText = localWeb3.utils.fromWei(result);
-                });
-            });
+    cdp.getPastEvents('PositionOpened', {fromBlock: 0,toBlock: 'latest'}).then(function(events){
+
+        for (var i =0; i<events.length; i++) {
+            let event = events[i];
+            if (event.returnValues.owner.toLowerCase()==userAddress.toLowerCase()){
+                //let posId = event.returnValues.posId;
+
+                printDebtPosition(event.returnValues.posId);
+
+
+                    //cdpStatic.methods.totalCurrentFee(posId).call().then(function (result) {
+                        //document.getElementById('accInterest-id-'+id).innerText = localWeb3.utils.fromWei(result);
+                   // });
+
+            }
         }
+
+
     });
 }
 
 function printDebtPosition(id){
-    let html;
-cdpStatic.methods.positions(id).call().then(function(position){
-    html = "<div id='position-"+id+"'>" +
-        "<p>opened: "+dateFromTimestamp(position.timeOpened)+"</p>" +
-        "<p>updated: "+dateFromTimestamp(position.lastTimeUpdated)+"</p>" +
-        "<p>coinsMinted: "+localWeb3.utils.fromWei(position.coinsMinted)+"</p>"+
-        "<p>accumulated interest:  <span style='font-weight: bold;' id='accInterest-id-"+id+"'></span></p>"+
-        "</div>"
-    return html;
-});
+    let html='';
 
+    cdpStatic.methods.totalCurrentFee(id).call().then(function (fee) {
+        cdpStatic.methods.positions(id).call().then(function(position){
+            if (!position.liquidated)
+            html = "<div id='position-"+id+"'>" +
+                "<p>opened: "+dateFromTimestamp(position.timeOpened)+"</p>" +
+                "<p>updated: "+dateFromTimestamp(position.lastTimeUpdated)+"</p>" +
+                "<p>coinsMinted: "+localWeb3.utils.fromWei(position.coinsMinted)+"</p>"+
+                "<p>wethLocked: "+localWeb3.utils.fromWei(position.wethAmountLocked)+"</p>"+
+                "<p>accumulated interest:  "+web3.utils.fromWei(fee)+"</p>"+
+                "<input type=\"button\" value=\"closeCDP\" onclick=\"cdp.methods.closeCDP("+id+").send({from:userAddress});\">"+
+                "<input type=\"button\" value=\"updateCDP\" onclick=\"updateCDP("+id+")\">"+
+                "<input type=\"button\" value=\"withdraw\" onclick=\"withdrawEther("+id+")\">"+
+                "<input type=\"button\" value=\"payInterest\" onclick=\"payInterest("+id+")\">"+
+                "</div>";
+            /*
+            * <input type="button" value="pay interest">
+            <input type="button" value="withdraw collateral">
+            <input type="button" value="update">
+
+            * */
+
+                document.getElementById("cdps").innerHTML += html;
+                //console.dir(position);
+        });
+    });
+}
+
+function withdrawEther(id){
+    let withdraw = document.getElementById('ethCollateral').value;
+    cdp.methods.withdrawEther(id, localWeb3.utils.toWei(withdraw)).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function payInterest(id){
+    cdp.methods.transferFee(id).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function updateCDP(id){
+    let collateral = document.getElementById('ethCollateral').value;
+    let amount = document.getElementById('stableCoinsAmount').value;
+    cdp.methods.updateCDP(id, localWeb3.utils.toWei(amount)).send({from:userAddress, value: web3.utils.toWei(collateral)}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function allowCoinsToCDP(){
+    let amount = document.getElementById('stableCoinsAmount').value;
+    stableCoin.methods.approve(cdpAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
 }
 
 async function subscribeToDaoEvents() {
@@ -346,6 +423,12 @@ function est() {
 
 }
 
+function claimEmission(){
+    daoStatic.methods.addresses('inflationFund').call().then(function (result){
+        let inflation = new web3.eth.Contract(inflationABI,result);
+        inflation.methods.claimEmission().send({from:userAddress});
+    })
+}
 
 function claim() {
       hash.methods.claimDividends().send({from:userAddress}).then(function ( result) {

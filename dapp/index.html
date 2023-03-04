@@ -12,7 +12,7 @@
             $("#voting").hide();
             $("#votingParams").hide();
             $("#vote").hide();
-
+            $("#getMetaMask").hide();
         })
     </script>
 </head>
@@ -20,14 +20,12 @@
 <a href="#" onclick="$('#unlockDiv').slideToggle();">show/hide</a>
 <div class="body flex-container">
     <div id = "getMetaMask" style="visibility: hidden;" align="center">
-
         <h3>To interact with blockchain application, please install MetaMask for your platform<br></h3>
         <a href = "https://chrome.google.com/webstore/detail/nkbihfbeogaeaoehlefnkodbefgpgknn"><img
                 src="img/chrome.png" height="50" width="50"/></a>
         <a href = "https://play.google.com/store/apps/details?id=io.metamask">
             <img src="img/android.png" height="50" width="50"/></a>
         <a href = "http://testflight.apple.com/join/4cYoRF4M"><img src="img/ios.png" height="50" width="50"/></a>
-
     </div>
     <div id="unlockDiv" >
     <table style="background-color :white">
@@ -38,23 +36,13 @@
 </div>
 </div>
 
-<table style="background-color :white">
-    <tr>
-        <td width="100px">
-            Your address: <span style="font-weight: bold;" id="userAddress"></span>
-        </td>
-    </tr>
-    <tr>
-        <td width="100px">
-            <span style="font-weight: bold;" id="network"></span>
-        </td>
-    </tr>
-    <tr>
-        <td width="100px">
-            ETH balance: <span style="font-weight: bold;" id="ethValue"></span>
-        </td>
-    </tr>
-</table>
+<p>ETH price: <span style="font-weight: bold;" id="ethPrice"></span><br>
+<p>Your address: <span style="font-weight: bold;" id="userAddress"></span><br>
+<p>network: <span style="font-weight: bold;" id="network"></span><br>
+<p>ETH balance: <span style="font-weight: bold;" id="ethValue"></span></p>
+<p>WETH balance: <span style="font-weight: bold;" id="wethBalance"></span></p>
+<p>stableCoinBalance balance: <span style="font-weight: bold;" id="stableCoinBalance"></span></p>
+
 
 <table border="1" width="100%">
     <tr>
@@ -62,13 +50,12 @@
             <h2>StableCoin</h2>
             <p>address: <span style="font-weight: bold;" id="stableCoinLink"></span></p>
             <p>total supply: <span style="font-weight: bold;" id="stableCoinSupply"></span></p>
-            <p>your balance: <span style="font-weight: bold;" id="stableCoinBalance"></span></p>
             <p>N of transactions (iterate transfers): <span style="font-weight: bold;" id="stableTxCount"></span></p>
             <p>N of holders (iterate addresses): <span style="font-weight: bold;" id="stableHolders"></span></p>
             <p>price vs USD (pool):</p>
-            <p>price vs USD (indicative):</p>
+            <p>price vs USD (indicative): <span style="font-weight: bold;" id="indicativePrice"></span></p>
             <p>overall collateral: <span style="font-weight: bold;" id="overallCollateral"></span></p>
-            <p>stabilization fund:<span style="font-weight: bold;" id="stabFund"></span></p>
+            <p>stabilization fund: <span style="font-weight: bold;" id="stabFund"></span></p>
             <p>pool volume:</p>
             <input type="button" value="Buy from pool">
         </td>
@@ -155,7 +142,8 @@
 
         </td>
         <td>
-            <h2>Borrow</h2>
+            <h2>Borrow</h2><input type="button" value="renew contracts" onclick="cdp.methods.renewContracts().send({from:userAddress});">
+            <p>your stable coin allowance: <span style="font-weight: bold;" id="cdpAllowance"></span></p>
             <p>address: <span style="font-weight: bold;" id="cdpLink"></span></p>
             <p>weth ballance: <span style="font-weight: bold;" id="cdpWethBalance"></span></p>
             <p>positions count: <span style="font-weight: bold;" id="positionsCount"></span></p>
@@ -163,23 +151,21 @@
             <p>overall fee payed: <span style="font-weight: bold;" id="overallCDPFeePayed"></span></p>
             <p>collateral discount: <span style="font-weight: bold;" id="collateralDiscount"></span></p>
             <p>interest rate: <span style="font-weight: bold;" id="interestRate"></span></p>
-            <input type="text" id ="ethCollateral">
+            <input type="text" id ="stableCoinsAmount" value="stableCoinsAmount">
+            <input type="text" id ="ethCollateral" value="ethCollateral">
             <input type="button" value="Borrow" onclick="openCDP()">
+            <input type="button" value="allowCoins" onclick="allowCoinsToCDP()">
             <h3>My dept positions:</h3>
             <div id="cdps"></div>
-            <p>opened:</p>
-            <p>updated:</p>
-            <p>volume:</p>
-            <p>accumulated interest:</p>
-            <input type="button" value="pay interest">
-            <input type="button" value="withdraw collateral">
-            <input type="button" value="update">
-            <input type="button" value="close">
-
         </td>
         <td>
             <h2>Cart</h2><input type="button" value="renew contracts" onclick="cart.methods.renewContracts().send({from:userAddress});">
             <p>address: <span style="font-weight: bold;" id="cartLink"></span></p>
+            <p>itemsCount: <span style="font-weight: bold;" id="itemsCount"></span></p>
+
+                <table id="cartItems" width="100%" border="1">
+                </table>
+
             <p>instruments: (actual price, blockchain price, share, last time updated)</p>
             <input type="button" value="claim update">
             <input type="button" value="buy oracle tokens">
@@ -207,8 +193,8 @@
             <p>annual percent: <span style="font-weight: bold;" id="annualInflation"></span></p>
             <p>accumulated volume:</p>
             <p>last emission: <span style="font-weight: bold;" id="lastEmission"></span></p>
-            <p>spender address:</p>
-            <input type="button" value="claim emission">
+            <p>spender address: <span style="font-weight: bold;" id="inflationSpender"></span></p>
+            <input type="button" value="claim emission" onclick="claimEmission()">
         </td>
     </tr>
 </table>

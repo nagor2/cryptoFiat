@@ -4,7 +4,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0xa10aDeD70407D61FcBfD76bCa30c31171e9bF098';
+var daoAddress = '0x683041b097D7859863BcdcdAde3d4Ee522416B37';
 
 var stableCoinABI = [
     {
@@ -2169,7 +2169,28 @@ var cartABI = [
             }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "name": "dictionary",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
     },
     {
         "inputs": [
@@ -2181,6 +2202,11 @@ var cartABI = [
         ],
         "name": "items",
         "outputs": [
+            {
+                "internalType": "bool",
+                "name": "exists",
+                "type": "bool"
+            },
             {
                 "internalType": "string",
                 "name": "symbol",
@@ -2198,7 +2224,8 @@ var cartABI = [
             }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
     },
     {
         "inputs": [],
@@ -2211,7 +2238,8 @@ var cartABI = [
             }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
     },
     {
         "inputs": [],
@@ -2224,7 +2252,8 @@ var cartABI = [
             }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
     },
     {
         "inputs": [],
@@ -2285,6 +2314,743 @@ var cartABI = [
             }
         ],
         "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            }
+        ],
+        "name": "getPrice",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            }
+        ],
+        "name": "getDecimals",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_decimals",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    }
+];
+var oracleABI =  [
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_INTDAOaddress",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "payable",
+        "type": "constructor",
+        "payable": true
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "donator",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "blockNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "Donation",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "profit",
+                "type": "uint256"
+            }
+        ],
+        "name": "ProfitEvent",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "subscirber",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "subscriptionID",
+                "type": "uint256"
+            }
+        ],
+        "name": "SubscriptionPayed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "block",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "gasPrice",
+                "type": "uint256"
+            }
+        ],
+        "name": "priceUpdateRequest",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "payer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "newPrice",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "timeStamp",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "time",
+                "type": "uint256"
+            }
+        ],
+        "name": "priceUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "block",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "string[]",
+                "name": "symbols",
+                "type": "string[]"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "gasPrice",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateSeveralPricesRequest",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "author",
+        "outputs": [
+            {
+                "internalType": "address payable",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "beneficiary",
+        "outputs": [
+            {
+                "internalType": "address payable",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "dictionary",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "discounts",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "finalized",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "gasPrices",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "name": "instruments",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "decimals",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "timeStamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "time",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "instrumentsCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "minSubscrTxNum",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "subscriptionsCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "updAdditionalPrice",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "updOnePriceGasCost",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "updSeveralPricesCost",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "updater",
+        "outputs": [
+            {
+                "internalType": "address payable",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "stateMutability": "payable",
+        "type": "receive",
+        "payable": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address payable",
+                "name": "newAddress",
+                "type": "address"
+            }
+        ],
+        "name": "changeBeneficiaryAddress",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "finalize",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "payer",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+            }
+        ],
+        "name": "setDiscount",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address payable",
+                "name": "newAddress",
+                "type": "address"
+            }
+        ],
+        "name": "changeUpdaterAddress",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+            }
+        ],
+        "name": "changeMinSubscrTxNum",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "subscriptionId",
+                "type": "uint256"
+            }
+        ],
+        "name": "topUpSubscription",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function",
+        "payable": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "email",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "frequencies",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "priceDifferences",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "string[]",
+                "name": "symbols",
+                "type": "string[]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "txSpeed",
+                "type": "uint256"
+            }
+        ],
+        "name": "payForSubscription",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function",
+        "payable": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            }
+        ],
+        "name": "requestPriceUpdate",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function",
+        "payable": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string[]",
+                "name": "symbols",
+                "type": "string[]"
+            }
+        ],
+        "name": "requestMultiplePricesUpdate",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function",
+        "payable": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "payer",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "timeStamps",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "string[]",
+                "name": "symbols",
+                "type": "string[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "prices",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[3]",
+                "name": "currentGasPrices",
+                "type": "uint256[3]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "subscriptionID",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateSeveralPricesSubscription",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string[]",
+                "name": "symbols",
+                "type": "string[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "timeStamps",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "prices",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "updateSeveralPrices",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "payer",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tickTimeStamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "newPrice",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateSinglePrice",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "success",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "decimals",
+                "type": "uint256"
+            }
+        ],
+        "name": "addInstrument",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "decimals",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateInstrument",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -2304,7 +3070,28 @@ var cartABI = [
             }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            }
+        ],
+        "name": "timeStamp",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
     },
     {
         "inputs": [
@@ -2318,12 +3105,13 @@ var cartABI = [
         "outputs": [
             {
                 "internalType": "uint256",
-                "name": "_decimals",
+                "name": "decimals",
                 "type": "uint256"
             }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
     }
 ];
 
@@ -2334,6 +3122,8 @@ var ruleStatic;
 var ruleAddress;
 var stableCoinAddress;
 var cdpStatic;
+var cartStatic;
+var oracleStatic;
 
 async function drawStatic(){
     await daoStatic.methods.addresses('rule').call().then(function (result) {
@@ -2357,7 +3147,9 @@ async function drawStatic(){
         });
     });
 
-
+    daoStatic.methods.addresses('inflationSpender').call().then(function (result) {
+        document.getElementById('inflationSpender').innerText = result;
+    });
 
     daoStatic.methods.addresses('weth').call().then(function (result) {
         wethAddress = result;
@@ -2369,7 +3161,26 @@ async function drawStatic(){
         daoStatic.methods.addresses('cdp').call().then(function (result) {
             cdpStatic = new localWeb3.eth.Contract(cdpABI,result);
             wethStatic.methods.balanceOf(result).call().then(function (result) {
-                document.getElementById('cdpWethBalance').innerText = (result/(10**18)).toFixed(2);
+                let cdpWethBalance = (result/(10**18)).toFixed(3);
+                document.getElementById('cdpWethBalance').innerText = cdpWethBalance;
+                daoStatic.methods.addresses('oracle').call().then(function (result) {
+                    oracleStatic =new localWeb3.eth.Contract(oracleABI, result);
+                    oracleStatic.methods.getPrice('eth').call().then(function (result) {
+                        let ethPrice = (result/(10**6)).toFixed(2);
+                        document.getElementById('ethPrice').innerText = ethPrice;
+                        let collateral = (ethPrice*cdpWethBalance).toFixed(3);
+                        document.getElementById('overallCollateral').innerText = collateral;
+
+                        cartStatic.methods.getCurrentSharePrice().call().then(function (sharePrice) {
+                            console.log ("sharePrice: "+sharePrice);
+                            document.getElementById('indicativePrice').innerText = parseFloat(sharePrice/10**6).toFixed(4);
+                            stableCoinStatic.methods.totalSupply().call().then(function (supply) {
+                                if (supply>0)
+                                document.getElementById('overallCollateral').innerText += " ("+parseFloat(100*collateral/web3.utils.fromWei(supply)/sharePrice*10**6).toFixed(2)+"%)";
+                            });
+                        });
+                    });
+                });
             });
         });
     });
@@ -2386,9 +3197,28 @@ async function drawStatic(){
     });
 
     daoStatic.methods.addresses('cart').call().then(function (result) {
-        var cartAddress = result;
+        let cartAddress = result;
 
         document.getElementById('cartLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + cartAddress + '>'+cartAddress+'</a>';
+
+        cartStatic =  new localWeb3.eth.Contract(cartABI,cartAddress);
+
+        cartStatic.methods.itemsCount().call().then(function (result) {
+            document.getElementById('itemsCount').innerText = result;
+            let cartItemsTable = document.getElementById('cartItems');
+            for (var i=0; i<result; i++){
+                    cartStatic.methods.items(i).call().then(function (result) {
+                        cartStatic.methods.getPrice(result['symbol']).call().then(function (price) {
+                            cartItemsTable.innerHTML += "<tr><td>" + result['symbol'] + "</td>"+
+                                "<td>" + parseFloat(result['initialPrice']/10**6).toFixed(2) + "</td>" +
+                                "<td>" + result['share'] + "</td>" +
+                                "<td>" + parseFloat(price/10**6).toFixed(2) + "</td></tr>";
+                        });
+                    });
+                }
+        });
+
+
 
     });
 
@@ -2424,7 +3254,7 @@ async function drawStatic(){
             document.getElementById('cdpLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + cdpAddress + '>'+cdpAddress+'</a>';
 
             stableCoinStatic.methods.balanceOf(cdpAddress).call().then(function (result) {
-                document.getElementById('stabFund').innerText = (result/(10**18)).toFixed(2);
+                document.getElementById('stabFund').innerText = (localWeb3.utils.fromWei(result));
             });
 
             var cdp = new localWeb3.eth.Contract(cdpABI,cdpAddress);

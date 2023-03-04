@@ -105,3 +105,5 @@ contract('CDP', (accounts) => {
         );
     });
 });
+
+//TODO:CloseCDP!!! checkTransferFee!!

@@ -55,13 +55,15 @@ contract CDP {
     }
 
     function openCDP (uint StableCoinsToMint) external payable returns (uint256 posID){
-        posID = numPositions++;
-        Position storage p = positions[posID];
-
         uint256 coinsToMint = getMaxStableCoinsToMint(msg.value);
 
         if (StableCoinsToMint <= coinsToMint)
             coinsToMint = StableCoinsToMint;
+
+        require (coinsToMint>1*10**coin.decimals(), "you can not mint such a little amount");
+
+        posID = numPositions++;
+        Position storage p = positions[posID];
 
         p.coinsMinted = coinsToMint;
         p.wethAmountLocked = msg.value;
@@ -125,9 +127,10 @@ contract CDP {
         require(coin.transferFrom(p.owner, address(this), overallDebt), "Could not transfer coins for some reason");
         require (weth.transfer(p.owner, p.wethAmountLocked), "Could not transfer collateral for some reason");
         p.wethAmountLocked = 0;
-        require (coin.burn(address(this), overallDebt), "Could not burn coins for some reason");
+        require (coin.burn(address(this), p.coinsMinted), "Could not burn coins for some reason");
         p.coinsMinted = 0;
         p.lastTimeUpdated = block.timestamp;
+        p.liquidated = true;
     }
 
     function transferFee(uint posID) public returns (bool success){
@@ -236,6 +239,7 @@ contract CDP {
         if (newStableCoinsAmount > p.coinsMinted) {
             uint256 difference = newStableCoinsAmount - p.coinsMinted;
             coin.mint(p.owner, difference);
+            p.coinsMinted = newStableCoinsAmount;
             emit PositionUpdated(posID, newStableCoinsAmount, p.wethAmountLocked);
             return true;
         }
@@ -244,6 +248,7 @@ contract CDP {
             uint256 difference = p.coinsMinted - newStableCoinsAmount;
             require(coin.balanceOf(p.owner)>=difference);
             coin.burn(p.owner, difference);
+            p.coinsMinted = newStableCoinsAmount;
             emit PositionUpdated(posID, newStableCoinsAmount, p.wethAmountLocked);
             return true;
         }

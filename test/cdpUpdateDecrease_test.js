@@ -56,3 +56,5 @@ contract('CDP Update Decrease', (accounts) => {
         assert.equal(balance, web3.utils.toWei('100', 'ether'), "owner's balance should be 100 stableCoin");
     });
 });
+
+//TODO: check coinsMinted update!!!

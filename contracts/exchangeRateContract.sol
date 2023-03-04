@@ -256,6 +256,6 @@ contract exchangeRateContract {
         }
     }
 
-    //TODO: написать функцию, которая обновляет цены по массиву индексов, а не по массиву стрингов. Для этого уже есть dictionary. Лучше даже хранить инстументы по id, а по dictionary определять стрингу из view функции!
+    //TODO: napisat' funkciyu, kotoraya obnovlyaet ceny po massivu indeksov, a ne po massivu stringov. Dlya etogo uzhe est' dictionary. Luchshe dazhe hranit' instumenty po id, a po dictionary opredelyat' stringu iz view funkcii!
 
 }
