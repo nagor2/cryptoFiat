@@ -11,6 +11,7 @@ import "./CDP.sol";
         uint256 currentInterestRate;
         uint256 lastTimeUpdated;
         uint256 accumulatedInterest;
+        bool closed;
     }
 
 contract DepositContract {
@@ -20,7 +21,7 @@ contract DepositContract {
     CDP cdp;
     uint256 public counter;
     mapping(uint256 => Deposit) public deposits;
-    event DepositOpened(uint256 id, uint256 amount, uint256 rate);
+    event DepositOpened(uint256 id, uint256 amount, uint256 rate, address owner);
 
     constructor(address INTDAOaddress){
         dao = INTDAO(INTDAOaddress);
@@ -45,16 +46,19 @@ contract DepositContract {
         d.coinsDeposited = amount;
         d.currentInterestRate = dao.params("depositRate");
         d.period = block.timestamp + dao.params("defaultDepositPeriod");
-        emit DepositOpened(counter, amount, d.currentInterestRate);
+        emit DepositOpened(counter, d.coinsDeposited, d.currentInterestRate, d.owner);
     }
 
     function withdraw(uint256 id, uint256 amount) public{
         claimInterest(id);
         Deposit storage d = deposits[id];
         require(msg.sender == d.owner, "only owner may init withdrawal");
+        require (!d.closed, "deposit is closed");
         require (amount<=d.coinsDeposited, "not enough coins on deposit");
         require(coin.transfer(d.owner, amount), "Could not transfer coins for some reason");
         d.coinsDeposited -= amount;
+        if (d.coinsDeposited==0)
+            d.closed = true;
         if (block.timestamp>d.period)
             d.currentInterestRate = dao.params("depositRate");
     }
@@ -62,6 +66,7 @@ contract DepositContract {
     function topUp(uint256 id) public{
         claimInterest(id);
         Deposit storage d = deposits[id];
+        require (!d.closed, "deposit is closed, open a new one, please");
         uint256 amount = coin.allowance(msg.sender, address(this));
         require (amount>0, "You should approve first");
         require(coin.transferFrom(msg.sender, address(this), amount), "Could not transfer coins for some reason");

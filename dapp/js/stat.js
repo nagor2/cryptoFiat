@@ -4,7 +4,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0x683041b097D7859863BcdcdAde3d4Ee522416B37';
+var daoAddress = '0x089AE5dda8b1A70a02a5b9cE27558E37d5fF762b';
 
 var stableCoinABI = [
     {
@@ -1034,6 +1034,12 @@ var depositABI = [
                 "internalType": "uint256",
                 "name": "rate",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
             }
         ],
         "name": "DepositOpened",
@@ -3124,6 +3130,7 @@ var stableCoinAddress;
 var cdpStatic;
 var cartStatic;
 var oracleStatic;
+var depositStatic;
 
 async function drawStatic(){
     await daoStatic.methods.addresses('rule').call().then(function (result) {
@@ -3149,6 +3156,10 @@ async function drawStatic(){
 
     daoStatic.methods.addresses('inflationSpender').call().then(function (result) {
         document.getElementById('inflationSpender').innerText = result;
+    });
+
+    daoStatic.methods.addresses('deposit').call().then(function (result) {
+        depositStatic = new localWeb3.eth.Contract(depositABI,result);
     });
 
     daoStatic.methods.addresses('weth').call().then(function (result) {

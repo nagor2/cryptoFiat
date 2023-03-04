@@ -128,7 +128,11 @@ contract('Deposit', (accounts) => {
         assert.equal(parseFloat(balance/10**18).toFixed(5), parseFloat("110").toFixed(5), "balance should increase");
     });
 
+    //TODO: check depositOpened event!
+
     //TODO: Тут возникают вопросы! Периодичность выплат, как быть со сложным процентом? – пока что решил не углубляться
     //TODO: Смена «ключевой ставки»
     //TODO: Пока что ставка фиксируется на первые 91 день. А что потом?
+
+
 });

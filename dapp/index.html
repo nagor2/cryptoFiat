@@ -124,22 +124,19 @@
     <tr>
         <td>
             <h2>Deposit</h2>
+            /*initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) */
+            <p>your stable coin allowance to Deposit contract: <span style="font-weight: bold;" id="depositAllowance"></span></p>
+            <p>you are approved to withdraw from CDP: <span style="font-weight: bold;" id="myCDPAllowance"></span></p>
             <p>address: <span style="font-weight: bold;" id="depositLink"></span></p>
             <p>N of deposits: <span style="font-weight: bold;" id="depositsCount"></span></p>
             <p>overall fee payed: <span style="font-weight: bold;" id="overallDepositFeePayed"></span></p>
             <p>overall volume: <span style="font-weight: bold;" id="overallDeposits"></span></p>
             <p>interest rate: <span style="font-weight: bold;" id="depositRate"></span></p>
-            <input type="button" value="Deposit">
+            <input type="text" id ="stableCoinsToDeposit" value="100">
+            <input type="button" value="allow" onclick="allowToDeposit()">
+            <input type="button" value="deposit" onclick="putOndeposit()">
             <h3>My deposit</h3>
-            <p>opened:</p>
-            <p>updated:</p>
-            <p>volume:</p>
-            <p>rate:</p>
-            <p>accumulated interest:</p>
-            <input type="button" value="topUp">
-            <input type="button" value="withdraw">
-            <input type="button" value="claim interest">
-
+            <div id="myDeposits"></div>
         </td>
         <td>
             <h2>Borrow</h2><input type="button" value="renew contracts" onclick="cdp.methods.renewContracts().send({from:userAddress});">

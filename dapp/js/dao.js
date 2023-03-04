@@ -10,9 +10,7 @@ var deposit;
 var votingId;
 var weth;
 var cdpAddress;
-
-
-
+var depositAddress;
 
 async function unlock(){
     if (typeof web3 !== 'undefined') {
@@ -73,12 +71,26 @@ function initGlobals() {
     });
 
 
+
+
     daoStatic.methods.addresses("cdp").call().then(function (result) {
         cdpAddress = result;
         cdp = new web3.eth.Contract(cdpABI,result);
         getMyDebtPositions();
         stableCoin.methods.allowance(userAddress, cdpAddress).call().then(function (result) {
             document.getElementById('cdpAllowance').innerText = (result/(10**18)).toFixed(5);
+        });
+    });
+
+    daoStatic.methods.addresses("deposit").call().then(function (result) {
+        deposit = new web3.eth.Contract(depositABI,result);
+        depositAddress = result;
+        getMyDeposits();
+        stableCoin.methods.allowance(userAddress, depositAddress).call().then(function (result) {
+            document.getElementById('depositAllowance').innerText = (result/(10**18)).toFixed(5);
+        });
+        stableCoin.methods.allowance(cdpAddress, userAddress).call().then(function (result) {
+            document.getElementById('myCDPAllowance').innerText = (result/(10**18)).toFixed(5);
         });
     });
 
@@ -194,6 +206,7 @@ function initGlobals() {
     //console.log ('You use '+ chain[0])
     //document.getElementById('network').innerHTML = 'Вы используете <a href="'+chain[1]+'" target="_blank">'+chain[0]+'</a>';
 }
+
 function openCDP(){
     let collateral = document.getElementById('ethCollateral').value;
     let amount = document.getElementById('stableCoinsAmount').value;
@@ -258,14 +271,6 @@ function printStr(id, str) {
     document.getElementById(id).innerHTML = str;
 }
 
-
-function withdraw() {
-    hash.methods.withdrawLP().send({from:userAddress}).on('receipt',function (result) {
-        console.log('Lp tokens transfered');
-    });
-}
-
-
 function getChain (chainId) {
     switch (chainId) {
         case '0x1':
@@ -310,6 +315,7 @@ function printDebtPosition(id){
 
     cdpStatic.methods.totalCurrentFee(id).call().then(function (fee) {
         cdpStatic.methods.positions(id).call().then(function(position){
+
             if (!position.liquidated)
             html = "<div id='position-"+id+"'>" +
                 "<p>opened: "+dateFromTimestamp(position.timeOpened)+"</p>" +
@@ -322,15 +328,50 @@ function printDebtPosition(id){
                 "<input type=\"button\" value=\"withdraw\" onclick=\"withdrawEther("+id+")\">"+
                 "<input type=\"button\" value=\"payInterest\" onclick=\"payInterest("+id+")\">"+
                 "</div>";
-            /*
-            * <input type="button" value="pay interest">
-            <input type="button" value="withdraw collateral">
-            <input type="button" value="update">
-
-            * */
-
                 document.getElementById("cdps").innerHTML += html;
-                //console.dir(position);
+        });
+    });
+}
+
+function printDeposit(id){
+    let html='';
+
+    depositStatic.methods.overallInterest(id).call().then(function (interest) {
+        depositStatic.methods.deposits(id).call().then(function(deposit){
+
+            if (!deposit.liquidated)
+                html = "<div id='deposit-"+id+"'>" +
+                    "<p>opened: "+dateFromTimestamp(deposit.timeOpened)+"</p>" +
+                    "<p>updated: "+dateFromTimestamp(deposit.lastTimeUpdated)+"</p>" +
+                    "<p>coinsDeposited: "+localWeb3.utils.fromWei(deposit.coinsDeposited)+"</p>"+
+                    "<p>accumulated interest:  "+web3.utils.fromWei(interest)+"</p>"+
+                    "<input type=\"button\" value=\"claimInterest\" onclick=\"deposit.methods.claimInterest("+id+").send({from:userAddress});\">"+
+                    "<input type=\"button\" value=\"topUp\" onclick=\"topUp("+id+")\">"+
+                    "<input type=\"button\" value=\"withdraw\" onclick=\"withdrawFromDeposit("+id+")\">"+
+                    "<input type=\"button\" value=\"close\" onclick=\"closeDeposit("+id+");\">"+
+                    "</div>";
+            document.getElementById("myDeposits").innerHTML += html;
+        });
+    });
+}
+
+function withdrawFromDeposit(id){
+    let amount = document.getElementById("stableCoinsToDeposit").value;
+    deposit.methods.withdraw(id,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function topUp(id){
+    deposit.methods.topUp(id).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function closeDeposit(id){
+    deposit.methods.deposits(id).call().then(function (d){
+        deposit.methods.withdraw(id,d.coinsDeposited).send({from:userAddress}).then(function (result) {
+            window.location.reload();
         });
     });
 }
@@ -344,6 +385,30 @@ function withdrawEther(id){
 
 function payInterest(id){
     cdp.methods.transferFee(id).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function putOndeposit(){
+    deposit.methods.deposit().send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function getMyDeposits(){
+    deposit.getPastEvents('DepositOpened', {fromBlock: 0,toBlock: 'latest'}).then(function(events){
+        for (let i =0; i<events.length; i++) {
+            let event = events[i];
+            if (event.returnValues.owner.toLowerCase()==userAddress.toLowerCase()){
+                printDeposit(event.returnValues.id);
+            }
+        }
+    });
+}
+
+function allowToDeposit (){
+    let amount = document.getElementById('stableCoinsToDeposit').value;
+    stableCoin.methods.approve(depositAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
         window.location.reload();
     });
 }
@@ -410,108 +475,11 @@ function subscribeToMetamaskEvents(){
 
 }
 
-function est() {
-
-    var ethValue = document.getElementById('ethValue').value*10**5;
-
-    hash.methods.tokensForEther(ethValue).call().then(function ( result) {
-
-        var tokens = (result/10**5).toFixed(2);
-
-        printStr('est', tokens);
-    });
-
-}
-
 function claimEmission(){
     daoStatic.methods.addresses('inflationFund').call().then(function (result){
         let inflation = new web3.eth.Contract(inflationABI,result);
         inflation.methods.claimEmission().send({from:userAddress});
     })
 }
-
-function claim() {
-      hash.methods.claimDividends().send({from:userAddress}).then(function ( result) {
-          alert ('dividends arrived, juicy feedback')
-    });
-
-}
-
-//user MISO Balance
-function hashBalance(userAddress) {
-    hash.methods.balanceOf(userAddress).call().then(function ( result) {
-        var balance = (result/10**decimals).toFixed(2);
-
-        console.log('Your hash balance: '+balance);
-        printStr('hashBalance', balance);
-
-        hash.methods.totalSupply().call().then(function ( result) {
-            var percent = (100*balance/(result/10**decimals)).toFixed(2);
-            printStr('shares', percent+'%');
-        });
-
-        hash.methods.currentPrice().call().then(function ( result) {
-            var cap = (balance*result/10**5).toFixed(2);
-            printStr('usdBalance', cap);
-        });
-
-    });
-}
-
-
-function buy() {
-    //gas est 60000
-    var ethValue = document.getElementById('ethValue').value * 10**18;
-    hash.methods.buyTokens().send({from:userAddress, value:ethValue}).then(function (result) {
-        alert ('jucy feedback')
-    });
-}
-
-
-//pending miso #pendingMiso(uint256 _pid, address _user)
-function dividends(address) {
-    hash.methods.getCurrentDividends(address).call().then(function (result) {
-        var ethDiv = result/10**18;
-        printStr('dividends', ethDiv.toFixed(5));
-
-        hash.methods.latestUSDPrice().call().then(function (result) {
-            var usdPrice = result/10**8;
-            printStr('usdDividends', (usdPrice*ethDiv).toFixed(2));
-
-        });
-    });
-}
-
-
-//MISO ETH UNI-V2 LP Tokens Staked
-function userInfo(address) {
-    masterChef.methods.userInfo(0, address).call().then(function ( result) {
-        console.log('lp tokens provided: '+result[0]/10**lpDecimals);
-        printStr('deposit', (Math.floor(result[0]/10**(lpDecimals-4))/10000).toFixed(decimalDisp));
-        //console.log('rewardDebt: '+result[1]/10**misoDecimals);
-        return result;
-
-    });
-}
-
-//Harvest
-//Harvest
-function harvestMiso() {
-    masterChef.methods.withdraw(0, 0).send({from:userAddress}).on('receipt',function (result) {
-        console.log('Miso harvested');
-    });
-}
-
-function lpBalance(){
-    lp.methods.balanceOf(userAddress).call().then(function (result) {
-        printStr('lptokens', (Math.floor(result/10**(lpDecimals-4))/10000).toFixed(decimalDisp));
-
-    });
-}
-
-//Approve MISO ETH UNI-V2 LP Tokens
-
-
-//Supply MISO ETH UNI-V2 LP Tokens
 
 
