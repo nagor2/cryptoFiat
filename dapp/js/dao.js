@@ -312,7 +312,7 @@ function printAuction(id){
                     "<p>lotToken: "+auction.lotToken+"</p>" +
                     "<p>lotAmount: "+localWeb3.utils.fromWei(auction.lotAmount)+"</p>" +
                     "<p>paymentToken: "+auction.paymentToken+"</p>" +
-
+                    "<p>paymentAmount: "+auction.paymentAmount+"</p>" +
                     "<p>best bid: "+bid.owner+"</p>" +
                     "<p>bidAmount: "+localWeb3.utils.fromWei(bid.bidAmount)+"</p>" +
                     "<p>bid time: "+dateFromTimestamp(bid.time)+"</p>" +
@@ -377,18 +377,6 @@ function getMyDeposits(){
     });
 }
 
-
-function getMyDeposits(){
-    deposit.getPastEvents('DepositOpened', {fromBlock: 0,toBlock: 'latest'}).then(function(events){
-        for (let i =0; i<events.length; i++) {
-            let event = events[i];
-            if (event.returnValues.owner.toLowerCase()==userAddress.toLowerCase()){
-                printDeposit(event.returnValues.id);
-            }
-        }
-    });
-}
-
 function allowToDeposit (){
     let amount = document.getElementById('stableCoinsToDeposit').value;
     stableCoin.methods.approve(depositAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
@@ -433,13 +421,14 @@ function initCoinsBuyOut(){
         stableCoinStatic.methods.totalSupply().call().then(function (supply){
             stableCoinStatic.methods.balanceOf(add).call().then(function (stabFund){
                 dao.methods.params('stabilizationFundPercent').call().then(function (percent){
-                    let coinsNeeded = localWeb3.utils.fromWei(supply)*percent/100 - stabFund;
+                    let coinsNeeded = supply*percent/100 - stabFund;
                     if (coinsNeeded>0)
                         auction.methods.initCoinsBuyOutForStabilization(localWeb3.utils.toWei(coinsNeeded.toString())).send({from:userAddress});
                 })
             });
         });
     });
+
 }
 
 function fillVoting(id) {

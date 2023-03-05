@@ -270,7 +270,4 @@ contract('DAO', (accounts) => {
 
         assert.equal(valueAfter, false, "wrong valueAfter");
     });
-
-
-
 });

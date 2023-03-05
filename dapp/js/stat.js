@@ -4,7 +4,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0x089AE5dda8b1A70a02a5b9cE27558E37d5fF762b';
+var daoAddress = '0xa70371f6c4D516EC7857748D3ce2895fbbc77F58';
 
 var stableCoinABI = [
     {
@@ -3120,7 +3120,7 @@ var oracleABI =  [
         "constant": true
     }
 ];
-var auctionABI =  [
+var auctionABI = [
     {
         "inputs": [
             {
@@ -3232,12 +3232,32 @@ var auctionABI =  [
             {
                 "indexed": false,
                 "internalType": "uint256",
+                "name": "bidId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
                 "name": "bidAmount",
                 "type": "uint256"
             }
         ],
         "name": "newBid",
         "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "auctionNum",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
     },
     {
         "inputs": [
@@ -3273,6 +3293,11 @@ var auctionABI =  [
                 "internalType": "address",
                 "name": "paymentToken",
                 "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "paymentAmount",
+                "type": "uint256"
             },
             {
                 "internalType": "uint256",
@@ -3328,6 +3353,20 @@ var auctionABI =  [
                 "internalType": "bool",
                 "name": "canceled",
                 "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "bidsNum",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -3426,6 +3465,24 @@ var auctionABI =  [
             }
         ],
         "name": "makeBid",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "bidId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "newBidAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "improveBid",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -3577,8 +3634,6 @@ async function drawStatic(){
     daoStatic.methods.addresses('auction').call().then(function (result) {
         auctionStatic = new localWeb3.eth.Contract(auctionABI,result);
         document.getElementById('auctionLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + result + '>'+result+'</a>';
-
-
 
         auctionStatic.getPastEvents('buyOutInit', {
             fromBlock: 0,
