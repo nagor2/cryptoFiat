@@ -22,7 +22,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         auction = await Auction.deployed(dao.address);
         cdp = await CDP.deployed(dao.address);
         rule = await Rule.deployed(dao.address);
-        await cdp.renewContracts();
+        await auction.renewContracts();
     });
 
     it("should init and execute coins buyOut for stabilization", async () => {
@@ -54,6 +54,8 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         let a = await auction.auctions(auctionId);
 
         assert.equal(paymentAmount, a.paymentAmount, "wrong paymentAmount set");
+        assert.equal(rule.address, a.lotToken, "wrong lotToken set");
+        assert.equal(stableCoin.address, a.paymentToken, "wrong paymentToken set");
 
         await stableCoin.transfer(bidder2, paymentAmount, {from:bidder});
 
@@ -80,7 +82,8 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
             assert.equal(parseFloat(ev.bidAmount/10**18).toFixed(0), 1000, "Should be correct amount");
         });
 
-        let bestBidAmount = await auction.getBestBidAmount()
+        let bestBidAmount = await auction.getBestBidAmount(auctionId);
+        assert.equal(parseFloat(bestBidAmount/10**18).toFixed(0), 1000, "Should be correct bestBid");
 
         await truffleAssert.fails(
             auction.makeBid(auctionId, web3.utils.toWei('1100'), {from:bidder2}),
@@ -94,20 +97,25 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         bidTx = await auction.makeBid(auctionId, web3.utils.toWei('950'), {from:bidder2});
 
+        bestBidAmount = await auction.getBestBidAmount(auctionId);
+        assert.equal(parseFloat(bestBidAmount/10**18).toFixed(0), 950, "Should be correct bestBid");
+
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(parseFloat(ev.auctionID), auctionId, "Should be the first auction");
             bidIdToCancel = parseFloat(ev.bidId);
             assert.equal(parseFloat(ev.bidAmount/10**18).toFixed(0), 950, "Should be correct amount");
         });
 
-
-
         await truffleAssert.fails(
             auction.improveBid(bidIdToImprove, web3.utils.toWei('902.5'), {from:bidder2}),
             truffleAssert.ErrorType.REVERT,
             "You may improve only your personal bids");
 
+        await time.increase(time.duration.seconds(30));
+
         bidTx = await auction.improveBid(bidIdToImprove, web3.utils.toWei('902.5'), {from:bidder});
+        bestBidAmount = await auction.getBestBidAmount(auctionId);
+        assert.equal(parseFloat(bestBidAmount/10**18).toFixed(1), 902.5, "Should be correct bestBid");
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(parseFloat(ev.auctionID), auctionId, "Should be correct auction");
@@ -119,6 +127,8 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         let ruleSupplyBefore = await rule.totalSupply();
 
+        assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 210, "wrong balance");
+
         await auction.claimToFinalizeAuction(auctionId);
 
         let ruleSupplyAfter = await rule.totalSupply();
@@ -128,10 +138,10 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         assert.equal(parseFloat(await stableCoin.balanceOf(cdp.address)/10**18).toFixed(), 105, "wrong balance");
         assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 105, "wrong balance");
 
-        assert.equal(ruleSupplyBefore+web3.utils.toWei('902.5'), ruleSupplyAfter, "wrong ruleSupply");
+        assert.equal(parseFloat(ruleSupplyBefore)+902.5*10**18, parseFloat(ruleSupplyAfter), "wrong ruleSupply");
         assert.equal(parseFloat(await rule.balanceOf(bidder)/10**18).toFixed(1), 902.5, "wrong balance");
 
-        await auction.cancelBid(bidIdToCancel);
+        await auction.cancelBid(bidIdToCancel, {from: bidder2});
         assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 0, "wrong balance");
         assert.equal(parseFloat(await stableCoin.balanceOf(bidder2)/10**18).toFixed(), 105, "wrong balance");
 
@@ -141,7 +151,6 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
             3. Проверяем, что аукцион идет на понижение.
             4. После финализации, проверяем, что произошел минт рулов, что стэйблы перешли куда надо.
         */
-        //assert.equal (0,1,"TODO")
     });
 });
 

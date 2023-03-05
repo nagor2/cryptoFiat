@@ -84,7 +84,6 @@ contract stableCoin is ERC20{
         require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to mint');
         balances[to] += amount;
         initialSupply += amount;
-        emit Transfer(dao.addresses('cdp'), msg.sender, amount);
         emit Mint(to, amount);
         return true;
     }

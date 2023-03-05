@@ -83,7 +83,6 @@ contract Auction {
     }
 
     function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) public returns (uint256 auctionID){
-        //TODO: похоже, здесь ошибка, потому что coinsAmountNeeded в аукционе далее нигде не фиксируется. Надо узнавать у оракла цену?
         uint256 actualStabilizationFund = coin.balanceOf(address(cdp));
         uint256 preferableStabilizationFund = coin.totalSupply() * dao.params("stabilizationFundPercent")/100;
 
@@ -192,7 +191,10 @@ contract Auction {
         require(a.initialized, "the bid is made on non-existent auction");
         require(a.bestBidId!=bidId, "You can not cancel a bid if it is a best one");
         ERC20 paymentToken = ERC20(address(a.paymentToken));
-        require(paymentToken.transfer(msg.sender, b.bidAmount), "we were not able to transfer your bid back");
+        if (a.lotToken == dao.addresses('rule') && a.paymentToken == dao.addresses('stableCoin'))
+            require(paymentToken.transfer(b.owner, a.paymentAmount), "we were not able to transfer your bid back");
+        else
+            require(paymentToken.transfer(b.owner, b.bidAmount), "we were not able to transfer your bid back");
         emit bidCanceled(bidId);
         b.canceled = true;
     }
@@ -212,7 +214,7 @@ contract Auction {
         }
         if (a.lotToken == dao.addresses('rule') && a.paymentToken == dao.addresses('stableCoin')){
             require(cdp.mintRule(bestBid.owner, bestBid.bidAmount), "could not mint rule");
-            require(coin.transfer(dao.addresses('cdp'), a.lotAmount), "could not transfer coins");
+            require(coin.transfer(dao.addresses('cdp'), a.paymentAmount), "could not transfer coins");
         }
         if (a.lotToken == dao.addresses('weth') && a.paymentToken == dao.addresses('stableCoin')){
             require(lotToken.transfer(bestBid.owner, a.lotAmount));
