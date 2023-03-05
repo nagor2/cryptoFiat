@@ -11,11 +11,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
+      <change afterPath="$PROJECT_DIR$/test/auction_stubFund.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dapp/js/dao.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/dao.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dapp/js/stat.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/stat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +27,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Solidity Contract" />
-        <option value="JavaScript File" />
         <option value="HTML File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -80,7 +81,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "B:/YandexDisk/Работа/ICO/oracle",
+    "last_opened_file_path": "B:/YandexDisk/Работа/ICO/CryptoFiat/repo",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -206,7 +207,8 @@
       <workItem from="1677403596303" duration="164000" />
       <workItem from="1677487473794" duration="3840000" />
       <workItem from="1677571810122" duration="819000" />
-      <workItem from="1677906468030" duration="34433000" />
+      <workItem from="1677906468030" duration="34636000" />
+      <workItem from="1677987763315" duration="12469000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>

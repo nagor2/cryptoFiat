@@ -88,10 +88,18 @@ contract('CDP withdraw and close position', (accounts) => {
 
         assert.equal(await coin.totalSupply(), web3.utils.toWei('1200', 'ether'), "wrong totalSupply");
 
+        let currentFee = await cdp.totalCurrentFee(posId);
+
+        assert.equal(parseFloat(currentFee/10**18).toFixed(4),parseFloat('90').toFixed(4), "wrong fee");
+
         await cdp.closeCDP(posId,{from:owner});
 
         assert.equal(await weth.balanceOf(owner), web3.utils.toWei('1', 'ether'), "weth on balance is wrong");
 
-        assert.equal(parseFloat(await coin.totalSupply()/10**18).toFixed(4), 110.0000, "wrong totalSupply");
+        assert.equal(parseFloat(await coin.totalSupply()/10**18).toFixed(4), 200.0000, "wrong totalSupply");
+
+        assert.equal(parseFloat(await coin.balanceOf(owner)/10**18).toFixed(4), 10.0000, "wrong totalSupply");
+        assert.equal(parseFloat(await coin.balanceOf(await dao.addresses('cdp'))/10**18).toFixed(4), 90.0000, "wrong totalSupply");
+        assert.equal(parseFloat(await coin.balanceOf(accounts[3])/10**18).toFixed(4), 100.0000, "wrong totalSupply");
     });
 });

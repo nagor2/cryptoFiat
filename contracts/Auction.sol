@@ -11,6 +11,7 @@ import "./CDP.sol";
         address lotToken;
         uint lotAmount;
         address paymentToken;
+        uint256 paymentAmount;
         uint256 initTime;
         uint256 lastTimeUpdated;
         uint256 bestBidId;
@@ -36,7 +37,7 @@ contract Auction {
 
     event buyOutInit(uint256 auctionID, uint256 lotAmount, address lotAddress);
     event buyOutFinished(uint256 auctionID, uint256 lotAmount, uint256 bestBid);
-    event newBid(uint256 auctionID, uint256 bidAmount);
+    event newBid(uint256 auctionID, uint256 bidId, uint256 bidAmount);
     event bidCanceled(uint256 bidId);
 
     event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 liquidateColleteral);
@@ -93,6 +94,7 @@ contract Auction {
         auctionID = auctionNum++;
         auctionEntity storage a = auctions[auctionID];
 
+        a.paymentAmount = coinsAmountNeeded;
         a.initialized = true;
         a.finalized = false;
         a.lotToken = dao.addresses('rule');
@@ -133,13 +135,16 @@ contract Auction {
         if (a.bestBidId!=0){
             Bid storage bestBid = bids[a.bestBidId];
             if (a.lotToken == dao.addresses('stableCoin') || a.lotToken == dao.addresses('weth'))
-                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100<bidAmount, "your bid is not high enough");
+                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100<=bidAmount, "your bid is not high enough");
             if (a.lotToken == dao.addresses('rule'))
-                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100>bidAmount, "your bid is not high enough");
+                require(bidAmount>0 && bestBid.bidAmount*(100-dao.params('minAuctionPriceMove'))/100>=bidAmount, "your bid is not low enough");
         }
         require(bidAmount>0, "your bid is not high enough");
         ERC20 paymentToken = ERC20(address(a.paymentToken));
-        require(paymentToken.transferFrom(msg.sender, address(this), bidAmount), "You should first approve bidAmount to auction contract address");
+        if (a.lotToken == dao.addresses('rule'))
+            require(paymentToken.transferFrom(msg.sender, address(this), a.paymentAmount), "You should first approve stableCoins to auction contract address");
+        else
+            require(paymentToken.transferFrom(msg.sender, address(this), bidAmount), "You should first approve bidAmount to auction contract address");
 
         uint256 bidId = ++bidsNum;
         Bid storage b = bids[bidId];
@@ -151,7 +156,33 @@ contract Auction {
 
         a.bestBidId = bidId;
         a.lastTimeUpdated = block.timestamp;
-        emit newBid(auctionId, bidAmount);
+        emit newBid(auctionId, bidId, bidAmount);
+    }
+
+    function improveBid(uint256 bidId, uint256 newBidAmount) public{
+        Bid storage b = bids[bidId];
+        require(b.owner == msg.sender, "You may improve only your personal bids");
+        auctionEntity storage a = auctions[b.auctionID];
+        require(a.initialized&&!a.finalized, "auctionId is wrong or it is already finished");
+        Bid storage bestBid = bids[a.bestBidId];
+
+        if (a.lotToken == dao.addresses('stableCoin') || a.lotToken == dao.addresses('weth'))
+            require(newBidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100<=newBidAmount, "your bid is not high enough");
+        if (a.lotToken == dao.addresses('rule'))
+            require(newBidAmount>0 && bestBid.bidAmount*(100-dao.params('minAuctionPriceMove'))/100>=newBidAmount, "your bid is not high enough");
+
+        ERC20 paymentToken = ERC20(address(a.paymentToken));
+
+        if (a.lotToken == dao.addresses('stableCoin') || a.lotToken == dao.addresses('weth')){
+            uint256 difference = newBidAmount-b.bidAmount;
+            require(paymentToken.transferFrom(msg.sender, address(this), difference), "You should first approve payment to auction contract address");
+        }
+
+        b.bidAmount = newBidAmount;
+        a.lastTimeUpdated = block.timestamp;
+        a.bestBidId = bidId;
+        emit newBid(b.auctionID, bidId, newBidAmount);
+        //TODO: test imporove bid
     }
 
     function cancelBid(uint256 bidId) public{
@@ -180,8 +211,8 @@ contract Auction {
             emit buyOutFinished(auctionId, a.lotAmount, bestBid.bidAmount);
         }
         if (a.lotToken == dao.addresses('rule') && a.paymentToken == dao.addresses('stableCoin')){
-            require(cdp.mintRule(bestBid.owner, bestBid.bidAmount));
-            require(coin.transfer(dao.addresses('cdp'), a.lotAmount));
+            require(cdp.mintRule(bestBid.owner, bestBid.bidAmount), "could not mint rule");
+            require(coin.transfer(dao.addresses('cdp'), a.lotAmount), "could not transfer coins");
         }
         if (a.lotToken == dao.addresses('weth') && a.paymentToken == dao.addresses('stableCoin')){
             require(lotToken.transfer(bestBid.owner, a.lotAmount));
