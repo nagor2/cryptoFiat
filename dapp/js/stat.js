@@ -4,7 +4,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0xa70371f6c4D516EC7857748D3ce2895fbbc77F58';
+var daoAddress = '0xb006e674F5610063F3C3c87c4d93651C37D2c100';
 
 var stableCoinABI = [
     {
@@ -3240,6 +3240,12 @@ var auctionABI = [
                 "internalType": "uint256",
                 "name": "bidAmount",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
             }
         ],
         "name": "newBid",
@@ -3632,6 +3638,7 @@ async function drawStatic(){
     });
 
     daoStatic.methods.addresses('auction').call().then(function (result) {
+        auctionAddress = result;
         auctionStatic = new localWeb3.eth.Contract(auctionABI,result);
         document.getElementById('auctionLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + result + '>'+result+'</a>';
 
@@ -3641,6 +3648,35 @@ async function drawStatic(){
         }).then(function (events){
             for (let i =0; i<events.length; i++) {
                     printAuction(events[i].returnValues.auctionID);
+            }
+        });
+
+        auctionStatic.getPastEvents('newBid', {
+            fromBlock: 0,
+            toBlock: 'latest'
+        }).then(function (events){
+            for (let i =0; i<events.length; i++) {
+                if (events[i].returnValues.owner == userAddress)
+                printBid(events[i].returnValues.auctionID, events[i].returnValues.bidId);
+            }
+        });
+
+        auctionStatic.getPastEvents('bidCanceled', {
+            fromBlock: 0,
+            toBlock: 'latest'
+        }).then(function (events){
+            for (let i =0; i<events.length; i++) {
+                if (events[i].returnValues.owner == userAddress)
+                printBidCanceled(events[i].returnValues.auctionID, events[i].returnValues.bidId);
+            }
+        });
+
+        auctionStatic.getPastEvents('liquidateCollateral', {
+            fromBlock: 0,
+            toBlock: 'latest'
+        }).then(function (events){
+            for (let i =0; i<events.length; i++) {
+                printLiquidateCollateral(events[i].returnValues.auctionID);
             }
         });
     });

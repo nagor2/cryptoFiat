@@ -37,7 +37,7 @@ contract Auction {
 
     event buyOutInit(uint256 auctionID, uint256 lotAmount, address lotAddress);
     event buyOutFinished(uint256 auctionID, uint256 lotAmount, uint256 bestBid);
-    event newBid(uint256 auctionID, uint256 bidId, uint256 bidAmount);
+    event newBid(uint256 auctionID, uint256 bidId, uint256 bidAmount, address owner);
     event bidCanceled(uint256 bidId);
 
     event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 liquidateColleteral);
@@ -155,7 +155,7 @@ contract Auction {
 
         a.bestBidId = bidId;
         a.lastTimeUpdated = block.timestamp;
-        emit newBid(auctionId, bidId, bidAmount);
+        emit newBid(auctionId, bidId, bidAmount, b.owner);
     }
 
     function improveBid(uint256 bidId, uint256 newBidAmount) public{
@@ -180,7 +180,7 @@ contract Auction {
         b.bidAmount = newBidAmount;
         a.lastTimeUpdated = block.timestamp;
         a.bestBidId = bidId;
-        emit newBid(b.auctionID, bidId, newBidAmount);
+        emit newBid(b.auctionID, bidId, newBidAmount, b.owner);
         //TODO: test imporove bid
     }
 

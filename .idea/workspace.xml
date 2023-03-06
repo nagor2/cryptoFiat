@@ -12,13 +12,10 @@
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dapp/js/dao.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/dao.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dapp/js/stat.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/stat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package (2).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock (2).json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/truffle-config (2).js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,14 +77,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;B:/YandexDisk/Работа/ICO/oracle&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "B:/YandexDisk/Работа/ICO/CryptoFiat/repo",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\dapp\js" />
@@ -214,6 +211,8 @@
       <workItem from="1678004328231" duration="4931000" />
       <workItem from="1678009648362" duration="4311000" />
       <workItem from="1678015557199" duration="537000" />
+      <workItem from="1678019229340" duration="144000" />
+      <workItem from="1678107431209" duration="3904000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>

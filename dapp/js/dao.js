@@ -11,6 +11,7 @@ var votingId;
 var weth;
 var cdpAddress;
 var depositAddress;
+var auctionAddress;
 var auction;
 
 async function unlock(){
@@ -316,13 +317,76 @@ function printAuction(id){
                     "<p>best bid: "+bid.owner+"</p>" +
                     "<p>bidAmount: "+localWeb3.utils.fromWei(bid.bidAmount)+"</p>" +
                     "<p>bid time: "+dateFromTimestamp(bid.time)+"</p>" +
-
-                    "<input type=\"button\" value=\"topUp\" onclick=\"topUp("+id+")\">"+
-                    "<input type=\"button\" value=\"withdraw\" onclick=\"withdrawFromDeposit("+id+")\">"+
-                    "<input type=\"button\" value=\"close\" onclick=\"closeDeposit("+id+");\">"+
+                    "<input type=\"text\" value=\"0\" id='bidAmount'>"+
+                    "<input type=\"button\" value=\"approve\" onclick=\"approveForAuction()\">"+
+                    "<input type=\"button\" value=\"make new bid\" onclick=\"makeBid("+id+")\">"+
                     "</div>";
             document.getElementById("activeAuctions").innerHTML += html;
         });
+    });
+}
+
+function printBid(auctionId, bidId){
+    let html='';
+    auctionStatic.methods.auctions(auctionId).call().then(function (auction) {
+        auctionStatic.methods.bids(bidId).call().then(function(bid){
+            if (!auction.finalized) {
+                html = "<div id='bid-" + bidId + "'>" +
+                    "<p>bidAmount: " + localWeb3.utils.fromWei(bid.bidAmount) + "</p>" +
+                    "<p>bid time: " + dateFromTimestamp(bid.time) + "</p>" +
+                    "<input type=\"button\" value=\"make new bid\" onclick=\"improveBid(" + bidId + ")\">" +
+                    "</div>";
+
+            }
+            else if (!bid.canceled) {
+                html = "<div id='bid-"+bidId+"'>" +
+                    "<h3>You have bid on finilized auction. Please, cancel it to return assets</h3>"+
+                    "<p>paymentToken: "+auction.paymentToken+"</p>" +
+                    "<p>paymentAmount: "+auction.paymentAmount+"</p>" +
+                    "<p>bidAmount: "+localWeb3.utils.fromWei(bid.bidAmount)+"</p>" +
+                    "<p>bid time: "+dateFromTimestamp(bid.time)+"</p>" +
+                    "<input type=\"button\" value=\"cancel bid\" onclick=\"cancelBid("+id+")\">"+
+                    "</div>";
+                document.getElementById("bidsToCancel").innerHTML += html;
+            }
+
+        });
+    });
+}
+
+function printBidCanceled(auctionId, bidId){
+    let html='';
+    auctionStatic.methods.auctions(auctionId).call().then(function (auction) {
+        auctionStatic.methods.bids(bidId).call().then(function(bid){
+            if (!auction.finalized)
+                html = "<div id='bidCanceled-"+bidId+"'>" +
+                    "<b>bid was canceled: "+bidId+"</b>" +
+                    "<p>bidAmount: "+localWeb3.utils.fromWei(bid.bidAmount)+"</p>" +
+                    "<p>bid time: "+dateFromTimestamp(bid.time)+"</p>" +
+                    "</div>";
+            document.getElementById("canceledBids").innerHTML += html;
+        });
+    });
+}
+
+function makeBid(id){
+    let amount = document.getElementById("bidAmount").value;
+    auction.methods.makeBid(id,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function approveForAuction(){
+    let amount = document.getElementById("bidAmount").value;
+    stableCoin.methods.approve(auctionAddress,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function improveBid(bidId){
+    let amount = document.getElementById("bidAmount").value;
+    auction.methods.improveBid(bidId,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+        window.location.reload();
     });
 }
 
