@@ -4,7 +4,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0xb006e674F5610063F3C3c87c4d93651C37D2c100';
+var daoAddress = '0x61F79939d7206092a4496F3DF4379c7caa7f9D16';
 
 var stableCoinABI = [
     {
@@ -3600,6 +3600,33 @@ async function drawStatic(){
         });
     });
 
+
+    await daoStatic.methods.addresses('stableCoin').call().then(function (result) {
+        stableCoinAddress = result;
+        stableCoinStatic = new localWeb3.eth.Contract(stableCoinABI,stableCoinAddress);
+        getTransfers(stableCoinStatic).then(function (result) {
+            document.getElementById('stableTxCount').innerText = result.length;
+            //console.log(result);
+        });
+
+    daoStatic.methods.addresses('cdp').call().then(function (add){
+        stableCoinStatic.methods.totalSupply().call().then(function (supply){
+            stableCoinStatic.methods.balanceOf(add).call().then(function (stabFund){
+                dao.methods.params('stabilizationFundPercent').call().then(function (percent){
+                    let coinsExceed =  stabFund - supply*percent/100;
+
+                    document.getElementById('stubFundParams').innerText = web3.utils.fromWei(stabFund.toString())+" (exceed:"+web3.utils.fromWei(coinsExceed.toString())+")";
+                })
+            });
+
+            daoStatic.methods.addresses('auction').call().then(function (auctionAddress) {
+                stableCoinStatic.methods.allowance(cdpAddress, auctionAddress).call().then(function (result) {
+                    document.getElementById('AllowedToAuction').innerText = localWeb3.utils.fromWei(result);
+                });
+            });
+        });
+    });
+
     daoStatic.methods.addresses('inflationFund').call().then(function (result) {
         var inflationAddress = result;
         var inflation = new localWeb3.eth.Contract(inflationABI,inflationAddress);
@@ -3656,7 +3683,7 @@ async function drawStatic(){
             toBlock: 'latest'
         }).then(function (events){
             for (let i =0; i<events.length; i++) {
-                if (events[i].returnValues.owner == userAddress)
+                if (events[i].returnValues.owner.toLowerCase() == userAddress.toLowerCase())
                 printBid(events[i].returnValues.auctionID, events[i].returnValues.bidId);
             }
         });
@@ -3665,7 +3692,9 @@ async function drawStatic(){
             fromBlock: 0,
             toBlock: 'latest'
         }).then(function (events){
+
             for (let i =0; i<events.length; i++) {
+
                 if (events[i].returnValues.owner == userAddress)
                 printBidCanceled(events[i].returnValues.auctionID, events[i].returnValues.bidId);
             }
@@ -3681,13 +3710,7 @@ async function drawStatic(){
         });
     });
 
-    await daoStatic.methods.addresses('stableCoin').call().then(function (result) {
-        stableCoinAddress = result;
-        stableCoinStatic = new localWeb3.eth.Contract(stableCoinABI,stableCoinAddress);
-        getTransfers(stableCoinStatic).then(function (result) {
-            document.getElementById('stableTxCount').innerText = result.length;
-            //console.log(result);
-        });
+
 
 
         getHolders(stableCoinStatic).then(function (result) {

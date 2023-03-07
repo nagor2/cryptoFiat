@@ -57,11 +57,12 @@
             <p>overall collateral: <span style="font-weight: bold;" id="overallCollateral"></span></p>
             <p>stabilization fund: <span style="font-weight: bold;" id="stabFund"></span></p>
             <input type="button" value="initCoinsBuyOut" onclick="initCoinsBuyOut()">
+            <input type="button" value="initCoinsBuyOut" onclick="initRuleBuyOut()">
             <p>pool volume:</p>
             <input type="button" value="Buy from pool">
         </td>
         <td>
-            <h2>INTDAO</h2> <input type="button" value="renew contracts" onclick="dao.methods.renewContracts().send({from:userAddress});">
+            <h2>INTDAO</h2> <input type="button" style="background-color: orange" value="renew contracts" onclick="dao.methods.renewContracts().send({from:userAddress});">
             <p>address: <span style="font-weight: bold;" id="daoLink"></span></p>
             <p>WETH address:<span style="font-weight: bold;" id="wethLink"></span></p>
             <p>authorized:</p>
@@ -120,6 +121,7 @@
             <p>marketCap: <span style="font-weight: bold;" id="ruleMarketCap"></span></p>
             <p>pool volume:</p>
             <input type="button" value="Buy from pool">
+            <input type="button" value="burnRule after buyout" onclick="cdp.methods.burnRule().send({from:userAddress});">
         </td>
     </tr>
     <tr>
@@ -139,7 +141,11 @@
             <div id="myDeposits"></div>
         </td>
         <td>
-            <h2>Borrow</h2><input type="button" value="renew contracts" onclick="cdp.methods.renewContracts().send({from:userAddress});">
+            <h2>Borrow</h2><input type="button" style="background-color: orange"  value="renew contracts" onclick="cdp.methods.renewContracts().send({from:userAddress});">
+            <p>stubFund: <span style="font-weight: bold;" id="stubFundParams"></span></p>
+            <input type="button" value="allow surplus to auction" onclick="allowSurplusToAuction()">
+            <p>AllowedToAuction: <span style="font-weight: bold;" id="AllowedToAuction"></span></p>
+            <input type="button" value="initRuleBuyOut" onclick="initRuleBuyOut()">
             <p>your stable coin allowance: <span style="font-weight: bold;" id="cdpAllowance"></span></p>
             <p>address: <span style="font-weight: bold;" id="cdpLink"></span></p>
             <p>weth ballance: <span style="font-weight: bold;" id="cdpWethBalance"></span></p>
@@ -171,6 +177,7 @@
     <tr>
         <td>
             <h2>Auction</h2>
+            <input type="button"  style="background-color: orange" value="renew contracts" onclick="auction.methods.renewContracts().send({from:userAddress});">
             <p>address: <span style="font-weight: bold;" id="auctionLink"></span></p>
             <p>current auctions:</p>
             <div id="activeAuctions"></div>

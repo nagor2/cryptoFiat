@@ -55,7 +55,7 @@ contract Auction {
     }
 
     function initRuleBuyOut() public returns (uint256 auctionID){
-        uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));
+        uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));//CHTO?? Kak mojet bit takoy allowence???
         require (coin.transferFrom(dao.addresses('cdp'), address(this), allowed), "Can not transfer surplus from CDP");
         auctionID = auctionNum++;
         auctionEntity storage a = auctions[auctionID];

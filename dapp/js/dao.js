@@ -267,8 +267,10 @@ function printDebtPosition(id){
             html = "<div id='position-"+id+"'>" +
                 "<p>opened: "+dateFromTimestamp(position.timeOpened)+"</p>" +
                 "<p>updated: "+dateFromTimestamp(position.lastTimeUpdated)+"</p>" +
-                "<p>coinsMinted: "+localWeb3.utils.fromWei(position.coinsMinted)+"</p>"+
+                "<p>coinsMinted (red/yellow/green): "+localWeb3.utils.fromWei(position.coinsMinted)+"</p>"+
                 "<p>wethLocked: "+localWeb3.utils.fromWei(position.wethAmountLocked)+"</p>"+
+                "<p>collateral (red/yellow/green): "+localWeb3.utils.fromWei(position.wethAmountLocked)+"</p>"+
+                "<p>maxCoinsToMint : "+localWeb3.utils.fromWei(position.wethAmountLocked)+"</p>"+
                 "<p>accumulated interest:  "+web3.utils.fromWei(fee)+"</p>"+
                 "<input type=\"button\" value=\"closeCDP\" onclick=\"cdp.methods.closeCDP("+id+").send({from:userAddress});\">"+
                 "<input type=\"button\" value=\"updateCDP\" onclick=\"updateCDP("+id+")\">"+
@@ -313,12 +315,15 @@ function printAuction(id){
                     "<p>lotToken: "+auction.lotToken+"</p>" +
                     "<p>lotAmount: "+localWeb3.utils.fromWei(auction.lotAmount)+"</p>" +
                     "<p>paymentToken: "+auction.paymentToken+"</p>" +
-                    "<p>paymentAmount: "+auction.paymentAmount+"</p>" +
+                    "<p>paymentAmount: "+localWeb3.utils.fromWei(auction.paymentAmount)+"</p>" +
                     "<p>best bid: "+bid.owner+"</p>" +
                     "<p>bidAmount: "+localWeb3.utils.fromWei(bid.bidAmount)+"</p>" +
                     "<p>bid time: "+dateFromTimestamp(bid.time)+"</p>" +
+                    "<input type=\"button\" value=\"claim to finalize\" onclick=\"claimToFinalizeAuction("+id+")\">"+
                     "<input type=\"text\" value=\"0\" id='bidAmount'>"+
                     "<input type=\"button\" value=\"approve\" onclick=\"approveForAuction()\">"+
+                    "<input type=\"button\" value=\"approveRuleForAuction\" onclick=\"approveRuleForAuction()\">"+
+
                     "<input type=\"button\" value=\"make new bid\" onclick=\"makeBid("+id+")\">"+
                     "</div>";
             document.getElementById("activeAuctions").innerHTML += html;
@@ -334,18 +339,20 @@ function printBid(auctionId, bidId){
                 html = "<div id='bid-" + bidId + "'>" +
                     "<p>bidAmount: " + localWeb3.utils.fromWei(bid.bidAmount) + "</p>" +
                     "<p>bid time: " + dateFromTimestamp(bid.time) + "</p>" +
-                    "<input type=\"button\" value=\"make new bid\" onclick=\"improveBid(" + bidId + ")\">" +
+                    "<input type=\"button\" value=\"improve bid\" onclick=\"improveBid(" + bidId + ")\">" +
+                    "<input type=\"button\" value=\"cancel bid\" onclick=\"cancelBid(" + bidId + ")\">" +
                     "</div>";
+                document.getElementById("auction-"+auctionId).innerHTML += html;
 
             }
-            else if (!bid.canceled) {
+            else if (!bid.canceled && auction.bestBidId!=bidId) {
                 html = "<div id='bid-"+bidId+"'>" +
                     "<h3>You have bid on finilized auction. Please, cancel it to return assets</h3>"+
                     "<p>paymentToken: "+auction.paymentToken+"</p>" +
-                    "<p>paymentAmount: "+auction.paymentAmount+"</p>" +
+                    "<p>paymentAmount: "+localWeb3.utils.fromWei(auction.paymentAmount)+"</p>" +
                     "<p>bidAmount: "+localWeb3.utils.fromWei(bid.bidAmount)+"</p>" +
                     "<p>bid time: "+dateFromTimestamp(bid.time)+"</p>" +
-                    "<input type=\"button\" value=\"cancel bid\" onclick=\"cancelBid("+id+")\">"+
+                    "<input type=\"button\" value=\"cancel bid\" onclick=\"cancelBid("+bidId+")\">"+
                     "</div>";
                 document.getElementById("bidsToCancel").innerHTML += html;
             }
@@ -376,12 +383,32 @@ function makeBid(id){
     });
 }
 
+function claimToFinalizeAuction(auctionId){
+    auction.methods.claimToFinalizeAuction(auctionId).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+function cancelBid(id){
+    auction.methods.cancelBid(id).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
 function approveForAuction(){
     let amount = document.getElementById("bidAmount").value;
     stableCoin.methods.approve(auctionAddress,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
         window.location.reload();
     });
 }
+
+function approveRuleForAuction(){
+    let amount = document.getElementById("bidAmount").value;
+    rule.methods.approve(auctionAddress,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
 
 function improveBid(bidId){
     let amount = document.getElementById("bidAmount").value;
@@ -487,7 +514,10 @@ function initCoinsBuyOut(){
                 dao.methods.params('stabilizationFundPercent').call().then(function (percent){
                     let coinsNeeded = supply*percent/100 - stabFund;
                     if (coinsNeeded>0)
-                        auction.methods.initCoinsBuyOutForStabilization(localWeb3.utils.toWei(coinsNeeded.toString())).send({from:userAddress});
+                        auction.methods.initCoinsBuyOutForStabilization(localWeb3.utils.toWei(coinsNeeded.toString())).send({from:userAddress}).then(function (result) {
+                            window.location.reload();
+                        });
+                    else alert ('there is no need to init buyout. Stub fund is full enough')
                 })
             });
         });
@@ -495,10 +525,23 @@ function initCoinsBuyOut(){
 
 }
 
+function initRuleBuyOut(){
+    auction.methods.initRuleBuyOut().send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
+
+function allowSurplusToAuction(){
+    cdp.methods.allowSurplusToAuction().send({from:userAddress}).then(function (result) {
+        window.location.reload();
+    });
+}
+
 function fillVoting(id) {
     daoStatic.methods.votings(id).call().then(function (result) {
 
-        document.getElementById('totalPositive').innerText = result[0];
+        document.getElementById('totalPositive').innerText = web3.utils.fromWei(result[0]);
         document.getElementById('voteingType').innerText = result[1];
         document.getElementById('voteingName').innerText = result[2];
         document.getElementById('voteingValue').innerText = result[3];
