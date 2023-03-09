@@ -11,12 +11,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
-      <change afterPath="$PROJECT_DIR$/dapp/favicon.ico" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dapp/js/dao.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/dao.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dapp/js/stat.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/stat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/~$TODO.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/~WRL1946.tmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cart_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cart_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpMarginCall_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpMarginCall_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/exchangeRate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/exchangeRate_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,11 +83,11 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../oracle" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\dapp\js" />
@@ -108,7 +113,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -209,7 +214,7 @@
       <workItem from="1678004328231" duration="4931000" />
       <workItem from="1678009648362" duration="4311000" />
       <workItem from="1678015557199" duration="537000" />
-      <workItem from="1678157705195" duration="8046000" />
+      <workItem from="1678157705195" duration="9299000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -314,7 +319,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -328,19 +332,5 @@
     <MESSAGE value="Some problems with open CDP" />
     <MESSAGE value="Not working code. Check later" />
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1678157729420">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1678157729420" />
-    <state x="184" y="85" key="MergeDialog" timestamp="1678157208190">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="184" y="85" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1678157208190" />
-    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1678157132700">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1678157132700" />
   </component>
 </project>

@@ -24,8 +24,8 @@ contract('Cart', (accounts) => {
     });
 
     it("should return valid share price if price changed", async () => {
-        await eRC.updateSinglePrice(exRAuthour, "Lumber", 0, 455510000, {from: exRAuthour}); //+10%
-        await eRC.updateSinglePrice(exRAuthour, "Gold", 0, 2241180000, {from: exRAuthour}); //+20%
+        await eRC.updateSinglePrice(2, 455510000, {from: exRAuthour}); //+10%
+        await eRC.updateSinglePrice(1, 2241180000, {from: exRAuthour}); //+20%
         let sharePrice = await cart.getCurrentSharePrice();
         assert.equal (sharePrice,1.166666*10**await cart.getDecimals('any'),"wrong sharePrice");
     });
@@ -43,8 +43,8 @@ contract('Cart', (accounts) => {
     });
 
     before('should setup the contracts instance', async () => {
-        await eRC.updateSinglePrice(exRAuthour, "Gold", 0, 1867650000, {from: exRAuthour});
-        await eRC.updateSinglePrice(exRAuthour, "Lumber", 0, 414100000, {from: exRAuthour});
+        await eRC.updateSinglePrice(1, 1867650000, {from: exRAuthour}); //gold
+        await eRC.updateSinglePrice(2, 414100000, {from: exRAuthour}); //lumber
     });
 
 });
