@@ -4,7 +4,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0x61F79939d7206092a4496F3DF4379c7caa7f9D16';
+var daoAddress = '0x03f3311a219d79d180362e88A12043eC567F35E4';
 
 var stableCoinABI = [
     {
@@ -1103,6 +1103,11 @@ var depositABI = [
                 "internalType": "uint256",
                 "name": "accumulatedInterest",
                 "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "closed",
+                "type": "bool"
             }
         ],
         "stateMutability": "view",

@@ -287,8 +287,7 @@ function printDeposit(id){
 
     depositStatic.methods.overallInterest(id).call().then(function (interest) {
         depositStatic.methods.deposits(id).call().then(function(deposit){
-
-            if (!deposit.liquidated)
+            if (!deposit.closed)
                 html = "<div id='deposit-"+id+"'>" +
                     "<p>opened: "+dateFromTimestamp(deposit.timeOpened)+"</p>" +
                     "<p>updated: "+dateFromTimestamp(deposit.lastTimeUpdated)+"</p>" +
@@ -529,6 +528,12 @@ function initRuleBuyOut(){
     auction.methods.initRuleBuyOut().send({from:userAddress}).then(function (result) {
         window.location.reload();
     });
+}
+
+function transferFromCDP() {
+    stableCoin.methods.allowance(cdpAddress, userAddress).call().then(function (approved) {
+        stableCoin.methods.transferFrom(cdpAddress, userAddress, approved).send({from:userAddress});
+    })
 }
 
 
