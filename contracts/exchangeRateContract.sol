@@ -15,7 +15,7 @@ import "./INTDAO.sol";
 
 contract exchangeRateContract {
 
-    constructor(address _INTDAOaddress) payable{
+    constructor(address payable _INTDAOaddress) payable{
         INTDAO dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("oracle", payable(address(this)));
         author = payable(msg.sender);
@@ -25,6 +25,7 @@ contract exchangeRateContract {
     uint256 public subscriptionsCount;
     uint256 public instrumentsCount;
 
+    //TODO: check this prices
     uint256 constant public updOnePriceGasCost = 84928;
     uint256 constant public updSeveralPricesCost = 87742;
     uint256 constant public updAdditionalPrice = 22700;

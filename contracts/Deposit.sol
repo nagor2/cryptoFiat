@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
 import "./INTDAO.sol";
 import "./stableCoin.sol";
@@ -23,7 +24,7 @@ contract DepositContract {
     mapping(uint256 => Deposit) public deposits;
     event DepositOpened(uint256 id, uint256 amount, uint256 rate, address owner);
 
-    constructor(address INTDAOaddress){
+    constructor(address payable INTDAOaddress){
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('deposit',payable(address(this)));
         coin = stableCoin(payable(dao.addresses('stableCoin')));
@@ -90,9 +91,13 @@ contract DepositContract {
     }
 
     function claimInterest(uint256 id) public {
-        uint256 interest = updateInterest(id);
+        updateInterest(id);
         Deposit storage d = deposits[id];
         cdp.claimInterest(overallInterest(id), d.owner);
         d.accumulatedInterest = 0;
+    }
+
+    receive() external payable {
+        dao.addresses('oracle').transfer(address(this).balance);
     }
 }

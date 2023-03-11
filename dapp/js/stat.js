@@ -1,10 +1,10 @@
-//var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/7005259595814e4185411127fb00ecf4'));
+var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/7005259595814e4185411127fb00ecf4'));
 
-var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+//var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
 
 var wethAddress;
-var daoAddress = '0x03f3311a219d79d180362e88A12043eC567F35E4';
+var daoAddress = '0x721279902b701faca570de095f8cbd4b12648cdd';
 
 var stableCoinABI = [
     {

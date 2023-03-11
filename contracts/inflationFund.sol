@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
 import "./INTDAO.sol";
 import "./stableCoin.sol";
@@ -11,7 +12,7 @@ contract InflationFund {
     uint256 public lastEmission;
     event inflationEmission(uint256 amount);
 
-    constructor(address INTDAOaddress){
+    constructor(address payable INTDAOaddress){
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('inflationFund',payable(address(this)));
         coin = stableCoin(payable(dao.addresses('stableCoin')));

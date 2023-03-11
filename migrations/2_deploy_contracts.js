@@ -11,57 +11,23 @@ var cartContract = artifacts.require("cartContract");
 
 module.exports = async function(deployer, network, accounts) {
     if (network == "dashboard") {
-        let daoAddress ="0x578A8A64D614eBAaAc2d0ADEb998dF2cfE7B8131"; //INTDAO.address;
-
-        /*
-        await deployer.deploy(weth);
-        await deployer.deploy(INTDAO, weth.address);
-        let daoAddress = INTDAO.address;*/
-        //await deployer.deploy(exchangeRateContract, daoAddress, {value:"100000000000000"});
-
-        //const eRC = await exchangeRateContract.deployed();
-        //eRC.addInstrument("eth", "Ethereum", 6);
-        await deployer.deploy(cartContract, daoAddress);
-        //const cart = await cartContract.deployed();
-        /*
-        let instruments = [
-            'Gold',            'XAU/USD',
-            'Silver',          'XAG/USD',
-            'Copper',          'Platinum',
-            'Palladium',       'Crude Oil WTI',
-            'Brent Oil',       'Natural Gas',
-            'Heating Oil',     'Gasoline RBOB',
-            'London Gas Oil',  'Aluminium',
-            'Zinc',            'Nickel',
-            'Copper London',   'US Wheat',
-            'Rough Rice',      'US Corn',
-            'US Soybeans',     'US Soybean Oil',
-            'US Soybean Meal', 'US Cotton',
-            'US Cocoa',        'US Coffee C',
-            'London Coffee',   'US Sugar',
-            'Orange Juice',    'Live Cattle',
-            'Lean Hogs',       'Feeder Cattle',
-            'Lumber',          'Oats'
-        ];
-        let prices = [1828850000,1820240000,21255000,21285000,4099000,918050000,1450250000,77080000,83750000,2330000,2749300,2376900,799250000,2400000000,3012000000,26151500000,8949000000,764500000,17605000,675400000,1525120000,61350000,493500000,80880000,2781500000,180630000,2065000000,21460000,227680000,162820000,85800000,186320000,388500000,352700000];
-
-        for (var i=0; i<instruments.length; i++){
-            await eRC.addInstrument(instruments[i], instruments[i], 6);
-            await cart.addItem(instruments[i], 10, prices[i]);
-        }
-
-        await deployer.deploy(stableCoin, daoAddress);
-        await deployer.deploy(Rule, daoAddress);
-        await deployer.deploy(auction, daoAddress);
+        //await deployer.deploy(weth);
+        //await deployer.deploy(INTDAO, '0xfe3d33a52a5c83cb44605abe33d11e787649e36c'); weth.address
+        let daoAddress = '0x721279902b701faca570de095f8cbd4b12648cdd';//INTDAO.address;
+        //await deployer.deploy(exchangeRateContract, daoAddress, {value:web3.utils.toWei('0.1')});
+        //await deployer.deploy(cartContract, daoAddress);
+        //await deployer.deploy(stableCoin, daoAddress);
+        //await deployer.deploy(Rule, daoAddress);
+        //await deployer.deploy(auction, daoAddress);
         await deployer.deploy(cdp, daoAddress);
         await deployer.deploy(deposit, daoAddress);
-        await deployer.deploy(InflationFund, daoAddress);*/
+        await deployer.deploy(InflationFund, daoAddress);
     }
     else if (network == "development"){
         const author = accounts[1];
         await deployer.deploy(weth);
         await deployer.deploy(INTDAO, weth.address, {from: author});
-        await deployer.deploy(exchangeRateContract, INTDAO.address, {from: author, value:"1000000000000000000"});
+        await deployer.deploy(exchangeRateContract, INTDAO.address, {from: author, value:web3.utils.toWei('0.1')});
         await deployer.deploy(cartContract, INTDAO.address);
         await deployer.deploy(stableCoin, INTDAO.address);
         await deployer.deploy(Rule, INTDAO.address, {from: author});
@@ -74,7 +40,7 @@ module.exports = async function(deployer, network, accounts) {
         const exRAuthour = accounts[5];
         await deployer.deploy(weth);
         await deployer.deploy(INTDAO, weth.address, {from: accounts[1]});
-        await deployer.deploy(exchangeRateContract, INTDAO.address, {from: exRAuthour, value:"1000000000000000000"});
+        await deployer.deploy(exchangeRateContract, INTDAO.address, {from: exRAuthour, value:web3.utils.toWei('0.1')});
         const eRC = await exchangeRateContract.deployed();
 
         await eRC.addInstrument("eth", "Ethereum", 6, {from: exRAuthour});

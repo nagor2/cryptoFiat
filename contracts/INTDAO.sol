@@ -7,8 +7,7 @@ contract INTDAO {
     mapping (uint => mapping(address => uint)) votes;
 
     mapping (uint=>Voting) public votings;
-    //TODO: add public and 256 ↓
-    uint votingID;
+    uint256 public votingID;
 
     struct Voting {
         uint totalPositive;
@@ -154,12 +153,15 @@ contract INTDAO {
         if (votings[votingId].voteingType == 2)
             addresses[votings[votingId].name] = votings[votingId].addr;
         //TODO: Написать тест на паузу контракта (зачем нужен этот функционал, не помню, но пусть будет)
-        //TODO: Если это deposit или inflationFund - автоматически авторизовать.
         if (votings[votingId].voteingType == 3)
             paused[votings[votingId].addr] = votings[votingId].decision;
         if (votings[votingId].voteingType == 4)
             authorized[votings[votingId].addr] = votings[votingId].decision;
         emit VotingSucceed(votingId);
         activeVoting = false;
+    }
+
+    receive() external payable {
+        addresses['oracle'].transfer(address(this).balance);
     }
 }

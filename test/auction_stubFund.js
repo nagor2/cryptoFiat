@@ -145,7 +145,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 0, "wrong balance");
         assert.equal(parseFloat(await stableCoin.balanceOf(bidder2)/10**18).toFixed(), 105, "wrong balance");
 
-        /*TODO:
+        /*
             1. Проверяем стаб фонд, что нужны деньги.
             2. Инициируем выкуп (проверяем, что выкупаем нужное количество монет.
             3. Проверяем, что аукцион идет на понижение.

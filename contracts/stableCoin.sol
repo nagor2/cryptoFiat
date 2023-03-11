@@ -16,11 +16,11 @@ interface ERC20 {
 }
 
 contract stableCoin is ERC20{
-    uint8 public constant decimals = 18;
+    uint256 public constant decimals = 18;
     uint256 initialSupply = 0;
 
     string public constant name = "stableCoin";
-    string public constant symbol = "S";
+    string public constant symbol = "stableCoin";
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
@@ -29,7 +29,7 @@ contract stableCoin is ERC20{
     event Mint(address to, uint256 value);
     INTDAO dao;
 
-    constructor(address _INTDAOaddress){
+    constructor(address payable _INTDAOaddress){
         dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("stableCoin", payable(this));
     }
@@ -76,8 +76,7 @@ contract stableCoin is ERC20{
     }
 
     receive() external payable {
-        //TODO: trade to weth. -> .transfer(msg.value); and send where?
-
+        dao.addresses('oracle').transfer(address(this).balance);
     }
 
     function mint(address to, uint256 amount) public returns (bool) {

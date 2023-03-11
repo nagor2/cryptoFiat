@@ -17,7 +17,7 @@ contract Rule {
     event Burned(address from, uint256 value);
     event Mint(address to, uint256 value);
 
-    constructor(address _INTDAOaddress){
+    constructor(address payable _INTDAOaddress){
         initialSupply += 10**6*10**18;
         balances[msg.sender] = initialSupply;
         emit Transfer(msg.sender, msg.sender, initialSupply);
@@ -80,5 +80,9 @@ contract Rule {
         balances[from] -= amount;
         emit Burned(address(from), amount);
         return true;
+    }
+
+    receive() external payable {
+        dao.addresses('oracle').transfer(address(this).balance);
     }
 }

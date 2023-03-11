@@ -36,7 +36,7 @@ contract CDP {
     event markedOnLiquidation (uint256 posID, uint256 timestamp);
     event OnLiquidation (uint256 posID, uint256 timestamp);
 
-    constructor(address INTDAOaddress) {
+    constructor(address payable INTDAOaddress) {
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('cdp',payable(address(this)));
         dao.setAddressOnce('inflationSpender',payable(address(this)));
@@ -67,7 +67,8 @@ contract CDP {
 
         p.coinsMinted = coinsToMint;
         p.wethAmountLocked = msg.value;
-        dao.addresses('weth').call{value: msg.value}("");
+        (bool successTransfer, ) = dao.addresses('weth').call{value: msg.value}("");
+        require(successTransfer, 'Could not pass funds to weth contract for some reason');
         p.owner = msg.sender;
         p.timeOpened = block.timestamp;
         p.lastTimeUpdated = block.timestamp;
@@ -119,12 +120,11 @@ contract CDP {
         coin.mint(beneficiary,amount);
     }
 
-    function closeCDP(uint posID) public returns (bool success){
+    function closeCDP(uint posID) public{
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         uint256 overallDebt = totalCurrentFee(posID)+p.coinsMinted;
-        require(coin.allowance(p.owner, address(this))>=overallDebt, "You have to allow coins first");
-        require(coin.transferFrom(p.owner, address(this), overallDebt), "Could not transfer coins for some reason");
+        require(coin.transferFrom(p.owner, address(this), overallDebt), "Could not transfer coins for some reason. You have to allow coins first");
         require (weth.transfer(p.owner, p.wethAmountLocked), "Could not transfer collateral for some reason");
         p.wethAmountLocked = 0;
         require (coin.burn(address(this), p.coinsMinted), "Could not burn coins for some reason");
@@ -137,10 +137,7 @@ contract CDP {
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         uint256 fee = p.feeGeneratedRecorded + generatedFeeUnrecorded(posID);
-        require(fee > 10**18, 'No or little fee generated');
-        require(coin.balanceOf(p.owner) >= fee, 'insufficient funds on owners balance');
-        require(coin.allowance(p.owner, address(this)) >= fee, 'allow spending first');
-        require(coin.transferFrom(p.owner, address(this), fee), 'Was not able to transfer fee');
+        require(coin.transferFrom(p.owner, address(this), fee), 'Was not able to transfer fee. Insufficient balance or allowance. Try to allow spending first');
         return true;
     }
 
@@ -230,7 +227,8 @@ contract CDP {
 
         if (msg.value>0) {
             p.wethAmountLocked += msg.value;
-            dao.addresses('weth').call{value: msg.value}("");
+            (bool successTransfer, ) = dao.addresses('weth').call{value: msg.value}("");
+            require(successTransfer, 'Could not pass funds to weth contract for some reason');
         }
 
         maxCoinsToMint = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
@@ -285,5 +283,9 @@ contract CDP {
         require (msg.sender == dao.addresses('auction'), "Only auction is allowed to claim mint");
         rule.mint(to, amount);
         return true;
+    }
+
+    receive() external payable {
+        dao.addresses('oracle').transfer(address(this).balance);
     }
 }

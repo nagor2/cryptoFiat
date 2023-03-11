@@ -42,7 +42,7 @@ contract Auction {
 
     event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 liquidateColleteral);
 
-    constructor(address _INTDAOaddress){
+    constructor(address payable _INTDAOaddress){
         dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("auction", payable(address(this)));
         cdp = CDP(dao.addresses('cdp'));
@@ -181,7 +181,7 @@ contract Auction {
         a.lastTimeUpdated = block.timestamp;
         a.bestBidId = bidId;
         emit newBid(b.auctionID, bidId, newBidAmount, b.owner);
-        //TODO: test imporove bid
+        //TODO: test improve bid
     }
 
     function cancelBid(uint256 bidId) public{
@@ -223,5 +223,9 @@ contract Auction {
         }
         a.finalized = true;
         return true;
+    }
+
+    receive() external payable {
+        dao.addresses('oracle').transfer(address(this).balance);
     }
 }

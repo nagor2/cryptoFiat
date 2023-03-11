@@ -26,7 +26,7 @@ contract cartContract{
     event shareChanged(uint256 id);
 
 
-    constructor(address INTDAOaddress){
+    constructor(address payable INTDAOaddress){
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('cart',payable(address(this)));
         oracle = exchangeRateContract(dao.addresses('oracle'));
@@ -68,8 +68,6 @@ contract cartContract{
         return overallCartPrice/sharesCount;
     }
 
-    //TODO: code a function, that reads only index value from oracle
-
     function getPrice(string memory symbol) public view returns (uint256) {
         if (keccak256(bytes(symbol)) == keccak256(bytes('stb')))
             return oracle.getPrice('eth') * 10**6 / getCurrentSharePrice();
@@ -77,6 +75,10 @@ contract cartContract{
     }
 
     function getDecimals(string memory symbol) public view returns (uint256 _decimals) {
-        return 6;
+        return oracle.getDecimals(symbol);
+    }
+
+    receive() external payable {
+        dao.addresses('oracle').transfer(address(this).balance);
     }
 }
