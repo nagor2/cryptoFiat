@@ -20,14 +20,14 @@ contract('Cart', (accounts) => {
 
     it("should return valid share price", async () => {
         let sharePrice = await cart.getCurrentSharePrice();
-        assert.equal (sharePrice,1*10**await cart.getDecimals('any'),"wrong sharePrice");
+        assert.equal (sharePrice,1*10**6,"wrong sharePrice");
     });
 
     it("should return valid share price if price changed", async () => {
         await eRC.updateSinglePrice(2, 455510000, {from: exRAuthour}); //+10%
         await eRC.updateSinglePrice(1, 2241180000, {from: exRAuthour}); //+20%
         let sharePrice = await cart.getCurrentSharePrice();
-        assert.equal (sharePrice,1.166666*10**await cart.getDecimals('any'),"wrong sharePrice");
+        assert.equal (sharePrice,1.166666*10**6,"wrong sharePrice");
     });
 
 
@@ -39,7 +39,7 @@ contract('Cart', (accounts) => {
         assert.equal (itemAfter.share,10,"wrong share");
         assert.equal (await cart.sharesCount(),20,"wrong share");
         let sharePrice = await cart.getCurrentSharePrice();
-        assert.equal (sharePrice,1.150000*10**await cart.getDecimals('any'),"wrong sharePrice");
+        assert.equal (sharePrice,1.150000*10**6,"wrong sharePrice");
     });
 
     before('should setup the contracts instance', async () => {
