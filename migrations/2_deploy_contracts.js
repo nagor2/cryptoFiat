@@ -70,7 +70,7 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(Platform, INTDAO.address, {from: accounts[2]});
 
         let addresses = [accounts[7], stableCoin.address, Platform.address]; //teamAddress, coin, platform
-        let params = [10, 1000, 5, 6, 70, 2592000, 604800, 600]; /*initialPrice, initialSupply, platformFeePercent,
+        let params = [10, 1000, 5, 6, 70, 5184000, 604800, 600]; /*initialPrice, initialSupply, platformFeePercent,
                                              number of stages, percentOfTokensToTeam,
                                              crowdsaleDuration in seconds (30 days)
                                              holdDuration (7 days), softCap*/

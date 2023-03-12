@@ -41,7 +41,7 @@ contract tokenTemplate is ERC20{
     uint256 public totalBudgetSpent;
     uint256 public tokensToSell;
 
-    event stageSubmitted(uint256 stageNumber);
+    event stageComplete(uint256 stageNumber);
     event tokensSold(uint256 amount, uint256 price);
     event tokensReturned(uint256 amount);
     event fundsPassed(uint256 stage, uint256 amount);
@@ -111,8 +111,8 @@ contract tokenTemplate is ERC20{
 
     function submitStage() public onlyTeam{
         require(!crowdSaleIsActive, "crowdsale is still active, finalizePublicOffer first");
-        require (block.timestamp > previousStageSubmitted+stagesDuration[currentStage], "too early to submit the stage");
-        emit stageSubmitted(currentStage);
+        require (block.timestamp >= previousStageSubmitted+stagesDuration[currentStage], "too early to submit the stage");
+        emit stageComplete(currentStage);
         currentStage++;
         previousStageSubmitted = block.timestamp;
     }
@@ -135,12 +135,13 @@ contract tokenTemplate is ERC20{
         initialSupply += tokensToTeam;
         emit Transfer(address(this), address(this), tokensToTeam);
         tokensToSell = 0;
+        previousStageSubmitted = block.timestamp - holdDuration;
     }
 
     function passFundsToTeam() public onlyTeam{
         require (!projectFinished, "Project is already finished, nothing to pass");
-        require (block.timestamp>previousStageSubmitted+holdDuration, "Hold period is not finished yet");
-        uint256 fundsToPass = budgetPercent[currentStage] * soldTokens * initialPrice / 100;
+        require (block.timestamp>=previousStageSubmitted+holdDuration, "Hold period is not finished yet");
+        uint256 fundsToPass = budgetPercent[currentStage] * soldTokens * initialPrice / 100 / 10**decimals;
         coin.transfer(teamAddress, fundsToPass);
         emit fundsPassed(currentStage, fundsToPass);
         totalBudgetSpent += budgetPercent[currentStage];
@@ -213,7 +214,8 @@ contract tokenTemplate is ERC20{
     }
 
     function transfer(address to, uint256 value) public returns (bool success) {
-        require(value<=balances[msg.sender]-frozen[msg.sender], "You can not transfer frozen tokens");
+        if (!projectFinished)
+            require(value<=(balances[msg.sender]-frozen[msg.sender]), "You can not transfer frozen tokens");
         if (balances[msg.sender] >= value && value > 0) {
             balances[msg.sender] -= value;
             balances[to] += value;
@@ -225,7 +227,8 @@ contract tokenTemplate is ERC20{
     }
 
     function transferFrom(address from, address to, uint256 value) public returns (bool success) {
-        require(value<=balances[from]-frozen[from], "You can not transfer frozen tokens");
+        if (!projectFinished)
+            require(value<=(balances[from]-frozen[from]), "You can not transfer frozen tokens");
         if (balances[from] >= value && allowed[from][msg.sender] >= value && value > 0) {
             balances[to] += value;
             balances[from] -= value;

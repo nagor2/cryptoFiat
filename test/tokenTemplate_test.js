@@ -5,6 +5,7 @@ var CDP = artifacts.require("./CDP.sol");
 var Token = artifacts.require("./tokenTemplate.sol");
 const { time } = require('@openzeppelin/test-helpers');
 const truffleAssert = require("truffle-assertions");
+const assert = require("assert");
 
 contract('Token template', (accounts) => {
     let dao;
@@ -13,6 +14,7 @@ contract('Token template', (accounts) => {
     let token;
     let cdp;
     const buyer = accounts[3];
+    const buyer2 = accounts[6];
     const author = accounts[2];
     const teamAddress = accounts[7];
 
@@ -103,7 +105,6 @@ contract('Token template', (accounts) => {
         await coin.approve(token.address, web3.utils.toWei('9000'),{from:buyer});
         await token.buyTokens({from:buyer});
         time.increase(time.duration.days(31));
-
         await token.finalizePublicOffer({from:teamAddress});
 
         assert.equal(await token.crowdSaleIsActive(), false, "crowdSaleIsActive should be set to false");
@@ -114,10 +115,67 @@ contract('Token template', (accounts) => {
         assert.equal(contractTokenBalance.toString(), web3.utils.toWei('2100'), "extra tokens should be placed on contract's balance");
     });
 
-    it("should submit the first stage and pass first tranche to the team", async () => {
-        let balance = await token.balanceOf(token.address);
-        let supply = await token.totalSupply();
-        assert.equal(balance.toString(), supply.toString(),"wrong initial balance");
+    it("should pass funds to team", async () => {
+        await token.passFundsToTeam({from:teamAddress});
+        let budgetSpentPercent = await token.totalBudgetSpent();
+        assert.equal(budgetSpentPercent.toString(), '5', "wrong budget spent");
+        let teamBalance = await coin.balanceOf(teamAddress);
+        assert.equal(teamBalance.toString(), web3.utils.toWei('450'), "wrong teamBalance");
+    });
+
+    it("should fail to submit next stage because of time", async () => {
+        await truffleAssert.fails(
+            token.submitStage({from: teamAddress}),
+            truffleAssert.ErrorType.REVERT,
+            "too early to submit the stage"
+        );
+    });
+
+    it("should submit next stage", async () => {
+        time.increase(time.duration.days(30))
+        await token.submitStage({from:teamAddress});
+    });
+
+    it("should not allow to pass fund to team due to holdDuration", async () => {
+        await truffleAssert.fails(
+            token.passFundsToTeam({from: teamAddress}),
+            truffleAssert.ErrorType.REVERT,
+            "Hold period is not finished yet"
+        );
+    });
+
+    it("should let return funds from sold tokens, but freeze some", async () => {
+        await token.transfer(buyer2, web3.utils.toWei('300'), {from:buyer});
+        await token.returnTokens({from:buyer2});
+        let tokensToSell = await token.tokensToSell();
+        assert(tokensToSell.toString(), web3.utils.toWei('285'));
+        let balance = await coin.balanceOf(buyer2);
+        assert(balance.toString(), web3.utils.toWei('2850'));
+        let tokenBalance = await token.balanceOf(buyer2);
+        assert(tokenBalance.toString(), web3.utils.toWei('15'));
+        let frozen = await token.frozen(buyer2);
+        assert(frozen.toString(), web3.utils.toWei('15'));
+        console.log(tokenBalance+' '+frozen);
+    });
+
+    it("should not let transfer frozen tokens", async () => {
+
+        let balance = await token.balanceOf(buyer2);
+        let frozen = await token.frozen(buyer2);
+        console.log(balance+' '+frozen);
+
+        await truffleAssert.fails(
+            token.transfer(buyer, web3.utils.toWei('15'),{from: buyer2}),
+            truffleAssert.ErrorType.REVERT,
+            "You can not transfer frozen tokens"
+        );
+    });
+
+    it("should let transfer unfrozen tokens", async () => {
+        await token.transfer(buyer2, web3.utils.toWei('15'),{from: buyer});
+        let balance = await token.balanceOf(buyer2);
+        assert(balance.toString(), web3.utils.toWei('30'), "wrong balance");
+        token.transfer(buyer, web3.utils.toWei('15'),{from: buyer2});
     });
 });
 
