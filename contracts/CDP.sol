@@ -95,7 +95,7 @@ contract CDP {
 
     function getMaxStableCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
         uint256 price = oracle.getPrice('stb');
-        uint256 decimals = oracle.getDecimals('stb');
+        uint256 decimals = oracle.getDecimals('eth');
         return ethValue * price * (100 - dao.params('collateralDiscount'))/(10**decimals)/100;
     }
 

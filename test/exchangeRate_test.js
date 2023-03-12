@@ -16,7 +16,7 @@ contract('Exchange Rate', (accounts) => {
 
     it("should put money on balance", async () => {
         let balance = await web3.eth.getBalance(exRate.address);
-        assert.equal (parseFloat(balance/10**18).toFixed(2), 1.00, "wrong balance");
+        assert.equal (parseFloat(balance/10**18).toFixed(2), 0.10, "wrong balance");
     });
 
     it("should add and update instrument", async () => {

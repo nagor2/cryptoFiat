@@ -11,11 +11,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
+      <change afterPath="$PROJECT_DIR$/test/platform_test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/tokenTemplate_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/~$TODO.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Commodity.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Commodity.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Platform.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Platform.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/tokenTemplate.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/tokenTemplate.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Platform.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Platform.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/tokenTemplate.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/tokenTemplate.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cart_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cart_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpFee_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/exchangeRate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/exchangeRate_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +36,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="JavaScript File" />
         <option value="Solidity Contract" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -77,14 +87,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "B:/YandexDisk/Работа/ICO/CryptoFiat/repo/contracts",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;B:/YandexDisk/Работа/ICO/CryptoFiat/repo/contracts&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo\contracts" />
@@ -215,7 +225,8 @@
       <workItem from="1678157705195" duration="9299000" />
       <workItem from="1678420805376" duration="4274000" />
       <workItem from="1678502735954" duration="11792000" />
-      <workItem from="1678532731291" duration="10719000" />
+      <workItem from="1678532731291" duration="10836000" />
+      <workItem from="1678585139550" duration="15936000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>

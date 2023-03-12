@@ -2,8 +2,6 @@ var INTDAO = artifacts.require("./INTDAO.sol");
 var cartContract = artifacts.require("./cartContract.sol");
 var Oracle = artifacts.require("./exchangeRateContract.sol");
 
-const truffleAssert = require('truffle-assertions');
-
 contract('Cart', (accounts) => {
     let dao;
     let cart;

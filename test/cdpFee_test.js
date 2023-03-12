@@ -49,7 +49,7 @@ it("should transfer fee to the auction to create buyOut", async () => {
     await truffleAssert.fails(
         cdp.transferFee(posId),
         truffleAssert.ErrorType.REVERT,
-        "insufficient funds on owners balance"
+        "Was not able to transfer fee. Insufficient balance or allowance. Try to allow spending first"
     );
 
     await stableCoin.transfer(owner, web3.utils.toWei('50', 'ether'), {from:recipient});

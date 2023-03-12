@@ -9,7 +9,8 @@ pragma solidity >=0.4.22 <0.9.0;
 contract Platform is ERC20{
     uint256 public constant decimals = 18;
     uint256 initialSupply = 10**6;
-    address tokenMinter;
+    address public tokenMinter;
+    address public ownerAddress;
 
     string public constant name = "Crowdfunding platform";
     string public constant symbol = "CFP";
@@ -32,11 +33,23 @@ contract Platform is ERC20{
         _;
     }
 
+    modifier onlyOwner{
+        require(msg.sender == ownerAddress, "This function is for minter only");
+        _;
+    }
+
     constructor(address payable INTDAOaddress){
         dao = INTDAO(INTDAOaddress);
         coin = stableCoin(dao.addresses('stableCoin'));
         cdp = CDP(dao.addresses('cdp'));
+        dao.setAddressOnce('platform',payable(address(this)));
         tokenMinter = msg.sender;
+        ownerAddress = msg.sender;
+        balances[ownerAddress] = initialSupply;
+    }
+
+    function changeMinter(address addr) public onlyOwner{
+        tokenMinter = addr;
     }
 
     function renewContracts() public {

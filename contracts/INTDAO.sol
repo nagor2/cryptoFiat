@@ -76,6 +76,8 @@ contract INTDAO {
                 authorized[addr] = true;
             if (keccak256(bytes(addressName)) == keccak256(bytes("inflationFund")))
                 authorized[addr] = true;
+            if (keccak256(bytes(addressName)) == keccak256(bytes("platform")))
+                authorized[addr] = true;
         }
     }
 
