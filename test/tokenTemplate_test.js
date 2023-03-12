@@ -73,7 +73,6 @@ contract('Token template', (accounts) => {
 
     it("should return money and increase interest", async () => {
         time.increase(time.duration.days(30));
-
         await token.approve(token.address, web3.utils.toWei('100'), {from:buyer});
         await token.returnTokens({from:buyer});
 
@@ -123,6 +122,35 @@ contract('Token template', (accounts) => {
         assert.equal(teamBalance.toString(), web3.utils.toWei('450'), "wrong teamBalance");
     });
 
+    it("should let return funds from sold tokens, but freeze some", async () => {
+        await token.transfer(buyer2, web3.utils.toWei('300'), {from:buyer});
+        await token.approve(token.address, web3.utils.toWei('300'), {from:buyer2});
+        await token.returnTokens({from:buyer2});
+        let tokensToSell = await token.tokensToSell();
+        assert.equal(tokensToSell.toString(), web3.utils.toWei('285'), "wrong tokens to sell");
+        let balance = await coin.balanceOf(buyer2);
+        assert.equal(balance.toString(), web3.utils.toWei('2850'), "wrong balance");
+        let tokenBalance = await token.balanceOf(buyer2);
+        assert.equal(tokenBalance.toString(), web3.utils.toWei('15'), "wrong balance");
+        let frozen = await token.frozen(buyer2);
+        assert.equal(frozen.toString(), web3.utils.toWei('15'), "wrong frozen");
+    });
+
+    it("should not let transfer frozen tokens", async () => {
+        await truffleAssert.fails(
+            token.transfer(buyer, web3.utils.toWei('15'),{from: buyer2}),
+            truffleAssert.ErrorType.REVERT,
+            "You can not transfer frozen tokens"
+        );
+    });
+
+    it("should let transfer unfrozen tokens", async () => {
+        await token.transfer(buyer2, web3.utils.toWei('15'),{from: buyer});
+        let balance = await token.balanceOf(buyer2);
+        assert(balance.toString(), web3.utils.toWei('30'), "wrong balance");
+        token.transfer(buyer, web3.utils.toWei('15'),{from: buyer2});
+    });
+
     it("should fail to submit next stage because of time", async () => {
         await truffleAssert.fails(
             token.submitStage({from: teamAddress}),
@@ -144,38 +172,50 @@ contract('Token template', (accounts) => {
         );
     });
 
-    it("should let return funds from sold tokens, but freeze some", async () => {
-        await token.transfer(buyer2, web3.utils.toWei('300'), {from:buyer});
-        await token.returnTokens({from:buyer2});
-        let tokensToSell = await token.tokensToSell();
-        assert(tokensToSell.toString(), web3.utils.toWei('285'));
-        let balance = await coin.balanceOf(buyer2);
-        assert(balance.toString(), web3.utils.toWei('2850'));
-        let tokenBalance = await token.balanceOf(buyer2);
-        assert(tokenBalance.toString(), web3.utils.toWei('15'));
-        let frozen = await token.frozen(buyer2);
-        assert(frozen.toString(), web3.utils.toWei('15'));
-        console.log(tokenBalance+' '+frozen);
+    it("should let pass fund to team", async () => {
+        time.increase(time.duration.days(7))
+        await token.passFundsToTeam({from: teamAddress});
+        let balance = await coin.balanceOf(teamAddress);
+        assert.equal(balance.toString(), web3.utils.toWei('1065'));
     });
 
-    it("should not let transfer frozen tokens", async () => {
-
-        let balance = await token.balanceOf(buyer2);
-        let frozen = await token.frozen(buyer2);
-        console.log(balance+' '+frozen);
-
+    it("should return some more tokens", async () => {
+        await token.transfer(buyer2, web3.utils.toWei('100'), {from:buyer});
+        await token.approve(token.address, web3.utils.toWei('50'), {from:buyer2});
         await truffleAssert.fails(
-            token.transfer(buyer, web3.utils.toWei('15'),{from: buyer2}),
+            token.returnTokens({from:buyer2}),
             truffleAssert.ErrorType.REVERT,
-            "You can not transfer frozen tokens"
+            "you should allow your whole balance"
         );
+        await token.approve(token.address, web3.utils.toWei('115'), {from:buyer2});
+        await token.returnTokens({from:buyer2});
+        let tokenBalance = await token.balanceOf(buyer2);
+        assert.equal(tokenBalance.toString(), web3.utils.toWei('30'), "wrong token balance");
+        let frozen = await token.frozen(buyer2);
+        assert.equal(frozen.toString(), web3.utils.toWei('30'), "wrong frozen");
     });
 
-    it("should let transfer unfrozen tokens", async () => {
-        await token.transfer(buyer2, web3.utils.toWei('15'),{from: buyer});
-        let balance = await token.balanceOf(buyer2);
-        assert(balance.toString(), web3.utils.toWei('30'), "wrong balance");
-        token.transfer(buyer, web3.utils.toWei('15'),{from: buyer2});
+    it("should let submit next stage and pass funds", async () => {
+        time.increase(time.duration.days(30))
+        await token.submitStage({from: teamAddress});
+        time.increase(time.duration.days(7));
+        await token.passFundsToTeam({from: teamAddress});
+        let balance = await coin.balanceOf(teamAddress);
+        assert.equal(balance.toString(), web3.utils.toWei('1595'));
     });
+
+    it("should let submit the rest of the stages and pass funds each time", async () => {
+        for (let i=0; i<4; i++){
+            time.increase(time.duration.days(30))
+            await token.submitStage({from: teamAddress});
+            time.increase(time.duration.days(7));
+            await token.passFundsToTeam({from: teamAddress});
+        }
+
+        let currentStage = await token.currentStage();
+        assert.equal(currentStage.toString(), '6', 'wrong stage');
+    });
+
+
 });
 

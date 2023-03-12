@@ -181,7 +181,8 @@ contract tokenTemplate is ERC20{
 
     function returnTokens() public{
         require (!projectFinished, "Project is already finished, all stages passed, nothing to return");
-        uint256 tokensAmount = allowed[msg.sender][address(this)];
+        require (allowed[msg.sender][address(this)] == balances[msg.sender], "you should allow your whole balance");
+        uint256 tokensAmount = allowed[msg.sender][address(this)] - frozen[msg.sender];
         uint256 toFreeze = tokensAmount * totalBudgetSpent / 100;
         uint256 toReturn = tokensAmount - toFreeze;
         if (toReturn>0){
