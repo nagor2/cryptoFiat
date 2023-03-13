@@ -40,6 +40,7 @@ contract tokenTemplate is ERC20{
     uint256 public platformFeePercent;
     uint256 public totalBudgetSpent;
     uint256 public tokensToSell;
+    uint256 public fundsRaised;
 
     event stageComplete(uint256 stageNumber);
     event tokensSold(uint256 amount, uint256 price);
@@ -152,7 +153,7 @@ contract tokenTemplate is ERC20{
 
     function finalizeProject() public onlyTeam{
         require (currentStage==numberOfMileStones-1, "All stages should be passed");
-        uint256 fee = soldTokens * initialPrice / 100 * platformFeePercent;
+        uint256 fee = fundsRaised * platformFeePercent / 100;
         coin.transfer(platformContractAddress, fee);
         platform.addDividend(address(coin), fee);
         uint256 coinsLeft = coin.balanceOf(address(this));
@@ -170,6 +171,7 @@ contract tokenTemplate is ERC20{
         uint256 coinsAmount = coin.allowance(msg.sender, address(this));
         require (coinsAmount > initialPrice, "You should allow enough stableCoins first");
         require (coin.transferFrom(msg.sender, address(this), coinsAmount), "Could not transfer for some reason");
+        fundsRaised += coinsAmount;
         uint256 currentPrice = initialPrice;
         if (!crowdSaleIsActive)
             currentPrice = initialPrice * (100+extraChargePercent[currentStage])/100;
@@ -197,6 +199,7 @@ contract tokenTemplate is ERC20{
             uint256 interestAvailable = calculateInterestAvailable(coinsAvailableForTokenHolder, msg.sender);
             platform.claimInterestForMintedTokenHolder(interestAvailable, msg.sender);
             require(coin.transfer(msg.sender, coinsAvailableForTokenHolder), "Could not transfer coins for some reason");
+            fundsRaised -= coinsAvailableForTokenHolder;
             tokensToSell += toReturn;
             soldTokens -= toReturn;
             frozen[msg.sender] += toFreeze;

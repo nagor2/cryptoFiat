@@ -167,17 +167,17 @@ contract('DAO', (accounts) => {
         await dao.vote(2, true,{from: voter});
 
         tx = await dao.claimToFinalizeVoting(2);
-        truffleAssert.eventNotEmitted(tx, 'VotingSucceed');
+        await truffleAssert.eventNotEmitted(tx, 'VotingSucceed');
 
         await time.increase(time.duration.days(1));
 
         let valueBefore = await dao.params("some string");
 
-        tx = await dao.claimToFinalizeVoting(2);
+        let tx2 = await dao.claimToFinalizeVoting(2);
 
         assert.equal(valueBefore, 0, "wrong valueBefore");
 
-        await truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
+        await truffleAssert.eventEmitted(tx2, 'VotingSucceed', async (ev) => {
             assert.equal(ev.id, 2, "wrong id");
         });
 

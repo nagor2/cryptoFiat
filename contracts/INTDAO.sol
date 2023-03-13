@@ -138,7 +138,7 @@ contract INTDAO {
             finalizeVoting(votingId);
             return;
         }
-        else if (votings[votingId].startTime + params['votingDuration'] < block.timestamp) {
+        else if (votings[votingId].startTime + params['votingDuration'] <= block.timestamp) {
             if (totalPooled >= params['quorum'] * ruleToken.totalSupply() / 100 && votings[votingId].totalPositive > (totalPooled - votings[votingId].totalPositive)) {
                 finalizeVoting(votingId);
                 return;

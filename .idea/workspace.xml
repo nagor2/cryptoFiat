@@ -12,8 +12,12 @@
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Platform.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Platform.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/tokenTemplate.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/tokenTemplate.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/platform_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/platform_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/tokenTemplate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/tokenTemplate_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,14 +80,10 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;B:/YandexDisk/Работа/ICO/CryptoFiat/repo/contracts&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  }
-}</component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo\contracts" />
@@ -110,7 +110,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -216,7 +216,8 @@
       <workItem from="1678502735954" duration="11792000" />
       <workItem from="1678532731291" duration="10836000" />
       <workItem from="1678585139550" duration="24772000" />
-      <workItem from="1678666584273" duration="3703000" />
+      <workItem from="1678666584273" duration="4006000" />
+      <workItem from="1678679910396" duration="12253000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -299,7 +300,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -321,6 +322,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -334,5 +336,11 @@
     <MESSAGE value="Some problems with open CDP" />
     <MESSAGE value="Not working code. Check later" />
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1678680687634">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1678680687634" />
   </component>
 </project>

@@ -8,7 +8,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Platform is ERC20{
     uint256 public constant decimals = 18;
-    uint256 initialSupply = 10**6;
+    uint256 initialSupply = 1000;
     address public tokenMinter;
     address public ownerAddress;
 
@@ -17,6 +17,7 @@ contract Platform is ERC20{
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
+    event newDividendsRound(uint256 round, address rewardToken, uint256 amount);
 
     INTDAO dao;
     CDP cdp;
@@ -45,7 +46,7 @@ contract Platform is ERC20{
         dao.setAddressOnce('platform',payable(address(this)));
         tokenMinter = msg.sender;
         ownerAddress = msg.sender;
-        balances[ownerAddress] = initialSupply;
+        balances[ownerAddress] = initialSupply*10**decimals;
     }
 
     function changeMinter(address addr) public onlyOwner{
@@ -66,7 +67,7 @@ contract Platform is ERC20{
         else beneficiary = addr;
         for (uint256 i=lastPayedDividendsRound[addr]; i<currentDividendsRound; i++){
             ERC20 token = ERC20(dividendsRounds[i]);
-            divAmount = balances[addr]*dividendsPerRoundPerToken[i];
+            divAmount = balances[addr]/10**18*dividendsPerRoundPerToken[i];
             if (token.balanceOf(address(this))>=divAmount)
                 token.transfer(beneficiary, divAmount);
             else
@@ -93,6 +94,7 @@ contract Platform is ERC20{
         require(mintedTokens[msg.sender], "only for authorized tokens");
         dividendsRounds[currentDividendsRound] = rewardToken;
         dividendsPerRoundPerToken[currentDividendsRound] = amount/initialSupply;
+        emit newDividendsRound(currentDividendsRound, rewardToken, amount);
         currentDividendsRound++;
         return true;
     }

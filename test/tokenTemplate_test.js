@@ -72,7 +72,7 @@ contract('Token template', (accounts) => {
     });
 
     it("should return money and increase interest", async () => {
-        time.increase(time.duration.days(30));
+        await time.increase(time.duration.days(30));
         await token.approve(token.address, web3.utils.toWei('100'), {from:buyer});
         await token.returnTokens({from:buyer});
 
@@ -103,7 +103,7 @@ contract('Token template', (accounts) => {
     it("should finalize public offer", async () => {
         await coin.approve(token.address, web3.utils.toWei('9000'),{from:buyer});
         await token.buyTokens({from:buyer});
-        time.increase(time.duration.days(31));
+        await time.increase(time.duration.days(31));
         await token.finalizePublicOffer({from:teamAddress});
 
         assert.equal(await token.crowdSaleIsActive(), false, "crowdSaleIsActive should be set to false");
@@ -160,7 +160,8 @@ contract('Token template', (accounts) => {
     });
 
     it("should submit next stage", async () => {
-        time.increase(time.duration.days(30))
+        await time.increase(time.duration.days(30));
+        await time.increase(time.duration.minutes(30));
         await token.submitStage({from:teamAddress});
     });
 
@@ -173,7 +174,7 @@ contract('Token template', (accounts) => {
     });
 
     it("should let pass fund to team", async () => {
-        time.increase(time.duration.days(7))
+        await time.increase(time.duration.days(7))
         await token.passFundsToTeam({from: teamAddress});
         let balance = await coin.balanceOf(teamAddress);
         assert.equal(balance.toString(), web3.utils.toWei('1065'));
@@ -196,9 +197,9 @@ contract('Token template', (accounts) => {
     });
 
     it("should let submit next stage and pass funds", async () => {
-        time.increase(time.duration.days(30))
+        await time.increase(time.duration.days(30))
         await token.submitStage({from: teamAddress});
-        time.increase(time.duration.days(7));
+        await time.increase(time.duration.days(7));
         await token.passFundsToTeam({from: teamAddress});
         let balance = await coin.balanceOf(teamAddress);
         assert.equal(balance.toString(), web3.utils.toWei('1595'));
@@ -206,9 +207,9 @@ contract('Token template', (accounts) => {
 
     it("should let submit the rest of the stages and pass funds each time", async () => {
         for (let i=0; i<3; i++){
-            time.increase(time.duration.days(30))
+            await time.increase(time.duration.days(30))
             await token.submitStage({from: teamAddress});
-            time.increase(time.duration.days(7));
+            await time.increase(time.duration.days(7));
             await token.passFundsToTeam({from: teamAddress});
         }
         let currentStage = await token.currentStage();
@@ -216,25 +217,74 @@ contract('Token template', (accounts) => {
     });
 
     it("should finalize project", async () => {
-        let tokenBalance = await coin.balanceOf(token.address);
-        await token.finalizeProject({from: teamAddress});
-        let platformFee = await token.platformFeePercent();
+        await platform.transfer(buyer2, web3.utils.toWei('500'), {from: author}); //to check dividends later
+
+        let finTx = await token.finalizeProject({from: teamAddress});
+
         //TODO: check dividends events emmited
         let platformBalance = await coin.balanceOf(platform.address);
-        assert.equal(platformBalance.toString(), (tokenBalance*platformFee/100).toString());
+        assert.equal(platformBalance.toString(), web3.utils.toWei('265'));
         let platformTokens = await token.balanceOf(platform.address);
-        assert.equal(platformTokens.toString(), we3.utils.toWei('150'));
+        assert.equal(platformTokens.toString(), web3.utils.toWei('150'));
 
-        //TODO: check, that tokens passed to the team and platform, money passed to the team and platform.
-        //let balance = await coin.balanceOf(teamAddress);
-        //assert.equal(balance.toString(), web3.utils.toWei('1065'));
+        /*
+        truffleAssert.eventEmitted(finTx, 'newDividendsRound', (ev) => {
+            assert.equal(ev.currentDividendsRound, 0, "wrong round");
+            assert.equal(ev.rewardToken, coin.address, "wrong rewardToken");
+            assert.equal(ev.amount, web3.utils.toWei('265'), "wrong amount");
+        });
+
+        truffleAssert.eventEmitted(finTx, 'newDividendsRound', (ev) => {
+            assert.equal(ev.currentDividendsRound, 1, "wrong round");
+            assert.equal(ev.rewardToken, token.address, "wrong rewardToken");
+            assert.equal(ev.amount, web3.utils.toWei('150'), "wrong amount");
+        });*/
+
+        let teamCoinBalance = await coin.balanceOf(teamAddress);
+        assert.equal(teamCoinBalance, web3.utils.toWei('5035'), "wrong amount");
+
+        let teamTokenBalance = await token.balanceOf(teamAddress);
+        assert.equal(teamTokenBalance, web3.utils.toWei('2320'), "wrong amount");
     });
+
+    it("should let transfer tokens after project is finished", async () => {
+        await token.transfer(buyer, web3.utils.toWei('30'), {from: buyer2});
+        let tokenBalance = await token.balanceOf(buyer2);
+        assert.equal(tokenBalance, web3.utils.toWei('0'), "wrong amount");
+        tokenBalance = await token.balanceOf(buyer);
+        assert.equal(tokenBalance, web3.utils.toWei('530'), "wrong amount");
+    });
+
+    it("should pay dividends for platform tokenholders", async () => {
+        let platformTokenBalance = await platform.balanceOf(buyer2);
+        assert.equal(platformTokenBalance, web3.utils.toWei('500'), "wrong amount");
+        await platform.claimDividends(buyer2);
+
+        let divRound = await platform.currentDividendsRound();
+        assert.equal(divRound, 2, "wrong divRound");
+
+        let divToken1 = await platform.dividendsRounds(0);
+        assert.equal(divToken1, coin.address, "wrong divToken1");
+
+        let divToken2 = await platform.dividendsRounds(1);
+        assert.equal(divToken2, token.address, "wrong divToken2");
+
+        let divPerToken1 = await platform.dividendsPerRoundPerToken(0);
+        assert.equal(divPerToken1, web3.utils.toWei('0.265'), "wrong divPerToken1");
+
+        let divPerToken2 = await platform.dividendsPerRoundPerToken(1);
+        assert.equal(divPerToken2, web3.utils.toWei('0.15'), "wrong divPerToken1");
+
+        let coinBalance = await coin.balanceOf(buyer2);
+        assert.equal(coinBalance, web3.utils.toWei('3832.5'), "wrong coinBalance");
+        let tokenBalance = await token.balanceOf(buyer2);
+        assert.equal(tokenBalance, web3.utils.toWei('75'), "wrong tokenBalance");
+    });
+
+
 
     //TODO: check, that i can return tokens when all steps passed.
     //TODO: check, that i can buy tokens with extra charge is someone returned it.
     //TODO: check, that i can not submit stage more than num of milestones
-    //TODO: frozen tokens become unfrozen after project finished
-
-
 });
 

@@ -154,7 +154,7 @@ contract('Auction', (accounts) => {
 
         let auFinishTx = await auction.claimToFinalizeAuction(auctionToFinish);
 
-        truffleAssert.eventEmitted(auFinishTx, 'buyOutFinished', async (ev) => {
+        await truffleAssert.eventEmitted(auFinishTx, 'buyOutFinished', async (ev) => {
             assert.equal(ev.auctionID, auctionToFinish, "id should be correct");
             assert.equal(parseFloat(ev.lotAmount/10**18).toFixed(0), 84, "stableCoinAmount should be correct");
             expect(ev.bestBid).to.eql(b.bidAmount, "rulePassedToCDP should be correct");
