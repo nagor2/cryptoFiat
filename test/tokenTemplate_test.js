@@ -30,7 +30,7 @@ contract('Token template', (accounts) => {
                                              crowdsaleDuration in seconds (30 days)
                                              holdDuration (7 days), softCap*/
         let budgetPercent = [5, 10, 10, 10, 15, 20, 30];
-        let extraChargePercent = [0, 10, 20, 30, 40, 50, 100];
+        let extraChargePercent = [10, 20, 30, 40, 50, 100];
         let stagesDuration = [2592000,2592000,2592000,2592000,2592000,2592000];
         let stagesShortDescription = ["first stage bla-bla-bla", "second stage bla-bla-bla",
             "third stage bla-bla-bla", "fourth stage bla-bla-bla", "fifth stage bla-bla-bla",
@@ -205,16 +205,35 @@ contract('Token template', (accounts) => {
     });
 
     it("should let submit the rest of the stages and pass funds each time", async () => {
-        for (let i=0; i<4; i++){
+        for (let i=0; i<3; i++){
             time.increase(time.duration.days(30))
             await token.submitStage({from: teamAddress});
             time.increase(time.duration.days(7));
             await token.passFundsToTeam({from: teamAddress});
         }
-
         let currentStage = await token.currentStage();
-        assert.equal(currentStage.toString(), '6', 'wrong stage');
+        assert.equal(currentStage.toString(), '5', 'wrong stage');
     });
+
+    it("should finalize project", async () => {
+        let tokenBalance = await coin.balanceOf(token.address);
+        await token.finalizeProject({from: teamAddress});
+        let platformFee = await token.platformFeePercent();
+        //TODO: check dividends events emmited
+        let platformBalance = await coin.balanceOf(platform.address);
+        assert.equal(platformBalance.toString(), (tokenBalance*platformFee/100).toString());
+        let platformTokens = await token.balanceOf(platform.address);
+        assert.equal(platformTokens.toString(), we3.utils.toWei('150'));
+
+        //TODO: check, that tokens passed to the team and platform, money passed to the team and platform.
+        //let balance = await coin.balanceOf(teamAddress);
+        //assert.equal(balance.toString(), web3.utils.toWei('1065'));
+    });
+
+    //TODO: check, that i can return tokens when all steps passed.
+    //TODO: check, that i can buy tokens with extra charge is someone returned it.
+    //TODO: check, that i can not submit stage more than num of milestones
+    //TODO: frozen tokens become unfrozen after project finished
 
 
 });

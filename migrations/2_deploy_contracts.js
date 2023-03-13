@@ -75,7 +75,7 @@ module.exports = async function(deployer, network, accounts) {
                                              crowdsaleDuration in seconds (30 days)
                                              holdDuration (7 days), softCap*/
         let budgetPercent = [5, 10, 10, 10, 15, 20, 30];
-        let extraChargePercent = [0, 10, 20, 30, 40, 50, 100];
+        let extraChargePercent = [10, 20, 30, 40, 50, 100];
         let stagesDuration = [2592000,2592000,2592000,2592000,2592000,2592000];
         let stagesShortDescription = ["first stage bla-bla-bla", "second stage bla-bla-bla",
             "third stage bla-bla-bla", "fourth stage bla-bla-bla", "fifth stage bla-bla-bla",

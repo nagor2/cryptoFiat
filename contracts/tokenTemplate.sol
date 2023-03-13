@@ -112,6 +112,7 @@ contract tokenTemplate is ERC20{
     function submitStage() public onlyTeam{
         require(!crowdSaleIsActive, "crowdsale is still active, finalizePublicOffer first");
         require (block.timestamp >= previousStageSubmitted+stagesDuration[currentStage], "too early to submit the stage");
+        require (currentStage<numberOfMileStones-1, "all stages complete, finalize project, please");
         emit stageComplete(currentStage);
         currentStage++;
         previousStageSubmitted = block.timestamp;
@@ -140,6 +141,8 @@ contract tokenTemplate is ERC20{
 
     function passFundsToTeam() public onlyTeam{
         require (!projectFinished, "Project is already finished, nothing to pass");
+        require (!crowdSaleIsActive, "you shold finish public offer first");
+        require (currentStage<numberOfMileStones, "all stages complete, finalize project, please");
         require (block.timestamp>=previousStageSubmitted+holdDuration, "Hold period is not finished yet");
         uint256 fundsToPass = budgetPercent[currentStage] * soldTokens * initialPrice / 100 / 10**decimals;
         coin.transfer(teamAddress, fundsToPass);
@@ -147,8 +150,8 @@ contract tokenTemplate is ERC20{
         totalBudgetSpent += budgetPercent[currentStage];
     }
 
-    function finalizeProject() public{
-        require (currentStage==numberOfMileStones, "All stages should be passed");
+    function finalizeProject() public onlyTeam{
+        require (currentStage==numberOfMileStones-1, "All stages should be passed");
         uint256 fee = soldTokens * initialPrice / 100 * platformFeePercent;
         coin.transfer(platformContractAddress, fee);
         platform.addDividend(address(coin), fee);
@@ -156,9 +159,9 @@ contract tokenTemplate is ERC20{
         coin.transfer(teamAddress, coinsLeft);
         emit fundsPassed(currentStage, coinsLeft);
         uint256 tokensToPlatform =  initialSupply * platformFeePercent /100;
-        transfer(platformContractAddress, tokensToPlatform);
+        this.transfer(platformContractAddress, tokensToPlatform);
         platform.addDividend(address(this), tokensToPlatform);
-        transfer(teamAddress, balances[address(this)]);
+        this.transfer(teamAddress, balances[address(this)]);
         projectFinished = true;
     }
 
@@ -167,7 +170,9 @@ contract tokenTemplate is ERC20{
         uint256 coinsAmount = coin.allowance(msg.sender, address(this));
         require (coinsAmount > initialPrice, "You should allow enough stableCoins first");
         require (coin.transferFrom(msg.sender, address(this), coinsAmount), "Could not transfer for some reason");
-        uint256 currentPrice = initialPrice * (100+extraChargePercent[currentStage])/100;
+        uint256 currentPrice = initialPrice;
+        if (!crowdSaleIsActive)
+            currentPrice = initialPrice * (100+extraChargePercent[currentStage])/100;
         uint256 tokensAmount = coinsAmount/currentPrice*10**decimals;
         if (tokensAmount>balances[address(this)])
             tokensAmount = balances[address(this)];
