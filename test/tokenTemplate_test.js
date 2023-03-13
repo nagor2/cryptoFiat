@@ -105,7 +105,7 @@ contract('Token template', (accounts) => {
         await token.buyTokens({from:buyer});
         await time.increase(time.duration.days(31));
         await token.finalizePublicOffer({from:teamAddress});
-
+        await time.increase(time.duration.seconds(1));//to submit next stage
         assert.equal(await token.crowdSaleIsActive(), false, "crowdSaleIsActive should be set to false");
         let actualSupply = await token.totalSupply();
         assert.equal(parseFloat(web3.utils.fromWei(actualSupply)).toFixed(2), 3000.00, "supply should change correctly");
@@ -161,7 +161,7 @@ contract('Token template', (accounts) => {
 
     it("should submit next stage", async () => {
         await time.increase(time.duration.days(30));
-        await time.increase(time.duration.minutes(30));
+        await time.increase(time.duration.seconds(1));
         await token.submitStage({from:teamAddress});
     });
 

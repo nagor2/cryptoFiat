@@ -73,7 +73,7 @@ contract('Auction', (accounts) => {
         let bidder = accounts[2];
         await rule.mint(accounts[2], 2,{from:bidder});
         await rule.approve(auction.address, 1, {from: bidder});
-
+        await time.increase(1); //this is to claim to finish due to a.initTime!=a.lastTimeUpdated condition
         let balanceBefore = await rule.balanceOf(bidder);
         assert.equal(parseFloat(balanceBefore), 2, "Wrong balance before");
 

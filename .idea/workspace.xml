@@ -12,12 +12,8 @@
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Platform.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Platform.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/tokenTemplate.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/tokenTemplate.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/platform_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/platform_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/tokenTemplate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/tokenTemplate_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -217,7 +213,7 @@
       <workItem from="1678532731291" duration="10836000" />
       <workItem from="1678585139550" duration="24772000" />
       <workItem from="1678666584273" duration="4006000" />
-      <workItem from="1678679910396" duration="12253000" />
+      <workItem from="1678679910396" duration="13542000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>

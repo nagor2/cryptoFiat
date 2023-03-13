@@ -137,7 +137,7 @@ contract tokenTemplate is ERC20{
         initialSupply += tokensToTeam;
         emit Transfer(address(this), address(this), tokensToTeam);
         tokensToSell = 0;
-        previousStageSubmitted = block.timestamp - holdDuration;
+        previousStageSubmitted = block.timestamp - holdDuration-1;
     }
 
     function passFundsToTeam() public onlyTeam{
