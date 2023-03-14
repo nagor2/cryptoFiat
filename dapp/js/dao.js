@@ -172,13 +172,13 @@ stableCoin.methods.balanceOf(userAddress).call().then(function (result){
 function allowRuleTokensToDao(){
     let amount = document.getElementById('tokensToPool').value;
     rule.methods.approve(daoAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
 function poolTokens(){
         dao.methods.poolTokens().send({from:userAddress}).then(function (result) {
-            window.location.reload();
+            alert('success');
         });
 }
 
@@ -190,7 +190,7 @@ function newVoting(){
     let decision = document.getElementById('decision').value;
 
     dao.methods.addVoting(votingType, name, value, addr, decision).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
@@ -199,18 +199,18 @@ function sendVote(){
     console.log(decision);
 
     dao.methods.vote(votingId, decision).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
 function claimToFinalize(){
     dao.methods.claimToFinalizeVoting(votingId).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });}
 
 function returnDAOTokens(){
     dao.methods.returnTokens().send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
@@ -378,33 +378,33 @@ function printBidCanceled(auctionId, bidId){
 function makeBid(id){
     let amount = document.getElementById("bidAmount").value;
     auction.methods.makeBid(id,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert ('bid successful');
     });
 }
 
 function claimToFinalizeAuction(auctionId){
     auction.methods.claimToFinalizeAuction(auctionId).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert ('finalized successfully');
     });
 }
 
 function cancelBid(id){
     auction.methods.cancelBid(id).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('bid canceled');
     });
 }
 
 function approveForAuction(){
     let amount = document.getElementById("bidAmount").value;
     stableCoin.methods.approve(auctionAddress,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('approved');
     });
 }
 
 function approveRuleForAuction(){
     let amount = document.getElementById("bidAmount").value;
     rule.methods.approve(auctionAddress,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert ('rule tokens approved')
     });
 }
 
@@ -412,7 +412,7 @@ function approveRuleForAuction(){
 function improveBid(bidId){
     let amount = document.getElementById("bidAmount").value;
     auction.methods.improveBid(bidId,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert ('bid improved');
     });
 }
 
@@ -432,7 +432,7 @@ function topUp(id){
 function closeDeposit(id){
     deposit.methods.deposits(id).call().then(function (d){
         deposit.methods.withdraw(id,d.coinsDeposited).send({from:userAddress}).then(function (result) {
-            window.location.reload();
+            alert ('deposit closed');
         });
     });
 }
@@ -440,19 +440,19 @@ function closeDeposit(id){
 function withdrawEther(id){
     let withdraw = document.getElementById('ethCollateral').value;
     cdp.methods.withdrawEther(id, localWeb3.utils.toWei(withdraw)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
 function payInterest(id){
     cdp.methods.transferFee(id).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
 function putOndeposit(){
     deposit.methods.deposit().send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
@@ -470,7 +470,7 @@ function getMyDeposits(){
 function allowToDeposit (){
     let amount = document.getElementById('stableCoinsToDeposit').value;
     stableCoin.methods.approve(depositAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('allowed');
     });
 }
 
@@ -478,14 +478,14 @@ function updateCDP(id){
     let collateral = document.getElementById('ethCollateral').value;
     let amount = document.getElementById('stableCoinsAmount').value;
     cdp.methods.updateCDP(id, localWeb3.utils.toWei(amount)).send({from:userAddress, value: web3.utils.toWei(collateral)}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
 function allowCoinsToCDP(){
     let amount = document.getElementById('stableCoinsAmount').value;
     stableCoin.methods.approve(cdpAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 

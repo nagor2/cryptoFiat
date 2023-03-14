@@ -195,7 +195,7 @@ contract tokenTemplate is ERC20{
         if (toReturn>0){
             require(this.transferFrom(msg.sender, address(this), toReturn), "Could not transfer tokens for some reason");
             emit tokensReturned(toReturn);
-            uint256 coinsAvailableForTokenHolder = toReturn * initialPrice / 10**decimals;
+            uint256 coinsAvailableForTokenHolder = initialPrice/ 10**decimals * toReturn;
             uint256 interestAvailable = calculateInterestAvailable(coinsAvailableForTokenHolder, msg.sender);
             platform.claimInterestForMintedTokenHolder(interestAvailable, msg.sender);
             require(coin.transfer(msg.sender, coinsAvailableForTokenHolder), "Could not transfer coins for some reason");

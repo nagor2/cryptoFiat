@@ -60,6 +60,8 @@ module.exports = async function(deployer, network, accounts) {
         let platform = await Platform.deployed();
 
         await platform.addMintedToken(token.address, {from: author});
+
+        console.log (INTDAO.address);
     }
     else{
         const exRAuthour = accounts[5];

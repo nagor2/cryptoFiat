@@ -4,7 +4,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0x748326e8aCD735705e8c2b629176A6c614dc37e2';
+var daoAddress = '0x92593871a8FF6a6E2355dF02BaB4eDfDcF64E46D';
 
 var stableCoinABI = [
     {
@@ -4043,7 +4043,7 @@ var platformABI =  [
         "type": "function"
     }
 ];
-var tokenTemplateABI =  [
+var tokenTemplateABI = [
     {
         "inputs": [
             {
@@ -5131,8 +5131,11 @@ async function printMintedToken(id, token){
     html+= "<p>name: <b>"+await token.methods.name().call() + "</b></p>";
     html+= "<p>price: <b>"+localWeb3.utils.fromWei(await token.methods.initialPrice().call()) + "</b> stableCoins</p>";
     html+= "<p>total supply: <b>"+localWeb3.utils.fromWei(await token.methods.totalSupply().call()) + "</b></p>";
+    html+= "<p>tokensToSell: <b>"+localWeb3.utils.fromWei(await token.methods.tokensToSell().call()) + "</b></p>";
+    html+= "<p>soldTokens: <b>"+localWeb3.utils.fromWei(await token.methods.soldTokens().call()) + "</b></p>";
     html+= "<p>funds raised: <b>"+localWeb3.utils.fromWei(await token.methods.fundsRaised().call()) + "</b> stableCoins</p>";
     html+= "<p>you allowed: <b>"+localWeb3.utils.fromWei(await stableCoinStatic.methods.allowance(userAddress, token._address).call()) + " stableCoins</b></p>";
+    html+= "<p>you allowed tokens to return: <b>"+localWeb3.utils.fromWei(await token.methods.allowance(userAddress, token._address).call()) + " tokens</b></p>";
     html+= "<p>your token balance: <b>"+localWeb3.utils.fromWei(await token.methods.balanceOf(userAddress).call()) + "</b> ("+await token.methods.symbol().call()+")</p>";
     html+='<input type="text" id ="allowCoinsToToken-id-'+id+'" value="allowCoinsToToken-id-'+id+'">';
     html+='<input type="button" value="allow coins" onclick="allowCoinsToToken('+id+')">';
@@ -5146,27 +5149,27 @@ async function printMintedToken(id, token){
 
 function buyTokens(id){
     mintedTokens[id].methods.buyTokens().send({from:userAddress, gas:3000000}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
 function allowCoinsToToken(id){
     let amount = document.getElementById('allowCoinsToToken-id-'+id).value;
     stableCoin.methods.approve(mintedTokens[id]._address, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
-        window.location.reload();
+        alert('success');
     });
 }
 
 function returnTokens(id) {
-    mintedTokens[id].methods.returnTokens().send({from:userAddress}).then(function (result) {
-        window.location.reload();
+    mintedTokens[id].methods.returnTokens().send({from:userAddress, gas:3000000}).then(function (result) {
+        alert('success');
     });
 }
 
 function allowTokens(id){
     mintedTokens[id].methods.balanceOf(userAddress).call().then(function(balance){
         mintedTokens[id].methods.approve(mintedTokens[id]._address, balance).send({from:userAddress}).then(function (result) {
-            window.location.reload();
+            alert('success');
         });
     });
 }
