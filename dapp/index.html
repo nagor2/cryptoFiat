@@ -107,7 +107,7 @@
             <input type="text" value="100" id="tokensToPool">
             <input type="button" value="allow tokens" onclick="allowRuleTokensToDao();">
             <input type="button" value="pool tokens" onclick="poolTokens();">
-            <input type="button" value="return tokens" onclick="returnTokens();">
+            <input type="button" value="return tokens" onclick="returnDAOTokens();">
         </td>
 
         <td>
@@ -185,10 +185,13 @@
             <div id="canceledBids"></div>
         </td>
         <td>
-            <h2>Invest</h2>
-            <p>top projects:</p>
-            <input type="button" value="Buy tokens">
-            <p>top commodities:</p>
+            <h2>Platform</h2>
+            <p>address: <span style="font-weight: bold;" id="platformLink"></span></p>
+            <p>totalSupply: <span style="font-weight: bold;" id="platformSupply"></span></p>
+            <p>number of tokens minted: <span style="font-weight: bold;" id="mintedTokensNum"></span></p>
+            <h4>top projects:</h4>
+            <div id="mintedTokens"></div>
+            <h4>top commodities:</h4>
             <input type="button" value="Buy commodities">
         </td>
         <td>

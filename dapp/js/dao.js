@@ -208,7 +208,7 @@ function claimToFinalize(){
         window.location.reload();
     });}
 
-function returnTokens(){
+function returnDAOTokens(){
     dao.methods.returnTokens().send({from:userAddress}).then(function (result) {
         window.location.reload();
     });

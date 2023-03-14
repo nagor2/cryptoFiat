@@ -7,6 +7,8 @@ const { time } = require('@openzeppelin/test-helpers');
 const truffleAssert = require("truffle-assertions");
 const assert = require("assert");
 
+const sleep = ms => new Promise(res => setTimeout(res, ms));
+
 contract('Token template', (accounts) => {
     let dao;
     let platform;
@@ -161,7 +163,7 @@ contract('Token template', (accounts) => {
 
     it("should submit next stage", async () => {
         await time.increase(time.duration.days(30));
-        await time.increase(time.duration.seconds(1));
+        await sleep(500);
         await token.submitStage({from:teamAddress});
     });
 

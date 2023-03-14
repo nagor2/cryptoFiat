@@ -8,9 +8,10 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Platform is ERC20{
     uint256 public constant decimals = 18;
-    uint256 initialSupply = 1000;
+    uint256 initialSupply = 1000*10**decimals;
     address public tokenMinter;
     address public ownerAddress;
+    uint256 public mintedNum;
 
     string public constant name = "Crowdfunding platform";
     string public constant symbol = "CFP";
@@ -24,7 +25,8 @@ contract Platform is ERC20{
     stableCoin coin;
 
     uint256 public currentDividendsRound;
-    mapping (address => bool) public mintedTokens;
+    mapping (address => bool) public isMintedByPlatform;
+    mapping (uint256 => address) public mintedTokens;
     mapping (uint256 => address) public dividendsRounds;
     mapping (uint256 => uint256) public dividendsPerRoundPerToken;
     mapping (address => uint256) public lastPayedDividendsRound;
@@ -85,22 +87,24 @@ contract Platform is ERC20{
     function addMintedToken(address addr) public onlyMinter{
         tokenTemplate token = tokenTemplate(addr);
         require(token.platformContractAddress() == address(this));
-        mintedTokens[addr] = true;
+        isMintedByPlatform[addr] = true;
+        mintedTokens[mintedNum] = addr;
+        mintedNum++;
     }
 
     function addDividend(address rewardToken, uint256 amount) public returns(bool success){
         require(amount>0, "dont be greedy");
-        require(rewardToken == dao.addresses('stableCoin') || mintedTokens[rewardToken], "only for authorized tokens");
-        require(mintedTokens[msg.sender], "only for authorized tokens");
+        require(rewardToken == dao.addresses('stableCoin') || isMintedByPlatform[rewardToken], "only for authorized tokens");
+        require(isMintedByPlatform[msg.sender], "only for authorized tokens");
         dividendsRounds[currentDividendsRound] = rewardToken;
-        dividendsPerRoundPerToken[currentDividendsRound] = amount/initialSupply;
+        dividendsPerRoundPerToken[currentDividendsRound] = 10**decimals*amount/initialSupply;
         emit newDividendsRound(currentDividendsRound, rewardToken, amount);
         currentDividendsRound++;
         return true;
     }
 
     function claimInterestForMintedTokenHolder(uint256 amount, address beneficiary) public{
-        require(mintedTokens[msg.sender], "only tokens, minted by the platform may claim interest");
+        require(isMintedByPlatform[msg.sender], "only tokens, minted by the platform may claim interest");
         cdp.claimInterest(amount, beneficiary);
     }
 

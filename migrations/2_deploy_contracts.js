@@ -37,6 +37,29 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(cdp, INTDAO.address);
         await deployer.deploy(deposit, INTDAO.address);
         await deployer.deploy(InflationFund, INTDAO.address);
+
+        await deployer.deploy(Platform, INTDAO.address, {from: author});
+
+        let addresses = [accounts[7], stableCoin.address, Platform.address]; //teamAddress, coin, platform
+        let params = [10, 1000, 5, 6, 70, 5184000, 604800, 600]; /*initialPrice, initialSupply, platformFeePercent,
+                                             number of stages, percentOfTokensToTeam,
+                                             crowdsaleDuration in seconds (30 days)
+                                             holdDuration (7 days), softCap*/
+        let budgetPercent = [5, 10, 10, 10, 15, 20, 30];
+        let extraChargePercent = [10, 20, 30, 40, 50, 100];
+        let stagesDuration = [2592000,2592000,2592000,2592000,2592000,2592000];
+        let stagesShortDescription = ["first stage bla-bla-bla", "second stage bla-bla-bla",
+            "third stage bla-bla-bla", "fourth stage bla-bla-bla", "fifth stage bla-bla-bla",
+            "sixth stage bla-bla-bla"];
+
+        await deployer.deploy(tokenTemplate, addresses, params, "start", "Startup token",
+            budgetPercent, extraChargePercent, stagesDuration, stagesShortDescription, {from: author});
+
+
+        let token = await tokenTemplate.deployed();
+        let platform = await Platform.deployed();
+
+        await platform.addMintedToken(token.address, {from: author});
     }
     else{
         const exRAuthour = accounts[5];

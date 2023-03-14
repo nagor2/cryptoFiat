@@ -169,13 +169,13 @@ contract tokenTemplate is ERC20{
     function buyTokens() public{
         require (tokensToSell > 0, "nothing to sell, sorry");
         uint256 coinsAmount = coin.allowance(msg.sender, address(this));
-        require (coinsAmount > initialPrice, "You should allow enough stableCoins first");
+        require (coinsAmount >= initialPrice, "You should allow enough stableCoins first");
         require (coin.transferFrom(msg.sender, address(this), coinsAmount), "Could not transfer for some reason");
         fundsRaised += coinsAmount;
         uint256 currentPrice = initialPrice;
         if (!crowdSaleIsActive)
             currentPrice = initialPrice * (100+extraChargePercent[currentStage])/100;
-        uint256 tokensAmount = coinsAmount/currentPrice*10**decimals;
+        uint256 tokensAmount = coinsAmount*10**decimals/currentPrice;
         if (tokensAmount>balances[address(this)])
             tokensAmount = balances[address(this)];
         this.transfer(msg.sender, tokensAmount);
