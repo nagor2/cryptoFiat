@@ -103,4 +103,4 @@ contract('CDP', (accounts) => {
     });
 });
 
-//TODO:CloseCDP!!! checkTransferFee!!
+//TODO:CloseCDP, checkTransferFee

@@ -163,7 +163,8 @@ contract('Token template', (accounts) => {
 
     it("should submit next stage", async () => {
         await time.increase(time.duration.days(30));
-        await sleep(500);
+        await time.increase(time.duration.minutes(1));
+        await sleep(10);
         await token.submitStage({from:teamAddress});
     });
 

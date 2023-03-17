@@ -170,8 +170,7 @@
                 </table>
 
             <p>instruments: (actual price, blockchain price, share, last time updated)</p>
-            <input type="button" value="claim update">
-            <input type="button" value="buy oracle tokens">
+            <input type="button" value="claim update" onclick="oracle.methods.requestMultiplePricesUpdate([1,2]).send({from:userAddress, value:web3.utils.toWei('0.01')});">
         </td>
     </tr>
     <tr>

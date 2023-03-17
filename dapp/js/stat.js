@@ -4,7 +4,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0x92593871a8FF6a6E2355dF02BaB4eDfDcF64E46D';
+var daoAddress = '0xF48e63b3bdb5941cD2d6f3b4f322746E947ab0a5';
 
 var stableCoinABI = [
     {
@@ -2373,7 +2373,7 @@ var oracleABI =  [
     {
         "inputs": [
             {
-                "internalType": "address",
+                "internalType": "address payable",
                 "name": "_INTDAOaddress",
                 "type": "address"
             }
@@ -2387,77 +2387,8 @@ var oracleABI =  [
         "inputs": [
             {
                 "indexed": false,
-                "internalType": "address",
-                "name": "donator",
-                "type": "address"
-            },
-            {
-                "indexed": false,
                 "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "blockNumber",
-                "type": "uint256"
-            }
-        ],
-        "name": "Donation",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "profit",
-                "type": "uint256"
-            }
-        ],
-        "name": "ProfitEvent",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "subscirber",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "subscriptionID",
-                "type": "uint256"
-            }
-        ],
-        "name": "SubscriptionPayed",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "block",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "gasPrice",
+                "name": "id",
                 "type": "uint256"
             }
         ],
@@ -2469,32 +2400,8 @@ var oracleABI =  [
         "inputs": [
             {
                 "indexed": false,
-                "internalType": "address",
-                "name": "payer",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
-            },
-            {
-                "indexed": false,
                 "internalType": "uint256",
-                "name": "newPrice",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "timeStamp",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "time",
+                "name": "id",
                 "type": "uint256"
             }
         ],
@@ -2507,23 +2414,24 @@ var oracleABI =  [
             {
                 "indexed": false,
                 "internalType": "uint256",
-                "name": "block",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "string[]",
-                "name": "symbols",
-                "type": "string[]"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "gasPrice",
+                "name": "profit",
                 "type": "uint256"
             }
         ],
-        "name": "updateSeveralPricesRequest",
+        "name": "profit",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256[]",
+                "name": "ids",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "severalPricesUpdateRequest",
         "type": "event"
     },
     {
@@ -2557,36 +2465,26 @@ var oracleABI =  [
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "dictionary",
-        "outputs": [
-            {
                 "internalType": "string",
                 "name": "",
                 "type": "string"
             }
         ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "discounts",
+        "name": "dictionary",
         "outputs": [
             {
                 "internalType": "uint256",
-                "name": "",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "decimals",
                 "type": "uint256"
             }
         ],
@@ -2616,33 +2514,8 @@ var oracleABI =  [
                 "type": "uint256"
             }
         ],
-        "name": "gasPrices",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
         "name": "instruments",
         "outputs": [
-            {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
             {
                 "internalType": "uint256",
                 "name": "price",
@@ -2650,17 +2523,7 @@ var oracleABI =  [
             },
             {
                 "internalType": "uint256",
-                "name": "decimals",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
                 "name": "timeStamp",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "time",
                 "type": "uint256"
             }
         ],
@@ -2671,20 +2534,6 @@ var oracleABI =  [
     {
         "inputs": [],
         "name": "instrumentsCount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [],
-        "name": "minSubscrTxNum",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -2767,11 +2616,6 @@ var oracleABI =  [
         "constant": true
     },
     {
-        "stateMutability": "payable",
-        "type": "receive",
-        "payable": true
-    },
-    {
         "inputs": [
             {
                 "internalType": "address payable",
@@ -2780,43 +2624,13 @@ var oracleABI =  [
             }
         ],
         "name": "changeBeneficiaryAddress",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [],
         "name": "finalize",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "payer",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-            }
-        ],
-        "name": "setDiscount",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -2838,69 +2652,8 @@ var oracleABI =  [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "value",
+                "name": "id",
                 "type": "uint256"
-            }
-        ],
-        "name": "changeMinSubscrTxNum",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "subscriptionId",
-                "type": "uint256"
-            }
-        ],
-        "name": "topUpSubscription",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function",
-        "payable": true
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "email",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256[]",
-                "name": "frequencies",
-                "type": "uint256[]"
-            },
-            {
-                "internalType": "uint256[]",
-                "name": "priceDifferences",
-                "type": "uint256[]"
-            },
-            {
-                "internalType": "string[]",
-                "name": "symbols",
-                "type": "string[]"
-            },
-            {
-                "internalType": "uint256",
-                "name": "txSpeed",
-                "type": "uint256"
-            }
-        ],
-        "name": "payForSubscription",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function",
-        "payable": true
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
             }
         ],
         "name": "requestPriceUpdate",
@@ -2912,9 +2665,9 @@ var oracleABI =  [
     {
         "inputs": [
             {
-                "internalType": "string[]",
-                "name": "symbols",
-                "type": "string[]"
+                "internalType": "uint256[]",
+                "name": "ids",
+                "type": "uint256[]"
             }
         ],
         "name": "requestMultiplePricesUpdate",
@@ -2926,51 +2679,8 @@ var oracleABI =  [
     {
         "inputs": [
             {
-                "internalType": "address",
-                "name": "payer",
-                "type": "address"
-            },
-            {
                 "internalType": "uint256[]",
-                "name": "timeStamps",
-                "type": "uint256[]"
-            },
-            {
-                "internalType": "string[]",
-                "name": "symbols",
-                "type": "string[]"
-            },
-            {
-                "internalType": "uint256[]",
-                "name": "prices",
-                "type": "uint256[]"
-            },
-            {
-                "internalType": "uint256[3]",
-                "name": "currentGasPrices",
-                "type": "uint256[3]"
-            },
-            {
-                "internalType": "uint256",
-                "name": "subscriptionID",
-                "type": "uint256"
-            }
-        ],
-        "name": "updateSeveralPricesSubscription",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string[]",
-                "name": "symbols",
-                "type": "string[]"
-            },
-            {
-                "internalType": "uint256[]",
-                "name": "timeStamps",
+                "name": "ids",
                 "type": "uint256[]"
             },
             {
@@ -2985,20 +2695,17 @@ var oracleABI =  [
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "transferProfit",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
-                "internalType": "address",
-                "name": "payer",
-                "type": "address"
-            },
-            {
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
-            },
-            {
                 "internalType": "uint256",
-                "name": "tickTimeStamp",
+                "name": "id",
                 "type": "uint256"
             },
             {
@@ -3008,13 +2715,7 @@ var oracleABI =  [
             }
         ],
         "name": "updateSinglePrice",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "success",
-                "type": "bool"
-            }
-        ],
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -3037,7 +2738,13 @@ var oracleABI =  [
             }
         ],
         "name": "addInstrument",
-        "outputs": [],
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            }
+        ],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -3116,7 +2823,7 @@ var oracleABI =  [
         "outputs": [
             {
                 "internalType": "uint256",
-                "name": "decimals",
+                "name": "",
                 "type": "uint256"
             }
         ],
@@ -4899,7 +4606,7 @@ async function drawStatic(){
                 let cdpWethBalance = (result/(10**18)).toFixed(3);
                 document.getElementById('cdpWethBalance').innerText = cdpWethBalance;
                 daoStatic.methods.addresses('oracle').call().then(function (result) {
-                    oracleStatic =new localWeb3.eth.Contract(oracleABI, result);
+                    oracleStatic = new localWeb3.eth.Contract(oracleABI, result);
                     oracleStatic.methods.getPrice('eth').call().then(function (result) {
                         let ethPrice = (result/(10**6)).toFixed(2);
                         document.getElementById('ethPrice').innerText = ethPrice;

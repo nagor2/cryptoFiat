@@ -21831,7 +21831,7 @@
         4585
       ],
       "Rule": [
-        5630
+        5626
       ]
     },
     "id": 4586,
@@ -21859,7 +21859,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 4586,
-        "sourceUnit": 5631,
+        "sourceUnit": 5627,
         "src": "74:20:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -21891,7 +21891,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Rule_$5630",
+              "typeIdentifier": "t_contract$_Rule_$5626",
               "typeString": "contract Rule"
             },
             "typeName": {
@@ -21901,13 +21901,13 @@
                 "id": 3708,
                 "name": "Rule",
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 5630,
+                "referencedDeclaration": 5626,
                 "src": "121:4:4"
               },
-              "referencedDeclaration": 5630,
+              "referencedDeclaration": 5626,
               "src": "121:4:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Rule_$5630",
+                "typeIdentifier": "t_contract$_Rule_$5626",
                 "typeString": "contract Rule"
               }
             },
@@ -27154,7 +27154,7 @@
                                   "referencedDeclaration": 3710,
                                   "src": "3411:9:4",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_Rule_$5630",
+                                    "typeIdentifier": "t_contract$_Rule_$5626",
                                     "typeString": "contract Rule"
                                   }
                                 },
@@ -27165,7 +27165,7 @@
                                 "lValueRequested": false,
                                 "memberName": "totalSupply",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 5362,
+                                "referencedDeclaration": 5358,
                                 "src": "3411:21:4",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -27879,7 +27879,7 @@
                       "referencedDeclaration": 3710,
                       "src": "3769:9:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Rule_$5630",
+                        "typeIdentifier": "t_contract$_Rule_$5626",
                         "typeString": "contract Rule"
                       }
                     },
@@ -27940,10 +27940,10 @@
                         "name": "Rule",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5630,
+                        "referencedDeclaration": 5626,
                         "src": "3781:4:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Rule_$5630_$",
+                          "typeIdentifier": "t_type$_t_contract$_Rule_$5626_$",
                           "typeString": "type(contract Rule)"
                         }
                       },
@@ -27958,13 +27958,13 @@
                       "src": "3781:23:4",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Rule_$5630",
+                        "typeIdentifier": "t_contract$_Rule_$5626",
                         "typeString": "contract Rule"
                       }
                     },
                     "src": "3769:35:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Rule_$5630",
+                      "typeIdentifier": "t_contract$_Rule_$5626",
                       "typeString": "contract Rule"
                     }
                   },
@@ -28144,7 +28144,7 @@
                         "referencedDeclaration": 3710,
                         "src": "3899:9:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Rule_$5630",
+                          "typeIdentifier": "t_contract$_Rule_$5626",
                           "typeString": "contract Rule"
                         }
                       },
@@ -28155,7 +28155,7 @@
                       "lValueRequested": false,
                       "memberName": "allowance",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5390,
+                      "referencedDeclaration": 5386,
                       "src": "3899:19:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_address_$_t_address_$returns$_t_uint256_$",
@@ -28413,7 +28413,7 @@
                             "referencedDeclaration": 3710,
                             "src": "4015:9:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Rule_$5630",
+                              "typeIdentifier": "t_contract$_Rule_$5626",
                               "typeString": "contract Rule"
                             }
                           },
@@ -28424,7 +28424,7 @@
                           "lValueRequested": false,
                           "memberName": "transferFrom",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 5501,
+                          "referencedDeclaration": 5497,
                           "src": "4015:22:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -29264,7 +29264,7 @@
                         "referencedDeclaration": 3710,
                         "src": "4502:9:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Rule_$5630",
+                          "typeIdentifier": "t_contract$_Rule_$5626",
                           "typeString": "contract Rule"
                         }
                       },
@@ -29275,7 +29275,7 @@
                       "lValueRequested": false,
                       "memberName": "transfer",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 5437,
+                      "referencedDeclaration": 5433,
                       "src": "4502:18:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -31005,7 +31005,7 @@
                               "referencedDeclaration": 3710,
                               "src": "5561:9:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Rule_$5630",
+                                "typeIdentifier": "t_contract$_Rule_$5626",
                                 "typeString": "contract Rule"
                               }
                             },
@@ -31016,7 +31016,7 @@
                             "lValueRequested": false,
                             "memberName": "totalSupply",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 5362,
+                            "referencedDeclaration": 5358,
                             "src": "5561:21:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -31391,7 +31391,7 @@
                                         "referencedDeclaration": 3710,
                                         "src": "5840:9:4",
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_contract$_Rule_$5630",
+                                          "typeIdentifier": "t_contract$_Rule_$5626",
                                           "typeString": "contract Rule"
                                         }
                                       },
@@ -31402,7 +31402,7 @@
                                       "lValueRequested": false,
                                       "memberName": "totalSupply",
                                       "nodeType": "MemberAccess",
-                                      "referencedDeclaration": 5362,
+                                      "referencedDeclaration": 5358,
                                       "src": "5840:21:4",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -33261,12 +33261,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x92593871a8FF6a6E2355dF02BaB4eDfDcF64E46D",
-      "transactionHash": "0x0ceeb3268bde22f4bc02b934d3eb705efd004369950a9ab335a9ff62ae5527aa"
+      "address": "0xF48e63b3bdb5941cD2d6f3b4f322746E947ab0a5",
+      "transactionHash": "0xa03d23dfee00905ddbec47ac6aff90de5bf69946769cf59f86ea94ae77e25e82"
     }
   },
   "schemaVersion": "3.4.11",
-  "updatedAt": "2023-03-14T08:57:34.421Z",
+  "updatedAt": "2023-03-17T05:09:38.227Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

@@ -120,4 +120,4 @@ contract('CDP Update Increase', (accounts) => {
     });
 });
 
-//TODO: check coinsMinted update!!!
+//TODO: check coinsMinted update

@@ -75,7 +75,7 @@ contract exchangeRateContract {
 
     function requestMultiplePricesUpdate(uint256[] memory ids) public payable {
         require (msg.value>= 2 * (ids.length * updAdditionalPrice + updSeveralPricesCost) * tx.gasprice, "You need to pass more ether to request new price.");
-        emit severalPricesUpdateRequest (ids);
+        emit severalPricesUpdateRequest(ids);
     }
 
     function updateSeveralPrices(uint256[] memory ids, uint256[] memory prices) public onlyUpdater{

@@ -48,7 +48,7 @@ contract Platform is ERC20{
         dao.setAddressOnce('platform',payable(address(this)));
         tokenMinter = msg.sender;
         ownerAddress = msg.sender;
-        balances[ownerAddress] = initialSupply*10**decimals;
+        balances[ownerAddress] = initialSupply;
     }
 
     function changeMinter(address addr) public onlyOwner{

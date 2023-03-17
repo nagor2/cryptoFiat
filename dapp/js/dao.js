@@ -13,6 +13,7 @@ var cdpAddress;
 var depositAddress;
 var auctionAddress;
 var auction;
+var oracle;
 
 async function unlock(){
     if (typeof web3 !== 'undefined') {
@@ -80,6 +81,11 @@ function initGlobals() {
             document.getElementById('cdpAllowance').innerText = (result/(10**18)).toFixed(5);
         });
     });
+
+    daoStatic.methods.addresses("oracle").call().then(function (result) {
+        oracle = new web3.eth.Contract(oracleABI,result);
+    });
+
 
     daoStatic.methods.addresses("deposit").call().then(function (result) {
         deposit = new web3.eth.Contract(depositABI,result);

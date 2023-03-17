@@ -26,10 +26,19 @@
       <change beforePath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/contracts/tokenTemplate.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/tokenTemplate.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Platform.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Platform.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/tokenTemplate.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/tokenTemplate.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dapp/js/dao.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/dao.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dapp/js/stat.js" beforeDir="false" afterPath="$PROJECT_DIR$/dapp/js/stat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpUpdateDecrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateDecrease_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deposit_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/deposit_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/platform_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/platform_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/tokenTemplate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/tokenTemplate_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -94,7 +103,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../oracle" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -230,7 +239,9 @@
       <workItem from="1678585139550" duration="24772000" />
       <workItem from="1678666584273" duration="4006000" />
       <workItem from="1678679910396" duration="15353000" />
-      <workItem from="1678762686870" duration="15810000" />
+      <workItem from="1678762686870" duration="17004000" />
+      <workItem from="1678935907007" duration="2421000" />
+      <workItem from="1679025690208" duration="4698000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -351,6 +362,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1679025705346">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1679025705346" />
     <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1678680687634">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

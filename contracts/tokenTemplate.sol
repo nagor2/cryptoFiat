@@ -142,7 +142,7 @@ contract tokenTemplate is ERC20{
 
     function passFundsToTeam() public onlyTeam{
         require (!projectFinished, "Project is already finished, nothing to pass");
-        require (!crowdSaleIsActive, "you shold finish public offer first");
+        require (!crowdSaleIsActive, "you should finish public offer first");
         require (currentStage<numberOfMileStones, "all stages complete, finalize project, please");
         require (block.timestamp>=previousStageSubmitted+holdDuration, "Hold period is not finished yet");
         uint256 fundsToPass = budgetPercent[currentStage] * soldTokens * initialPrice / 100 / 10**decimals;

@@ -57,4 +57,4 @@ contract('CDP Update Decrease', (accounts) => {
     });
 });
 
-//TODO: check coinsMinted update!!!
+//TODO: check coinsMinted update
