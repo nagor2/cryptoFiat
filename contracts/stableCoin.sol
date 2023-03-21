@@ -19,8 +19,8 @@ contract stableCoin is ERC20{
     uint256 public constant decimals = 18;
     uint256 initialSupply = 0;
 
-    string public constant name = "stableCoin";
-    string public constant symbol = "stableCoin";
+    string public constant name = "True Stable Coin";
+    string public constant symbol = "TSC";
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;

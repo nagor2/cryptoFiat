@@ -41,7 +41,7 @@ contract INTDAO {
         params['stabilizationFundPercent'] = 5;
         params['quorum'] = 60;
         params['majority'] = 50;
-        params['minAuctionBalanceToInitBuyOut'] = 10**19;
+        params['minCDPBalanceToInitBuyOut'] = 10**19;
         params['absoluteMajority'] = 80;
         params['minRuleTokensToInitVotingPercent'] = 1;
         params['votingDuration'] = 1 days;
@@ -52,6 +52,10 @@ contract INTDAO {
         params['marginCallTimeLimit'] = 1 days;
         params['annualInflationPercent'] = 1;
         params['defaultDepositPeriod'] = 91 days;
+        params['maxCoinsForStabilization'] = 50*10**18;
+        params['maxRuleEmissionPercent'] = 1;
+        params['highVolatilityEventBarrierPercent'] = 5;
+
 
         addresses['weth'] = payable(WETH);
         addresses['cdp'] = payable(0x0);
@@ -63,9 +67,6 @@ contract INTDAO {
         addresses['deposit'] = payable(0x0);
         addresses['inflationFund'] = payable(0x0);
         addresses['inflationSpender'] = payable(0x0);
-
-        authorized[msg.sender] = true;
-        //TODO: убрать эту (↑) фигню (нужна была, по всей видимости, для тестов)
     }
 
     function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses
@@ -154,7 +155,6 @@ contract INTDAO {
             params[votings[votingId].name] = votings[votingId].value;
         if (votings[votingId].voteingType == 2)
             addresses[votings[votingId].name] = votings[votingId].addr;
-        //TODO: Написать тест на паузу контракта (зачем нужен этот функционал, не помню, но пусть будет)
         if (votings[votingId].voteingType == 3)
             paused[votings[votingId].addr] = votings[votingId].decision;
         if (votings[votingId].voteingType == 4)

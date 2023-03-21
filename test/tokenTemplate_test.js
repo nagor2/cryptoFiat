@@ -220,7 +220,7 @@ contract('Token template', (accounts) => {
     });
 
     it("should finalize project", async () => {
-        await platform.transfer(buyer2, web3.utils.toWei('500'), {from: author}); //to check dividends later
+        await platform.transfer(buyer2, web3.utils.toWei('500000'), {from: author}); //to check dividends later
 
         let finTx = await token.finalizeProject({from: teamAddress});
 
@@ -260,7 +260,7 @@ contract('Token template', (accounts) => {
 
     it("should pay dividends for platform tokenholders", async () => {
         let platformTokenBalance = await platform.balanceOf(buyer2);
-        assert.equal(platformTokenBalance, web3.utils.toWei('500'), "wrong amount");
+        assert.equal(platformTokenBalance, web3.utils.toWei('500000'), "wrong amount");
         await platform.claimDividends(buyer2);
 
         let divRound = await platform.currentDividendsRound();
@@ -273,10 +273,10 @@ contract('Token template', (accounts) => {
         assert.equal(divToken2, token.address, "wrong divToken2");
 
         let divPerToken1 = await platform.dividendsPerRoundPerToken(0);
-        assert.equal(divPerToken1, web3.utils.toWei('0.265'), "wrong divPerToken1");
+        assert.equal(divPerToken1, web3.utils.toWei('0.000265'), "wrong divPerToken1");
 
         let divPerToken2 = await platform.dividendsPerRoundPerToken(1);
-        assert.equal(divPerToken2, web3.utils.toWei('0.15'), "wrong divPerToken1");
+        assert.equal(divPerToken2, web3.utils.toWei('0.00015'), "wrong divPerToken1");
 
         let coinBalance = await coin.balanceOf(buyer2);
         assert.equal(coinBalance, web3.utils.toWei('3832.5'), "wrong coinBalance");

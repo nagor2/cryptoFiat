@@ -1,10 +1,12 @@
 //var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/7005259595814e4185411127fb00ecf4'));
+//const provider = new ethers.providers.JsonRpcProvider("https://etc.rpc.rivet.cloud/6f4e0413c2dd468ebd08f54a5c9c5b82");
+//var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
-var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://etc.rpc.rivet.cloud/6f4e0413c2dd468ebd08f54a5c9c5b82'));
 
 
 var wethAddress;
-var daoAddress = '0xF48e63b3bdb5941cD2d6f3b4f322746E947ab0a5';
+var daoAddress = '0xd1c5A469191E45a4D06D725681F2B73a402737b4';
 
 var stableCoinABI = [
     {
@@ -1216,7 +1218,7 @@ var cdpABI = [
     {
         "inputs": [
             {
-                "internalType": "address",
+                "internalType": "address payable",
                 "name": "INTDAOaddress",
                 "type": "address"
             }
@@ -1391,6 +1393,11 @@ var cdpABI = [
         "constant": true
     },
     {
+        "stateMutability": "payable",
+        "type": "receive",
+        "payable": true
+    },
+    {
         "inputs": [],
         "name": "renewContracts",
         "outputs": [],
@@ -1542,13 +1549,7 @@ var cdpABI = [
             }
         ],
         "name": "closeCDP",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "success",
-                "type": "bool"
-            }
-        ],
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -4552,6 +4553,8 @@ var tokenTemplateABI = [
     }
 ];
 var mintedTokens = [];
+var poolABI = [{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount0","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1","type":"uint256"},{"indexed":true,"internalType":"address","name":"to","type":"address"}],"name":"Burn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount0","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount0In","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1In","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount0Out","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1Out","type":"uint256"},{"indexed":true,"internalType":"address","name":"to","type":"address"}],"name":"Swap","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint112","name":"reserve0","type":"uint112"},{"indexed":false,"internalType":"uint112","name":"reserve1","type":"uint112"}],"name":"Sync","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"constant":true,"inputs":[],"name":"DOMAIN_SEPARATOR","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"MINIMUM_LIQUIDITY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"PERMIT_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"to","type":"address"}],"name":"burn","outputs":[{"internalType":"uint256","name":"amount0","type":"uint256"},{"internalType":"uint256","name":"amount1","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"factory","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getReserves","outputs":[{"internalType":"uint112","name":"_reserve0","type":"uint112"},{"internalType":"uint112","name":"_reserve1","type":"uint112"},{"internalType":"uint32","name":"_blockTimestampLast","type":"uint32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"_token0","type":"address"},{"internalType":"address","name":"_token1","type":"address"}],"name":"initialize","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"kLast","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"to","type":"address"}],"name":"mint","outputs":[{"internalType":"uint256","name":"liquidity","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"nonces","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"permit","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"price0CumulativeLast","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"price1CumulativeLast","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"to","type":"address"}],"name":"skim","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"uint256","name":"amount0Out","type":"uint256"},{"internalType":"uint256","name":"amount1Out","type":"uint256"},{"internalType":"address","name":"to","type":"address"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"swap","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"sync","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"token0","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"token1","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}];
+var stablePoolAddress = "0xc54e601Ed1f091D8ad300ead6f10135f5C510305";
 
 var daoStatic = new localWeb3.eth.Contract(daoABI,daoAddress);
 var wethStatic;
@@ -4565,8 +4568,12 @@ var oracleStatic;
 var depositStatic;
 var auctionStatic;
 var platformStatic;
+var stablePool;
+var rulePool;
 
 async function drawStatic(){
+    stablePool = new localWeb3.eth.Contract(poolABI, stablePoolAddress);
+
     await daoStatic.methods.addresses('rule').call().then(function (result) {
         ruleAddress = result;
         ruleStatic = new localWeb3.eth.Contract(ruleABI, ruleAddress);
@@ -4579,12 +4586,13 @@ async function drawStatic(){
             document.getElementById('ruleHolders').innerText = result.length;
         });
 
-        document.getElementById('ruleLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + ruleAddress + '>'+ruleAddress+'</a>';
+        document.getElementById('ruleLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + ruleAddress + '>'+ruleAddress+'</a>';
 
         getTransfers(ruleStatic).then(function (result) {
             document.getElementById('ruleTxCount').innerText = result.length;
         });
     });
+
     daoStatic.methods.addresses('inflationSpender').call().then(function (result) {
         document.getElementById('inflationSpender').innerText = result;
     });
@@ -4598,7 +4606,7 @@ async function drawStatic(){
         wethStatic = new localWeb3.eth.Contract(wethABI,wethAddress);
 
 
-        document.getElementById('wethLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + wethAddress + '>'+wethAddress+'</a>';
+        document.getElementById('wethLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + wethAddress + '>'+wethAddress+'</a>';
 
         daoStatic.methods.addresses('cdp').call().then(function (result) {
             cdpStatic = new localWeb3.eth.Contract(cdpABI,result);
@@ -4607,8 +4615,19 @@ async function drawStatic(){
                 document.getElementById('cdpWethBalance').innerText = cdpWethBalance;
                 daoStatic.methods.addresses('oracle').call().then(function (result) {
                     oracleStatic = new localWeb3.eth.Contract(oracleABI, result);
-                    oracleStatic.methods.getPrice('eth').call().then(function (result) {
+                    oracleStatic.methods.getPrice('etc').call().then(function (result) {
                         let ethPrice = (result/(10**6)).toFixed(2);
+
+
+                        stablePool.methods.getReserves().call().then(function (reserve) {
+                            let etcPoolAmount = reserve[1];
+                            let tscPoolAmount = reserve[0];
+                            document.getElementById('etcPool').innerText = localWeb3.utils.fromWei(etcPoolAmount);
+                            document.getElementById('tscPool').innerText = localWeb3.utils.fromWei(tscPoolAmount);
+                            let stablePoolPrice = etcPoolAmount*ethPrice/tscPoolAmount;
+                            document.getElementById('stablePoolPrice').innerText = stablePoolPrice;
+                        });
+
                         document.getElementById('ethPrice').innerText = ethPrice;
                         let collateral = (ethPrice*cdpWethBalance).toFixed(3);
                         document.getElementById('overallCollateral').innerText = collateral;
@@ -4656,7 +4675,7 @@ async function drawStatic(){
 
     daoStatic.methods.addresses('platform').call().then(function (result) {
         platformStatic = new localWeb3.eth.Contract(platformABI,result);
-        document.getElementById('platformLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + result + '>'+result+'</a>';
+        document.getElementById('platformLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + result + '>'+result+'</a>';
 
         platformStatic.methods.totalSupply().call().then(function (result) {
             document.getElementById('platformSupply').innerText = localWeb3.utils.fromWei(result);
@@ -4678,7 +4697,7 @@ async function drawStatic(){
         var inflationAddress = result;
         var inflation = new localWeb3.eth.Contract(inflationABI,inflationAddress);
 
-        document.getElementById('inflationLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + inflationAddress + '>'+inflationAddress+'</a>';
+        document.getElementById('inflationLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + inflationAddress + '>'+inflationAddress+'</a>';
 
         inflation.methods.lastEmission().call().then(function (result) {
             document.getElementById('lastEmission').innerText = dateFromTimestamp(result);
@@ -4688,7 +4707,7 @@ async function drawStatic(){
     daoStatic.methods.addresses('cart').call().then(function (result) {
         let cartAddress = result;
 
-        document.getElementById('cartLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + cartAddress + '>'+cartAddress+'</a>';
+        document.getElementById('cartLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + cartAddress + '>'+cartAddress+'</a>';
 
         cartStatic =  new localWeb3.eth.Contract(cartABI,cartAddress);
 
@@ -4714,7 +4733,7 @@ async function drawStatic(){
     daoStatic.methods.addresses('auction').call().then(function (result) {
         auctionAddress = result;
         auctionStatic = new localWeb3.eth.Contract(auctionABI,result);
-        document.getElementById('auctionLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + result + '>'+result+'</a>';
+        document.getElementById('auctionLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + result + '>'+result+'</a>';
 
         auctionStatic.getPastEvents('buyOutInit', {
             fromBlock: 0,
@@ -4765,7 +4784,7 @@ async function drawStatic(){
             //console.log(result);
         });
 
-        document.getElementById('stableCoinLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + stableCoinAddress + '>'+stableCoinAddress+'</a>';
+        document.getElementById('stableCoinLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + stableCoinAddress + '>'+stableCoinAddress+'</a>';
         stableCoinStatic.methods.totalSupply().call().then(function (result) {
             document.getElementById('stableCoinSupply').innerText = (result/(10**18)).toFixed(2);
         });
@@ -4773,7 +4792,7 @@ async function drawStatic(){
 
         daoStatic.methods.addresses('cdp').call().then(function (result) {
             var cdpAddress = result;
-            document.getElementById('cdpLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + cdpAddress + '>'+cdpAddress+'</a>';
+            document.getElementById('cdpLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + cdpAddress + '>'+cdpAddress+'</a>';
 
             stableCoinStatic.methods.balanceOf(cdpAddress).call().then(function (result) {
                 document.getElementById('stabFund').innerText = (localWeb3.utils.fromWei(result));
@@ -4788,7 +4807,7 @@ async function drawStatic(){
 
         daoStatic.methods.addresses('deposit').call().then(function (result) {
             var depositAddress = result;
-            document.getElementById('depositLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + depositAddress + '>'+depositAddress+'</a>';
+            document.getElementById('depositLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + depositAddress + '>'+depositAddress+'</a>';
             stableCoinStatic.methods.balanceOf(depositAddress).call().then(function (result) {
                 document.getElementById('overallDeposits').innerText = (result/(10**18)).toFixed(2);
             });
@@ -4898,7 +4917,7 @@ async function getHolders(contract){
 }
 
 window.onload = async function() {
-    document.getElementById('daoLink').innerHTML = '<a target=_blank href = https://goerli.etherscan.io/address/' + daoAddress + '>'+daoAddress+'</a>';
+    document.getElementById('daoLink').innerHTML = '<a target=_blank href = https://blockscout.com/etc/mainnet/address/' + daoAddress + '>'+daoAddress+'</a>';
     await drawStatic();
     unlock();
 };

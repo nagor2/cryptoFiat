@@ -47,5 +47,7 @@ contract('Exchange Rate', (accounts) => {
         price = await exRate.getPrice("eth");
         assert.equal (price, 101, "wrong price");
     });
+
+    //TODO: check this prices (to update request)
 });
 

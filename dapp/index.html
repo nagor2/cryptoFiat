@@ -40,7 +40,7 @@
 <p>Your address: <span style="font-weight: bold;" id="userAddress"></span><br>
 <p>network: <span style="font-weight: bold;" id="network"></span><br>
 <p>ETH balance: <span style="font-weight: bold;" id="ethValue"></span></p>
-<p>WETH balance: <span style="font-weight: bold;" id="wethBalance"></span></p>
+<p>WETH balance: <span style="font-weight: bold;" id="wethBalance"></span><span id="wethConvert"></span></p>
 <p>stableCoinBalance balance: <span style="font-weight: bold;" id="stableCoinBalance"></span></p>
 
 
@@ -52,13 +52,15 @@
             <p>total supply: <span style="font-weight: bold;" id="stableCoinSupply"></span></p>
             <p>N of transactions (iterate transfers): <span style="font-weight: bold;" id="stableTxCount"></span></p>
             <p>N of holders (iterate addresses): <span style="font-weight: bold;" id="stableHolders"></span></p>
-            <p>price vs USD (pool):</p>
+            <p>price vs USD (pool): <span style="font-weight: bold;" id="stablePoolPrice"></span></p>
             <p>price vs USD (indicative): <span style="font-weight: bold;" id="indicativePrice"></span></p>
+            <p>ETC in pool: <span style="font-weight: bold;" id="etcPool"></span></p>
+            <p>TSC in pool: <span style="font-weight: bold;" id="tscPool"></span></p>
+            <a href="https://swap.ethereumclassic.com/#/swap" target="_blank">swap</a>
             <p>overall collateral: <span style="font-weight: bold;" id="overallCollateral"></span></p>
             <p>stabilization fund: <span style="font-weight: bold;" id="stabFund"></span></p>
             <input type="button" value="initCoinsBuyOut" onclick="initCoinsBuyOut()">
             <input type="button" value="initRuleBuyOut" onclick="initRuleBuyOut()">
-            <p>pool volume:</p>
             <input type="button" value="Buy from pool">
         </td>
         <td>
@@ -170,6 +172,8 @@
                 </table>
 
             <p>instruments: (actual price, blockchain price, share, last time updated)</p>
+
+            <input type="button" value="transferProfit" onclick="oracle.methods.transferProfit().send({from:userAddress});">
             <input type="button" value="claim update" onclick="oracle.methods.requestMultiplePricesUpdate([1,2]).send({from:userAddress, value:web3.utils.toWei('0.01')});">
         </td>
     </tr>

@@ -37,7 +37,7 @@ contract cartContract{
     }
 
     function addItem(string memory symbol, uint256 share, uint256 initialPrice) public{
-        require(dao.authorized(msg.sender), "only authorized address may do this");
+        require(msg.sender == oracle.updater(), "only authorized address may addItem");
         require (dictionary[symbol]==0, "instrument already exists, please, use setShare");
         uint256 itemId = itemsCount++;
         cartItem storage c = items[itemId];
@@ -51,7 +51,7 @@ contract cartContract{
     }
 
     function setShare(uint256 id, uint256 share) public{
-        require(dao.authorized(msg.sender), "only authorized address may do this");
+        require(msg.sender == oracle.updater(), "only authorized address may setShare");
         cartItem storage c = items[id];
         sharesCount -= c.share;
         sharesCount += share;
@@ -70,7 +70,7 @@ contract cartContract{
 
     function getPrice(string memory symbol) public view returns (uint256) {
         if (keccak256(bytes(symbol)) == keccak256(bytes('stb')))
-            return oracle.getPrice('eth') * 10**6 / getCurrentSharePrice();
+            return oracle.getPrice('etc') * 10**6 / getCurrentSharePrice();
         return oracle.getPrice(symbol);
     }
 

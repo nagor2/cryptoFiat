@@ -32,7 +32,7 @@ contract('Cart', (accounts) => {
     it("should return valid share price if share changed", async () => {
         let itemBefore = await cart.items(1);
         assert.equal (itemBefore.share,5,"wrong share");
-        await cart.setShare(1, 10,{from:accounts[1]});
+        await cart.setShare(1, 10,{from:exRAuthour});
         let itemAfter= await cart.items(1);
         assert.equal (itemAfter.share,10,"wrong share");
         assert.equal (await cart.sharesCount(),20,"wrong share");

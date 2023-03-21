@@ -8,7 +8,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Platform is ERC20{
     uint256 public constant decimals = 18;
-    uint256 initialSupply = 1000*10**decimals;
+    uint256 initialSupply = 10**6*10**decimals;
     address public tokenMinter;
     address public ownerAddress;
     uint256 public mintedNum;

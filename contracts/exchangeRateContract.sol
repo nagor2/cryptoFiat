@@ -14,18 +14,19 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./INTDAO.sol";
 
 contract exchangeRateContract {
+    INTDAO dao;
 
     constructor(address payable _INTDAOaddress) payable{
-        INTDAO dao = INTDAO(_INTDAOaddress);
+        dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("oracle", payable(address(this)));
         author = payable(msg.sender);
         updater = payable(msg.sender);
+        beneficiary = payable(msg.sender);
     }
 
     uint256 public subscriptionsCount;
     uint256 public instrumentsCount;
 
-    //TODO: check this prices
     uint256 constant public updOnePriceGasCost = 84928;
     uint256 constant public updSeveralPricesCost = 87742;
     uint256 constant public updAdditionalPrice = 22700;
@@ -53,6 +54,7 @@ contract exchangeRateContract {
     event severalPricesUpdateRequest (uint256[] ids);
     event priceUpdated (uint256 id);
     event profit (uint256 profit);
+    event highVolatility(uint256 id);
 
     function changeBeneficiaryAddress(address payable newAddress) public onlyAuthor{
         if (!finalized)
@@ -94,6 +96,16 @@ contract exchangeRateContract {
 
     function updPrice(uint256 id, uint256 newPrice) internal {
         instruments[id].timeStamp = block.timestamp;
+        uint256 prevPrice = instruments[id].price;
+        uint256 move = 0;
+        if (prevPrice!=0){
+            if (prevPrice >= newPrice)
+                move = prevPrice - newPrice;
+            else
+                move = newPrice - prevPrice;
+            if (move * 100 / prevPrice > dao.params('highVolatilityEventBarrierPercent'))
+                emit highVolatility(id);
+        }
         instruments[id].price = newPrice;
         emit priceUpdated (id);
     }

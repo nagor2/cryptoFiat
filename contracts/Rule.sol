@@ -5,7 +5,8 @@ import "./INTDAO.sol";
 
 contract Rule {
     string public constant name = "Rule token";
-    string public constant symbol = "RULE";
+    string public constant symbol = "RLE";
+    uint256 public constant decimals = 18;
     uint256 initialSupply;
     INTDAO dao;
     mapping (address => uint256) balances;
@@ -18,7 +19,7 @@ contract Rule {
     event Mint(address to, uint256 value);
 
     constructor(address payable _INTDAOaddress){
-        initialSupply += 10**6*10**18;
+        initialSupply += 10**6*10**decimals;
         balances[msg.sender] = initialSupply;
         emit Transfer(msg.sender, msg.sender, initialSupply);
         dao = INTDAO(_INTDAOaddress);

@@ -35,12 +35,21 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
             value: web3.utils.toWei('1')});
 
         let stubFund = await stableCoin.balanceOf(await dao.addresses('cdp'));
-        assert.equal(await stableCoin.balanceOf(await dao.addresses('cdp')), 0, "should burn first");
+        assert.equal(await stableCoin.balanceOf(await dao.addresses('cdp')), 0, "should be zero first");
         let neededFund = await dao.params('stabilizationFundPercent') * await stableCoin.totalSupply()/100;
         neededFund = parseFloat(neededFund/10**18).toFixed();
         assert.equal(neededFund, 105, "wrong needed fund");
 
         let paymentAmount = web3.utils.toWei((neededFund - stubFund).toString());
+
+        await truffleAssert.fails(
+            auction.initCoinsBuyOutForStabilization(paymentAmount, {from:bidder2}),
+            truffleAssert.ErrorType.REVERT,
+            "too many coins for one auction");
+
+        paymentAmount = await dao.params('maxCoinsForStabilization');
+
+        //console.log(web3.utils.fromWei(paymentAmount));
 
         let auctionTx = await auction.initCoinsBuyOutForStabilization(paymentAmount);
 
@@ -53,7 +62,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         let a = await auction.auctions(auctionId);
 
-        assert.equal(paymentAmount, a.paymentAmount, "wrong paymentAmount set");
+        assert.equal(paymentAmount.toString(), a.paymentAmount, "wrong paymentAmount set");
         assert.equal(rule.address, a.lotToken, "wrong lotToken set");
         assert.equal(stableCoin.address, a.paymentToken, "wrong paymentToken set");
 
@@ -62,17 +71,22 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         let balanceBefore = await stableCoin.balanceOf(bidder);
         let balanceBefore2 = await stableCoin.balanceOf(bidder2);
 
-        assert.equal(parseFloat(balanceBefore/10**18).toFixed(), 1995, "wrong balanceBefore")
-        assert.equal(parseFloat(balanceBefore2/10**18).toFixed(), 105, "wrong balanceBefore2")
+        assert.equal(web3.utils.fromWei(balanceBefore), '2050', "wrong balanceBefore")
+        assert.equal(web3.utils.fromWei(balanceBefore2), '50', "wrong balanceBefore2")
 
-        assert.ok(await stableCoin.balanceOf(bidder)>=paymentAmount, "bidder does not have enough funds to make a bid");
-        assert.ok(await stableCoin.balanceOf(bidder2)>=paymentAmount, "bidder2 does not have enough funds to make a bid");
+        assert.ok((parseFloat(balanceBefore/10**18)>=parseFloat(paymentAmount/10**18)), "bidder does not have enough funds to make a bid");
+        assert.ok((parseFloat(balanceBefore2/10**18)>=parseFloat(paymentAmount/10**18)), "bidder2 does not have enough funds to make a bid");
 
         await stableCoin.approve(auction.address, paymentAmount, {from:bidder});
         await stableCoin.approve(auction.address, paymentAmount, {from:bidder2});
 
         let bidIdToImprove;
         let bidIdToCancel;
+
+        await truffleAssert.fails(
+            auction.makeBid(auctionId, web3.utils.toWei('10001'), {from:bidder}),
+            truffleAssert.ErrorType.REVERT,
+            "too many rules for one emission");
 
         let bidTx = await auction.makeBid(auctionId, web3.utils.toWei('1000'), {from:bidder});
 
@@ -127,30 +141,36 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         let ruleSupplyBefore = await rule.totalSupply();
 
-        assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 210, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 100, "wrong balance");
 
         await auction.claimToFinalizeAuction(auctionId);
 
         let ruleSupplyAfter = await rule.totalSupply();
 
-        assert.equal(parseFloat(await stableCoin.balanceOf(bidder)/10**18).toFixed(), 1890, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(bidder)/10**18).toFixed(), 2000, "wrong balance");
         assert.equal(parseFloat(await stableCoin.balanceOf(bidder2)/10**18).toFixed(), 0, "wrong balance");
-        assert.equal(parseFloat(await stableCoin.balanceOf(cdp.address)/10**18).toFixed(), 105, "wrong balance");
-        assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 105, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(cdp.address)/10**18).toFixed(), 50, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 50, "wrong balance");
 
         assert.equal(parseFloat(ruleSupplyBefore)+902.5*10**18, parseFloat(ruleSupplyAfter), "wrong ruleSupply");
         assert.equal(parseFloat(await rule.balanceOf(bidder)/10**18).toFixed(1), 902.5, "wrong balance");
 
         await auction.cancelBid(bidIdToCancel, {from: bidder2});
         assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 0, "wrong balance");
-        assert.equal(parseFloat(await stableCoin.balanceOf(bidder2)/10**18).toFixed(), 105, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(bidder2)/10**18).toFixed(), 50, "wrong balance");
 
         /*
             1. Проверяем стаб фонд, что нужны деньги.
             2. Инициируем выкуп (проверяем, что выкупаем нужное количество монет.
             3. Проверяем, что аукцион идет на понижение.
             4. После финализации, проверяем, что произошел минт рулов, что стэйблы перешли куда надо.
+            5. Проверяем, что за раз нельзя выкупить более 50 стэйблов с рынка
+            6. Проверяем, что нельзя сделать более 1% эмиссии рулов.
         */
     });
+
+    //TODO: test improve bid
 });
+
+
 

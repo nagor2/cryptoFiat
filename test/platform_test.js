@@ -22,7 +22,7 @@ contract('Platform', (accounts) => {
 
     it("should put initialSupply on authors balance", async () => {
         let supply = await platform.balanceOf(author);
-        assert.equal (supply,web3.utils.toWei('1000'),"should put platform tokens on owner's balance");
+        assert.equal (supply,web3.utils.toWei('1000000'),"should put platform tokens on owner's balance");
     });
 
     it("should change minter", async () => {

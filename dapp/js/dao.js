@@ -107,6 +107,7 @@ function initGlobals() {
         weth = new web3.eth.Contract(wethABI,result);
         weth.methods.balanceOf(userAddress).call().then (function (result){
             document.getElementById('wethBalance').innerText = (result/(10**18)).toFixed(6);
+            document.getElementById('wethConvert').innerHTML = ' <input type="button" value="convert" onclick="weth.methods.withdraw(\''+result.toString()+'\').send({from:userAddress})">';
         })
     });
 
@@ -164,7 +165,7 @@ function initGlobals() {
 function openCDP(){
     let collateral = document.getElementById('ethCollateral').value;
     let amount = document.getElementById('stableCoinsAmount').value;
-    cdp.methods.openCDP(localWeb3.utils.toWei(amount)).send({from:userAddress, value: web3.utils.toWei(collateral)}).then(function (result) {
+    cdp.methods.openCDP(localWeb3.utils.toWei(amount.toString())).send({from:userAddress, value: web3.utils.toWei(collateral.toString())}).then(function (result) {
         window.location.reload();
     });
 }
@@ -265,25 +266,28 @@ function getMyDebtPositions(){
 
 function printDebtPosition(id){
     let html='';
+    console.log (id+" printDebtPosition");
 
     cdpStatic.methods.totalCurrentFee(id).call().then(function (fee) {
         cdpStatic.methods.positions(id).call().then(function(position){
+            cdpStatic.methods.getMaxStableCoinsToMint(position.wethAmountLocked).call().then(function(maxCoins) {
 
-            if (!position.liquidated)
-            html = "<div id='position-"+id+"'>" +
-                "<p>opened: "+dateFromTimestamp(position.timeOpened)+"</p>" +
-                "<p>updated: "+dateFromTimestamp(position.lastTimeUpdated)+"</p>" +
-                "<p>coinsMinted (red/yellow/green): "+localWeb3.utils.fromWei(position.coinsMinted)+"</p>"+
-                "<p>wethLocked: "+localWeb3.utils.fromWei(position.wethAmountLocked)+"</p>"+
-                "<p>collateral (red/yellow/green): "+localWeb3.utils.fromWei(position.wethAmountLocked)+"</p>"+
-                "<p>maxCoinsToMint : "+localWeb3.utils.fromWei(position.wethAmountLocked)+"</p>"+
-                "<p>accumulated interest:  "+web3.utils.fromWei(fee)+"</p>"+
-                "<input type=\"button\" value=\"closeCDP\" onclick=\"cdp.methods.closeCDP("+id+").send({from:userAddress});\">"+
-                "<input type=\"button\" value=\"updateCDP\" onclick=\"updateCDP("+id+")\">"+
-                "<input type=\"button\" value=\"withdraw\" onclick=\"withdrawEther("+id+")\">"+
-                "<input type=\"button\" value=\"payInterest\" onclick=\"payInterest("+id+")\">"+
-                "</div>";
+                if (!position.liquidated)
+                    html = "<div id='position-" + id + "'>" +
+                        "<p>opened: " + dateFromTimestamp(position.timeOpened) + "</p>" +
+                        "<p>updated: " + dateFromTimestamp(position.lastTimeUpdated) + "</p>" +
+                        "<p>coinsMinted (red/yellow/green): " + localWeb3.utils.fromWei(position.coinsMinted) + "</p>" +
+                        "<p>wethLocked: " + localWeb3.utils.fromWei(position.wethAmountLocked) + "</p>" +
+                        "<p>collateral (red/yellow/green): " + localWeb3.utils.fromWei(position.wethAmountLocked) + "</p>" +
+                        "<p>maxCoinsToMint : " + localWeb3.utils.fromWei(maxCoins) + "</p>" +
+                        "<p>accumulated interest:  " + web3.utils.fromWei(fee) + "</p>" +
+                        "<input type=\"button\" value=\"closeCDP\" onclick=\"cdp.methods.closeCDP(" + id + ").send({from:userAddress});\">" +
+                        "<input type=\"button\" value=\"updateCDP\" onclick=\"updateCDP(" + id + ")\">" +
+                        "<input type=\"button\" value=\"withdraw\" onclick=\"withdrawEther(" + id + ")\">" +
+                        "<input type=\"button\" value=\"payInterest\" onclick=\"payInterest(" + id + ")\">" +
+                        "</div>";
                 document.getElementById("cdps").innerHTML += html;
+            });
         });
     });
 }

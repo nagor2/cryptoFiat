@@ -167,7 +167,8 @@ contract('Auction', (accounts) => {
     });
 
 
-
+//TODO: test, that i can not emit more than 5% of RULE
+    //that i cannot claim more, than a little amount of stableCoins
 
 });
 

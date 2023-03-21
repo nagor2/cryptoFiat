@@ -95,7 +95,7 @@ contract CDP {
 
     function getMaxStableCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
         uint256 price = oracle.getPrice('stb');
-        uint256 decimals = oracle.getDecimals('eth');
+        uint256 decimals = oracle.getDecimals('etc');
         return ethValue * price * (100 - dao.params('collateralDiscount'))/(10**decimals)/100;
     }
 
@@ -145,7 +145,7 @@ contract CDP {
         uint256 stabilizationFundAmount = dao.params('stabilizationFundPercent')*coin.totalSupply()/100;
         require (coin.balanceOf(address(this)) >= stabilizationFundAmount, "insufficient funds on CDP contract");
         uint256 surplus = coin.balanceOf(address(this)) - stabilizationFundAmount;
-        require (surplus >= dao.params('minAuctionBalanceToInitBuyOut'), "not enough surplus to start buyOut");
+        require (surplus >= dao.params('minCDPBalanceToInitBuyOut'), "not enough surplus to start buyOut");
         uint256 currentAllowance = coin.allowance(dao.addresses('cdp'), dao.addresses('auction'));
         require (coin.approve(dao.addresses('auction'), currentAllowance+surplus), "could not approve coins for some reason");
         return true;

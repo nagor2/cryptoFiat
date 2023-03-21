@@ -4,6 +4,7 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./INTDAO.sol";
 import "./stableCoin.sol";
 import "./CDP.sol";
+import "./Rule.sol";
 
     struct auctionEntity {
         bool initialized;
@@ -31,6 +32,7 @@ contract Auction {
     stableCoin coin;
     INTDAO dao;
     CDP cdp;
+    Rule rule;
 
     mapping(uint256 => auctionEntity) public auctions;
     mapping (uint256 => Bid) public bids;
@@ -47,15 +49,17 @@ contract Auction {
         dao.setAddressOnce("auction", payable(address(this)));
         cdp = CDP(dao.addresses('cdp'));
         coin = stableCoin(payable(dao.addresses('stableCoin')));
+        rule = Rule(payable(dao.addresses('rule')));
     }
 
     function renewContracts() public {
         coin = stableCoin(payable(dao.addresses('stableCoin')));
         cdp = CDP(dao.addresses('cdp'));
+        rule = Rule(payable(dao.addresses('rule')));
     }
 
     function initRuleBuyOut() public returns (uint256 auctionID){
-        uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));//CHTO?? Kak mojet bit takoy allowence???
+        uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));
         require (coin.transferFrom(dao.addresses('cdp'), address(this), allowed), "Can not transfer surplus from CDP");
         auctionID = auctionNum++;
         auctionEntity storage a = auctions[auctionID];
@@ -85,6 +89,7 @@ contract Auction {
     function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) public returns (uint256 auctionID){
         uint256 actualStabilizationFund = coin.balanceOf(address(cdp));
         uint256 preferableStabilizationFund = coin.totalSupply() * dao.params("stabilizationFundPercent")/100;
+        require(coinsAmountNeeded<=dao.params("maxCoinsForStabilization"), "too many coins for one auction");
 
         require (actualStabilizationFund<preferableStabilizationFund/5, "not so low to init Rule emission");
         if (coinsAmountNeeded > preferableStabilizationFund - actualStabilizationFund)
@@ -140,8 +145,10 @@ contract Auction {
         }
         require(bidAmount>0, "your bid is not high enough");
         ERC20 paymentToken = ERC20(address(a.paymentToken));
-        if (a.lotToken == dao.addresses('rule'))
+        if (a.lotToken == dao.addresses('rule')){
+            require(bidAmount<=rule.totalSupply()*dao.params('maxRuleEmissionPercent')/100, "too many rules for one emission");
             require(paymentToken.transferFrom(msg.sender, address(this), a.paymentAmount), "You should first approve stableCoins to auction contract address");
+        }
         else
             require(paymentToken.transferFrom(msg.sender, address(this), bidAmount), "You should first approve bidAmount to auction contract address");
 
@@ -181,7 +188,6 @@ contract Auction {
         a.lastTimeUpdated = block.timestamp;
         a.bestBidId = bidId;
         emit newBid(b.auctionID, bidId, newBidAmount, b.owner);
-        //TODO: test improve bid
     }
 
     function cancelBid(uint256 bidId) public{
