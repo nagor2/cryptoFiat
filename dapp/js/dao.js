@@ -280,6 +280,7 @@ function printDebtPosition(id){
                         "<p>wethLocked: " + localWeb3.utils.fromWei(position.wethAmountLocked) + "</p>" +
                         "<p>collateral (red/yellow/green): " + localWeb3.utils.fromWei(position.wethAmountLocked) + "</p>" +
                         "<p>maxCoinsToMint : " + localWeb3.utils.fromWei(maxCoins) + "</p>" +
+                        "<p>recorded:  " + web3.utils.fromWei(position.feeGeneratedRecorded) + "</p>" +
                         "<p>accumulated interest:  " + web3.utils.fromWei(fee) + "</p>" +
                         "<input type=\"button\" value=\"closeCDP\" onclick=\"cdp.methods.closeCDP(" + id + ").send({from:userAddress});\">" +
                         "<input type=\"button\" value=\"updateCDP\" onclick=\"updateCDP(" + id + ")\">" +

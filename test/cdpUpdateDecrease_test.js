@@ -58,3 +58,5 @@ contract('CDP Update Decrease', (accounts) => {
 });
 
 //TODO: check coinsMinted update
+//TODO: Critical bug, p.feeGeneratedRecorded = generatedFeeUnrecorded(posID); => p.feeGeneratedRecorded += generatedFeeUnrecorded(posID); test this shit
+//TODO: check deposit for this shit

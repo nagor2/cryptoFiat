@@ -222,7 +222,7 @@ contract CDP {
         require(p.owner == msg.sender, 'Only owner may update the position');
         uint256 maxCoinsToMint;
 
-        p.feeGeneratedRecorded = generatedFeeUnrecorded(posID);
+        p.feeGeneratedRecorded += generatedFeeUnrecorded(posID);
         p.lastTimeUpdated = block.timestamp;
 
         if (msg.value>0) {

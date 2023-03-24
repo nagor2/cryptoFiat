@@ -38,7 +38,10 @@ contract('CDP Update Increase', (accounts) => {
         positionBefore = await cdp.positions(posId);
         await time.increase(time.duration.years(1));
         fee = await cdp.generatedFeeUnrecorded(posId);
+
         positionUpdate = await cdp.updateCDP(posId, web3.utils.toWei('2100', 'ether'), {from: accounts[ownerId],value: web3.utils.toWei('1', 'ether')});
+        await time.increase(time.duration.seconds(1));
+        await cdp.updateCDP(posId, web3.utils.toWei('2100', 'ether'), {from: accounts[ownerId]});
         positionAfter = await cdp.positions(posId);
     });
 
@@ -52,6 +55,12 @@ contract('CDP Update Increase', (accounts) => {
     it("should properly calculate maxCoins to mint", async () => {
         const coins = await cdp.getMaxStableCoinsToMintForPos(posId);
         assert.equal(parseFloat(coins/10**18).toFixed(4), parseFloat(4160).toFixed(4), "should decrease amount as fee is growing");
+    });
+
+    it("should increase overall fee", async () => {
+        //totalCurrentFee
+        //const balance = await stableCoin.balanceOf(positionBefore.owner);
+        //assert.equal(balance, web3.utils.toWei('2100', 'ether'), "owner's balance should be 2100 stableCoin");
     });
 
     it("should increase owner balance", async () => {
