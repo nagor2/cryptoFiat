@@ -1,12 +1,12 @@
 //var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/7005259595814e4185411127fb00ecf4'));
 //const provider = new ethers.providers.JsonRpcProvider("https://etc.rpc.rivet.cloud/6f4e0413c2dd468ebd08f54a5c9c5b82");
-//var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
-var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://etc.rpc.rivet.cloud/6f4e0413c2dd468ebd08f54a5c9c5b82'));
+//var localWeb3 = new Web3(new Web3.providers.HttpProvider('https://etc.rpc.rivet.cloud/6f4e0413c2dd468ebd08f54a5c9c5b82'));
 
 
 var wethAddress;
-var daoAddress = '0xd1c5A469191E45a4D06D725681F2B73a402737b4';
+var daoAddress = '0xD711C667BF98dEf24957526786511006Aa8b2ccb';
 
 var stableCoinABI = [
     {
@@ -4777,8 +4777,6 @@ async function drawStatic(){
     });
 
 
-
-
         getHolders(stableCoinStatic).then(function (result) {
             document.getElementById('stableHolders').innerText = result.length;
             //console.log(result);
@@ -4852,7 +4850,6 @@ async function getTransfers(contract) {
 }
 
 async function printMintedToken(id, token){
-
     let html="<div id='token-id-'"+id+">";
     html+= "<p>name: <b>"+await token.methods.name().call() + "</b></p>";
     html+= "<p>price: <b>"+localWeb3.utils.fromWei(await token.methods.initialPrice().call()) + "</b> stableCoins</p>";

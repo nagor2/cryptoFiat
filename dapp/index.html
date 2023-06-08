@@ -129,6 +129,7 @@
     <tr>
         <td>
             <h2>Deposit</h2>
+            <input type="button"  style="background-color: orange" value="renew contracts" onclick="deposit.methods.renewContracts().send({from:userAddress});">
             <p>your stable coin allowance to Deposit contract: <span style="font-weight: bold;" id="depositAllowance"></span></p>
             <p>you are approved to withdraw from CDP: <span style="font-weight: bold;" id="myCDPAllowance"></span><input type="button" value="transfer from" onclick="transferFromCDP()"></p>
             <p>address: <span style="font-weight: bold;" id="depositLink"></span></p>
@@ -189,6 +190,7 @@
         </td>
         <td>
             <h2>Platform</h2>
+            <input type="button"  style="background-color: orange" value="renew contracts" onclick="platform.methods.renewContracts().send({from:userAddress});">
             <p>address: <span style="font-weight: bold;" id="platformLink"></span></p>
             <p>totalSupply: <span style="font-weight: bold;" id="platformSupply"></span></p>
             <p>number of tokens minted: <span style="font-weight: bold;" id="mintedTokensNum"></span></p>

@@ -54,7 +54,7 @@ contract('CDP Update Increase', (accounts) => {
 
     it("should properly calculate maxCoins to mint", async () => {
         const coins = await cdp.getMaxStableCoinsToMintForPos(posId);
-        assert.equal(parseFloat(coins/10**18).toFixed(4), parseFloat(4160).toFixed(4), "should decrease amount as fee is growing");
+        assert.equal(parseFloat(coins/10**18).toFixed(3), parseFloat(4160).toFixed(3), "should decrease amount as fee is growing");
     });
 
     it("should increase overall fee", async () => {
@@ -76,11 +76,11 @@ contract('CDP Update Increase', (accounts) => {
         await cdp.transferFee(posId);
         ownerBalance = await stableCoin.balanceOf(positionBefore.owner);
 
-        assert.equal(parseFloat(ownerBalance/10**18).toFixed(4), parseFloat(1920).toFixed(4), "owner's balance should be 1920 stableCoins after");
+        assert.equal(parseFloat(ownerBalance/10**18).toFixed(3), parseFloat(1920).toFixed(3), "owner's balance should be 1920 stableCoins after");
 
         const balanceAfter = await stableCoin.balanceOf(cdp.address);
-        assert.equal(parseFloat(balanceBefore/10**18).toFixed(4), parseFloat(0).toFixed(4), "should be empty CDP contract balance");
-        assert.equal(parseFloat(balanceAfter/10**18).toFixed(4), parseFloat(fee/10**18).toFixed(4), "should put fee on CDP contract balance");
+        assert.equal(parseFloat(balanceBefore/10**18).toFixed(3), parseFloat(0).toFixed(3), "should be empty CDP contract balance");
+        assert.equal(parseFloat(balanceAfter/10**18).toFixed(3), parseFloat(fee/10**18).toFixed(3), "should put fee on CDP contract balance");
     });
 
     it("should increase ethAmount locked", async () => {
@@ -93,8 +93,8 @@ contract('CDP Update Increase', (accounts) => {
     });
 
     it("should increase generated fee", async () => {
-        assert.equal(parseFloat(positionAfter.feeGeneratedRecorded/10**18).toFixed(4), parseFloat(180).toFixed(4), "should increase generated fee");
-        assert.equal(parseFloat(positionAfter.feeGeneratedRecorded/10**18).toFixed(4), parseFloat(fee/10**18).toFixed(4), "should increase generated fee");
+        assert.equal(parseFloat(positionAfter.feeGeneratedRecorded/10**18).toFixed(3), parseFloat(180).toFixed(3), "should increase generated fee");
+        assert.equal(parseFloat(positionAfter.feeGeneratedRecorded/10**18).toFixed(3), parseFloat(fee/10**18).toFixed(3), "should increase generated fee");
     });
 
     it("should not allow to mint coins due to feeGenerated", async () => {

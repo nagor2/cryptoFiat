@@ -14,6 +14,7 @@ var depositAddress;
 var auctionAddress;
 var auction;
 var oracle;
+var platform;
 
 async function unlock(){
     if (typeof web3 !== 'undefined') {
@@ -62,15 +63,16 @@ function handleAccountsChanged(accounts) {
 }
 
 function initGlobals() {
-
     rule = new web3.eth.Contract(ruleABI,ruleAddress);
     dao = new web3.eth.Contract(daoABI,daoAddress);
 
+    daoStatic.methods.addresses("platform").call().then(function (result) {
+        platform = new web3.eth.Contract(platformABI,result);
+    });
 
     daoStatic.methods.addresses("stableCoin").call().then(function (result) {
         stableCoin = new web3.eth.Contract(stableCoinABI,result);
         stableCoinBalance();
-
     });
 
     daoStatic.methods.addresses("cdp").call().then(function (result) {
@@ -124,7 +126,6 @@ function initGlobals() {
     });
     ruleStatic.methods.balanceOf(daoAddress).call().then(function (result) {
         document.getElementById('ruleBalanceOfDAO').innerText = (result/(10**18)).toFixed(2);
-    });
     daoStatic.methods.totalPooled().call().then(function (result) {
         document.getElementById('overallPooled').innerText = (result/(10**18)).toFixed(2);
     });
@@ -462,9 +463,9 @@ function payInterest(id){
 }
 
 function putOndeposit(){
-    deposit.methods.deposit().send({from:userAddress}).then(function (result) {
-        alert('success');
-    });
+        deposit.methods.deposit().send({from:userAddress}).then(function (result) {
+            alert('success');
+        });
 }
 
 function getMyDeposits(){
@@ -523,10 +524,12 @@ function initCoinsBuyOut(){
             stableCoinStatic.methods.balanceOf(add).call().then(function (stabFund){
                 dao.methods.params('stabilizationFundPercent').call().then(function (percent){
                     let coinsNeeded = supply*percent/100 - stabFund;
-                    if (coinsNeeded>0)
-                        auction.methods.initCoinsBuyOutForStabilization(localWeb3.utils.toWei(coinsNeeded.toString())).send({from:userAddress}).then(function (result) {
+                    if (coinsNeeded>0){
+                        console.log("needed: "+localWeb3.utils.fromWei(coinsNeeded.toString()));
+                        auction.methods.initCoinsBuyOutForStabilization(coinsNeeded.toString()).send({from:userAddress}).then(function (result) {
                             window.location.reload();
                         });
+                    }
                     else alert ('there is no need to init buyout. Stub fund is full enough')
                 })
             });

@@ -8,7 +8,6 @@ contract('DAO', (accounts) => {
     let dao;
     let ruleHolder;
     let ruleToken;
-    const sleep = ms => new Promise(res => setTimeout(res, ms));
 
 
     before(async () => {

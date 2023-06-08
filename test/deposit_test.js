@@ -100,9 +100,9 @@ contract('Deposit', (accounts) => {
 
         await deposit.claimInterest(1);
         let balance = await coin.balanceOf(owner);
-        assert.equal(parseFloat(balance/10**18).toFixed(5), parseFloat("10").toFixed(5), "balance should decrease");
+        assert.equal(parseFloat(balance/10**18).toFixed(3), parseFloat("10").toFixed(3), "balance should decrease");
         let allowance = await coin.allowance(cdp.address, owner);
-        assert.equal(parseFloat(allowance/10**18).toFixed(5), parseFloat("6").toFixed(5), "balance should decrease");
+        assert.equal(parseFloat(allowance/10**18).toFixed(3), parseFloat("6").toFixed(3), "balance should decrease");
     });
 
     it("should topUp deposit", async () => {

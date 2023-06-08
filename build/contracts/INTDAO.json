@@ -68,7 +68,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -87,7 +88,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -106,7 +108,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -125,7 +128,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -144,7 +148,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -163,7 +168,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -176,7 +182,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -189,7 +196,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -238,11 +246,13 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "stateMutability": "payable",
-      "type": "receive"
+      "type": "receive",
+      "payable": true
     },
     {
       "inputs": [
@@ -34253,9 +34263,16 @@
     "name": "solc",
     "version": "0.8.10+commit.fc410830.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x43de7767F6Ba0B6aa79da9347f015596d69007E4",
+      "transactionHash": "0x6835f9a44238b28d28ce7ad3b955de8d454cc27ba7f90e9e0fcd867cc166ebba"
+    }
+  },
   "schemaVersion": "3.4.11",
-  "updatedAt": "2023-03-21T08:47:02.932Z",
+  "updatedAt": "2023-06-08T05:39:23.703Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

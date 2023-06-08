@@ -60,7 +60,7 @@ contract CDP {
         if (StableCoinsToMint <= coinsToMint)
             coinsToMint = StableCoinsToMint;
 
-        require (coinsToMint>1*10**coin.decimals(), "you can not mint such a little amount");
+        require (coinsToMint>1*10**coin.decimals(), "you can not mint less than 1 coin");
 
         posID = numPositions++;
         Position storage p = positions[posID];

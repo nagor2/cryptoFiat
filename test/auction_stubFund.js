@@ -5,7 +5,6 @@ var StableCoin = artifacts.require("./stableCoin.sol");
 var Auction = artifacts.require("./Auction.sol");
 var CDP = artifacts.require("./CDP.sol");
 var Rule = artifacts.require("./Rule.sol");
-
 const truffleAssert = require('truffle-assertions');
 
 
@@ -15,6 +14,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
     let auction;
     let cdp;
     let rule;
+    let cart;
 
     before('should setup the contracts instance', async () => {
         dao = await INTDAO.deployed();
