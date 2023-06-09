@@ -55,11 +55,14 @@ it("should transfer fee to the auction to create buyOut", async () => {
     await stableCoin.transfer(owner, web3.utils.toWei('50', 'ether'), {from:recipient});
     await stableCoin.approve(cdp.address, web3.utils.toWei('100', 'ether'), {from:owner})
     await cdp.transferFee(posId);
+    const feeAfter = await cdp.totalCurrentFee(posId);
 
     let cdpBalance = await stableCoin.balanceOf(cdp.address);
     //let auctionBalance = await stableCoin.balanceOf(auction.address);
     assert.equal(parseFloat(cdpBalance/10**18).toFixed(4),parseFloat('90').toFixed(4),"smth wrong");
     //assert.equal(parseFloat(auctionBalance/10**18).toFixed(4),parseFloat('40').toFixed(4),"smth wrong");
+    assert.equal(feeAfter, 0);
     });
+
 
 });

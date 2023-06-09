@@ -138,6 +138,8 @@ contract CDP {
         require(!p.onLiquidation, "This position is on liquidation");
         uint256 fee = p.feeGeneratedRecorded + generatedFeeUnrecorded(posID);
         require(coin.transferFrom(p.owner, address(this), fee), 'Was not able to transfer fee. Insufficient balance or allowance. Try to allow spending first');
+        p.feeGeneratedRecorded = 0;
+        p.lastTimeUpdated = block.timestamp;
         return true;
     }
 
