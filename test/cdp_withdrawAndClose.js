@@ -41,7 +41,7 @@ contract('CDP withdraw and close position', (accounts) => {
 
     it("should withdrawEther", async () => {
         let toWithdraw = web3.utils.toWei('0.1', 'ether');
-        assert.equal(await weth.balanceOf(owner), 0, "wethLocked is wrong");
+        assert.equal(await weth.balanceOf(owner), 0, "weth balance is wrong");
         await cdp.withdrawEther(posId, toWithdraw, {from:owner});
         assert.equal(await weth.balanceOf(owner), toWithdraw, "wethLocked is wrong");
         assert.equal(await weth.balanceOf(cdp.address), web3.utils.toWei('0.9', 'ether'), "wethLocked is wrong");

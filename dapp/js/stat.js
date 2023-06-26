@@ -6,7 +6,7 @@ var localWeb3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'
 
 
 var wethAddress;
-var daoAddress = '0xD711C667BF98dEf24957526786511006Aa8b2ccb';
+var daoAddress = '0x370a8dDA75141dfAac599658D464C30622a867aC';//'0xd1c5A469191E45a4D06D725681F2B73a402737b4';
 
 var stableCoinABI = [
     {

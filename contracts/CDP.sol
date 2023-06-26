@@ -148,8 +148,7 @@ contract CDP {
         require (coin.balanceOf(address(this)) >= stabilizationFundAmount, "insufficient funds on CDP contract");
         uint256 surplus = coin.balanceOf(address(this)) - stabilizationFundAmount;
         require (surplus >= dao.params('minCDPBalanceToInitBuyOut'), "not enough surplus to start buyOut");
-        uint256 currentAllowance = coin.allowance(dao.addresses('cdp'), dao.addresses('auction'));
-        require (coin.approve(dao.addresses('auction'), currentAllowance+surplus), "could not approve coins for some reason");
+        require (coin.approve(dao.addresses('auction'), surplus), "could not approve coins for some reason");
         return true;
     }
 

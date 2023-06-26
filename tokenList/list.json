@@ -1,0 +1,21 @@
+{
+  "name": "TSC Token",
+  "logoURI": "https://raw.githubusercontent.com/etcswap/token-list/main/etc-swap-list-logo.png",
+  "keywords": ["ethereum classic2", "etc2", "etc swap2"],
+  "timestamp": "2022-07-23T00:00:00.000+00:00",
+  "tokens": [
+    {
+      "chainId": 61,
+      "address": "0x05e70011940cc4AfA46ef7c79BEf44E6348c702d",
+      "name": "True stable coin",
+      "symbol": "TSC",
+      "decimals": 18,
+      "logoURI": "https://truestablecoin.ru/tokenlist/logo.png"
+    }
+  ],
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  }
+}

@@ -125,42 +125,42 @@ function initGlobals() {
         document.getElementById('allowed').innerText = (result/(10**18)).toFixed(2);
     });
     ruleStatic.methods.balanceOf(daoAddress).call().then(function (result) {
-        document.getElementById('ruleBalanceOfDAO').innerText = (result/(10**18)).toFixed(2);
-    daoStatic.methods.totalPooled().call().then(function (result) {
-        document.getElementById('overallPooled').innerText = (result/(10**18)).toFixed(2);
+        document.getElementById('ruleBalanceOfDAO').innerText = (result / (10 ** 18)).toFixed(2);
+        daoStatic.methods.totalPooled().call().then(function (result) {
+            document.getElementById('overallPooled').innerText = (result / (10 ** 18)).toFixed(2);
+        });
+
+        stableCoinStatic.methods.balanceOf(userAddress).call().then(function (result) {
+            document.getElementById('stableCoinBalance').innerText = (result / (10 ** 18)).toFixed(2);
+        });
+
+        daoStatic.methods.pooled(userAddress).call().then(function (result) {
+            var pooledTokens = (result / 10 ** 18).toFixed(2);
+            console.log('pooled: ' + pooledTokens);
+            printStr('pooled', pooledTokens);
+        });
+
+        daoStatic.methods.activeVoting().call().then(function (result) {
+            document.getElementById('activeVoting').innerText = result;
+            if (result.toString() == 'true') {
+                $('#votingParams').slideToggle();
+                document.getElementById("claimToFinalizeButton").disabled = false;
+            } else document.getElementById("claimToFinalizeButton").disabled = true;
+        });
+
+        window.web3.eth.getBalance(userAddress).then(function (result) {
+            document.getElementById('userAddress').innerText = userAddress;
+            document.getElementById('ethValue').innerText = ((result / 10 ** 11).toFixed(10) / 10 ** 7).toFixed(4);
+            //est();
+
+        });
+
+        subscribeToDaoEvents();
+
+        var chain = getChain(ethereum.chainId);
+        //console.log ('You use '+ chain[0])
+        //document.getElementById('network').innerHTML = 'Вы используете <a href="'+chain[1]+'" target="_blank">'+chain[0]+'</a>';
     });
-
-    stableCoinStatic.methods.balanceOf(userAddress).call().then(function (result) {
-        document.getElementById('stableCoinBalance').innerText = (result/(10**18)).toFixed(2);
-    });
-
-    daoStatic.methods.pooled(userAddress).call().then(function ( result) {
-        var pooledTokens = (result/10**18).toFixed(2);
-        console.log('pooled: '+pooledTokens);
-        printStr('pooled', pooledTokens);
-    });
-
-    daoStatic.methods.activeVoting().call().then(function (result) {
-        document.getElementById('activeVoting').innerText = result;
-        if (result.toString()=='true') {
-            $('#votingParams').slideToggle();
-            document.getElementById("claimToFinalizeButton").disabled = false;
-        }
-        else document.getElementById("claimToFinalizeButton").disabled = true;
-    });
-
-    window.web3.eth.getBalance(userAddress).then(function (result) {
-        document.getElementById('userAddress').innerText = userAddress;
-        document.getElementById('ethValue').innerText = ((result/10**11).toFixed(10)/10**7).toFixed(4);
-        //est();
-
-    });
-
-    subscribeToDaoEvents();
-
-    var chain = getChain(ethereum.chainId);
-    //console.log ('You use '+ chain[0])
-    //document.getElementById('network').innerHTML = 'Вы используете <a href="'+chain[1]+'" target="_blank">'+chain[0]+'</a>';
 }
 
 function openCDP(){
@@ -523,7 +523,7 @@ function initCoinsBuyOut(){
         stableCoinStatic.methods.totalSupply().call().then(function (supply){
             stableCoinStatic.methods.balanceOf(add).call().then(function (stabFund){
                 dao.methods.params('stabilizationFundPercent').call().then(function (percent){
-                    let coinsNeeded = supply*percent/100 - stabFund;
+                        let coinsNeeded = supply*percent/100 - stabFund;
                     if (coinsNeeded>0){
                         console.log("needed: "+localWeb3.utils.fromWei(coinsNeeded.toString()));
                         auction.methods.initCoinsBuyOutForStabilization(coinsNeeded.toString()).send({from:userAddress}).then(function (result) {
