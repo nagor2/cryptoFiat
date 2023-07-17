@@ -15,7 +15,7 @@ import "./weth.sol";
         uint256 timeOpened;
         uint256 lastTimeUpdated;
         uint256 feeRate;
-        uint256 markedOnLiquidation;
+        uint256 markedOnLiquidation; //TODO: uint?
         bool onLiquidation;
         bool liquidated;
         uint256 liquidationAuctionID;
@@ -156,8 +156,7 @@ contract CDP {
         Position storage p = positions[posID];
         require (p.markedOnLiquidation>0 && block.timestamp - p.markedOnLiquidation > dao.params('marginCallTimeLimit'), "Position is not marked to be opened or owner still has time");
         require(!p.onLiquidation, "Position is already on liquidation");
-        uint256 maxCoinsForPos = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
-        if (maxCoinsForPos < p.coinsMinted) {
+        if (getMaxStableCoinsToMintForPos(posID) < p.coinsMinted) {
             p.onLiquidation = true;
             uint256 currentAllowance = weth.allowance(dao.addresses('cdp'), dao.addresses('auction'));
             require(weth.approve(dao.addresses('auction'), currentAllowance+p.wethAmountLocked), "could not approve weth for some reason");
@@ -173,6 +172,7 @@ contract CDP {
     function startCoinsBuyOut(uint256 posID) public{
         Position storage p = positions[posID];
         p.liquidationAuctionID = auction.initCoinsBuyOut(posID);
+        p.wethAmountLocked = 0;
     }
 
     function finishMarginCall(uint256 posID) public {
@@ -234,6 +234,7 @@ contract CDP {
 
         maxCoinsToMint = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
         require(maxCoinsToMint>0 && maxCoinsToMint >= newStableCoinsAmount, 'not enough collateral to mint amount');
+        //TODO: убрать require
 
         if (newStableCoinsAmount > p.coinsMinted) {
             uint256 difference = newStableCoinsAmount - p.coinsMinted;

@@ -10952,12 +10952,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x456132866cd4D36381a52001e4C654Ea187F7629",
-      "transactionHash": "0x75ab2773bf66f27f12c969827cce3fff79f6cab3c8533a9665c8ab14b13e80c0"
+      "address": "0x52257314c39c956A5C067f02C904861ABb0cf742",
+      "transactionHash": "0x23e24707c215862b47d4c593a3e11c02eb867342f9e8cd8595eae8a1cc70556d"
     }
   },
   "schemaVersion": "3.4.5",
-  "updatedAt": "2023-06-26T11:35:20.592Z",
+  "updatedAt": "2023-06-30T04:10:41.857Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

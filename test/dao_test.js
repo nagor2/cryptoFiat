@@ -82,7 +82,7 @@ contract('DAO', (accounts) => {
     });
 
     it('should not be able to finalize voting', async () => {
-        let tx = await dao.claimToFinalizeVoting(1);
+        let tx = await dao.claimToFinalizeCurrentVoting();
 
         truffleAssert.eventNotEmitted(tx, 'VotingFailed', async (ev) => {
             assert.equal(ev.id, 1, "wrong id");
@@ -93,13 +93,13 @@ contract('DAO', (accounts) => {
         await time.increase(time.duration.days(2));
 
         await truffleAssert.fails(
-            dao.vote(1, true,{from: ruleHolder}),
+            dao.vote(true,{from: ruleHolder}),
             truffleAssert.ErrorType.REVERT,
             "Voting is already inactive");
     });
 
     it('should be able to finalize voting', async () => {
-        let tx = await dao.claimToFinalizeVoting(1);
+        let tx = await dao.claimToFinalizeCurrentVoting();
 
         truffleAssert.eventEmitted(tx, 'VotingFailed', async (ev) => {
             assert.equal(ev.id, 1, "wrong id");
@@ -162,17 +162,17 @@ contract('DAO', (accounts) => {
         await dao.poolTokens({from: ruleHolder});
 
         await dao.addVoting(1, "some string", 10, accounts[1], false,{from: ruleHolder});
-        await dao.vote(2, false,{from: ruleHolder});
-        await dao.vote(2, true,{from: voter});
+        await dao.vote(false,{from: ruleHolder});
+        await dao.vote(true,{from: voter});
 
-        tx = await dao.claimToFinalizeVoting(2);
+        tx = await dao.claimToFinalizeCurrentVoting();
         await truffleAssert.eventNotEmitted(tx, 'VotingSucceed');
 
         await time.increase(time.duration.days(1));
 
         let valueBefore = await dao.params("some string");
 
-        let tx2 = await dao.claimToFinalizeVoting(2);
+        let tx2 = await dao.claimToFinalizeCurrentVoting();
 
         assert.equal(valueBefore, 0, "wrong valueBefore");
 
@@ -207,12 +207,12 @@ contract('DAO', (accounts) => {
         });
 */
         await dao.addVoting(2, "some address", 0, accounts[1], false,{from: ruleHolder});
-        await dao.vote(3, true,{from: ruleHolder});
+        await dao.vote(true,{from: ruleHolder});
 
         let valueBefore = await dao.addresses("some address");
         assert.equal(valueBefore, 0, "wrong valueBefore");
 
-        tx = await dao.claimToFinalizeVoting(3);
+        tx = await dao.claimToFinalizeCurrentVoting();
 
         await truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
             assert.equal(ev.id, 3, "wrong id");
@@ -231,12 +231,12 @@ contract('DAO', (accounts) => {
 
         let votingId = 4; // incremented id
 
-        await dao.vote(votingId, true,{from: ruleHolder});
+        await dao.vote(true,{from: ruleHolder});
 
         let valueBefore = await dao.authorized(addressToAuthorize);
         assert.equal(valueBefore, false, "wrong valueBefore");
 
-        let tx = await dao.claimToFinalizeVoting(votingId);
+        let tx = await dao.claimToFinalizeCurrentVoting();
 
         truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
             assert.equal(ev.id, votingId, "wrong id");
@@ -254,12 +254,12 @@ contract('DAO', (accounts) => {
 
         let votingId = 5; // incremented id
 
-        await dao.vote(votingId, true,{from: ruleHolder});
+        await dao.vote(true,{from: ruleHolder});
 
         let valueBefore = await dao.authorized(addressToAuthorize);
         assert.equal(valueBefore, true, "wrong valueBefore");
 
-        let tx = await dao.claimToFinalizeVoting(votingId);
+        let tx = await dao.claimToFinalizeCurrentVoting();
 
         truffleAssert.eventEmitted(tx, 'VotingSucceed', async (ev) => {
             assert.equal(ev.id, votingId, "wrong id");

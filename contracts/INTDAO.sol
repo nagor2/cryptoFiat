@@ -116,50 +116,50 @@ contract INTDAO {
         return true;
     }
 
-    function vote(uint256 votingId, bool _vote) public{
+    function vote(bool _vote) public{
         require(activeVoting, "No active voting found");
-        require(votings[votingId].startTime + params['votingDuration'] >= block.timestamp, "Voting is already inactive");
+        require(votings[votingID].startTime + params['votingDuration'] >= block.timestamp, "Voting is already inactive");
         require(pooled[msg.sender]>0, "You dont have pooled tokens to vote");
 
         if (_vote) {
-            uint _votesToAdd = pooled[msg.sender] - votes[votingId][msg.sender];
-            votes[votingId][msg.sender] = pooled[msg.sender];
-            votings[votingId].totalPositive += _votesToAdd;
+            uint _votesToAdd = pooled[msg.sender] - votes[votingID][msg.sender];
+            votes[votingID][msg.sender] = pooled[msg.sender];
+            votings[votingID].totalPositive += _votesToAdd;
         }
         else {
-            if (votes[votingId][msg.sender] > 0){
-                votings[votingID].totalPositive -= votes[votingId][msg.sender];
-                votes[votingId][msg.sender] = 0;
+            if (votes[votingID][msg.sender] > 0){
+                votings[votingID].totalPositive -= votes[votingID][msg.sender];
+                votes[votingID][msg.sender] = 0;
             }
         }
     }
 
-    function claimToFinalizeVoting(uint votingId) public {
-        if (votings[votingId].totalPositive >= ruleToken.totalSupply() * params['absoluteMajority'] / 100) {
-            finalizeVoting(votingId);
+    function claimToFinalizeCurrentVoting() public {
+        if (votings[votingID].totalPositive >= ruleToken.totalSupply() * params['absoluteMajority'] / 100) {
+            finalizeCurrentVoting();
             return;
         }
-        else if (votings[votingId].startTime + params['votingDuration'] <= block.timestamp) {
-            if (totalPooled >= params['quorum'] * ruleToken.totalSupply() / 100 && votings[votingId].totalPositive > (totalPooled - votings[votingId].totalPositive)) {
-                finalizeVoting(votingId);
+        else if (votings[votingID].startTime + params['votingDuration'] <= block.timestamp) {
+            if (totalPooled >= params['quorum'] * ruleToken.totalSupply() / 100 && votings[votingID].totalPositive > (totalPooled - votings[votingID].totalPositive)) {
+                finalizeCurrentVoting();
                 return;
             }
-            emit VotingFailed(votingId);
+            emit VotingFailed(votingID);
             activeVoting = false;
             return;
         }
     }
 
-    function finalizeVoting(uint votingId) internal {
-        if (votings[votingId].voteingType == 1)
-            params[votings[votingId].name] = votings[votingId].value;
-        if (votings[votingId].voteingType == 2)
-            addresses[votings[votingId].name] = votings[votingId].addr;
-        if (votings[votingId].voteingType == 3)
-            paused[votings[votingId].addr] = votings[votingId].decision;
-        if (votings[votingId].voteingType == 4)
-            authorized[votings[votingId].addr] = votings[votingId].decision;
-        emit VotingSucceed(votingId);
+    function finalizeCurrentVoting() internal {
+        if (votings[votingID].voteingType == 1)
+            params[votings[votingID].name] = votings[votingID].value;
+        if (votings[votingID].voteingType == 2)
+            addresses[votings[votingID].name] = votings[votingID].addr;
+        if (votings[votingID].voteingType == 3)
+            paused[votings[votingID].addr] = votings[votingID].decision;
+        if (votings[votingID].voteingType == 4)
+            authorized[votings[votingID].addr] = votings[votingID].decision;
+        emit VotingSucceed(votingID);
         activeVoting = false;
     }
 

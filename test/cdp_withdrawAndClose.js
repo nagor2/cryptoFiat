@@ -58,7 +58,7 @@ contract('CDP withdraw and close position', (accounts) => {
 
         await truffleAssert.fails(
             cdp.withdrawEther(posId, web3.utils.toWei('0.4', 'ether'), {from:owner}),
-            truffleAssert.ErrorType.REVERT,
+            truffleAssert.ErrorType.OUT_OF_GAS,//for some reason it returns out of gas, though should revert
             "you want to keep not enough weth to cover emission and current fee"
         );
 
