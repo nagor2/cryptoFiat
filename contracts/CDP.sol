@@ -104,7 +104,7 @@ contract CDP {
         return getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
     }
 
-    function claimInterest(uint256 amount, address beneficiary) public{
+    function claimInterest(uint256 amount, address beneficiary) external{
         require(dao.authorized(msg.sender), "only authorized address may do this");
         if (coin.balanceOf(address(this))>amount)
             coin.transfer(beneficiary, amount);
@@ -115,12 +115,12 @@ contract CDP {
         }
     }
 
-    function claimEmission(uint256 amount, address beneficiary) public{
+    function claimEmission(uint256 amount, address beneficiary) external{
         require(dao.authorized(msg.sender), "only authorized address may do this");
         coin.mint(beneficiary,amount);
     }
 
-    function closeCDP(uint posID) public{
+    function closeCDP(uint posID) external{
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         uint256 overallDebt = totalCurrentFee(posID)+p.coinsMinted;
@@ -133,7 +133,7 @@ contract CDP {
         p.liquidated = true;
     }
 
-    function transferFee(uint posID) public returns (bool success){
+    function transferFee(uint posID) external returns (bool success){
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         uint256 fee = p.feeGeneratedRecorded + generatedFeeUnrecorded(posID);
@@ -143,7 +143,7 @@ contract CDP {
         return true;
     }
 
-    function allowSurplusToAuction() public returns (bool success) {
+    function allowSurplusToAuction() external returns (bool success) {
         uint256 stabilizationFundAmount = dao.params('stabilizationFundPercent')*coin.totalSupply()/100;
         require (coin.balanceOf(address(this)) >= stabilizationFundAmount, "insufficient funds on CDP contract");
         uint256 surplus = coin.balanceOf(address(this)) - stabilizationFundAmount;
@@ -152,7 +152,7 @@ contract CDP {
         return true;
     }
 
-    function claimMarginCall(uint posID) public returns (bool success) {
+    function claimMarginCall(uint posID) external returns (bool success) {
         Position storage p = positions[posID];
         require (p.markedOnLiquidation>0 && block.timestamp - p.markedOnLiquidation > dao.params('marginCallTimeLimit'), "Position is not marked to be opened or owner still has time");
         require(!p.onLiquidation, "Position is already on liquidation");
@@ -169,13 +169,13 @@ contract CDP {
         }
     }
 
-    function startCoinsBuyOut(uint256 posID) public{
+    function startCoinsBuyOut(uint256 posID) external{
         Position storage p = positions[posID];
         p.liquidationAuctionID = auction.initCoinsBuyOut(posID);
         p.wethAmountLocked = 0;
     }
 
-    function finishMarginCall(uint256 posID) public {
+    function finishMarginCall(uint256 posID) external {
         Position storage p = positions[posID];
         require(auction.claimToFinalizeAuction(p.liquidationAuctionID), "could not finalize auction");
         uint256 bidAmount = auction.getBestBidAmount(p.liquidationAuctionID);
@@ -196,7 +196,7 @@ contract CDP {
         }
     }
 
-    function markToLiquidate(uint posID) public returns (bool success){
+    function markToLiquidate(uint posID) external returns (bool success){
         Position storage p = positions[posID];
         require (p.markedOnLiquidation==0 && !p.onLiquidation, "This position is on liquidation or already marked");
         uint256 maxCoinsForPos = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
@@ -208,7 +208,7 @@ contract CDP {
         return false;
     }
 
-    function eraseMarkToLiquidate(uint posID) public{
+    function eraseMarkToLiquidate(uint posID) external{
         Position storage p = positions[posID];
         require (p.markedOnLiquidation>0 && !p.onLiquidation && !p.liquidated, "This position is not marked or locked/liquidated");
         uint256 maxCoinsForPos = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
@@ -217,11 +217,10 @@ contract CDP {
         }
     }
 
-    function updateCDP(uint posID, uint newStableCoinsAmount) public payable returns (bool success){
+    function updateCDP(uint posID, uint newStableCoinsAmount) external payable returns (bool success){
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         require(p.owner == msg.sender, 'Only owner may update the position');
-        uint256 maxCoinsToMint;
 
         p.feeGeneratedRecorded += generatedFeeUnrecorded(posID);
         p.lastTimeUpdated = block.timestamp;
@@ -232,9 +231,7 @@ contract CDP {
             require(successTransfer, 'Could not pass funds to weth contract for some reason');
         }
 
-        maxCoinsToMint = getMaxStableCoinsToMint(p.wethAmountLocked) - totalCurrentFee(posID);
-        require(maxCoinsToMint>0 && maxCoinsToMint >= newStableCoinsAmount, 'not enough collateral to mint amount');
-        //TODO: убрать require
+        require(getMaxStableCoinsToMintForPos(posID) >= newStableCoinsAmount, 'not enough collateral to mint amount');
 
         if (newStableCoinsAmount > p.coinsMinted) {
             uint256 difference = newStableCoinsAmount - p.coinsMinted;
@@ -254,7 +251,7 @@ contract CDP {
         }
     }
 
-    function withdrawEther (uint256 posID, uint256 etherToWithdraw) public{
+    function withdrawEther (uint256 posID, uint256 etherToWithdraw) external{
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         require(p.owner == msg.sender, 'Only owner may update the position');
@@ -277,17 +274,17 @@ contract CDP {
         return p.onLiquidation;
     }
 
-    function burnRule() public{
+    function burnRule() external{
         rule.burn(address(this), rule.balanceOf(address(this)));
     }
 
-    function mintRule(address to, uint256 amount) public returns (bool success){
+    function mintRule(address to, uint256 amount) external returns (bool success){
         require (msg.sender == dao.addresses('auction'), "Only auction is allowed to claim mint");
         rule.mint(to, amount);
         return true;
     }
 
-    receive() external payable {
+    function withdraw() external {
         dao.addresses('oracle').transfer(address(this).balance);
     }
 }

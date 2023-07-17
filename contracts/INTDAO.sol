@@ -70,7 +70,7 @@ contract INTDAO {
     }
 
     function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses
-        if (addresses[addressName] == address (0x0)) {
+        require (addresses[addressName] == address (0x0), "address was already set");
             addresses[addressName] = addr;
             paused[addr] = false;
             if (keccak256(bytes(addressName)) == keccak256(bytes("deposit")))
@@ -79,17 +79,20 @@ contract INTDAO {
                 authorized[addr] = true;
             if (keccak256(bytes(addressName)) == keccak256(bytes("platform")))
                 authorized[addr] = true;
-        }
     }
 
     function addVoting(uint256 votingType, string memory name, uint value, address payable addr, bool _decision) public {
         require(!activeVoting, "There is an active voting");
         require(votingType>0&&votingType<5, "Incorrect voteing type");
-        require (pooled[msg.sender]>=ruleToken.totalSupply()*params['minRuleTokensToInitVotingPercent']/100, "Too little tokens to init voting");
+        require (isEnoughTokensPooledToInitVoting(msg.sender), "Too little tokens to init voting");
         votingID++;
         votings[votingID] = Voting(0, votingType, name, value, addr, block.timestamp, _decision);
-        emit NewVoting(votingID, name);
         activeVoting = true;
+        emit NewVoting(votingID, name);
+    }
+
+    function isEnoughTokensPooledToInitVoting(address initiator) internal view returns (bool enough){
+        return pooled[initiator]>=ruleToken.totalSupply()*params['minRuleTokensToInitVotingPercent']/100;
     }
 
     function renewContracts() public {
@@ -163,7 +166,7 @@ contract INTDAO {
         activeVoting = false;
     }
 
-    receive() external payable {
+    function withdraw() public {
         addresses['oracle'].transfer(address(this).balance);
     }
 }

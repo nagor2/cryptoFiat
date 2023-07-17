@@ -31,10 +31,10 @@ contract('DAO', (accounts) => {
     });
 
     it('should set address only once', async () => {
-        let prevAddr = await dao.addresses('dao');
-        await dao.setAddressOnce('dao', accounts[2]);
-        let afterChange = await dao.addresses('dao');
-        assert.equal(prevAddr, afterChange, "should not change address if it is non-zero");
+        await truffleAssert.fails(
+            dao.setAddressOnce('dao', accounts[2]),
+            truffleAssert.ErrorType.REVERT,
+            "address was already set");
     });
 
     it('should put rule tokens on balance', async () => {
