@@ -166,7 +166,9 @@ contract INTDAO {
         activeVoting = false;
     }
 
+    receive() external payable {}
+
     function withdraw() public {
-        addresses['oracle'].transfer(address(this).balance);
+        //payable(addresses['oracle']).transfer(address(this).balance);
     }
 }

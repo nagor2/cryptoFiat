@@ -12,22 +12,9 @@
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Auction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Auction.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Commodity.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Commodity.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/DepositContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/DepositContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ERC20.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ERC20.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/InflationFund.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/InflationFund.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Platform.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Platform.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Rule.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/WETH9.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/WETH9.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/cartContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/cartContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/tokenTemplate.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/tokenTemplate.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/exchangeRate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/exchangeRate_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,10 +76,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo\contracts" />
@@ -119,7 +109,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -283,6 +273,7 @@
       <workItem from="1688348755996" duration="49000" />
       <workItem from="1689159495562" duration="7697000" />
       <workItem from="1689243202196" duration="732000" />
+      <workItem from="1689642046624" duration="5548000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -365,7 +356,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">

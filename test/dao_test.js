@@ -1,17 +1,21 @@
 var INTDAO = artifacts.require("./INTDAO.sol");
 var Rule = artifacts.require("./Rule.sol");
+var Oracle = artifacts.require("./exchangeRateContract.sol");
+
 const truffleAssert = require('truffle-assertions');
 const { time } = require('@openzeppelin/test-helpers');
 
 contract('DAO', (accounts) => {
 
     let dao;
+    let oracle;
     let ruleHolder;
     let ruleToken;
 
 
     before(async () => {
         dao = await INTDAO.deployed();
+        oracle = await Oracle.deployed();
         ruleHolder = accounts[7];
         ruleToken = await Rule.deployed(dao.address);
         await dao.renewContracts();
@@ -23,6 +27,15 @@ contract('DAO', (accounts) => {
         assert.notEqual(address, undefined);
         assert.notEqual(address, null);
         assert.notEqual(address, 0x0);
+    });
+
+    it('should transfer ether to oracle contract', async()=>{
+        let balanceBefore = await web3.eth.getBalance(oracle.address);
+        assert.equal(balanceBefore,web3.utils.toWei('0.1', "ether"), 'balance should be 0.1')
+        await dao.send(web3.utils.toWei("1", "ether"),{from: accounts[0]});
+        await dao.withdraw();
+        let balanceAfter = await web3.eth.getBalance(oracle.address);
+        assert.equal(balanceAfter,web3.utils.toWei('1.1', "ether"), 'balance should be 1.1 ether')
     });
 
     it('addresses filled successfully', async () => {
@@ -105,7 +118,6 @@ contract('DAO', (accounts) => {
             assert.equal(ev.id, 1, "wrong id");
         });
     });
-
 
     it('should be able to get back pooled tokens', async () => {
         let totalPooledBefore = await dao.totalPooled();
@@ -269,6 +281,7 @@ contract('DAO', (accounts) => {
 
         assert.equal(valueAfter, false, "wrong valueAfter");
     });
+
 });
 
 //TODO: Написать тест на паузу контракта (зачем нужен этот функционал, не помню, но пусть будет)
