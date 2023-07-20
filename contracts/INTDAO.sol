@@ -169,6 +169,6 @@ contract INTDAO {
     receive() external payable {}
 
     function withdraw() public {
-        //payable(addresses['oracle']).transfer(address(this).balance);
+        addresses['oracle'].transfer(address(this).balance);
     }
 }

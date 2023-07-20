@@ -284,6 +284,8 @@ contract CDP {
         return true;
     }
 
+    receive() external payable {}
+
     function withdraw() external {
         dao.addresses('oracle').transfer(address(this).balance);
     }

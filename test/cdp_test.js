@@ -101,6 +101,19 @@ contract('CDP', (accounts) => {
             "Only owner may update the position"
         );
     });
+
+    it('should transfer ether to oracle contract', async()=>{
+        let balanceBefore = await web3.eth.getBalance(oracle.address);
+        assert.equal(balanceBefore,web3.utils.toWei('0.1', "ether"), 'balance should be 0.1')
+        await cdp.send(web3.utils.toWei("1", "ether"),{from: accounts[0]});
+        await cdp.withdraw();
+        let balanceAfter = await web3.eth.getBalance(oracle.address);
+        assert.equal(balanceAfter,web3.utils.toWei('1.1', "ether"), 'balance should be 1.1 ether')
+    });
+
+
+
+
 });
 
 //TODO:CloseCDP, checkTransferFee

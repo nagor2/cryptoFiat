@@ -75,7 +75,9 @@ contract stableCoin is ERC20{
         return true;
     }
 
-    receive() external payable {
+    receive() external payable {}
+
+    function withdraw() external {
         dao.addresses('oracle').transfer(address(this).balance);
     }
 

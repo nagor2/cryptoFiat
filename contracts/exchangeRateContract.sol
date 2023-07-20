@@ -137,4 +137,6 @@ contract exchangeRateContract {
     function getDecimals(string memory symbol) public view returns (uint256) {
         return dictionary[symbol].decimals;
     }
+
+    receive() external payable {}
 }
