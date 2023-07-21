@@ -15,7 +15,7 @@ import "./weth.sol";
         uint256 timeOpened;
         uint256 lastTimeUpdated;
         uint256 feeRate;
-        uint256 markedOnLiquidation; //TODO: uint?
+        uint256 markedOnLiquidation;
         bool onLiquidation;
         bool liquidated;
         uint256 liquidationAuctionID;
@@ -54,7 +54,7 @@ contract CDP {
         weth = ERC20(dao.addresses('weth'));
     }
 
-    function openCDP (uint StableCoinsToMint) external payable returns (uint256 posID){
+    function openCDP(uint StableCoinsToMint) external payable returns (uint256 posID){
         uint256 coinsToMint = getMaxStableCoinsToMint(msg.value);
 
         if (StableCoinsToMint <= coinsToMint)

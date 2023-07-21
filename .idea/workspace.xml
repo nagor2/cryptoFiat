@@ -11,14 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
+      <change afterPath="$PROJECT_DIR$/doc/Specification.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/~$TODO.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/~$ecification.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/~WRL0866.tmp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/stableCoin_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/stableCoin_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -274,7 +274,9 @@
       <workItem from="1688348755996" duration="49000" />
       <workItem from="1689159495562" duration="7697000" />
       <workItem from="1689243202196" duration="732000" />
-      <workItem from="1689820583159" duration="4332000" />
+      <workItem from="1689820583159" duration="8519000" />
+      <workItem from="1689906662243" duration="2626000" />
+      <workItem from="1689930653472" duration="10050000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -403,5 +405,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1689820592879" />
+    <state x="733" y="462" width="587" height="530" key="find.popup" timestamp="1689937464349">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="733" y="462" width="587" height="530" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1689937464349" />
   </component>
 </project>

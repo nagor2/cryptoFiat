@@ -47,7 +47,6 @@ contract INTDAO {
         params['votingDuration'] = 1 days;
         params['auctionTurnDuration'] = 15 minutes;
         params['minAuctionPriceMove'] = 5;
-        params['marginCallFee'] = 13;
         params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
         params['marginCallTimeLimit'] = 1 days;
         params['annualInflationPercent'] = 1;
@@ -55,7 +54,6 @@ contract INTDAO {
         params['maxCoinsForStabilization'] = 50*10**18;
         params['maxRuleEmissionPercent'] = 1;
         params['highVolatilityEventBarrierPercent'] = 5;
-
 
         addresses['weth'] = payable(WETH);
         addresses['cdp'] = payable(0x0);
@@ -162,8 +160,8 @@ contract INTDAO {
             paused[votings[votingID].addr] = votings[votingID].decision;
         if (votings[votingID].voteingType == 4)
             authorized[votings[votingID].addr] = votings[votingID].decision;
-        emit VotingSucceed(votingID);
         activeVoting = false;
+        emit VotingSucceed(votingID);
     }
 
     receive() external payable {}
