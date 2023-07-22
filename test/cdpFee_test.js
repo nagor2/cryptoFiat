@@ -1,7 +1,7 @@
 const truffleAssert = require("truffle-assertions");
 const { time } = require('@openzeppelin/test-helpers');
 
-contract('CDP transfer fee', (accounts) => {
+contract('CDP transfer interest fee', (accounts) => {
 
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
@@ -47,14 +47,14 @@ it("should transfer fee to the auction to create buyOut", async () => {
     await cdp.updateCDP(posId, web3.utils.toWei(String(coinsMintAmount), 'ether'), {from: owner});
 
     await truffleAssert.fails(
-        cdp.transferFee(posId),
+        cdp.transferInterest(posId),
         truffleAssert.ErrorType.REVERT,
         "Was not able to transfer fee. Insufficient balance or allowance. Try to allow spending first"
     );
 
     await stableCoin.transfer(owner, web3.utils.toWei('50', 'ether'), {from:recipient});
     await stableCoin.approve(cdp.address, web3.utils.toWei('100', 'ether'), {from:owner})
-    await cdp.transferFee(posId);
+    await cdp.transferInterest(posId);
     const feeAfter = await cdp.totalCurrentFee(posId);
 
     let cdpBalance = await stableCoin.balanceOf(cdp.address);

@@ -55,9 +55,9 @@ contract('Token template', (accounts) => {
     });
 
     it("should buyTokens", async () => {
-        await cdp.openCDP(web3.utils.toWei('10000', 'ether'), {
+        await cdp.openCDP(web3.utils.toWei('10000'), {
             from: buyer,
-            value: web3.utils.toWei('5', 'ether')
+            value: web3.utils.toWei('5')
         });
 
         await coin.approve(token.address, web3.utils.toWei('1000'),{from:buyer});

@@ -4,16 +4,16 @@ import "./Rule.sol";
 
 contract INTDAO {
     Rule ruleToken;
-    mapping (uint => mapping(address => uint)) votes;
+    mapping (uint256 => mapping(address => uint256)) votes;
 
-    mapping (uint=>Voting) public votings;
+    mapping (uint256=>Voting) public votings;
     uint256 public votingID;
 
     struct Voting {
-        uint totalPositive;
+        uint256 totalPositive;
         uint256 voteingType;
         string name;
-        uint value;
+        uint256 value;
         address payable addr;
         uint256 startTime;
         bool decision;
@@ -21,12 +21,12 @@ contract INTDAO {
 
     bool public activeVoting;
 
-    mapping (string => uint) public params;
+    mapping (string => uint256) public params;
     mapping (string => address payable) public addresses;
     mapping (address => bool) public paused;
     mapping (address => bool) public authorized;
 
-    mapping (address => uint) public pooled;
+    mapping (address => uint256) public pooled;
     uint256 public totalPooled;
 
     event NewVoting (uint256 id, string name);
@@ -54,17 +54,10 @@ contract INTDAO {
         params['maxCoinsForStabilization'] = 50*10**18;
         params['maxRuleEmissionPercent'] = 1;
         params['highVolatilityEventBarrierPercent'] = 5;
+        params['minCoinsToMint'] = 1;
 
         addresses['weth'] = payable(WETH);
-        addresses['cdp'] = payable(0x0);
-        addresses['auction'] = payable(0x0);
-        addresses['stableCoin'] = payable(0x0);
         addresses['dao'] = payable(address(this));
-        addresses['oracle'] = payable(0x0);
-        addresses['rule'] = payable(0x0);
-        addresses['deposit'] = payable(0x0);
-        addresses['inflationFund'] = payable(0x0);
-        addresses['inflationSpender'] = payable(0x0);
     }
 
     function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses
@@ -136,6 +129,7 @@ contract INTDAO {
     }
 
     function claimToFinalizeCurrentVoting() public {
+        require (activeVoting, "There is no active voting");
         if (votings[votingID].totalPositive >= ruleToken.totalSupply() * params['absoluteMajority'] / 100) {
             finalizeCurrentVoting();
             return;
@@ -145,8 +139,8 @@ contract INTDAO {
                 finalizeCurrentVoting();
                 return;
             }
-            emit VotingFailed(votingID);
             activeVoting = false;
+            emit VotingFailed(votingID);
             return;
         }
     }

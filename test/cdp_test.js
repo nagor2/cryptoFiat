@@ -47,11 +47,11 @@ contract('CDP', (accounts) => {
             assert.equal(position.wethAmountLocked, web3.utils.toWei('1', 'ether'), "ethAmountLocked should be 1 ether");
             const block = await web3.eth.getBlock("latest");
             assert.equal(position.timeOpened, block.timestamp, "time of the position should be set to now");
-            assert.equal(position.feeGeneratedRecorded, 0, "fee generated should be set to 0");
+            assert.equal(position.interestAmountRecorded, 0, "fee generated should be set to 0");
 
             const rate = await dao.params('interestRate');
 
-            expect(rate).to.eql(position.feeRate, "fee rate should be set to dao.params value"); //compare 2 BN
+            expect(rate).to.eql(position.interestRate, "fee rate should be set to dao.params value"); //compare 2 BN
             assert.equal(position.coinsMinted.toString(), 2170 * (10 ** 18).toString(), "should mint 2170*10^18 stableCoins");
         });
     });
@@ -77,7 +77,7 @@ contract('CDP', (accounts) => {
 
     it("time rewind", async () => {
         await time.increase(time.duration.years(1));
-        const fee = await cdp.generatedFeeUnrecorded(0);
+        const fee = await cdp.interestAmountUnrecorded(0);
         assert.equal(parseFloat(fee/10**18).toFixed(4), parseFloat(195.3).toFixed(4), "should increase generated fee. It may sometimes fail due to time rewind (not precise)");
     });
 

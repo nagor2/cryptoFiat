@@ -43,19 +43,18 @@ contract('CDP margin call', (accounts) => {
     });
 
     it("should not mark pos on liquidation if eth value is still enough and mark if not", async () => {
-        let owner = accounts[5];
         await oracle.updateSinglePrice(0, 3000000000, {from: author});
-        let markRes = await cdp.markToLiquidate.call(posId);
-        assert.isFalse(markRes,"position should not be marked");
-        await oracle.updateSinglePrice(0, 1428000000, {from: author});
         let markTx = await cdp.markToLiquidate(posId);
+        truffleAssert.eventNotEmitted(markTx,'markedOnLiquidation');
+        await oracle.updateSinglePrice(0, 1428000000, {from: author});
+        markTx = await cdp.markToLiquidate(posId);
         truffleAssert.eventEmitted(markTx, 'markedOnLiquidation', async (ev) => {
             assert.equal(ev.posID, posId, 'positionID is wrong');
             let block = await web3.eth.getBlock("latest");
             assert.equal(ev.timestamp, block.timestamp, 'time is wrong');
             let position = await cdp.positions(posId);
             block = await web3.eth.getBlock("latest");
-            assert.equal(position.markedOnLiquidation.toString(), block.timestamp, "time is wrong 2")
+            assert.equal(position.markedOnLiquidationTimestamp.toString(), block.timestamp, "time is wrong 2")
         });
         await oracle.updateSinglePrice(0, 3100000000, {from: author});
     });

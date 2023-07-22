@@ -1,3 +1,4 @@
+const truffleAssert = require("truffle-assertions");
 var INTDAO = artifacts.require("./INTDAO.sol");
 var ExRate = artifacts.require("./exchangeRateContract.sol");
 
@@ -44,6 +45,13 @@ contract('Exchange Rate', (accounts) => {
         assert.equal (price, 102, "wrong price");
         price = await exRate.getPrice("eth");
         assert.equal (price, 101, "wrong price");
+    });
+
+    it("should emit highVolatilityEventBarrierPercent", async () => {
+        let tx = await exRate.updateSeveralPrices([2,0,1], [100,101,10], {from: author});
+        truffleAssert.eventEmitted(tx, 'highVolatility', async (ev) => {
+            assert.equal(ev.id, 1, "wrong id");
+        });
     });
 
     //TODO: check this prices (to update request)

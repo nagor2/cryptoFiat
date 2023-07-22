@@ -39,7 +39,7 @@ contract('Auction', (accounts) => {
         await time.increase(time.duration.years(1));//1 year in seconds. It may sometimes fail
         let feeToAllow = await cdp.totalCurrentFee(0);
         await stableCoin.approve(cdp.address, web3.utils.toWei(feeToAllow+0.0001, 'ether'), {from:accounts[2]});
-        await cdp.transferFee(0);
+        await cdp.transferInterest(0, {from: accounts[2]});
         let cdpBalance = await stableCoin.balanceOf(cdp.address);
         assert.equal(parseFloat(cdpBalance/10**18).toFixed(4), parseFloat(feeToAllow/10**18).toFixed(4), "Wrong balance");
         await cdp.allowSurplusToAuction();
