@@ -189,7 +189,7 @@ contract CDP {
 
         if (bidAmount>=p.coinsMinted){
             uint256 overallDebt = p.coinsMinted + totalCurrentFee(posID) + p.coinsMinted * dao.params('liquidationFee') / 100;
-            if (bidAmount > overallDebt)
+            if (bidAmount >= overallDebt)
                 coin.transfer(p.owner, bidAmount - overallDebt);
             coin.burn(address(this), p.coinsMinted);
             p.liquidated = true;

@@ -45,7 +45,7 @@ contract Auction {
     event newBid(uint256 auctionID, uint256 bidId, uint256 bidAmount, address owner);
     event bidCanceled(uint256 bidId);
 
-    event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 liquidateColleteral);
+    event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 colleteral);
 
     constructor(address payable _INTDAOaddress){
         dao = INTDAO(_INTDAOaddress);
@@ -137,7 +137,7 @@ contract Auction {
         a.bestBidId = 0;
         a.isMarginCall = true;
 
-        emit liquidateCollateral(auctionID, posID, 0);
+        emit liquidateCollateral(auctionID, posID, collateral);
         return auctionID;
     }
 
@@ -230,8 +230,8 @@ contract Auction {
         ERC20 lotToken = ERC20(address(a.lotToken));
         ERC20 paymentToken = ERC20(address(a.paymentToken));
         if (a.lotToken == dao.addresses('stableCoin') && a.paymentToken == dao.addresses('rule')) {
-            require(lotToken.transfer(bestBid.owner, a.lotAmount));
-            require(paymentToken.transfer(dao.addresses('cdp'), bestBid.bidAmount));
+            require(lotToken.transfer(bestBid.owner, a.lotAmount), "lotToken transfer failed for some reason");
+            require(paymentToken.transfer(dao.addresses('cdp'), bestBid.bidAmount), "paymentToken transfer failed for some reason");
             ruleBuyOut = false;
             emit buyOutFinished(auctionId, a.lotAmount, bestBid.bidAmount);
         }
