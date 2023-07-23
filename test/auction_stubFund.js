@@ -42,14 +42,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         let paymentAmount = web3.utils.toWei((neededFund - stubFund).toString());
 
-        await truffleAssert.fails(
-            auction.initCoinsBuyOutForStabilization(paymentAmount, {from:bidder2}),
-            truffleAssert.ErrorType.REVERT,
-            "too many coins for one auction");
-
         paymentAmount = await dao.params('maxCoinsForStabilization');
-
-        //console.log(web3.utils.fromWei(paymentAmount));
 
         let auctionTx = await auction.initCoinsBuyOutForStabilization(paymentAmount);
 

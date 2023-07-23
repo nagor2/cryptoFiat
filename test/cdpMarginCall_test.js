@@ -59,3 +59,5 @@ contract('CDP margin call', (accounts) => {
         await oracle.updateSinglePrice(0, 3100000000, {from: author});
     });
 });
+
+//TODO: need to test full logic (finishMarginCall invoke several times!)

@@ -11,20 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
-      <change afterPath="$PROJECT_DIR$/doc/~$TODO.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/Specification.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Specification.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpFee_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/~$TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/~$TODO.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/auction_stubFund.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_stubFund.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cdpMarginCall_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpMarginCall_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/exchangeRate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/exchangeRate_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/tokenTemplate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/tokenTemplate_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,6 +83,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;B:/work/React/cryptofiat&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -288,7 +283,8 @@
       <workItem from="1689906662243" duration="2626000" />
       <workItem from="1689930653472" duration="10228000" />
       <workItem from="1689996198206" duration="9401000" />
-      <workItem from="1690005837086" duration="7581000" />
+      <workItem from="1690005837086" duration="7803000" />
+      <workItem from="1690071604591" duration="16352000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
