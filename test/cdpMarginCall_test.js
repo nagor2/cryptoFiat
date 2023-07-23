@@ -56,6 +56,54 @@ contract('CDP margin call', (accounts) => {
             block = await web3.eth.getBlock("latest");
             assert.equal(position.markedOnLiquidationTimestamp.toString(), block.timestamp, "time is wrong 2")
         });
+    });
+
+    it("should set position on liquidation and claim margin call", async () => {
+        const positionBefore = await cdp.positions(posId);
+        assert.isFalse (positionBefore.onLiquidation, "position should not be no liquidation");
+
+        await truffleAssert.fails(
+            cdp.claimMarginCall(posId),
+            truffleAssert.ErrorType.REVERT,
+            "Position is not marked on liquidation or owner still has time"
+        );
+
+        await time.increase(time.duration.days(1)+1);
+
+        let liquidationTx = await cdp.claimMarginCall(posId);
+
+        truffleAssert.eventEmitted(liquidationTx, 'OnLiquidation', async (ev) => {
+            assert.equal(ev.posID, posId, 'positionID is wrong');
+            let block = await web3.eth.getBlock("latest");
+            assert.equal(ev.timestamp, block.timestamp, 'time is wrong');
+        });
+    });
+
+    it("should init auction", async () => {
+        const positionBefore = await cdp.positions(posId);
+        assert.equal (positionBefore.liquidationAuctionID, 0, "there should be no liquidationAuctionID before");
+
+
+        await truffleAssert.fails(
+            auction.initCoinsBuyOut(posId, positionBefore.wethAmountLocked),
+            truffleAssert.ErrorType.REVERT,
+            "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract"
+        );
+
+        console.log ("liquidationAuctionID: "+positionBefore.liquidationAuctionID)
+        console.log ("liquidated: "+positionBefore.liquidated)
+        console.log ("onLiquidation: "+positionBefore.onLiquidation)
+
+        //check weth balance before and after
+        let liquidationTx = await cdp.startCoinsBuyOut(posId);
+
+        const positionAfter = await cdp.positions(posId);
+        assert.isTrue(positionAfter.liquidationAuctionID!=0, "there should be a liquidationAuctionID after");
+    });
+
+
+
+    it("should set quotes back to initial values auction", async () => {
         await oracle.updateSinglePrice(0, 3100000000, {from: author});
     });
 });

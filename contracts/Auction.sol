@@ -65,7 +65,7 @@ contract Auction {
         require (!ruleBuyOut, "Rule buyOut auction already exist");
         uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));
         require (coin.transferFrom(dao.addresses('cdp'), address(this), allowed), "Can not transfer surplus from CDP");
-        auctionID = auctionNum++;
+        auctionID = ++auctionNum;
         auctionEntity storage a = auctions[auctionID];
 
         a.initialized = true;
@@ -102,7 +102,7 @@ contract Auction {
         if (coinsAmountNeeded>dao.params("maxCoinsForStabilization"))
             coinsAmountNeeded = dao.params("maxCoinsForStabilization");
 
-        auctionID = auctionNum++;
+        auctionID = ++auctionNum;
         auctionEntity storage a = auctions[auctionID];
 
         a.paymentAmount = coinsAmountNeeded;
@@ -119,26 +119,25 @@ contract Auction {
         return auctionID;
     }
 
-    function initCoinsBuyOut(uint256 posID) external returns (uint256 auctionID){
-        require (msg.sender == address(cdp), "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract");
+    function initCoinsBuyOut(uint256 posID, uint256 collateral) external returns (uint256 auctionID){
+        require (msg.sender == dao.addresses('cdp'), "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract");
         ERC20 weth = ERC20(dao.addresses('weth'));
-        uint256 wethLocked = cdp.wethLocked(posID);
-        require(weth.transferFrom(dao.addresses('cdp'), address(this), wethLocked), "could not transfer weth for some reason");
+        require(weth.transferFrom(dao.addresses('cdp'), address(this), collateral), "could not transfer weth for some reason");
 
-        auctionID = auctionNum++;
+        auctionID = ++auctionNum;
         auctionEntity storage a = auctions[auctionID];
 
         a.initialized = true;
         a.finalized = false;
         a.lotToken = dao.addresses('weth');
-        a.lotAmount = wethLocked;
+        a.lotAmount = collateral;
         a.paymentToken = dao.addresses('stableCoin');
         a.lastTimeUpdated = block.timestamp;
         a.initTime = block.timestamp;
         a.bestBidId = 0;
         a.isMarginCall = true;
 
-        emit liquidateCollateral(auctionID, posID, wethLocked);
+        emit liquidateCollateral(auctionID, posID, 0);
         return auctionID;
     }
 
@@ -222,7 +221,7 @@ contract Auction {
     function claimToFinalizeAuction(uint256 auctionId) public returns (bool success){
         auctionEntity storage a = auctions[auctionId];
         if (a.isMarginCall)
-            require (msg.sender == address (cdp), "Only CDP contract may finish this auction. Please, use finishMarginCall method.");
+            require (msg.sender == dao.addresses('cdp'), "Only CDP contract may finish this auction. Please, use finishMarginCall method.");
 
         require(a.initialized && !a.finalized, "the auction is finished or non-existent");
         require(block.timestamp-a.lastTimeUpdated>=dao.params('auctionTurnDuration'), "it is too early to finalize, wait a bit");

@@ -157,7 +157,7 @@ contract CDP {
 
     function claimMarginCall(uint256 posID) external returns (bool success) {
         Position storage p = positions[posID];
-            require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp > dao.params('marginCallTimeLimit'), "Position is not marked to be opened or owner still has time");
+            require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp > dao.params('marginCallTimeLimit'), "Position is not marked on liquidation or owner still has time");
         require(!p.onLiquidation && !p.liquidated, "Position is already on liquidation or already liquidated");
         if (getMaxStableCoinsToMintForPos(posID) < p.coinsMinted) {
             p.onLiquidation = true;
@@ -175,7 +175,7 @@ contract CDP {
     function startCoinsBuyOut(uint256 posID) external{
         Position storage p = positions[posID];
         require (p.onLiquidation && !p.liquidated && p.liquidationAuctionID == 0, "Position is not on liquidation or already liquidated, or auction was already started");
-        p.liquidationAuctionID = auction.initCoinsBuyOut(posID);
+        p.liquidationAuctionID = auction.initCoinsBuyOut(posID, p.wethAmountLocked);
         p.wethAmountLocked = 0;
     }
 
@@ -274,11 +274,6 @@ contract CDP {
         p.wethAmountLocked -= etherToWithdraw;
         weth.transfer(msg.sender, etherToWithdraw);
         emit PositionUpdated (posID, p.coinsMinted, p.wethAmountLocked);
-    }
-
-    function wethLocked(uint256 posID) public view returns (uint256 amount) {
-        Position storage p = positions[posID];
-        return p.wethAmountLocked;
     }
 
     function burnRule() external{

@@ -14,10 +14,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Specification.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Specification.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/TODO.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/~$TODO.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/~$TODO.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/auction_stubFund.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_stubFund.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cdpMarginCall_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpMarginCall_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,15 +76,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;B:/work/React/cryptofiat&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "B:/YandexDisk/Работа/ICO/CryptoFiat/repo",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo\contracts" />
@@ -285,6 +281,7 @@
       <workItem from="1689996198206" duration="9401000" />
       <workItem from="1690005837086" duration="7803000" />
       <workItem from="1690071604591" duration="16352000" />
+      <workItem from="1690097553736" duration="5483000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
