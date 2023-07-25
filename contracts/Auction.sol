@@ -82,15 +82,6 @@ contract Auction {
         return auctionID;
     }
 
-    function getBestBidAmount (uint256 auctionID) public view returns (uint256){
-        auctionEntity storage a = auctions[auctionID];
-        if (a.bestBidId >0) {
-            Bid storage b = bids[a.bestBidId];
-            return b.bidAmount;
-        }
-        else return 0;
-    }
-
     function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) external returns (uint256 auctionID){
         require (!isCoinsBuyOutForStabilization, "CoinsBuyOutForStabilization already exists and not finished");
         uint256 actualStabilizationFund = coin.balanceOf(address(cdp));
@@ -214,10 +205,6 @@ contract Auction {
         b.canceled = true;
     }
 
-    function isFinalized(uint256 auctionId) public view returns (bool finalized){
-        return auctions[auctionId].finalized;
-    }
-
     function claimToFinalizeAuction(uint256 auctionId) public returns (bool success){
         auctionEntity storage a = auctions[auctionId];
         if (a.isMarginCall)
@@ -249,7 +236,21 @@ contract Auction {
         return true;
     }
 
-    receive() external payable {
+    function isFinalized(uint256 auctionId) public view returns (bool finalized){
+        return auctions[auctionId].finalized;
+    }
+
+    function getPaymentAmount(uint256 auctionID) public view returns (uint256){
+        return auctions[auctionID].paymentAmount;
+    }
+
+    function getBestBidAmount (uint256 auctionID) public view returns (uint256){
+        return bids[auctions[auctionID].bestBidId].bidAmount;
+    }
+
+    receive() external payable {}
+
+    function withdraw() external {
         dao.addresses('oracle').transfer(address(this).balance);
     }
 }

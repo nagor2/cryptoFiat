@@ -47,7 +47,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         let auctionTx = await auction.initCoinsBuyOutForStabilization(paymentAmount);
 
         truffleAssert.eventEmitted(auctionTx, 'buyOutInit', async (ev) => {
-            assert.equal(ev.auctionID, 0, "Should be the first auction");
+            assert.equal(ev.auctionID, 1, "Should be the first auction");
             auctionId = ev.auctionID;
             assert.equal(parseFloat(ev.lotAmount/10**18).toFixed(0), 0, "Should be zero amount");
             assert.equal(ev.lotAddress, rule.address, "Should be correct address");

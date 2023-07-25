@@ -185,12 +185,12 @@ contract CDP {
         if (!auction.isFinalized(p.liquidationAuctionID))
             require(auction.claimToFinalizeAuction(p.liquidationAuctionID), "could not finalize auction");
 
-        uint256 bidAmount = auction.getBestBidAmount(p.liquidationAuctionID);
+        uint256 paymentAmount = auction.getPaymentAmount(p.liquidationAuctionID);
 
-        if (bidAmount>=p.coinsMinted){
+        if (paymentAmount >=p.coinsMinted){
             uint256 overallDebt = p.coinsMinted + totalCurrentFee(posID) + p.coinsMinted * dao.params('liquidationFee') / 100;
-            if (bidAmount >= overallDebt)
-                coin.transfer(p.owner, bidAmount - overallDebt);
+            if (paymentAmount > overallDebt)
+                coin.transfer(p.owner, paymentAmount - overallDebt);
             coin.burn(address(this), p.coinsMinted);
             p.liquidated = true;
             return;

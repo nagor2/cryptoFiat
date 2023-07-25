@@ -132,21 +132,26 @@ contract('CDP margin call', (accounts) => {
         await stableCoin.approve(auction.address, web3.utils.toWei('1900'),{from:recipient})
         await auction.makeBid(position.liquidationAuctionID, web3.utils.toWei('1900'),{from:recipient});
         await time.increase(time.duration.minutes(15)+1);
+        await cdp.openCDP(web3.utils.toWei('2000'), {from: accounts[4],value: web3.utils.toWei('3')});
         await cdp.finishMarginCall(posId);
 
         position = await cdp.positions(posId);
-        assert.equal(await stableCoin.totalSupply(), web3.utils.toWei('100'), "wrong total supply");
+        assert.equal(await stableCoin.totalSupply(), web3.utils.toWei('2100'), "wrong total supply");
         assert.equal(position.coinsMinted, web3.utils.toWei('100'), "wrong coins minted");
     });
 
     it("should recieve 10000 rules to recipient and decrease stubFund deficit", async () => {
-        await cdp.openCDP(web3.utils.toWei('2000'), {from: accounts[4],value: web3.utils.toWei('1')});
+
         let position = await cdp.positions(posId);
         assert.isFalse(position.liquidated, "position should not be liquidated");
 
         await stableCoin.approve(auction.address, web3.utils.toWei('50'),{from:recipient})
 
         const auctionId = (parseInt(position.liquidationAuctionID)+1);
+
+        const auctionEntity = await auction.auctions(auctionId);
+
+        assert.equal(auctionEntity.paymentAmount, web3.utils.toWei('50'), "wrong auction payment amount");
 
         await time.increase(1);
 
@@ -157,18 +162,13 @@ contract('CDP margin call', (accounts) => {
         );
 
         await auction.makeBid(auctionId, web3.utils.toWei('10000'),{from:recipient});
-
         await time.increase(time.duration.minutes(15)+1);
-
         await auction.claimToFinalizeAuction(auctionId);
 
-        console.log((await stableCoin.totalSupply()).toString())
         assert.equal(await stableCoin.totalSupply(),web3.utils.toWei('2100'), "wrong total supply")
         assert.equal(position.coinsMinted,web3.utils.toWei('100'), "wrong coinsMinted")
         assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('10000'),  "wrong rule balance")
-        let cdpBalance = await stableCoin.balanceOf(cdp.address);
-        console.log (parseFloat(cdpBalance/10**18));
-        assert.equal(cdpBalance,web3.utils.toWei('50'), "wrong cdp balance")
+        assert.equal(await stableCoin.balanceOf(cdp.address),web3.utils.toWei('50'), "wrong cdp balance")
     });
 
     it("should create the last coinsBuyOut", async () => {
@@ -192,8 +192,8 @@ contract('CDP margin call', (accounts) => {
         position = await cdp.positions(posId);
 
         assert.isTrue(position.liquidated, "position should be liquidated");
-        expect(await stableCoin.totalSupply()).to.eql(200, "wrong total supply");
-        expect(await rule.balanceOf(recipient)).to.eql(web3.utils.toWei('20000'), "wrong rule balance");
+        assert.equal(await stableCoin.totalSupply(),web3.utils.toWei('2000'), "wrong total supply")
+        assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('20000'), "wrong rule balance")
     });
 
 
