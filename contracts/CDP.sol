@@ -141,10 +141,10 @@ contract CDP {
         p.lastTimeUpdated = block.timestamp;
     }
 
-    function setRestrictInterestWithdrawal(uint256 posID, bool to) external {
+    function switchRestrictInterestWithdrawal(uint256 posID) external {
         Position storage p = positions[posID];
         require (p.owner == msg.sender, "Only owner may set this property");
-        p.restrictInterestWithdrawal = to;
+        p.restrictInterestWithdrawal = !p.restrictInterestWithdrawal;
     }
 
     function allowSurplusToAuction() external{

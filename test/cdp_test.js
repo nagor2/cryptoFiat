@@ -75,7 +75,7 @@ contract('CDP', (accounts) => {
         assert.equal(coinsMinted.toString(), ballance.toString(), "notEqual mint coins");
     });
 
-    it("time rewind", async () => {
+    it("time rewind and increase interest fee", async () => {
         await time.increase(time.duration.years(1));
         const fee = await cdp.interestAmountUnrecorded(0);
         assert.equal(parseFloat(fee/10**18).toFixed(4), parseFloat(195.3).toFixed(4), "should increase generated fee. It may sometimes fail due to time rewind (not precise)");
@@ -115,5 +115,3 @@ contract('CDP', (accounts) => {
 
 
 });
-
-//TODO:CloseCDP, checkTransferFee
