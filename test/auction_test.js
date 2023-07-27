@@ -56,7 +56,7 @@ contract('Auction', (accounts) => {
 
     it("should not allow to make a bid on non-existent auction", async () => {
         await truffleAssert.fails(
-            auction.makeBid(1, 100),
+            auction.makeBid(100, 100),
             truffleAssert.ErrorType.REVERT,
             "auctionId is wrong or it is already finished");
     });
@@ -64,7 +64,7 @@ contract('Auction', (accounts) => {
     it("should not allow to make a little bid", async () => {
         await rule.approve(auction.address, 1, {from: accounts[2]});
         await truffleAssert.fails(
-            auction.makeBid(0, 0),
+            auction.makeBid(1, 0),
             truffleAssert.ErrorType.REVERT,
             "your bid is not high enough");
     });
@@ -77,10 +77,10 @@ contract('Auction', (accounts) => {
         let balanceBefore = await rule.balanceOf(bidder);
         assert.equal(parseFloat(balanceBefore), 2, "Wrong balance before");
 
-        let bidTx = await auction.makeBid(0, 1, {from: bidder});
+        let bidTx = await auction.makeBid(1, 1, {from: bidder});
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
-            assert.equal(ev.auctionID, 0, "Should be correct auction");
+            assert.equal(ev.auctionID, 1, "Should be correct auction");
             assert.equal(ev.bidAmount, 1, "Should be correct amount");
         });
 
@@ -106,7 +106,7 @@ contract('Auction', (accounts) => {
         let newBidder = accounts[3];
         await rule.mint(newBidder, 2,{from:newBidder});
         await rule.approve(auction.address, 2, {from: newBidder});
-        await auction.makeBid(0, 2, {from: newBidder});
+        await auction.makeBid(1, 2, {from: newBidder});
 
         let balanceBefore = await rule.balanceOf(formerBidder);
         assert.equal(parseFloat(balanceBefore), 1, "Wrong balance before");
@@ -125,24 +125,24 @@ contract('Auction', (accounts) => {
 
     it("should not allow to finilize auction", async () => {
         await truffleAssert.fails(
-            auction.claimToFinalizeAuction(1),
+            auction.claimToFinalizeAuction(0),
             truffleAssert.ErrorType.REVERT,
             "the auction is finished or non-existent");
         await truffleAssert.fails(
-            auction.claimToFinalizeAuction(0),
+            auction.claimToFinalizeAuction(1),
             truffleAssert.ErrorType.REVERT,
             "it is too early to finalize, wait a bit");
 
         await time.increase(890);
 
         await truffleAssert.fails(
-            auction.claimToFinalizeAuction(0),
+            auction.claimToFinalizeAuction(1),
             truffleAssert.ErrorType.REVERT,
             "it is too early to finalize, wait a bit");
     });
 
     it("should finilize auction and pass assets", async () => {
-        const auctionToFinish = 0;
+        const auctionToFinish = 1;
         await time.increase(10);
 
         let cdpRuleBalanceBefore = await rule.balanceOf(cdp.address);
