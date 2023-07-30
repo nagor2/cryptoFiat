@@ -161,8 +161,6 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
             6. Проверяем, что нельзя сделать более 1% эмиссии рулов.
         */
     });
-
-    //TODO: test improve bid
 });
 
 

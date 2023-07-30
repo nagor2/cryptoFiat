@@ -165,10 +165,5 @@ contract('Auction', (accounts) => {
         let bidderStableCoinBalanceAfter = await stableCoin.balanceOf(b.owner);
         assert.equal (parseFloat(bidderStableCoinBalanceAfter/10**18).toFixed(0), 84, "balance should be 84");
     });
-
-
-//TODO: test, that i can not emit more than 5% of RULE
-    //that i cannot claim more, than a little amount of stableCoins
-
 });
 

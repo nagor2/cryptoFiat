@@ -224,7 +224,16 @@ contract('Token template', (accounts) => {
 
         let finTx = await token.finalizeProject({from: teamAddress});
 
-        //TODO: check dividends events emmited
+        //console.log(finTx);
+
+        //let result = await truffleAssert.createTransactionResult(platform, finTx.transactionHash);
+
+        //truffleAssert.eventEmitted(result, 'newDividendsRound', async (ev) => {
+            //assert.equal(ev.round, posId, 'positionID is wrong');
+            //assert.equal(ev.rewardToken, web3.utils.toWei('100', 'ether'), 'amount is wrong');
+            //assert.equal(ev.amount, web3.utils.toWei('100', 'ether'), 'amount is wrong');
+       // });
+
         let platformBalance = await coin.balanceOf(platform.address);
         assert.equal(platformBalance.toString(), web3.utils.toWei('265'));
         let platformTokens = await token.balanceOf(platform.address);

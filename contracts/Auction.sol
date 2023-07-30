@@ -132,7 +132,7 @@ contract Auction {
         return auctionID;
     }
 
-    function makeBid(uint256 auctionId, uint256 bidAmount) public{
+    function makeBid(uint256 auctionId, uint256 bidAmount) public returns (uint256 bidId){
         auctionEntity storage a = auctions[auctionId];
         require(a.initialized&&!a.finalized, "auctionId is wrong or it is already finished");
 
@@ -152,7 +152,7 @@ contract Auction {
         else
             require(paymentToken.transferFrom(msg.sender, address(this), bidAmount), "You should first approve bidAmount to auction contract address");
 
-        uint256 bidId = ++bidsNum;
+        bidId = ++bidsNum;
         Bid storage b = bids[bidId];
         b.owner = msg.sender;
         b.auctionID = auctionId;
@@ -163,6 +163,7 @@ contract Auction {
         a.bestBidId = bidId;
         a.lastTimeUpdated = block.timestamp;
         emit newBid(auctionId, bidId, bidAmount, b.owner);
+        return bidId;
     }
 
     function improveBid(uint256 bidId, uint256 newBidAmount) public{

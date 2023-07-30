@@ -12,9 +12,25 @@
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpFee_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Auction.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Commodity.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/DepositContract.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/ERC20.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/InflationFund.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Platform.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/Rule.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/WETH9.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/cartContract.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/contracts/tokenTemplate.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/auction_stubFund.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_stubFund.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpMarginCall_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpMarginCall_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/tokenTemplate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/tokenTemplate_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,17 +92,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;B:/YandexDisk/Работа/ICO/CryptoFiat/repo&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo" />
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo\contracts" />
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo\build\contracts" />
       <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\dapp\js" />
       <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\dapp\client\src\contracts" />
-      <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\test" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\d.nagornykh\YandexDisk\Работа\ICO\CryptoFiat\repo\trash" />
@@ -106,7 +126,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -278,7 +298,10 @@
       <workItem from="1690071604591" duration="16352000" />
       <workItem from="1690097553736" duration="19283000" />
       <workItem from="1690254125640" duration="5595000" />
-      <workItem from="1690426476179" duration="10916000" />
+      <workItem from="1690426476179" duration="11805000" />
+      <workItem from="1690691218807" duration="9407000" />
+      <workItem from="1690731635985" duration="2066000" />
+      <workItem from="1690733900115" duration="926000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -361,7 +384,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -383,7 +406,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -397,15 +419,5 @@
     <MESSAGE value="Some problems with open CDP" />
     <MESSAGE value="Not working code. Check later" />
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1690254131022">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1690254131022" />
-    <state x="666" y="255" width="587" height="530" key="find.popup" timestamp="1690448232947">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="666" y="255" width="587" height="530" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1690448232947" />
   </component>
 </project>

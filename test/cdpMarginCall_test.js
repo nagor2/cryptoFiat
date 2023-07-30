@@ -126,11 +126,40 @@ contract('CDP margin call', (accounts) => {
         assert.isTrue(positionAfter.liquidationAuctionID!=0, "there should be a liquidationAuctionID after");
     });
 
-    it("should finishMarginCall and decrease coinsMinted and totalSupply", async () => {
+    it("should finishMarginCall and decrease coinsMinted and totalSupply (with bids improvement)", async () => {
         let position = await cdp.positions(posId);
         await time.increase(1);
         await stableCoin.approve(auction.address, web3.utils.toWei('1900'),{from:recipient})
-        await auction.makeBid(position.liquidationAuctionID, web3.utils.toWei('1900'),{from:recipient});
+        let bidTx = await auction.makeBid(position.liquidationAuctionID, web3.utils.toWei('1800'),{from:recipient});
+        let bidId;
+
+        truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
+            bidId = ev.bidId.toNumber();
+            assert.equal (ev.owner, recipient, "wrong bid owner");
+            assert.equal (ev.bidAmount, web3.utils.toWei('1800'), "wrong bid amount");
+        })
+
+        await truffleAssert.fails(
+            auction.improveBid(bidId, web3.utils.toWei('1801'),{from:recipient}),
+            truffleAssert.ErrorType.REVERT,
+            "your bid is not high enough"
+        );
+
+        await truffleAssert.fails(
+            auction.improveBid(bidId, web3.utils.toWei('9000')),
+            truffleAssert.ErrorType.REVERT,
+            "You may improve only your personal bids"
+        );
+
+        bidTx = await auction.improveBid(bidId, web3.utils.toWei('1900'),{from:recipient});
+
+        truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
+            assert.equal (ev.bidId.toNumber(), bidId, "wrong bid id");
+            assert.equal (ev.owner, recipient, "wrong bid owner");
+            assert.equal (ev.bidAmount, web3.utils.toWei('1900'), "wrong bid amount");
+        })
+
+
         await time.increase(time.duration.minutes(15)+1);
         await cdp.openCDP(web3.utils.toWei('2000'), {from: accounts[4],value: web3.utils.toWei('3')});
         await cdp.finishMarginCall(posId);
@@ -140,14 +169,16 @@ contract('CDP margin call', (accounts) => {
         assert.equal(position.coinsMinted, web3.utils.toWei('100'), "wrong coins minted");
     });
 
-    it("should recieve 10000 rules to recipient and decrease stubFund deficit", async () => {
+    it("should recieve 10000 rules to recipient and decrease stubFund deficit (with bids improvement)", async () => {
 
         let position = await cdp.positions(posId);
+        let bidId;
+
         assert.isFalse(position.liquidated, "position should not be liquidated");
 
         await stableCoin.approve(auction.address, web3.utils.toWei('50'),{from:recipient})
 
-        const auctionId = (parseInt(position.liquidationAuctionID)+1);
+        const auctionId = (parseInt(position.liquidationAuctionID)+1); //next auction in loop
 
         const auctionEntity = await auction.auctions(auctionId);
 
@@ -161,13 +192,39 @@ contract('CDP margin call', (accounts) => {
             "too many rules for one emission"
         );
 
-        await auction.makeBid(auctionId, web3.utils.toWei('10000'),{from:recipient});
+        let bidTx = await auction.makeBid(auctionId, web3.utils.toWei('10000'),{from:recipient});
+
+        truffleAssert.eventEmitted(bidTx, 'newBid',async (ev) => {
+            bidId = ev.bidId.toNumber();
+            assert.equal (ev.owner, recipient, "wrong bid owner");
+        })
+
+        await truffleAssert.fails(
+            auction.improveBid(bidId, web3.utils.toWei('9950'),{from:recipient}),
+            truffleAssert.ErrorType.REVERT,
+            "your bid is not high enough"
+        );
+
+        await truffleAssert.fails(
+            auction.improveBid(bidId, web3.utils.toWei('9000')),
+            truffleAssert.ErrorType.REVERT,
+            "You may improve only your personal bids"
+        );
+
+        bidTx = await auction.improveBid(bidId, web3.utils.toWei('9000'),{from:recipient});
+
+        truffleAssert.eventEmitted(bidTx, 'newBid',async (ev) => {
+            assert.equal (bidId, ev.bidId.toNumber(), "wrong bid owner");
+            assert.equal (ev.owner, recipient, "wrong bid owner");
+            assert.equal (ev.bidAmount, web3.utils.toWei('9000'), "wrong bid amount");
+        })
+
         await time.increase(time.duration.minutes(15)+1);
         await auction.claimToFinalizeAuction(auctionId);
 
         assert.equal(await stableCoin.totalSupply(),web3.utils.toWei('2100'), "wrong total supply")
         assert.equal(position.coinsMinted,web3.utils.toWei('100'), "wrong coinsMinted")
-        assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('10000'),  "wrong rule balance")
+        assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('9000'),  "wrong rule balance")
         assert.equal(await stableCoin.balanceOf(cdp.address),web3.utils.toWei('50'), "wrong cdp balance")
     });
 
@@ -193,7 +250,7 @@ contract('CDP margin call', (accounts) => {
 
         assert.isTrue(position.liquidated, "position should be liquidated");
         assert.equal(await stableCoin.totalSupply(),web3.utils.toWei('2000'), "wrong total supply")
-        assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('20000'), "wrong rule balance")
+        assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('19000'), "wrong rule balance")
     });
 
 
@@ -202,5 +259,3 @@ contract('CDP margin call', (accounts) => {
     });
 
 });
-
-//TODO: need to test full logic (finishMarginCall invoke several times!)
