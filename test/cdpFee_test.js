@@ -29,7 +29,7 @@ before('should setup the contracts instance', async () => {
         let posTx = await cdp.openCDP(web3.utils.toWei(String(coinsMintAmount)), {from: owner,value: web3.utils.toWei('1')});
 
         await truffleAssert.eventEmitted(posTx, 'PositionOpened', async (ev) => {
-            posId = ev.posId.toNumber();
+            posId = ev.posID.toNumber();
         });
 
         assert.equal(await cdp.totalCurrentFee(posId), '0', "wrong total fee");
@@ -86,13 +86,11 @@ before('should setup the contracts instance', async () => {
         await cdp.transferInterest(posId, {from: position.owner});
 
         assert.equal(parseFloat(await stableCoin.balanceOf(cdp.address)/10**18).toFixed(4), 99.0000, "wrong cdp balance");
-
         assert.equal(parseFloat(await stableCoin.balanceOf(position.owner)/10**18).toFixed(4), 1.0000, "wrong owner balance");
 
         position = await cdp.positions(posId);
 
         assert.equal(parseFloat(await cdp.totalCurrentFee(posId)), 0, "wrong totalCurrentFee");
-
         assert.equal(parseFloat(position.interestAmountRecorded), 0, "wrong interestAmountRecorded");
     });
 
@@ -106,7 +104,7 @@ it("should generate additional fee", async () => {
     let posTx = await cdp.openCDP(web3.utils.toWei(String(coinsMintAmount), 'ether'), {from: owner,value: web3.utils.toWei('1', 'ether')});
 
     await truffleAssert.eventEmitted(posTx, 'PositionOpened', async (ev) => {
-        posId = ev.posId.toNumber();
+        posId = ev.posID.toNumber();
         });
 
     const position = await cdp.positions(posId);
@@ -147,7 +145,6 @@ it("should generate additional fee", async () => {
     it("should allow and transfer surplus to auction and create RuleBuyOut", async () => {
 
         let cdpBalance = parseFloat(await stableCoin.balanceOf(cdp.address)/10**18).toFixed();
-
 
         let surplus = (cdpBalance - parseFloat(await stableCoin.totalSupply()/10**18)*(parseFloat(await dao.params('stabilizationFundPercent')))/100);
 

@@ -32,7 +32,7 @@ contract CDP {
     ERC20 weth;
 
     mapping(uint256 => Position) public positions;
-    event PositionOpened (address owner, uint256 posId);
+    event PositionOpened (address owner, uint256 posID);
     event PositionUpdated (uint256 posID, uint256 newStableCoinsAmount, uint256 wethLocked);
     event markedOnLiquidation (uint256 posID, uint256 timestamp);
     event markOnLiquidationErased (uint256 posID, uint256 timestamp);

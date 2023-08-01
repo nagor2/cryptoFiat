@@ -41,7 +41,7 @@ contract('CDP margin call', (accounts) => {
         let coinsMintAmount = 2000;
         let posTx = await cdp.openCDP(web3.utils.toWei(String(coinsMintAmount)), {from: owner,value: web3.utils.toWei('1')});
         await truffleAssert.eventEmitted(posTx, 'PositionOpened', async (ev) => {
-            posId = ev.posId.toNumber();
+            posId = ev.posID.toNumber();
         });
 
         const position = await cdp.positions(posId);
@@ -116,7 +116,6 @@ contract('CDP margin call', (accounts) => {
 
         const cdpWethBalanceAfter = await weth.balanceOf(cdp.address);
         assert.equal(cdpWethBalanceAfter, 0, "wrong balance cdpWethBalanceAfter");
-
 
         const positionAfter = await cdp.positions(posId);
         assert.isTrue(positionAfter.liquidationAuctionID!=0, "there should be a liquidationAuctionID after");

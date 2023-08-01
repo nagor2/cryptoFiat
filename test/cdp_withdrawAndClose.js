@@ -27,7 +27,7 @@ contract('CDP withdraw and close position', (accounts) => {
         });
 
         truffleAssert.eventEmitted(posTx, 'PositionOpened', async (ev) => {
-            posId = ev.posId.toNumber();
+            posId = ev.posID.toNumber();
         });
 
 

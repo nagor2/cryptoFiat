@@ -13,7 +13,7 @@ contract('CDP Update Decrease', (accounts) => {
     let oracle;
     let stableCoin;
     let position;
-    let positionID;
+    let positionTx;
     let positionUpdate;
     const ownerId = 2;
 
@@ -23,12 +23,15 @@ contract('CDP Update Decrease', (accounts) => {
         stableCoin = await StableCoin.deployed(dao.address);
         cdp = await CDP.deployed(dao.address);
 
-        positionID = await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
+        positionTx = await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
             from: accounts[ownerId],
             value: web3.utils.toWei('1', 'ether')
         });
 
-        posId = 0;
+        await truffleAssert.eventEmitted(positionTx, 'PositionOpened', async (ev) => {
+            posId = ev.posID.toNumber();
+        });
+
 
         expectedOwner = accounts[ownerId];
 
@@ -41,7 +44,7 @@ contract('CDP Update Decrease', (accounts) => {
 
     it("should emit PositionUpdated", async () => {
         truffleAssert.eventEmitted(positionUpdate, 'PositionUpdated', async (ev) => {
-            assert.equal(ev.posID, posId, 'positionID is wrong');
+            assert.equal(ev.posID.toNumber(), posId, 'positionID is wrong');
             assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('100', 'ether'), 'amount is wrong');
         });
     });
@@ -55,8 +58,8 @@ contract('CDP Update Decrease', (accounts) => {
         const balance = await stableCoin.balanceOf(position.owner);
         assert.equal(balance, web3.utils.toWei('100', 'ether'), "owner's balance should be 100 stableCoin");
     });
-});
 
-//TODO: check coinsMinted update
-//TODO: Critical bug, p.feeGeneratedRecorded = generatedFeeUnrecorded(posID); => p.feeGeneratedRecorded += generatedFeeUnrecorded(posID); test this shit
-//TODO: check deposit for this shit
+    it("should decrease coinsMinted", async () => {
+        assert.equal(position.coinsMinted, web3.utils.toWei('100', 'ether'), "coinsMinted should be 100 stableCoin");
+    });
+});

@@ -12,10 +12,14 @@
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cdpFee_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cdpMarginCall_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpMarginCall_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpUpdateDecrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateDecrease_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpUpdateIncrease_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdp_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/tokenTemplate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/tokenTemplate_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -285,7 +289,7 @@
       <workItem from="1690691218807" duration="9407000" />
       <workItem from="1690731635985" duration="2066000" />
       <workItem from="1690733900115" duration="926000" />
-      <workItem from="1690855180062" duration="4093000" />
+      <workItem from="1690855180062" duration="10134000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -430,5 +434,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1690781711514" />
+    <state x="666" y="255" width="587" height="530" key="find.popup" timestamp="1690869052425">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="666" y="255" width="587" height="530" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1690869052425" />
   </component>
 </project>

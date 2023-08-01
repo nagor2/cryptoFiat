@@ -221,33 +221,16 @@ contract('Token template', (accounts) => {
     });
 
     it("should finalize project", async () => {
-        await platform.transfer(buyer2, web3.utils.toWei('500000'), {from: author}); //to check dividends later
+        await platform.transfer(buyer2, web3.utils.toWei('500000'), {from: author}); //TODO: check dividends later
 
         let finTx = await token.finalizeProject({from: teamAddress});
 
-        //console.log(finTx);
-
-        //TODO: check dividends events emmited
         let platformBalance = await coin.balanceOf(platform.address);
         assert.equal(platformBalance.toString(), web3.utils.toWei('265'));
         let platformTokens = await token.balanceOf(platform.address);
         assert.equal(platformTokens.toString(), web3.utils.toWei('150'));
 
-
         await expectEvent.inTransaction(finTx.tx, platform, 'newDividendsRound', { rewardToken: coin.address});
-
-        /*
-        truffleAssert.eventEmitted(finTx, 'newDividendsRound', (ev) => {
-            assert.equal(ev.currentDividendsRound, 0, "wrong round");
-            assert.equal(ev.rewardToken, coin.address, "wrong rewardToken");
-            assert.equal(ev.amount, web3.utils.toWei('265'), "wrong amount");
-        });
-
-        truffleAssert.eventEmitted(finTx, 'newDividendsRound', (ev) => {
-            assert.equal(ev.currentDividendsRound, 1, "wrong round");
-            assert.equal(ev.rewardToken, token.address, "wrong rewardToken");
-            assert.equal(ev.amount, web3.utils.toWei('150'), "wrong amount");
-        });*/
 
         let teamCoinBalance = await coin.balanceOf(teamAddress);
         assert.equal(teamCoinBalance, web3.utils.toWei('5035'), "wrong amount");

@@ -15,10 +15,13 @@ contract('CDP Update Increase', (accounts) => {
     let stableCoin;
     let positionBefore;
     let positionAfter;
-    let positionID;
+    let positionTx;
     let positionUpdate;
+    let pos;
     let fee;
     let weth;
+    let id;
+    let posId;
     const owner = accounts[2];
 
     before('should setup the contracts instance', async () => {
@@ -28,12 +31,15 @@ contract('CDP Update Increase', (accounts) => {
         stableCoin = await StableCoin.deployed(dao.address);
         cdp = await CDP.deployed(dao.address);
 
-        positionID = await cdp.openCDP(web3.utils.toWei('2000', 'ether'), {
+        positionTx = await cdp.openCDP(web3.utils.toWei('2000', 'ether'), {
             from: owner,
             value: web3.utils.toWei('1', 'ether')
         });
 
-        posId = 0; // Костыль, хотя, если clean room...
+        await truffleAssert.eventEmitted(positionTx, 'PositionOpened', async (ev) => {
+            posId = ev.posID;
+        });
+
         expectedOwner = owner;
         positionBefore = await cdp.positions(posId);
         await time.increase(time.duration.years(1));
@@ -46,8 +52,8 @@ contract('CDP Update Increase', (accounts) => {
     });
 
     it("should emit PositionUpdated with right parameters", async () => {
-        truffleAssert.eventEmitted(positionUpdate, 'PositionUpdated', async (ev) => {
-            assert.equal(ev.posID, posId, 'positionID is wrong');
+        await truffleAssert.eventEmitted(positionUpdate, 'PositionUpdated', async (ev) => {
+            assert.equal(ev.posID, posId.toNumber(), 'positionID is wrong');
             assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('2100', 'ether'), 'amount is wrong');
         });
     });
@@ -58,10 +64,11 @@ contract('CDP Update Increase', (accounts) => {
     });
 
     it("should increase overall fee", async () => {
-        return false;
-        //totalCurrentFee
-        //const balance = await stableCoin.balanceOf(positionBefore.owner);
-        //assert.equal(balance, web3.utils.toWei('2100', 'ether'), "owner's balance should be 2100 stableCoin");
+        let recordedFee = positionAfter.interestAmountRecorded;
+        assert.equal(parseFloat(recordedFee/10**18).toFixed(4), 180.0000, "should increase overall fee");
+
+        let overallFee = await cdp.totalCurrentFee(posId);
+        assert.equal(parseFloat(overallFee/10**18).toFixed(4), 180.0000, "should increase overall fee");
     });
 
     it("should increase owner balance", async () => {
@@ -101,17 +108,15 @@ contract('CDP Update Increase', (accounts) => {
     it("should not allow to mint coins due to feeGenerated", async () => {
         let account = accounts[3];
 
-        let pos = await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
+        pos = await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
             from: account,
             value: web3.utils.toWei('1', 'ether')
         });
 
-        let id;
-
         truffleAssert.eventEmitted(pos, 'PositionOpened', async (ev) => {
             assert.equal(ev.owner, accounts[3], 'position owner is wrong');
-            assert.equal(ev.posId, 1, 'id is wrong');
-            id = ev.posId;
+            assert.equal(ev.posID, 1, 'id is wrong');
+            id = ev.posID;
         });
 
         await time.increase(time.duration.years(1));//1 year in seconds. It may sometimes fail
@@ -128,6 +133,10 @@ contract('CDP Update Increase', (accounts) => {
             assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('2079'), 'amount is wrong');
         });
     });
-});
 
-//TODO: check coinsMinted update
+    it("should increase coinsMinted", async () => {
+        const posAft = await cdp.positions(id);
+        assert.equal(posAft.coinsMinted, web3.utils.toWei('2079'), "increase coinsMinted");
+    });
+
+});

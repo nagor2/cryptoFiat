@@ -41,7 +41,7 @@ contract('CDP', (accounts) => {
 
     it("should create a valid Position", async () => {
         truffleAssert.eventEmitted(positionIDtx, 'PositionOpened', async (ev) => {
-            positionID = ev.posId.toNumber();
+            positionID = ev.posID.toNumber();
             const position = await cdp.positions(positionID);
             assert.equal(position.owner, expectedOwner, "position.owner should be " + expectedOwner);
             assert.equal(position.wethAmountLocked, web3.utils.toWei('1', 'ether'), "ethAmountLocked should be 1 ether");
@@ -84,7 +84,7 @@ contract('CDP', (accounts) => {
     it("should return valid position ID", async () => {
         const numPos = await cdp.numPositions.call();
         truffleAssert.eventEmitted(positionIDtx, 'PositionOpened', (ev) => {
-            return ev.owner === accounts[1] && ev.posId.toNumber() === numPos - 1;
+            return ev.owner === accounts[1] && ev.posID.toNumber() === numPos - 1;
         });
     });
 
