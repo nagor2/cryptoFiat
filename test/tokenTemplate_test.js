@@ -4,6 +4,7 @@ var StableCoin = artifacts.require("./stableCoin.sol");
 var CDP = artifacts.require("./CDP.sol");
 var Token = artifacts.require("./tokenTemplate.sol");
 const { time } = require('@openzeppelin/test-helpers');
+const { expectEvent } = require('@openzeppelin/test-helpers');
 const truffleAssert = require("truffle-assertions");
 const assert = require("assert");
 
@@ -226,18 +227,14 @@ contract('Token template', (accounts) => {
 
         //console.log(finTx);
 
-        //let result = await truffleAssert.createTransactionResult(platform, finTx.transactionHash);
-
-        //truffleAssert.eventEmitted(result, 'newDividendsRound', async (ev) => {
-            //assert.equal(ev.round, posId, 'positionID is wrong');
-            //assert.equal(ev.rewardToken, web3.utils.toWei('100', 'ether'), 'amount is wrong');
-            //assert.equal(ev.amount, web3.utils.toWei('100', 'ether'), 'amount is wrong');
-       // });
-
+        //TODO: check dividends events emmited
         let platformBalance = await coin.balanceOf(platform.address);
         assert.equal(platformBalance.toString(), web3.utils.toWei('265'));
         let platformTokens = await token.balanceOf(platform.address);
         assert.equal(platformTokens.toString(), web3.utils.toWei('150'));
+
+
+        await expectEvent.inTransaction(finTx.tx, platform, 'newDividendsRound', { rewardToken: coin.address});
 
         /*
         truffleAssert.eventEmitted(finTx, 'newDividendsRound', (ev) => {

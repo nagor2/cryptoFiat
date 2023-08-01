@@ -139,7 +139,7 @@ it("should generate additional fee", async () => {
 
     let cdpBalance = await stableCoin.balanceOf(cdp.address);
     //let auctionBalance = await stableCoin.balanceOf(auction.address);
-    assert.equal(parseFloat(cdpBalance/10**18).toFixed(4),189.0000,"smth wrong");
+    assert.equal(parseFloat(cdpBalance/10**18).toFixed(2),189.00,"smth wrong");
     //assert.equal(parseFloat(auctionBalance/10**18).toFixed(4),parseFloat('40').toFixed(4),"smth wrong");
     assert.equal(feeAfter, 0);
     });

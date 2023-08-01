@@ -1,5 +1,6 @@
 const truffleAssert = require("truffle-assertions");
 const { time } = require('@openzeppelin/test-helpers');
+const { expectEvent } = require('@openzeppelin/test-helpers');
 
 contract('CDP margin call', (accounts) => {
 
@@ -105,14 +106,9 @@ contract('CDP margin call', (accounts) => {
 
         let liquidationTx = await cdp.startCoinsBuyOut(posId);
 
-        //truffleAssert.eventEmitted(liquidationTx, 'Transfer');
-        /*
-        truffleAssert.eventEmitted(liquidationTx, 'liquidateCollateral', async (ev) => {
-            assert.equal(ev.auctionID, 1, 'auctionID is wrong');
-            assert.equal(ev.posID, posId, 'positionID is wrong');
-            assert.equal(ev.collateral, positionBefore.wethAmountLocked, 'collateral amount is wrong');
-        });
-         */
+
+
+        await expectEvent.inTransaction(liquidationTx.tx, auction, 'liquidateCollateral', { auctionID:web3.utils.toBN(1), posID:web3.utils.toBN(posId), collateral:positionBefore.wethAmountLocked});
 
         const auctionWethBalanceAfter = await weth.balanceOf(auction.address);
 
@@ -158,7 +154,6 @@ contract('CDP margin call', (accounts) => {
             assert.equal (ev.owner, recipient, "wrong bid owner");
             assert.equal (ev.bidAmount, web3.utils.toWei('1900'), "wrong bid amount");
         })
-
 
         await time.increase(time.duration.minutes(15)+1);
         await cdp.openCDP(web3.utils.toWei('2000'), {from: accounts[4],value: web3.utils.toWei('3')});

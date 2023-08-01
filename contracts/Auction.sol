@@ -45,7 +45,7 @@ contract Auction {
     event newBid(uint256 auctionID, uint256 bidId, uint256 bidAmount, address owner);
     event bidCanceled(uint256 bidId);
 
-    event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 colleteral);
+    event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 collateral);
 
     constructor(address payable _INTDAOaddress){
         dao = INTDAO(_INTDAOaddress);
