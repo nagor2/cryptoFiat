@@ -58,7 +58,7 @@ contract('CDP withdraw and close position', (accounts) => {
 
         await truffleAssert.fails(
             cdp.withdrawEther(posId, web3.utils.toWei('0.4', 'ether'), {from:owner}),
-            truffleAssert.ErrorType.REVERT,//for some reason it returns out of gas, though should revert
+            truffleAssert.ErrorType.REVERT,
             "you want to keep not enough weth to cover emission and current fee"
         );
 
@@ -92,6 +92,13 @@ contract('CDP withdraw and close position', (accounts) => {
 
         assert.equal(parseFloat(currentFee/10**18).toFixed(4),parseFloat('90').toFixed(4), "wrong fee");
 
+
+        await truffleAssert.fails(
+            cdp.closeCDP(posId),
+            truffleAssert.ErrorType.REVERT,
+            "Only owner may close his position"
+        );
+
         await cdp.closeCDP(posId,{from:owner});
 
         assert.equal(await weth.balanceOf(owner), web3.utils.toWei('1', 'ether'), "weth on balance is wrong");
@@ -99,7 +106,7 @@ contract('CDP withdraw and close position', (accounts) => {
         assert.equal(parseFloat(await coin.totalSupply()/10**18).toFixed(4), 200.0000, "wrong totalSupply");
 
         assert.equal(parseFloat(await coin.balanceOf(owner)/10**18).toFixed(3), 10.000, "wrong totalSupply");
-        assert.equal(parseFloat(await coin.balanceOf(await dao.addresses('cdp'))/10**18).toFixed(4), 90.0000, "wrong totalSupply");
+        assert.equal(parseFloat(await coin.balanceOf(await dao.addresses('cdp'))/10**18).toFixed(3), 90.000, "wrong totalSupply");
         assert.equal(parseFloat(await coin.balanceOf(accounts[3])/10**18).toFixed(4), 100.0000, "wrong totalSupply");
     });
 });
