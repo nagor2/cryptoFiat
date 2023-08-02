@@ -261,6 +261,11 @@ contract CDP {
             emit PositionUpdated(posID, newStableCoinsAmount, p.wethAmountLocked);
             return true;
         }
+
+        if (newStableCoinsAmount == p.coinsMinted) {
+            emit PositionUpdated(posID, newStableCoinsAmount, p.wethAmountLocked);
+            return true;
+        }
     }
 
     function withdrawEther (uint256 posID, uint256 etherToWithdraw) external{
