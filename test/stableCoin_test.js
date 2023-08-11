@@ -44,12 +44,9 @@ contract('stableCoin', (accounts) => {
         );
     });
 
-    it('should transfer ether to oracle contract', async()=>{
-        let balanceBefore = await web3.eth.getBalance(oracle.address);
-        assert.equal(balanceBefore,web3.utils.toWei('0.1', "ether"), 'balance should be 0.1')
-        await coin.send(web3.utils.toWei("1", "ether"),{from: accounts[0]});
-        await coin.withdraw();
-        let balanceAfter = await web3.eth.getBalance(oracle.address);
-        assert.equal(balanceAfter,web3.utils.toWei('1.1', "ether"), 'balance should be 1.1 ether')
+    it('should set params name and symbol', async () => {
+        assert.equal(await coin.symbol(), "TSC");
+        assert.equal(await coin.name(), "True Stable Coin");
     });
+
 });

@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity 0.8.19;
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./INTDAO.sol";
-import "./stableCoin.sol";
 import "./CDP.sol";
-import "./Rule.sol";
 
     struct auctionEntity {
         bool initialized;
@@ -30,10 +29,10 @@ import "./Rule.sol";
 contract Auction {
     uint256 public auctionNum;
     uint256 public bidsNum;
-    stableCoin coin;
+    IERC20 coin;
     INTDAO dao;
     CDP cdp;
-    Rule rule;
+    IERC20 rule;
     bool isCoinsBuyOutForStabilization;
     bool ruleBuyOut;
 
@@ -50,20 +49,23 @@ contract Auction {
         dao = INTDAO(_INTDAOaddress);
         dao.setAddressOnce("auction", payable(address(this)));
         cdp = CDP(dao.addresses('cdp'));
-        coin = stableCoin(payable(dao.addresses('stableCoin')));
-        rule = Rule(payable(dao.addresses('rule')));
+        coin = IERC20(payable(dao.addresses('stableCoin')));
+        rule = IERC20(payable(dao.addresses('rule')));
     }
 
     function renewContracts() external {
-        coin = stableCoin(payable(dao.addresses('stableCoin')));
+        coin = IERC20(payable(dao.addresses('stableCoin')));
         cdp = CDP(dao.addresses('cdp'));
-        rule = Rule(payable(dao.addresses('rule')));
+        rule = IERC20(payable(dao.addresses('rule')));
     }
 
     function initRuleBuyOut() external returns (uint256 auctionID){
         require (!ruleBuyOut, "Rule buyOut auction already exist");
+
         uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));
-        require (coin.transferFrom(dao.addresses('cdp'), address(this), allowed), "Can not transfer surplus from CDP");
+        require (allowed>0, "Can not transfer surplus from CDP");
+
+        coin.transferFrom(dao.addresses('cdp'), address(this), allowed);
 
         auctionID = createNewAuction(dao.addresses('stableCoin'), allowed, dao.addresses('rule'), 0);
         ruleBuyOut = true;

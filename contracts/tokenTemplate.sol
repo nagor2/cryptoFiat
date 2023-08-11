@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 import "./Platform.sol";
-import "./stableCoin.sol";
 
-pragma solidity >=0.4.22 <0.9.0;
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+pragma solidity 0.8.19;
+
 
 contract tokenTemplate is ERC20{
     Platform platform;
-    stableCoin coin;
-    uint256 public constant decimals = 18;
-    string public name;
-    string public symbol;
+    ERC20 coin;
 
     mapping (address => uint256) balances;
     mapping (address => uint256) timeBought;
@@ -59,15 +59,15 @@ contract tokenTemplate is ERC20{
                 uint256[] memory _budgetPercent,
                 uint256[] memory _extraChargePercent,
                 uint256[] memory _stagesDuration,
-                string[] memory _stagesShortDescription) {
+                string[] memory _stagesShortDescription) ERC20 (_symbol, _name){
 
         teamAddress = addresses[0];
-        coin = stableCoin(payable(addresses[1]));
+        coin = ERC20(payable(addresses[1]));
         platform = Platform(payable(addresses[2]));
         platformContractAddress = addresses[2];
 
-        initialPrice = params[0]*10**coin.decimals();
-        initialSupply = params[1]*10**decimals;
+        initialPrice = params[0];
+        initialSupply = params[1];
         balances[address(this)] = initialSupply;
         platformFeePercent = params[2];
         numberOfMileStones = params[3];
@@ -95,7 +95,7 @@ contract tokenTemplate is ERC20{
         projectFinished = false;
         initialTime = block.timestamp;
         budgetPercent = new uint256[](numberOfMileStones+1);
-        budgetPercent = _budgetPercent;
+        budgetPercent = _budgetPercent; //????/
         extraChargePercent = new uint256[](numberOfMileStones);
         extraChargePercent = _extraChargePercent;
         stagesDuration = new uint256[](numberOfMileStones);
@@ -104,8 +104,6 @@ contract tokenTemplate is ERC20{
         stagesShortDescription = _stagesShortDescription;
         crowdSaleIsActive = true;
         previousStageSubmitted = block.timestamp;
-        name = _name;
-        symbol = _symbol;
         tokensToSell = initialSupply;
         soldTokens = 0;
     }
@@ -145,7 +143,7 @@ contract tokenTemplate is ERC20{
         require (!crowdSaleIsActive, "you should finish public offer first");
         require (currentStage<numberOfMileStones, "all stages complete, finalize project, please");
         require (block.timestamp>=previousStageSubmitted+holdDuration, "Hold period is not finished yet");
-        uint256 fundsToPass = budgetPercent[currentStage] * soldTokens * initialPrice / 100 / 10**decimals;
+        uint256 fundsToPass = budgetPercent[currentStage] * soldTokens * initialPrice / 100;
         coin.transfer(teamAddress, fundsToPass);
         emit fundsPassed(currentStage, fundsToPass);
         totalBudgetSpent += budgetPercent[currentStage];
@@ -175,7 +173,7 @@ contract tokenTemplate is ERC20{
         uint256 currentPrice = initialPrice;
         if (!crowdSaleIsActive)
             currentPrice = initialPrice * (100+extraChargePercent[currentStage])/100;
-        uint256 tokensAmount = coinsAmount*10**decimals/currentPrice;
+        uint256 tokensAmount = coinsAmount/currentPrice;
         if (tokensAmount>balances[address(this)])
             tokensAmount = balances[address(this)];
         this.transfer(msg.sender, tokensAmount);
@@ -195,7 +193,7 @@ contract tokenTemplate is ERC20{
         if (toReturn>0){
             require(this.transferFrom(msg.sender, address(this), toReturn), "Could not transfer tokens for some reason");
             emit tokensReturned(toReturn);
-            uint256 coinsAvailableForTokenHolder = initialPrice/ 10**decimals * toReturn;
+            uint256 coinsAvailableForTokenHolder = initialPrice/ toReturn;
             uint256 interestAvailable = calculateInterestAvailable(coinsAvailableForTokenHolder, msg.sender);
             platform.claimInterestForMintedTokenHolder(interestAvailable, msg.sender);
             require(coin.transfer(msg.sender, coinsAvailableForTokenHolder), "Could not transfer coins for some reason");
@@ -210,49 +208,12 @@ contract tokenTemplate is ERC20{
         return coinsOnHold*(block.timestamp - timeBought[holderAddress])/1 days*platform.getCurrentInterestRate()/36500;
     }
 
-    function totalSupply() public view returns (uint256) {
-        return initialSupply;
-    }
-
-    function balanceOf(address owner) public view returns (uint256 balance) {
-        return balances[owner];
-    }
-
-    function allowance(address owner, address spender) public view returns (uint remaining) {
-        return allowed[owner][spender];
-    }
-
-    function transfer(address to, uint256 value) public returns (bool success) {
-        if (!projectFinished)
-            require(value<=(balances[msg.sender]-frozen[msg.sender]), "You can not transfer frozen tokens");
-        if (balances[msg.sender] >= value && value > 0) {
-            balances[msg.sender] -= value;
-            balances[to] += value;
-            emit Transfer(msg.sender, to, value);
-            return true;
-        } else {
-            return false;
+    function _transfer(address from, address to, uint256 amount) internal override {
+        if (!projectFinished){
+            require(amount<=(balances[from]-frozen[from]),
+                "You can not transfer frozen tokens");
         }
-    }
-
-    function transferFrom(address from, address to, uint256 value) public returns (bool success) {
-        if (!projectFinished)
-            require(value<=(balances[from]-frozen[from]), "You can not transfer frozen tokens");
-        if (balances[from] >= value && allowed[from][msg.sender] >= value && value > 0) {
-            balances[to] += value;
-            balances[from] -= value;
-            allowed[from][msg.sender] -= value;
-            emit Transfer(from, to, value);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function approve(address spender, uint256 value) public returns (bool success) {
-        allowed[msg.sender][spender] = value;
-        emit Approval(msg.sender, spender, value);
-        return true;
+        super._transfer(from, to, amount);
     }
 }
 

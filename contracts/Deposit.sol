@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity 0.8.19;
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "./INTDAO.sol";
-import "./stableCoin.sol";
 import "./CDP.sol";
 
     struct Deposit {
@@ -18,7 +19,7 @@ import "./CDP.sol";
 contract DepositContract {
 
     INTDAO dao;
-    stableCoin coin;
+    IERC20 coin;
     CDP cdp;
     uint256 public counter;
     mapping(uint256 => Deposit) public deposits;
@@ -27,12 +28,12 @@ contract DepositContract {
     constructor(address payable INTDAOaddress){
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('deposit',payable(address(this)));
-        coin = stableCoin(payable(dao.addresses('stableCoin')));
+        coin = IERC20(payable(dao.addresses('stableCoin')));
         cdp = CDP(payable(dao.addresses('cdp')));
     }
 
     function renewContracts() public {
-        coin = stableCoin(payable(dao.addresses('stableCoin')));
+        coin = IERC20(payable(dao.addresses('stableCoin')));
         cdp = CDP(payable(dao.addresses('cdp')));
     }
 

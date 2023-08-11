@@ -1,28 +1,23 @@
 // SPDX-License-Identifier: UNLICENSED
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "./INTDAO.sol";
-import "./stableCoin.sol";
 import "./CDP.sol";
 import "./tokenTemplate.sol";
 
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity 0.8.19;
 
 contract Platform is ERC20{
-    uint256 public constant decimals = 18;
-    uint256 initialSupply = 10**6*10**decimals;
     address public tokenMinter;
     address public ownerAddress;
     uint256 public mintedNum;
 
-    string public constant name = "Crowdfunding platform";
-    string public constant symbol = "CFP";
-
-    mapping (address => uint256) balances;
-    mapping (address => mapping (address => uint256)) allowed;
     event newDividendsRound(uint256 round, address rewardToken, uint256 amount);
 
     INTDAO dao;
     CDP cdp;
-    stableCoin coin;
+    IERC20 coin;
 
     uint256 public currentDividendsRound;
     mapping (address => bool) public isMintedByPlatform;
@@ -41,14 +36,14 @@ contract Platform is ERC20{
         _;
     }
 
-    constructor(address payable INTDAOaddress){
+    constructor(address payable INTDAOaddress) ERC20("Crowdfunding platform", "CFP"){
+        _mint(msg.sender, 10**6);
         dao = INTDAO(INTDAOaddress);
-        coin = stableCoin(dao.addresses('stableCoin'));
+        coin = IERC20(dao.addresses('stableCoin'));
         cdp = CDP(dao.addresses('cdp'));
         dao.setAddressOnce('platform',payable(address(this)));
         tokenMinter = msg.sender;
         ownerAddress = msg.sender;
-        balances[ownerAddress] = initialSupply;
     }
 
     function changeMinter(address addr) public onlyOwner{
@@ -56,7 +51,7 @@ contract Platform is ERC20{
     }
 
     function renewContracts() public {
-        coin = stableCoin(dao.addresses('stableCoin'));
+        coin = IERC20(dao.addresses('stableCoin'));
         cdp = CDP(dao.addresses('cdp'));
     }
 
@@ -69,7 +64,7 @@ contract Platform is ERC20{
         else beneficiary = addr;
         for (uint256 i=lastPayedDividendsRound[addr]; i<currentDividendsRound; i++){
             ERC20 token = ERC20(dividendsRounds[i]);
-            divAmount = balances[addr]/10**18*dividendsPerRoundPerToken[i];
+            divAmount = balanceOf(addr)/10**18*dividendsPerRoundPerToken[i];
             if (token.balanceOf(address(this))>=divAmount)
                 token.transfer(beneficiary, divAmount);
             else
@@ -97,7 +92,7 @@ contract Platform is ERC20{
         require(rewardToken == dao.addresses('stableCoin') || isMintedByPlatform[rewardToken], "only for authorized tokens");
         require(isMintedByPlatform[msg.sender], "only for authorized tokens");
         dividendsRounds[currentDividendsRound] = rewardToken;
-        dividendsPerRoundPerToken[currentDividendsRound] = 10**decimals*amount/initialSupply;
+        dividendsPerRoundPerToken[currentDividendsRound] = 10**decimals()*amount/totalSupply();
         emit newDividendsRound(currentDividendsRound, rewardToken, amount);
         currentDividendsRound++;
         return true;
@@ -110,51 +105,6 @@ contract Platform is ERC20{
 
     function getCurrentInterestRate() public view returns (uint256 interestRate){
         return dao.params('depositRate');
-    }
-
-    function totalSupply() public view returns (uint256) {
-        return initialSupply;
-    }
-
-    function balanceOf(address owner) public view returns (uint256 balance) {
-        return balances[owner];
-    }
-
-    function allowance(address owner, address spender) public view returns (uint remaining) {
-        return allowed[owner][spender];
-    }
-
-    function transfer(address to, uint256 value) public returns (bool success) {
-        claimDividends(to);
-        claimDividends(msg.sender);
-        if (balances[msg.sender] >= value && value > 0) {
-            balances[msg.sender] -= value;
-            balances[to] += value;
-            emit Transfer(msg.sender, to, value);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function transferFrom(address from, address to, uint256 value) public returns (bool success) {
-        claimDividends(from);
-        claimDividends(to);
-        if (balances[from] >= value && allowed[from][msg.sender] >= value && value > 0) {
-            balances[to] += value;
-            balances[from] -= value;
-            allowed[from][msg.sender] -= value;
-            emit Transfer(from, to, value);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function approve(address spender, uint256 value) public returns (bool success) {
-        allowed[msg.sender][spender] = value;
-        emit Approval(msg.sender, spender, value);
-        return true;
     }
 
     receive() external payable {

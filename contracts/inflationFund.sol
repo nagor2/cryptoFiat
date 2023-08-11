@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity 0.8.19;
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "./INTDAO.sol";
-import "./stableCoin.sol";
 import "./CDP.sol";
 
 contract InflationFund {
     INTDAO dao;
-    stableCoin coin;
+    IERC20 coin;
     CDP cdp;
 
     uint256 public lastEmission;
@@ -15,13 +16,13 @@ contract InflationFund {
     constructor(address payable INTDAOaddress){
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('inflationFund',payable(address(this)));
-        coin = stableCoin(payable(dao.addresses('stableCoin')));
+        coin = IERC20(dao.addresses('stableCoin'));
         cdp = CDP(payable(dao.addresses('cdp')));
         lastEmission = block.timestamp;
     }
 
     function renewContracts() public {
-        coin = stableCoin(payable(dao.addresses('stableCoin')));
+        coin = IERC20(payable(dao.addresses('stableCoin')));
         cdp = CDP(payable(dao.addresses('cdp')));
     }
 

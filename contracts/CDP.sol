@@ -1,9 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity 0.8.19;
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+interface IERC20MintableAndBurnable is IERC20{
+    function mint(address to, uint256 amount) external;
+    function burn(address from, uint256 amount) external;
+}
+
 import "./INTDAO.sol";
 import "./cart.sol";
-import "./Rule.sol";
-import "./stableCoin.sol";
 import "./Auction.sol";
 import "./weth.sol";
 
@@ -26,9 +31,9 @@ contract CDP {
     uint256 public numPositions;
     INTDAO dao;
     cartContract oracleCart;
-    stableCoin coin;
+    IERC20MintableAndBurnable coin;
     Auction auction;
-    Rule rule;
+    IERC20MintableAndBurnable rule;
     ERC20 weth;
 
     mapping(uint256 => Position) public positions;
@@ -42,15 +47,16 @@ contract CDP {
         dao = INTDAO(INTDAOaddress);
         dao.setAddressOnce('cdp',payable(address(this)));
         dao.setAddressOnce('inflationSpender',payable(address(this)));
-        coin = stableCoin(payable(dao.addresses('stableCoin')));
+        coin = IERC20MintableAndBurnable(dao.addresses('stableCoin'));
         oracleCart = cartContract(dao.addresses('cart'));
         auction = Auction(dao.addresses('auction'));
-        rule = Rule(dao.addresses('rule'));
+        rule = IERC20MintableAndBurnable(dao.addresses('rule'));
         weth = ERC20(dao.addresses('weth'));
     }
 
     function renewContracts() public {
-        coin = stableCoin(payable(dao.addresses('stableCoin')));
+        coin = IERC20MintableAndBurnable(dao.addresses('stableCoin'));
+        rule = IERC20MintableAndBurnable(dao.addresses('rule'));
         oracleCart = cartContract(dao.addresses('cart'));
         auction = Auction(dao.addresses('auction'));
         weth = ERC20(dao.addresses('weth'));
@@ -60,7 +66,7 @@ contract CDP {
         stableCoinsToMint = (stableCoinsToMint > getMaxStableCoinsToMint(msg.value))
                             ?getMaxStableCoinsToMint(msg.value):stableCoinsToMint;
 
-        require (stableCoinsToMint >= dao.params('minCoinsToMint')*10**coin.decimals(), "you can not mint less than 1 coin");
+        require (stableCoinsToMint >= dao.params('minCoinsToMint'), "you can not mint less than 1 coin");
 
         posID = numPositions++;
         Position storage p = positions[posID];
@@ -125,7 +131,7 @@ contract CDP {
         require(coin.transferFrom(p.owner, address(this), overallDebt), "Could not transfer coins for some reason. You have to allow coins first");
         require (weth.transfer(p.owner, p.wethAmountLocked), "Could not transfer collateral for some reason");
         p.wethAmountLocked = 0;
-        require (coin.burn(address(this), p.coinsMinted), "Could not burn coins for some reason");
+        coin.burn(address(this), p.coinsMinted);
         p.coinsMinted = 0;
         p.lastTimeUpdated = block.timestamp;
         p.liquidated = true;
@@ -232,7 +238,7 @@ contract CDP {
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         require(p.owner == msg.sender, "Only owner may update the position");
-        require (newStableCoinsAmount >= dao.params('minCoinsToMint')*10**coin.decimals(), "you can not mint less than 1 coin");
+        require (newStableCoinsAmount >= dao.params('minCoinsToMint'), "you can not mint less than 1 coin");
 
         p.interestAmountRecorded += interestAmountUnrecorded(posID);
         p.lastTimeUpdated = block.timestamp;

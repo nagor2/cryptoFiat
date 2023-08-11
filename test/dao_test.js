@@ -281,7 +281,6 @@ contract('DAO', (accounts) => {
 
         assert.equal(valueAfter, false, "wrong valueAfter");
     });
-
 });
 
 //TODO: Написать тест на паузу контракта (зачем нужен этот функционал, не помню, но пусть будет)

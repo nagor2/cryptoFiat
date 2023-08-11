@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@drizzle/store": "^1.5.3",
+    "@openzeppelin/contracts": "^4.9.3",
     "debug": "^4.3.4",
     "path-exists": "^5.0.0",
     "truffle-assertions": "^0.9.2",
