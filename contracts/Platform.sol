@@ -37,7 +37,7 @@ contract Platform is ERC20{
     }
 
     constructor(address payable INTDAOaddress) ERC20("Crowdfunding platform", "CFP"){
-        _mint(msg.sender, 10**6);
+        _mint(msg.sender, 10**6*10**decimals());
         dao = INTDAO(INTDAOaddress);
         coin = IERC20(dao.addresses('stableCoin'));
         cdp = CDP(dao.addresses('cdp'));

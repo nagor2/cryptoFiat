@@ -15,13 +15,16 @@ contract('Auction', (accounts) => {
     let auction;
     let cdp;
     let rule;
+    let bidder = accounts[2];
+    let newBidder = accounts[3];
+    let ruleHolder = accounts[7];
 
     before('should setup the contracts instance', async () => {
         dao = await INTDAO.deployed();
         stableCoin = await StableCoin.deployed(dao.address);
         auction = await Auction.deployed(dao.address);
         cdp = await CDP.deployed(dao.address);
-        rule = await Rule.deployed(dao.address);
+        rule = await Rule.deployed(dao.address, {from:ruleHolder});
     });
 
     it("should throw if little money on balance", async () => {
@@ -70,8 +73,7 @@ contract('Auction', (accounts) => {
     });
 
     it("should make a bid", async () => {
-        let bidder = accounts[2];
-        await rule.mint(accounts[2], 2,{from:bidder});
+        await rule.transfer(bidder, 2,{from:ruleHolder});
         await rule.approve(auction.address, 1, {from: bidder});
         await time.increase(1); //this is to claim to finish due to a.initTime!=a.lastTimeUpdated condition
         let balanceBefore = await rule.balanceOf(bidder);
@@ -102,21 +104,19 @@ contract('Auction', (accounts) => {
     });
 
     it("should cancel a bid and transfer funds back", async () => {
-        let formerBidder = accounts[2];
-        let newBidder = accounts[3];
-        await rule.mint(newBidder, 2,{from:newBidder});
+        await rule.transfer(newBidder, 2,{from:ruleHolder});
         await rule.approve(auction.address, 2, {from: newBidder});
         await auction.makeBid(1, 2, {from: newBidder});
 
-        let balanceBefore = await rule.balanceOf(formerBidder);
+        let balanceBefore = await rule.balanceOf(bidder);
         assert.equal(parseFloat(balanceBefore), 1, "Wrong balance before");
-        let bidTx = await auction.cancelBid(1, {from: formerBidder});
+        let bidTx = await auction.cancelBid(1, {from: bidder});
 
 
         truffleAssert.eventEmitted(bidTx, 'bidCanceled', async (ev) => {
             assert.equal(ev.bidId, 1, "bid should be canceled");
         });
-        let balanceAfter = await rule.balanceOf(formerBidder);
+        let balanceAfter = await rule.balanceOf(bidder);
         assert.equal(parseFloat(balanceAfter), 2, "Wrong balance after");
 
         let b = await auction.bids(1);

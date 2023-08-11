@@ -127,7 +127,7 @@ it("should generate additional fee", async () => {
     await truffleAssert.fails(
         cdp.transferInterest(posId),
         truffleAssert.ErrorType.REVERT,
-        "Was not able to transfer fee. Insufficient balance or allowance. Try to allow spending first"
+        "insufficient allowance"
     );
 
     await stableCoin.transfer(owner, web3.utils.toWei('50', 'ether'), {from:recipient});

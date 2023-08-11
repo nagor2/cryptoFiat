@@ -83,6 +83,8 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         let bidTx = await auction.makeBid(auctionId, web3.utils.toWei('1000'), {from:bidder});
 
+
+
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(parseFloat(ev.auctionID), auctionId, "Should be the first auction");
             bidIdToImprove = parseFloat(ev.bidId);
@@ -105,12 +107,12 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         bidTx = await auction.makeBid(auctionId, web3.utils.toWei('950'), {from:bidder2});
 
         bestBidAmount = await auction.getBestBidAmount(auctionId);
-        assert.equal(parseFloat(bestBidAmount).toFixed(0), 950, "Should be correct bestBid");
+        assert.equal(parseFloat(bestBidAmount/10**18).toFixed(0), 950, "Should be correct bestBid");
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(parseFloat(ev.auctionID), auctionId, "Should be the first auction");
             bidIdToCancel = parseFloat(ev.bidId);
-            assert.equal(parseFloat(ev.bidAmount).toFixed(0), 950, "Should be correct amount");
+            assert.equal(parseFloat(ev.bidAmount/10**18).toFixed(0), 950, "Should be correct amount");
         });
 
         await truffleAssert.fails(
@@ -122,7 +124,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         bidTx = await auction.improveBid(bidIdToImprove, web3.utils.toWei('902.5'), {from:bidder});
         bestBidAmount = await auction.getBestBidAmount(auctionId);
-        assert.equal(parseFloat(bestBidAmount).toFixed(1), 902.5, "Should be correct bestBid");
+        assert.equal(parseFloat(bestBidAmount/10**18).toFixed(1), 902.5, "Should be correct bestBid");
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(parseFloat(ev.auctionID), auctionId, "Should be correct auction");
@@ -140,13 +142,13 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         let ruleSupplyAfter = await rule.totalSupply();
 
-        assert.equal(parseFloat(await stableCoin.balanceOf(bidder)).toFixed(), 2000, "wrong balance");
-        assert.equal(parseFloat(await stableCoin.balanceOf(bidder2)).toFixed(), 0, "wrong balance");
-        assert.equal(parseFloat(await stableCoin.balanceOf(cdp.address)).toFixed(), 50, "wrong balance");
-        assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)).toFixed(), 50, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(bidder)/10**18).toFixed(), 2000, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(bidder2)/10**18).toFixed(), 0, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(cdp.address)/10**18).toFixed(), 50, "wrong balance");
+        assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 50, "wrong balance");
 
-        assert.equal(parseFloat(ruleSupplyBefore)+902.5, parseFloat(ruleSupplyAfter), "wrong ruleSupply");
-        assert.equal(parseFloat(await rule.balanceOf(bidder)).toFixed(1), 902.5, "wrong balance");
+        assert.equal(parseFloat(ruleSupplyBefore)+902.5*10**18, parseFloat(ruleSupplyAfter), "wrong ruleSupply");
+        assert.equal(parseFloat(await rule.balanceOf(bidder)/10**18).toFixed(1), 902.5, "wrong balance");
 
         await auction.cancelBid(bidIdToCancel, {from: bidder2});
         assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(), 0, "wrong balance");

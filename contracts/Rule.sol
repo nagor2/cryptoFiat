@@ -11,7 +11,7 @@ contract Rule is ERC20{
     IDAO dao;
 
     constructor(address payable _INTDAOaddress) ERC20("Rule token", "RLE"){
-        _mint(msg.sender, 10**6);
+        _mint(msg.sender, 10**6*10**decimals());
         dao = IDAO(_INTDAOaddress);
         dao.setAddressOnce("rule", payable(address(this)));
     }

@@ -11,42 +11,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
-      <change afterPath="$PROJECT_DIR$/build/contracts/Auction.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/Commodity.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/DepositContract.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/ERC20.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/IDAO.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/IERC20MintableAndBurnable.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/InflationFund.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/Platform.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/WETH9.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/cartContract.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/contracts/tokenTemplate.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Commodity.sol" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Deposit.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Deposit.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Platform.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Platform.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Rule.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/cart.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/cart.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/inflationFund.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/inflationFund.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/tokenTemplate.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/tokenTemplate.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/auction_stubFund.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_stubFund.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/dao_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/dao_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/stableCoin_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/stableCoin_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/tokenTemplate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/tokenTemplate_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpFee_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deposit_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/deposit_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -322,7 +293,8 @@
       <workItem from="1691031751434" duration="4941000" />
       <workItem from="1691405747763" duration="3673000" />
       <workItem from="1691476230585" duration="700000" />
-      <workItem from="1691722888502" duration="14417000" />
+      <workItem from="1691722888502" duration="14448000" />
+      <workItem from="1691744815159" duration="4615000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -451,9 +423,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1691728009943" />
-    <state x="666" y="255" width="587" height="530" key="find.popup" timestamp="1691727029755">
+    <state x="666" y="255" width="587" height="530" key="find.popup" timestamp="1691744905392">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="666" y="255" width="587" height="530" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1691727029755" />
+    <state x="666" y="255" width="587" height="530" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1691744905392" />
   </component>
 </project>

@@ -12,18 +12,16 @@ contract('Deposit', (accounts) => {
     let cdp;
     let coin;
     let deposit;
-    let owner = accounts[0];
-    let amount;
+    const owner = accounts[0];
+    const amount = web3.utils.toWei('100');
 
     before('should setup the contracts instance', async () => {
         dao = await INTDAO.deployed(0x0);
         coin = await StableCoin.deployed(dao.address);
         cdp = await CDP.deployed(dao.address);
         deposit = await Deposit.deployed(dao.address);
-        amount = web3.utils.toWei('100', "ether");
-        await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
-            from: accounts[1],
-            value: web3.utils.toWei('1', 'ether')});
+
+        await cdp.openCDP(web3.utils.toWei('1000'), {from: accounts[1], value: web3.utils.toWei('1')});
 
         await coin.transfer(cdp.address, web3.utils.toWei('10', 'ether'), {from: accounts[1]}); //topUp stabFund
     });
@@ -39,14 +37,14 @@ contract('Deposit', (accounts) => {
         await truffleAssert.fails(
             deposit.deposit({from: owner}),
             truffleAssert.ErrorType.REVERT,
-            "Could not transfer coins for some reason");
+            "transfer amount exceeds balance");
 
         await coin.transfer(owner, 50, {from: accounts[1]});
 
         await truffleAssert.fails(
             deposit.deposit({from: owner}),
             truffleAssert.ErrorType.REVERT,
-            "Could not transfer coins for some reason");
+            "transfer amount exceeds balance");
 
         await coin.transfer(accounts[1], 50, {from: owner});
         await coin.approve(deposit.address, 0, {from: owner});
