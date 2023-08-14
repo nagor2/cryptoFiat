@@ -2,8 +2,15 @@
 pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "./INTDAO.sol";
-import "./CDP.sol";
+interface ICDP{
+    function claimInterest(uint256 amount, address beneficiary) external;
+}
+
+interface IDAO{
+    function addresses(string memory) external view returns (address);
+    function params(string memory) external view returns (uint256);
+    function setAddressOnce(string memory, address) external;
+}
 
     struct Deposit {
         address owner;
@@ -17,24 +24,23 @@ import "./CDP.sol";
     }
 
 contract DepositContract {
-
-    INTDAO dao;
+    IDAO dao;
     IERC20 coin;
-    CDP cdp;
+    ICDP cdp;
     uint256 public counter;
     mapping(uint256 => Deposit) public deposits;
     event DepositOpened(uint256 id, uint256 amount, uint256 rate, address owner);
 
     constructor(address payable INTDAOaddress){
-        dao = INTDAO(INTDAOaddress);
+        dao = IDAO(INTDAOaddress);
         dao.setAddressOnce('deposit',payable(address(this)));
-        coin = IERC20(payable(dao.addresses('stableCoin')));
-        cdp = CDP(payable(dao.addresses('cdp')));
+        coin = IERC20(dao.addresses('stableCoin'));
+        cdp = ICDP(dao.addresses('cdp'));
     }
 
     function renewContracts() public {
         coin = IERC20(payable(dao.addresses('stableCoin')));
-        cdp = CDP(payable(dao.addresses('cdp')));
+        cdp = ICDP(payable(dao.addresses('cdp')));
     }
 
     function deposit() public{
@@ -52,12 +58,12 @@ contract DepositContract {
     }
 
     function withdraw(uint256 id, uint256 amount) public{
-        claimInterest(id);
+        updateInterest(id);
         Deposit storage d = deposits[id];
         require(msg.sender == d.owner, "only owner may init withdrawal");
         require (!d.closed, "deposit is closed");
         require (amount<=d.coinsDeposited, "not enough coins on deposit");
-        require(coin.transfer(d.owner, amount), "Could not transfer coins for some reason");
+        coin.transfer(d.owner, amount);
         d.coinsDeposited -= amount;
         if (d.coinsDeposited==0)
             d.closed = true;
@@ -66,12 +72,12 @@ contract DepositContract {
     }
 
     function topUp(uint256 id) public{
-        claimInterest(id);
+        updateInterest(id);
         Deposit storage d = deposits[id];
         require (!d.closed, "deposit is closed, open a new one, please");
         uint256 amount = coin.allowance(msg.sender, address(this));
         require (amount>0, "You should approve first");
-        require(coin.transferFrom(msg.sender, address(this), amount), "Could not transfer coins for some reason");
+        coin.transferFrom(msg.sender, address(this), amount);
         if (block.timestamp>d.period)
             d.currentInterestRate = dao.params("depositRate");
         d.coinsDeposited += amount;
@@ -93,12 +99,7 @@ contract DepositContract {
 
     function claimInterest(uint256 id) public {
         updateInterest(id);
-        Deposit storage d = deposits[id];
-        cdp.claimInterest(overallInterest(id), d.owner);
-        d.accumulatedInterest = 0;
-    }
-
-    receive() external payable {
-        dao.addresses('oracle').transfer(address(this).balance);
+        cdp.claimInterest(overallInterest(id), deposits[id].owner);
+        deposits[id].accumulatedInterest = 0;
     }
 }

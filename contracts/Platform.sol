@@ -1,10 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import "./INTDAO.sol";
-import "./CDP.sol";
-import "./tokenTemplate.sol";
+interface IDAO{
+    function addresses(string memory) external view returns (address);
+    function params(string memory) external view returns (uint256);
+    function setAddressOnce(string memory, address) external;
+}
+
+interface ICDP{
+    function claimInterest(uint256 amount, address beneficiary) external;
+}
+
+interface IToken{
+    function platformContractAddress() external view returns (address);
+}
 
 pragma solidity 0.8.19;
 
@@ -15,8 +25,8 @@ contract Platform is ERC20{
 
     event newDividendsRound(uint256 round, address rewardToken, uint256 amount);
 
-    INTDAO dao;
-    CDP cdp;
+    IDAO dao;
+    ICDP cdp;
     IERC20 coin;
 
     uint256 public currentDividendsRound;
@@ -38,9 +48,9 @@ contract Platform is ERC20{
 
     constructor(address payable INTDAOaddress) ERC20("Crowdfunding platform", "CFP"){
         _mint(msg.sender, 10**6*10**decimals());
-        dao = INTDAO(INTDAOaddress);
+        dao = IDAO(INTDAOaddress);
         coin = IERC20(dao.addresses('stableCoin'));
-        cdp = CDP(dao.addresses('cdp'));
+        cdp = ICDP(dao.addresses('cdp'));
         dao.setAddressOnce('platform',payable(address(this)));
         tokenMinter = msg.sender;
         ownerAddress = msg.sender;
@@ -52,7 +62,7 @@ contract Platform is ERC20{
 
     function renewContracts() public {
         coin = IERC20(dao.addresses('stableCoin'));
-        cdp = CDP(dao.addresses('cdp'));
+        cdp = ICDP(dao.addresses('cdp'));
     }
 
     function claimDividends(address addr) public{
@@ -63,7 +73,7 @@ contract Platform is ERC20{
         }
         else beneficiary = addr;
         for (uint256 i=lastPayedDividendsRound[addr]; i<currentDividendsRound; i++){
-            ERC20 token = ERC20(dividendsRounds[i]);
+            IERC20 token = IERC20(dividendsRounds[i]);
             divAmount = balanceOf(addr)/10**18*dividendsPerRoundPerToken[i];
             if (token.balanceOf(address(this))>=divAmount)
                 token.transfer(beneficiary, divAmount);
@@ -80,7 +90,7 @@ contract Platform is ERC20{
     }
 
     function addMintedToken(address addr) public onlyMinter{
-        tokenTemplate token = tokenTemplate(addr);
+        IToken token = IToken(addr);
         require(token.platformContractAddress() == address(this));
         isMintedByPlatform[addr] = true;
         mintedTokens[mintedNum] = addr;
@@ -105,9 +115,5 @@ contract Platform is ERC20{
 
     function getCurrentInterestRate() public view returns (uint256 interestRate){
         return dao.params('depositRate');
-    }
-
-    receive() external payable {
-        dao.addresses('oracle').transfer(address(this).balance);
     }
 }

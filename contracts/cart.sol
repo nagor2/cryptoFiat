@@ -1,8 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
 
-import "./INTDAO.sol";
-import "./exchangeRateContract.sol";
+interface IDAO{
+    function addresses(string memory) external view returns (address);
+    function setAddressOnce(string memory, address) external;
+}
+
+interface IOracle{
+    function updater() external view returns (address);
+    function getPrice(string memory) external view returns (uint256);
+    function getDecimals(string memory) external view returns (uint8);
+}
 
 contract cartContract{
 
@@ -13,8 +21,8 @@ contract cartContract{
         uint256 initialPrice;
     }
 
-    INTDAO dao;
-    exchangeRateContract oracle;
+    IDAO dao;
+    IOracle oracle;
 
     uint256 public itemsCount;
     uint256 public sharesCount;
@@ -27,13 +35,13 @@ contract cartContract{
 
 
     constructor(address payable INTDAOaddress){
-        dao = INTDAO(INTDAOaddress);
+        dao = IDAO(INTDAOaddress);
         dao.setAddressOnce('cart',payable(address(this)));
-        oracle = exchangeRateContract(dao.addresses('oracle'));
+        oracle = IOracle(dao.addresses('oracle'));
     }
 
     function renewContracts() public {
-        oracle = exchangeRateContract(dao.addresses('oracle'));
+        oracle = IOracle(dao.addresses('oracle'));
     }
 
     function addItem(string memory symbol, uint256 share, uint256 initialPrice) public{
@@ -74,11 +82,7 @@ contract cartContract{
         return oracle.getPrice(symbol);
     }
 
-    function getDecimals(string memory symbol) public view returns (uint256 _decimals) {
+    function getDecimals(string memory symbol) public view returns (uint8 _decimals) {
         return oracle.getDecimals(symbol);
-    }
-
-    receive() external payable {
-        dao.addresses('oracle').transfer(address(this).balance);
     }
 }

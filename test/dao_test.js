@@ -29,15 +29,6 @@ contract('DAO', (accounts) => {
         assert.notEqual(address, 0x0);
     });
 
-    it('should transfer ether to oracle contract', async()=>{
-        let balanceBefore = await web3.eth.getBalance(oracle.address);
-        assert.equal(balanceBefore,web3.utils.toWei('0.1', "ether"), 'balance should be 0.1')
-        await dao.send(web3.utils.toWei("1", "ether"),{from: accounts[0]});
-        await dao.withdraw();
-        let balanceAfter = await web3.eth.getBalance(oracle.address);
-        assert.equal(balanceAfter,web3.utils.toWei('1.1', "ether"), 'balance should be 1.1 ether')
-    });
-
     it('addresses filled successfully', async () => {
         const address = await dao.address;
         assert.equal(await dao.addresses('dao'),address);

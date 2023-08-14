@@ -1,16 +1,31 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface IERC20MintableAndBurnable is IERC20{
     function mint(address to, uint256 amount) external;
     function burn(address from, uint256 amount) external;
 }
 
-import "./INTDAO.sol";
-import "./cart.sol";
-import "./Auction.sol";
-import "./weth.sol";
+interface IDAO{
+    function addresses(string memory) external view returns (address);
+    function params(string memory) external view returns (uint256);
+    function setAddressOnce(string memory, address) external;
+    function authorized(address candidate) external view returns (bool isAuthorized);
+}
+
+interface IAuction{
+    function initCoinsBuyOut(uint256 posID, uint256 collateral) external returns (uint256 auctionID);
+    function isFinalized(uint256 auctionId) external view returns (bool finalized);
+    function claimToFinalizeAuction(uint256 auctionID) external returns (bool success);
+    function getPaymentAmount(uint256 auctionID) external view returns (uint256);
+    function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) external returns (uint256 auctionID);
+}
+
+interface ICart{
+    function getPrice(string memory symbol) external view returns (uint256);
+    function getDecimals(string memory symbol) external view returns (uint8);
+}
 
     struct Position {
         address owner;
@@ -29,12 +44,12 @@ import "./weth.sol";
 
 contract CDP {
     uint256 public numPositions;
-    INTDAO dao;
-    cartContract oracleCart;
+    IDAO dao;
+    ICart oracleCart;
     IERC20MintableAndBurnable coin;
-    Auction auction;
+    IAuction auction;
     IERC20MintableAndBurnable rule;
-    ERC20 weth;
+    IERC20 weth;
 
     mapping(uint256 => Position) public positions;
     event PositionOpened (address owner, uint256 posID);
@@ -44,22 +59,22 @@ contract CDP {
     event OnLiquidation (uint256 posID, uint256 timestamp);
 
     constructor(address payable INTDAOaddress) {
-        dao = INTDAO(INTDAOaddress);
+        dao = IDAO(INTDAOaddress);
         dao.setAddressOnce('cdp',payable(address(this)));
         dao.setAddressOnce('inflationSpender',payable(address(this)));
         coin = IERC20MintableAndBurnable(dao.addresses('stableCoin'));
-        oracleCart = cartContract(dao.addresses('cart'));
-        auction = Auction(dao.addresses('auction'));
+        oracleCart = ICart(dao.addresses('cart'));
+        auction = IAuction(dao.addresses('auction'));
         rule = IERC20MintableAndBurnable(dao.addresses('rule'));
-        weth = ERC20(dao.addresses('weth'));
+        weth = IERC20(dao.addresses('weth'));
     }
 
     function renewContracts() public {
         coin = IERC20MintableAndBurnable(dao.addresses('stableCoin'));
         rule = IERC20MintableAndBurnable(dao.addresses('rule'));
-        oracleCart = cartContract(dao.addresses('cart'));
-        auction = Auction(dao.addresses('auction'));
-        weth = ERC20(dao.addresses('weth'));
+        oracleCart = ICart(dao.addresses('cart'));
+        auction = IAuction(dao.addresses('auction'));
+        weth = IERC20(dao.addresses('weth'));
     }
 
     function openCDP(uint256 stableCoinsToMint) external payable returns (uint256 posID){
@@ -295,11 +310,5 @@ contract CDP {
         require (msg.sender == dao.addresses('auction'), "Only auction is allowed to claim mint");
         rule.mint(to, amount);
         return true;
-    }
-
-    receive() external payable {}
-
-    function withdraw() external {
-        dao.addresses('oracle').transfer(address(this).balance);
     }
 }

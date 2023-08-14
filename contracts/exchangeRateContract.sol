@@ -9,16 +9,20 @@ pragma solidity 0.8.19;
     struct instrumentDescription {
         uint256 id;
         string name;
-        uint256 decimals;
+        uint8 decimals;
     }
-import "./INTDAO.sol";
+
+interface IDAO{
+    function params(string memory) external view returns (uint256);
+    function setAddressOnce(string memory, address) external;
+}
 
 contract exchangeRateContract {
-    INTDAO dao;
+    IDAO dao;
 
     constructor(address payable _INTDAOaddress) payable{
-        dao = INTDAO(_INTDAOaddress);
-        dao.setAddressOnce("oracle", payable(address(this)));
+        dao = IDAO(_INTDAOaddress);
+        dao.setAddressOnce("oracle", address(this));
         author = payable(msg.sender);
         updater = payable(msg.sender);
         beneficiary = payable(msg.sender);
@@ -110,7 +114,7 @@ contract exchangeRateContract {
         emit priceUpdated (id);
     }
 
-    function addInstrument(string memory symbol, string memory name, uint256 decimals) public onlyUpdater returns (uint256 id){
+    function addInstrument(string memory symbol, string memory name, uint8 decimals) public onlyUpdater returns (uint256 id){
         require (bytes (dictionary[symbol].name).length == 0, "Symbol already exist, use updateInstrument");
         id = instrumentsCount;
         dictionary[symbol].id = id;
@@ -121,7 +125,7 @@ contract exchangeRateContract {
         return id;
     }
 
-    function updateInstrument(string memory symbol, string memory name, uint decimals) public onlyUpdater{
+    function updateInstrument(string memory symbol, string memory name, uint8 decimals) public onlyUpdater{
         dictionary[symbol].name = name;
         dictionary[symbol].decimals = decimals;
     }
@@ -134,9 +138,7 @@ contract exchangeRateContract {
         return instruments[dictionary[symbol].id].timeStamp;
     }
 
-    function getDecimals(string memory symbol) public view returns (uint256) {
+    function getDecimals(string memory symbol) public view returns (uint8) {
         return dictionary[symbol].decimals;
     }
-
-    receive() external payable {}
 }

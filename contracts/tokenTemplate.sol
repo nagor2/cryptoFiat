@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
-import "./Platform.sol";
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+
+interface IPlatform{
+    function addDividend(address rewardToken, uint256 amount) external returns(bool success);
+    function claimInterestForMintedTokenHolder(uint256 amount, address beneficiary) external;
+    function getCurrentInterestRate() external view returns (uint256 interestRate);
+}
 
 pragma solidity 0.8.19;
 
-
-contract tokenTemplate is ERC20{
-    Platform platform;
-    ERC20 coin;
+contract tokenTemplate is IERC20{
+    IPlatform platform;
+    IERC20 coin;
 
     mapping (address => uint256) balances;
     mapping (address => uint256) timeBought;
@@ -62,8 +66,8 @@ contract tokenTemplate is ERC20{
                 string[] memory _stagesShortDescription) ERC20 (_symbol, _name){
 
         teamAddress = addresses[0];
-        coin = ERC20(payable(addresses[1]));
-        platform = Platform(payable(addresses[2]));
+        coin = IERC20(payable(addresses[1]));
+        platform = IPlatform(payable(addresses[2]));
         platformContractAddress = addresses[2];
 
         initialPrice = params[0];

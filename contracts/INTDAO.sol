@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
-import "./Rule.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract INTDAO {
-    Rule ruleToken;
+    IERC20 ruleToken;
     mapping (uint256 => mapping(address => uint256)) votes;
 
     mapping (uint256=>Voting) public votings;
@@ -22,7 +22,7 @@ contract INTDAO {
     bool public activeVoting;
 
     mapping (string => uint256) public params;
-    mapping (string => address payable) public addresses;
+    mapping (string => address) public addresses;
     mapping (address => bool) public paused;
     mapping (address => bool) public authorized;
 
@@ -56,11 +56,11 @@ contract INTDAO {
         params['highVolatilityEventBarrierPercent'] = 5;
         params['minCoinsToMint'] = 1;
 
-        addresses['weth'] = payable(WETH);
-        addresses['dao'] = payable(address(this));
+        addresses['weth'] = WETH;
+        addresses['dao'] = address(this);
     }
 
-    function setAddressOnce(string memory addressName, address payable addr) public{ //a certain pool of names, check not to expand addresses
+    function setAddressOnce(string memory addressName, address addr) public{ //a certain pool of names, check not to expand addresses
         require (addresses[addressName] == address (0x0), "address was already set");
             addresses[addressName] = addr;
             paused[addr] = false;
@@ -87,7 +87,7 @@ contract INTDAO {
     }
 
     function renewContracts() public {
-        ruleToken = Rule(addresses['rule']);
+        ruleToken = IERC20(addresses['rule']);
     }
 
     function poolTokens() public returns (bool success){
@@ -156,11 +156,5 @@ contract INTDAO {
             authorized[votings[votingID].addr] = votings[votingID].decision;
         activeVoting = false;
         emit VotingSucceed(votingID);
-    }
-
-    receive() external payable {}
-
-    function withdraw() public {
-        addresses['oracle'].transfer(address(this).balance);
     }
 }

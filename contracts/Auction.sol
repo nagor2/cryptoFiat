@@ -2,8 +2,15 @@
 pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "./INTDAO.sol";
-import "./CDP.sol";
+interface IDAO{
+    function addresses(string memory) external view returns (address);
+    function params(string memory) external view returns (uint256);
+    function setAddressOnce(string memory, address) external;
+}
+
+interface ICDP{
+    function mintRule(address to, uint256 amount) external returns (bool success);
+}
 
     struct auctionEntity {
         bool initialized;
@@ -30,8 +37,8 @@ contract Auction {
     uint256 public auctionNum;
     uint256 public bidsNum;
     IERC20 coin;
-    INTDAO dao;
-    CDP cdp;
+    IDAO dao;
+    ICDP cdp;
     IERC20 rule;
     bool isCoinsBuyOutForStabilization;
     bool ruleBuyOut;
@@ -46,16 +53,16 @@ contract Auction {
     event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 collateral);
 
     constructor(address payable _INTDAOaddress){
-        dao = INTDAO(_INTDAOaddress);
-        dao.setAddressOnce("auction", payable(address(this)));
-        cdp = CDP(dao.addresses('cdp'));
+        dao = IDAO(_INTDAOaddress);
+        dao.setAddressOnce("auction", address(this));
+        cdp = ICDP(dao.addresses('cdp'));
         coin = IERC20(payable(dao.addresses('stableCoin')));
         rule = IERC20(payable(dao.addresses('rule')));
     }
 
     function renewContracts() external {
         coin = IERC20(payable(dao.addresses('stableCoin')));
-        cdp = CDP(dao.addresses('cdp'));
+        cdp = ICDP(dao.addresses('cdp'));
         rule = IERC20(payable(dao.addresses('rule')));
     }
 
@@ -94,7 +101,7 @@ contract Auction {
 
     function initCoinsBuyOut(uint256 posID, uint256 collateral) external returns (uint256 auctionID){
         require (msg.sender == dao.addresses('cdp'), "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract");
-        ERC20 weth = ERC20(dao.addresses('weth'));
+        IERC20 weth = IERC20(dao.addresses('weth'));
         require(weth.transferFrom(dao.addresses('cdp'), address(this), collateral), "could not transfer weth for some reason");
 
         auctionID = createNewAuction (dao.addresses('weth'), collateral, dao.addresses('stableCoin'),0);
@@ -132,7 +139,7 @@ contract Auction {
                 require(bidAmount>0 && bestBid.bidAmount*(100-dao.params('minAuctionPriceMove'))/100>=bidAmount, "your bid is not low enough");
         }
         require(bidAmount>0, "your bid is not high enough");
-        ERC20 paymentToken = ERC20(address(a.paymentToken));
+        IERC20 paymentToken = IERC20(address(a.paymentToken));
         if (a.lotToken == dao.addresses('rule')){
             require(bidAmount<=rule.totalSupply()*dao.params('maxRuleEmissionPercent')/100, "too many rules for one emission");
             require(paymentToken.transferFrom(msg.sender, address(this), a.paymentAmount), "You should first approve stableCoins to auction contract address");
@@ -166,7 +173,7 @@ contract Auction {
         if (a.lotToken == dao.addresses('rule'))
             require(newBidAmount>0 && bestBid.bidAmount*(100-dao.params('minAuctionPriceMove'))/100>=newBidAmount, "your bid is not high enough");
 
-        ERC20 paymentToken = ERC20(address(a.paymentToken));
+        IERC20 paymentToken = IERC20(address(a.paymentToken));
 
         if (a.lotToken == dao.addresses('stableCoin') || a.lotToken == dao.addresses('weth')){
             uint256 difference = newBidAmount-b.bidAmount;
@@ -185,7 +192,7 @@ contract Auction {
         auctionEntity storage a = auctions[b.auctionID];
         require(a.initialized, "the bid is made on non-existent auction");
         require(a.bestBidId!=bidId, "You can not cancel a bid if it is a best one");
-        ERC20 paymentToken = ERC20(address(a.paymentToken));
+        IERC20 paymentToken = IERC20(address(a.paymentToken));
         if (a.lotToken == dao.addresses('rule'))
             require(paymentToken.transfer(b.owner, a.paymentAmount), "we were not able to transfer your bid back");
         else
@@ -212,8 +219,8 @@ contract Auction {
         Bid storage bestBid = bids[a.bestBidId];
 
         if (a.lotToken == dao.addresses('stableCoin')){
-            require(ERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount), "lotToken transfer failed for some reason");
-            require(ERC20(address(a.paymentToken)).transfer(dao.addresses('cdp'), bestBid.bidAmount), "paymentToken transfer failed for some reason");
+            require(IERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount), "lotToken transfer failed for some reason");
+            require(IERC20(address(a.paymentToken)).transfer(dao.addresses('cdp'), bestBid.bidAmount), "paymentToken transfer failed for some reason");
             ruleBuyOut = false;
             emit buyOutFinished(auctionID, a.lotAmount, bestBid.bidAmount);
         }
@@ -223,8 +230,8 @@ contract Auction {
             isCoinsBuyOutForStabilization = false;
         }
         if (a.lotToken == dao.addresses('weth')){
-            require(ERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount));
-            require(ERC20(address(a.paymentToken)).transfer(dao.addresses('cdp'), bestBid.bidAmount));
+            require(IERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount));
+            require(IERC20(address(a.paymentToken)).transfer(dao.addresses('cdp'), bestBid.bidAmount));
             emit buyOutFinished(auctionID, a.lotAmount, bestBid.bidAmount);
         }
         a.finalized = true;
@@ -240,11 +247,5 @@ contract Auction {
 
     function getBestBidAmount (uint256 auctionID) public view returns (uint256){
         return bids[auctions[auctionID].bestBidId].bidAmount;
-    }
-
-    receive() external payable {}
-
-    function withdraw() external {
-        dao.addresses('oracle').transfer(address(this).balance);
     }
 }

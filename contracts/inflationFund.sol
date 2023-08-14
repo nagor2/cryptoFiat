@@ -2,28 +2,35 @@
 pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "./INTDAO.sol";
-import "./CDP.sol";
+interface IDAO{
+    function addresses(string memory) external view returns (address);
+    function params(string memory) external view returns (uint256);
+    function setAddressOnce(string memory, address) external;
+}
+
+interface ICDP{
+    function claimEmission(uint256 amount, address beneficiary) external;
+}
 
 contract InflationFund {
-    INTDAO dao;
+    IDAO dao;
     IERC20 coin;
-    CDP cdp;
+    ICDP cdp;
 
     uint256 public lastEmission;
     event inflationEmission(uint256 amount);
 
     constructor(address payable INTDAOaddress){
-        dao = INTDAO(INTDAOaddress);
-        dao.setAddressOnce('inflationFund',payable(address(this)));
+        dao = IDAO(INTDAOaddress);
+        dao.setAddressOnce('inflationFund',address(this));
         coin = IERC20(dao.addresses('stableCoin'));
-        cdp = CDP(payable(dao.addresses('cdp')));
+        cdp = ICDP(payable(dao.addresses('cdp')));
         lastEmission = block.timestamp;
     }
 
     function renewContracts() public {
         coin = IERC20(payable(dao.addresses('stableCoin')));
-        cdp = CDP(payable(dao.addresses('cdp')));
+        cdp = ICDP(payable(dao.addresses('cdp')));
     }
 
     function claimEmission() public{
