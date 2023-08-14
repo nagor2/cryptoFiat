@@ -8,8 +8,6 @@ var weth = artifacts.require("WETH9");
 var deposit = artifacts.require("DepositContract");
 var InflationFund = artifacts.require("inflationFund.sol");
 var cartContract = artifacts.require("cartContract");
-var Platform = artifacts.require("Platform");
-var tokenTemplate = artifacts.require("tokenTemplate");
 
 module.exports = async function(deployer, network, accounts) {
 
@@ -34,7 +32,6 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(INTDAO, weth.address, {from: author});
         await deployer.deploy(exchangeRateContract, INTDAO.address, {from: exRAuthour, value:web3.utils.toWei('0.1')});
 
-
         const eRC = await exchangeRateContract.deployed();
 
         await eRC.addInstrument("etc", "Ethereum", 6, {from: exRAuthour});
@@ -46,9 +43,7 @@ module.exports = async function(deployer, network, accounts) {
         await eRC.addInstrument("Lumber", "Lumber", 6, {from: exRAuthour});
         await eRC.updateSinglePrice(2, 414100000, {from: exRAuthour});
 
-
         await deployer.deploy(cartContract, INTDAO.address);
-
 
         const cart = await cartContract.deployed();
 
@@ -61,30 +56,6 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(cdp, INTDAO.address);
         await deployer.deploy(deposit, INTDAO.address);
         await deployer.deploy(InflationFund, INTDAO.address);
-
-        await deployer.deploy(Platform, INTDAO.address, {from: accounts[2]});
-
-        let addresses = [accounts[7], stableCoin.address, Platform.address]; //teamAddress, coin, platform
-        let params = [10, 1000, 5, 6, 70, 5184000, 604800, 600]; /*initialPrice, initialSupply, platformFeePercent,
-                                             number of stages, percentOfTokensToTeam,
-                                             crowdsaleDuration in seconds (30 days)
-                                             holdDuration (7 days), softCap*/
-        let budgetPercent = [5, 10, 10, 10, 15, 20, 30];
-        let extraChargePercent = [10, 20, 30, 40, 50, 100];
-        let stagesDuration = [2592000,2592000,2592000,2592000,2592000,2592000];
-        let stagesShortDescription = ["first stage bla-bla-bla", "second stage bla-bla-bla",
-            "third stage bla-bla-bla", "fourth stage bla-bla-bla", "fifth stage bla-bla-bla",
-            "sixth stage bla-bla-bla"];
-
-        await deployer.deploy(tokenTemplate, addresses, params, "start", "Startup token",
-            budgetPercent, extraChargePercent, stagesDuration, stagesShortDescription, {from: accounts[2]});
-
-
-        let token = await tokenTemplate.deployed();
-        let platform = await Platform.deployed();
-
-
-        await platform.addMintedToken(token.address, {from: accounts[2]});
 
         console.log (INTDAO.address);
     }
@@ -117,21 +88,5 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(cdp, INTDAO.address);
         await deployer.deploy(deposit, INTDAO.address);
         await deployer.deploy(InflationFund, INTDAO.address);
-        await deployer.deploy(Platform, INTDAO.address, {from: accounts[2]});
-
-        let addresses = [accounts[7], stableCoin.address, Platform.address]; //teamAddress, coin, platform
-        let params = [10, 1000, 5, 6, 70, 5184000, 604800, 600]; /*initialPrice, initialSupply, platformFeePercent,
-                                             number of stages, percentOfTokensToTeam,
-                                             crowdsaleDuration in seconds (30 days)
-                                             holdDuration (7 days), softCap*/
-        let budgetPercent = [5, 10, 10, 10, 15, 20, 30];
-        let extraChargePercent = [10, 20, 30, 40, 50, 100];
-        let stagesDuration = [2592000,2592000,2592000,2592000,2592000,2592000];
-        let stagesShortDescription = ["first stage bla-bla-bla", "second stage bla-bla-bla",
-            "third stage bla-bla-bla", "fourth stage bla-bla-bla", "fifth stage bla-bla-bla",
-            "sixth stage bla-bla-bla"];
-
-        await deployer.deploy(tokenTemplate, addresses, params, "start", "Startup token",
-            budgetPercent, extraChargePercent, stagesDuration, stagesShortDescription, {from: accounts[2]});
     }
 };
