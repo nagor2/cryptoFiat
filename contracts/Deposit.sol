@@ -1,16 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-interface ICDP{
-    function claimInterest(uint256 amount, address beneficiary) external;
-}
-
-interface IDAO{
-    function addresses(string memory) external view returns (address);
-    function params(string memory) external view returns (uint256);
-    function setAddressOnce(string memory, address) external;
-}
+import "./IDAO.sol";
+import "./ICDP.sol";
 
     struct Deposit {
         address owner;
@@ -23,7 +15,7 @@ interface IDAO{
         bool closed;
     }
 
-contract DepositContract {
+contract DepositContract{
     IDAO dao;
     IERC20 coin;
     ICDP cdp;
@@ -31,19 +23,18 @@ contract DepositContract {
     mapping(uint256 => Deposit) public deposits;
     event DepositOpened(uint256 id, uint256 amount, uint256 rate, address owner);
 
-    constructor(address payable INTDAOaddress){
-        dao = IDAO(INTDAOaddress);
+    constructor(address _INTDAOaddress){
+        dao = IDAO(_INTDAOaddress);
         dao.setAddressOnce('deposit',payable(address(this)));
+        renewContracts();
+    }
+
+    function renewContracts() public {
         coin = IERC20(dao.addresses('stableCoin'));
         cdp = ICDP(dao.addresses('cdp'));
     }
 
-    function renewContracts() public {
-        coin = IERC20(payable(dao.addresses('stableCoin')));
-        cdp = ICDP(payable(dao.addresses('cdp')));
-    }
-
-    function deposit() public{
+    function deposit() external{
         uint256 amount = coin.allowance(msg.sender, address(this));
         require (amount>0, "you have to approve coins first");
         require (coin.transferFrom(msg.sender, address(this), amount), "Could not transfer coins for some reason");
@@ -57,7 +48,7 @@ contract DepositContract {
         emit DepositOpened(counter, d.coinsDeposited, d.currentInterestRate, d.owner);
     }
 
-    function withdraw(uint256 id, uint256 amount) public{
+    function withdraw(uint256 id, uint256 amount) external{
         updateInterest(id);
         Deposit storage d = deposits[id];
         require(msg.sender == d.owner, "only owner may init withdrawal");
@@ -71,7 +62,7 @@ contract DepositContract {
             d.currentInterestRate = dao.params("depositRate");
     }
 
-    function topUp(uint256 id) public{
+    function topUp(uint256 id) external{
         updateInterest(id);
         Deposit storage d = deposits[id];
         require (!d.closed, "deposit is closed, open a new one, please");
@@ -97,7 +88,7 @@ contract DepositContract {
         return d.accumulatedInterest;
     }
 
-    function claimInterest(uint256 id) public {
+    function claimInterest(uint256 id) external{
         updateInterest(id);
         cdp.claimInterest(overallInterest(id), deposits[id].owner);
         deposits[id].accumulatedInterest = 0;

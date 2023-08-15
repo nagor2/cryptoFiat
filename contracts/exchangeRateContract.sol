@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
+import "./IDAO.sol";
 
     struct Instrument {
         uint256 price;
@@ -12,15 +13,10 @@ pragma solidity 0.8.19;
         uint8 decimals;
     }
 
-interface IDAO{
-    function params(string memory) external view returns (uint256);
-    function setAddressOnce(string memory, address) external;
-}
-
 contract exchangeRateContract {
     IDAO dao;
 
-    constructor(address payable _INTDAOaddress) payable{
+    constructor(address _INTDAOaddress) payable{
         dao = IDAO(_INTDAOaddress);
         dao.setAddressOnce("oracle", address(this));
         author = payable(msg.sender);
@@ -60,7 +56,7 @@ contract exchangeRateContract {
     event profit (uint256 profit);
     event highVolatility(uint256 id);
 
-    function changeBeneficiaryAddress(address payable newAddress) public onlyAuthor{
+    function changeBeneficiaryAddress(address payable newAddress) external onlyAuthor{
         if (!finalized)
             beneficiary = newAddress;
     }
@@ -70,31 +66,31 @@ contract exchangeRateContract {
             finalized = true;
     }
 
-    function changeUpdaterAddress (address payable newAddress) public onlyAuthor{
+    function changeUpdaterAddress (address payable newAddress) external onlyAuthor{
         updater = newAddress;
     }
 
-    function requestPriceUpdate(uint256 id) public payable {
+    function requestPriceUpdate(uint256 id) external payable {
         require (msg.value>=2*updOnePriceGasCost*tx.gasprice, "You need to pass more ether to request new price.");
         emit priceUpdateRequest(id);
     }
 
-    function requestMultiplePricesUpdate(uint256[] memory ids) public payable {
+    function requestMultiplePricesUpdate(uint256[] memory ids) external payable {
         require (msg.value>= 2 * (ids.length * updAdditionalPrice + updSeveralPricesCost) * tx.gasprice, "You need to pass more ether to request new price.");
         emit severalPricesUpdateRequest(ids);
     }
 
-    function updateSeveralPrices(uint256[] memory ids, uint256[] memory prices) public onlyUpdater{
+    function updateSeveralPrices(uint256[] memory ids, uint256[] memory prices) external onlyUpdater{
         for (uint i=0; i<ids.length; i++)
             updPrice (ids[i], prices[i]);
     }
 
-    function transferProfit() public onlyAuthor{
+    function transferProfit() external onlyAuthor{
         beneficiary.transfer(address(this).balance);
         emit profit(address(this).balance);
     }
 
-    function updateSinglePrice(uint256 id, uint256 newPrice) public onlyUpdater{
+    function updateSinglePrice(uint256 id, uint256 newPrice) external onlyUpdater{
         updPrice (id, newPrice);
     }
 
@@ -114,7 +110,7 @@ contract exchangeRateContract {
         emit priceUpdated (id);
     }
 
-    function addInstrument(string memory symbol, string memory name, uint8 decimals) public onlyUpdater returns (uint256 id){
+    function addInstrument(string memory symbol, string memory name, uint8 decimals) external onlyUpdater returns (uint256 id){
         require (bytes (dictionary[symbol].name).length == 0, "Symbol already exist, use updateInstrument");
         id = instrumentsCount;
         dictionary[symbol].id = id;
@@ -125,20 +121,20 @@ contract exchangeRateContract {
         return id;
     }
 
-    function updateInstrument(string memory symbol, string memory name, uint8 decimals) public onlyUpdater{
+    function updateInstrument(string memory symbol, string memory name, uint8 decimals) external onlyUpdater{
         dictionary[symbol].name = name;
         dictionary[symbol].decimals = decimals;
     }
 
-    function getPrice(string memory symbol) public view returns (uint256) {
+    function getPrice(string memory symbol) external view returns (uint256) {
         return instruments[dictionary[symbol].id].price;
     }
 
-    function timeStamp(string memory symbol) public view returns (uint256) {
+    function timeStamp(string memory symbol) external view returns (uint256) {
         return instruments[dictionary[symbol].id].timeStamp;
     }
 
-    function getDecimals(string memory symbol) public view returns (uint8) {
+    function getDecimals(string memory symbol) external view returns (uint8) {
         return dictionary[symbol].decimals;
     }
 }

@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
-
-interface IDAO{
-    function addresses(string memory) external view returns (address);
-    function setAddressOnce(string memory, address) external;
-}
+import "./IDAO.sol";
 
 interface IOracle{
     function updater() external view returns (address);
@@ -37,7 +33,7 @@ contract cartContract{
     constructor(address payable INTDAOaddress){
         dao = IDAO(INTDAOaddress);
         dao.setAddressOnce('cart',payable(address(this)));
-        oracle = IOracle(dao.addresses('oracle'));
+        renewContracts();
     }
 
     function renewContracts() public {

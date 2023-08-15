@@ -236,7 +236,7 @@ contract('DAO', (accounts) => {
 
         await dao.vote(true,{from: ruleHolder});
 
-        let valueBefore = await dao.authorized(addressToAuthorize);
+        let valueBefore = await dao.isAuthorized(addressToAuthorize);
         assert.equal(valueBefore, false, "wrong valueBefore");
 
         let tx = await dao.claimToFinalizeCurrentVoting();
@@ -245,7 +245,7 @@ contract('DAO', (accounts) => {
             assert.equal(ev.id, votingId, "wrong id");
         });
 
-        let valueAfter = await dao.authorized(addressToAuthorize);
+        let valueAfter = await dao.isAuthorized(addressToAuthorize);
 
         assert.equal(valueAfter, true, "wrong valueAfter");
     });
@@ -259,7 +259,7 @@ contract('DAO', (accounts) => {
 
         await dao.vote(true,{from: ruleHolder});
 
-        let valueBefore = await dao.authorized(addressToAuthorize);
+        let valueBefore = await dao.isAuthorized(addressToAuthorize);
         assert.equal(valueBefore, true, "wrong valueBefore");
 
         let tx = await dao.claimToFinalizeCurrentVoting();
@@ -268,7 +268,7 @@ contract('DAO', (accounts) => {
             assert.equal(ev.id, votingId, "wrong id");
         });
 
-        let valueAfter = await dao.authorized(addressToAuthorize);
+        let valueAfter = await dao.isAuthorized(addressToAuthorize);
 
         assert.equal(valueAfter, false, "wrong valueAfter");
     });

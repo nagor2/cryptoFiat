@@ -1,16 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./IDAO.sol";
+import "./ICDP.sol";
 
-interface IDAO{
-    function addresses(string memory) external view returns (address);
-    function params(string memory) external view returns (uint256);
-    function setAddressOnce(string memory, address) external;
-}
-
-interface ICDP{
-    function mintRule(address to, uint256 amount) external returns (bool success);
-}
 
     struct auctionEntity {
         bool initialized;
@@ -52,18 +45,16 @@ contract Auction {
     event bidCanceled(uint256 bidId);
     event liquidateCollateral(uint256 auctionID, uint256 posID, uint256 collateral);
 
-    constructor(address payable _INTDAOaddress){
+    constructor(address _INTDAOaddress){
         dao = IDAO(_INTDAOaddress);
         dao.setAddressOnce("auction", address(this));
-        cdp = ICDP(dao.addresses('cdp'));
-        coin = IERC20(payable(dao.addresses('stableCoin')));
-        rule = IERC20(payable(dao.addresses('rule')));
+        renewContracts();
     }
 
-    function renewContracts() external {
-        coin = IERC20(payable(dao.addresses('stableCoin')));
+    function renewContracts() public{
         cdp = ICDP(dao.addresses('cdp'));
-        rule = IERC20(payable(dao.addresses('rule')));
+        coin = IERC20(dao.addresses('stableCoin'));
+        rule = IERC20(dao.addresses('rule'));
     }
 
     function initRuleBuyOut() external returns (uint256 auctionID){
@@ -237,15 +228,15 @@ contract Auction {
         a.finalized = true;
     }
 
-    function isFinalized(uint256 auctionId) public view returns (bool finalized){
+    function isFinalized(uint256 auctionId) external view returns (bool finalized){
         return auctions[auctionId].finalized;
     }
 
-    function getPaymentAmount(uint256 auctionID) public view returns (uint256){
+    function getPaymentAmount(uint256 auctionID) external view returns (uint256){
         return auctions[auctionID].paymentAmount;
     }
 
-    function getBestBidAmount (uint256 auctionID) public view returns (uint256){
+    function getBestBidAmount (uint256 auctionID) external view returns (uint256){
         return bids[auctions[auctionID].bestBidId].bidAmount;
     }
 }

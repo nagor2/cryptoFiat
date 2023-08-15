@@ -14,7 +14,7 @@ contract INTDAO {
         uint256 voteingType;
         string name;
         uint256 value;
-        address payable addr;
+        address addr;
         uint256 startTime;
         bool decision;
     }
@@ -24,7 +24,7 @@ contract INTDAO {
     mapping (string => uint256) public params;
     mapping (string => address) public addresses;
     mapping (address => bool) public paused;
-    mapping (address => bool) public authorized;
+    mapping (address => bool) public isAuthorized;
 
     mapping (address => uint256) public pooled;
     uint256 public totalPooled;
@@ -60,37 +60,31 @@ contract INTDAO {
         addresses['dao'] = address(this);
     }
 
+    function renewContracts() public {
+        ruleToken = IERC20(addresses['rule']);
+    }
+
     function setAddressOnce(string memory addressName, address addr) public{ //a certain pool of names, check not to expand addresses
         require (addresses[addressName] == address (0x0), "address was already set");
             addresses[addressName] = addr;
             paused[addr] = false;
             if (keccak256(bytes(addressName)) == keccak256(bytes("deposit")))
-                authorized[addr] = true;
+                isAuthorized[addr] = true;
             if (keccak256(bytes(addressName)) == keccak256(bytes("inflationFund")))
-                authorized[addr] = true;
-            if (keccak256(bytes(addressName)) == keccak256(bytes("platform")))
-                authorized[addr] = true;
+                isAuthorized[addr] = true;
     }
 
-    function addVoting(uint256 votingType, string memory name, uint value, address payable addr, bool _decision) public {
+    function addVoting(uint256 votingType, string memory name, uint value, address addr, bool decision) external{
         require(!activeVoting, "There is an active voting");
         require(votingType>0&&votingType<5, "Incorrect voteing type");
-        require (isEnoughTokensPooledToInitVoting(msg.sender), "Too little tokens to init voting");
+        require(isEnoughTokensPooledToInitVoting(msg.sender), "Too little tokens to init voting");
         votingID++;
-        votings[votingID] = Voting(0, votingType, name, value, addr, block.timestamp, _decision);
+        votings[votingID] = Voting(0, votingType, name, value, addr, block.timestamp, decision);
         activeVoting = true;
         emit NewVoting(votingID, name);
     }
 
-    function isEnoughTokensPooledToInitVoting(address initiator) internal view returns (bool enough){
-        return pooled[initiator]>=ruleToken.totalSupply()*params['minRuleTokensToInitVotingPercent']/100;
-    }
-
-    function renewContracts() public {
-        ruleToken = IERC20(addresses['rule']);
-    }
-
-    function poolTokens() public returns (bool success){
+    function poolTokens() external returns (bool success){
         uint256 amount = ruleToken.allowance(msg.sender, address(this));
         require (amount>0, "allow tokens first");
         require(ruleToken.transferFrom(msg.sender, address(this), amount), "Could not pool tokens for some reason");
@@ -99,7 +93,7 @@ contract INTDAO {
         return true;
     }
 
-    function returnTokens() public returns (bool) {
+    function returnTokens() external returns (bool) {
         require(pooled[msg.sender] > 0, 'You must have pooled tokens');
         if (activeVoting && votes[votingID][msg.sender]>0){
             votings[votingID].totalPositive -= votes[votingID][msg.sender];
@@ -110,13 +104,13 @@ contract INTDAO {
         return true;
     }
 
-    function vote(bool _vote) public{
+    function vote(bool _vote) external{
         require(activeVoting, "No active voting found");
         require(votings[votingID].startTime + params['votingDuration'] >= block.timestamp, "Voting is already inactive");
         require(pooled[msg.sender]>0, "You dont have pooled tokens to vote");
 
         if (_vote) {
-            uint _votesToAdd = pooled[msg.sender] - votes[votingID][msg.sender];
+            uint256 _votesToAdd = pooled[msg.sender] - votes[votingID][msg.sender];
             votes[votingID][msg.sender] = pooled[msg.sender];
             votings[votingID].totalPositive += _votesToAdd;
         }
@@ -128,7 +122,7 @@ contract INTDAO {
         }
     }
 
-    function claimToFinalizeCurrentVoting() public {
+    function claimToFinalizeCurrentVoting() external{
         require (activeVoting, "There is no active voting");
         if (votings[votingID].totalPositive >= ruleToken.totalSupply() * params['absoluteMajority'] / 100) {
             finalizeCurrentVoting();
@@ -145,7 +139,7 @@ contract INTDAO {
         }
     }
 
-    function finalizeCurrentVoting() internal {
+    function finalizeCurrentVoting() internal{
         if (votings[votingID].voteingType == 1)
             params[votings[votingID].name] = votings[votingID].value;
         if (votings[votingID].voteingType == 2)
@@ -153,8 +147,12 @@ contract INTDAO {
         if (votings[votingID].voteingType == 3)
             paused[votings[votingID].addr] = votings[votingID].decision;
         if (votings[votingID].voteingType == 4)
-            authorized[votings[votingID].addr] = votings[votingID].decision;
+            isAuthorized[votings[votingID].addr] = votings[votingID].decision;
         activeVoting = false;
         emit VotingSucceed(votingID);
+    }
+
+    function isEnoughTokensPooledToInitVoting(address initiator) internal view returns (bool enough){
+        return pooled[initiator]>=ruleToken.totalSupply()*params['minRuleTokensToInitVotingPercent']/100;
     }
 }

@@ -1,17 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./IDAO.sol";
 
 interface IERC20MintableAndBurnable is IERC20{
     function mint(address to, uint256 amount) external;
     function burn(address from, uint256 amount) external;
-}
-
-interface IDAO{
-    function addresses(string memory) external view returns (address);
-    function params(string memory) external view returns (uint256);
-    function setAddressOnce(string memory, address) external;
-    function authorized(address candidate) external view returns (bool isAuthorized);
 }
 
 interface IAuction{
@@ -58,18 +52,14 @@ contract CDP {
     event markOnLiquidationErased (uint256 posID, uint256 timestamp);
     event OnLiquidation (uint256 posID, uint256 timestamp);
 
-    constructor(address payable INTDAOaddress) {
+    constructor(address INTDAOaddress){
         dao = IDAO(INTDAOaddress);
         dao.setAddressOnce('cdp',payable(address(this)));
         dao.setAddressOnce('inflationSpender',payable(address(this)));
-        coin = IERC20MintableAndBurnable(dao.addresses('stableCoin'));
-        oracleCart = ICart(dao.addresses('cart'));
-        auction = IAuction(dao.addresses('auction'));
-        rule = IERC20MintableAndBurnable(dao.addresses('rule'));
-        weth = IERC20(dao.addresses('weth'));
+        renewContracts();
     }
 
-    function renewContracts() public {
+    function renewContracts() public{
         coin = IERC20MintableAndBurnable(dao.addresses('stableCoin'));
         rule = IERC20MintableAndBurnable(dao.addresses('rule'));
         oracleCart = ICart(dao.addresses('cart'));
@@ -123,7 +113,7 @@ contract CDP {
     }
 
     function claimInterest(uint256 amount, address beneficiary) external{
-        require(dao.authorized(msg.sender), "only authorized address may do this");
+        require(dao.isAuthorized(msg.sender), "only authorized address may do this");
         if (coin.balanceOf(address(this))>amount)
             coin.transfer(beneficiary, amount);
         else {
@@ -134,7 +124,7 @@ contract CDP {
     }
 
     function claimEmission(uint256 amount, address beneficiary) external{
-        require(dao.authorized(msg.sender), "only authorized address may do this");
+        require(dao.isAuthorized(msg.sender), "only authorized address may do this");
         coin.mint(beneficiary,amount);
     }
 
@@ -162,7 +152,7 @@ contract CDP {
         p.lastTimeUpdated = block.timestamp;
     }
 
-    function switchRestrictInterestWithdrawal(uint256 posID) external {
+    function switchRestrictInterestWithdrawal(uint256 posID) external{
         Position storage p = positions[posID];
         require (p.owner == msg.sender, "Only owner may set this property");
         p.restrictInterestWithdrawal = !p.restrictInterestWithdrawal;
@@ -176,7 +166,7 @@ contract CDP {
         require (coin.approve(dao.addresses('auction'), surplus), "could not approve coins for some reason");
     }
 
-    function claimMarginCall(uint256 posID) external returns (bool success) {
+    function claimMarginCall(uint256 posID) external returns (bool success){
         Position storage p = positions[posID];
             require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp > dao.params('marginCallTimeLimit'), "Position is not marked on liquidation or owner still has time");
         require(!p.onLiquidation && !p.liquidated, "Position is already on liquidation or already liquidated");
@@ -200,7 +190,7 @@ contract CDP {
         p.wethAmountLocked = 0;
     }
 
-    function finishMarginCall(uint256 posID) external {
+    function finishMarginCall(uint256 posID) external{
         Position storage p = positions[posID];
         require(p.onLiquidation && !p.liquidated && p.liquidationAuctionID !=0, "Position is not on liquidation or was already liquidated or auction was not started");
         if (!auction.isFinalized(p.liquidationAuctionID))
@@ -231,7 +221,7 @@ contract CDP {
         }
     }
 
-    function markToLiquidate(uint256 posID) external {
+    function markToLiquidate(uint256 posID) external{
         Position storage p = positions[posID];
         require (p.markedOnLiquidationTimestamp == 0 && !p.onLiquidation, "This position is on liquidation or already marked");
         if (getMaxStableCoinsToMintForPos(posID) < p.coinsMinted) {
