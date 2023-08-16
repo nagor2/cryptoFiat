@@ -11,12 +11,12 @@ contract stableCoin is ERC20{
         dao.setAddressOnce("stableCoin", address(this));
     }
 
-    function mint(address to, uint256 amount) public{
+    function mint(address to, uint256 amount) external{
         require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to mint');
         _mint(to, amount);
     }
 
-    function burn(address from, uint256 amount) public{
+    function burn(address from, uint256 amount) external{
         require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to burn');
         _burn(from, amount);
     }

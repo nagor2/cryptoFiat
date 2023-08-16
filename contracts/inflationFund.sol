@@ -19,14 +19,14 @@ contract InflationFund {
         renewContracts();
     }
 
-    function renewContracts() public {
+    function renewContracts() public{
         coin = IERC20(dao.addresses('stableCoin'));
         cdp = ICDP(dao.addresses('cdp'));
     }
 
     function claimEmission() external{
         uint256 period = block.timestamp - lastEmission;
-        require (period>=363 days, "too early to claim");
+        require (period>=365 days, "too early to claim");
         uint256 amount = period/365 days*dao.params("annualInflationPercent")*coin.totalSupply()/100;
         lastEmission = block.timestamp;
         require (amount>0, "nothing to emit");

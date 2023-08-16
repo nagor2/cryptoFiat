@@ -64,14 +64,16 @@ contract INTDAO {
         ruleToken = IERC20(addresses['rule']);
     }
 
-    function setAddressOnce(string memory addressName, address addr) public{ //a certain pool of names, check not to expand addresses
-        require (addresses[addressName] == address (0x0), "address was already set");
-            addresses[addressName] = addr;
-            paused[addr] = false;
-            if (keccak256(bytes(addressName)) == keccak256(bytes("deposit")))
-                isAuthorized[addr] = true;
-            if (keccak256(bytes(addressName)) == keccak256(bytes("inflationFund")))
-                isAuthorized[addr] = true;
+    function setAddressOnce(string memory addressName, address addr) external {
+        require (addresses[addressName] == address(0), "address was already set");
+        addresses[addressName] = addr;
+        paused[addr] = false;
+        //a certain pool of names, check not to expand addresses
+        bytes32 hash = keccak256(bytes(addressName));
+        if (hash == keccak256(bytes("deposit")) ||
+            hash == keccak256(bytes("inflationFund"))) {
+            isAuthorized[addr] = true;
+        }
     }
 
     function addVoting(uint256 votingType, string memory name, uint value, address addr, bool decision) external{
