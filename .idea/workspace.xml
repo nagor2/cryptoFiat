@@ -12,26 +12,7 @@
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Auction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Auction.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/DepositContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/DepositContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IAuction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IAuction.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ICDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ICDP.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ICart.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ICart.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IDAO.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IDAO.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IERC20MintableAndBurnable.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IERC20MintableAndBurnable.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IOracle.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IOracle.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/InflationFund.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/InflationFund.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Rule.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/WETH9.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/WETH9.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/cartContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/cartContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/inflationFund.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/inflationFund.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -311,7 +292,8 @@
       <workItem from="1691744815159" duration="4781000" />
       <workItem from="1691984369556" duration="12398000" />
       <workItem from="1692068828629" duration="6396000" />
-      <workItem from="1692165813112" duration="5240000" />
+      <workItem from="1692165813112" duration="5270000" />
+      <workItem from="1692264667902" duration="236000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>

@@ -59,6 +59,7 @@ contract Auction {
 
     function initRuleBuyOut() external returns (uint256 auctionID){
         require (!ruleBuyOut, "Rule buyOut auction already exist");
+        require ((rule.balanceOf(msg.sender)>=rule.totalSupply()*dao.params('minRuleTokensToInitVotingPercent')/100), "not enough rule balance");
 
         uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));
         require (allowed>0, "Can not transfer surplus from CDP");
