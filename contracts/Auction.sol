@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity 0.8.18;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IDAO.sol";
 import "./ICDP.sol";
@@ -30,7 +30,7 @@ contract Auction {
     uint256 public auctionNum;
     uint256 public bidsNum;
     IERC20 coin;
-    IDAO dao;
+    IDAO immutable dao;
     ICDP cdp;
     IERC20 rule;
     bool isCoinsBuyOutForStabilization;

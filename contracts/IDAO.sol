@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity 0.8.18;
 
 interface IDAO{
     function addresses(string memory) external view returns (address);

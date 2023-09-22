@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity 0.8.18;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract INTDAO {
@@ -11,7 +11,7 @@ contract INTDAO {
 
     struct Voting {
         uint256 totalPositive;
-        uint256 voteingType;
+        uint256 votingType;
         string name;
         uint256 value;
         address addr;
@@ -67,7 +67,6 @@ contract INTDAO {
     function setAddressOnce(string memory addressName, address addr) external {
         require (addresses[addressName] == address(0), "address was already set");
         addresses[addressName] = addr;
-        paused[addr] = false;
         //a certain pool of names, check not to expand addresses
         bytes32 hash = keccak256(bytes(addressName));
         if (hash == keccak256(bytes("deposit")) ||
@@ -142,13 +141,13 @@ contract INTDAO {
     }
 
     function finalizeCurrentVoting() internal{
-        if (votings[votingID].voteingType == 1)
+        if (votings[votingID].votingType == 1)
             params[votings[votingID].name] = votings[votingID].value;
-        if (votings[votingID].voteingType == 2)
+        if (votings[votingID].votingType == 2)
             addresses[votings[votingID].name] = votings[votingID].addr;
-        if (votings[votingID].voteingType == 3)
+        if (votings[votingID].votingType == 3)
             paused[votings[votingID].addr] = votings[votingID].decision;
-        if (votings[votingID].voteingType == 4)
+        if (votings[votingID].votingType == 4)
             isAuthorized[votings[votingID].addr] = votings[votingID].decision;
         activeVoting = false;
         emit VotingSucceed(votingID);

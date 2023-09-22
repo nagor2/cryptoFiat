@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity 0.8.18;
 import "./IDAO.sol";
 
 interface IOracle{
@@ -17,12 +17,12 @@ contract cartContract{
         uint256 initialPrice;
     }
 
-    IDAO dao;
+    IDAO immutable dao;
     IOracle oracle;
 
     uint256 public itemsCount;
     uint256 public sharesCount;
-    uint256 public decimals = 6;
+    uint256 public constant decimals = 6;
     mapping(uint256 => cartItem) public items;
     mapping (string => uint256) public dictionary;
 
