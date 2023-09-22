@@ -152,7 +152,7 @@ it("should generate additional fee", async () => {
 
         await cdp.allowSurplusToAuction();
 
-        let buyOutInitTx = await auction.initRuleBuyOut();
+        let buyOutInitTx = await auction.initRuleBuyOut({from:accounts[7]});
 
         truffleAssert.eventEmitted(buyOutInitTx, 'buyOutInit', async (ev) => {
             assert.equal(ev.auctionID, 1, "Should be the first auction");

@@ -27,26 +27,36 @@ contract('Auction', (accounts) => {
         rule = await Rule.deployed(dao.address, {from:ruleHolder});
     });
 
-    it("should throw if little money on balance", async () => {
+    it("should throw if little rule on balance to init auction", async () => {
         await truffleAssert.fails(
             auction.initRuleBuyOut(),
+            truffleAssert.ErrorType.REVERT,
+            "not enough rule balance");
+    });
+
+    it("should throw if little money on balance", async () => {
+        let minAmount = web3.utils.fromWei(await rule.totalSupply()) /100 * await dao.params('minRuleTokensToInitVotingPercent');
+        await rule.transfer(bidder, web3.utils.toWei(minAmount.toString()), {from:ruleHolder});
+
+        await truffleAssert.fails(
+            auction.initRuleBuyOut({from:bidder}),
             truffleAssert.ErrorType.REVERT,
             "Can not transfer surplus from CDP");
     });
 
     it("should initAuction", async () => {
         await cdp.openCDP(web3.utils.toWei('2100', 'ether'), {
-            from: accounts[2],
+            from: bidder,
             value: web3.utils.toWei('1', 'ether')
         });
         await time.increase(time.duration.years(1));//1 year in seconds. It may sometimes fail
         let feeToAllow = await cdp.totalCurrentFee(0);
-        await stableCoin.approve(cdp.address, web3.utils.toWei(feeToAllow+0.0001, 'ether'), {from:accounts[2]});
-        await cdp.transferInterest(0, {from: accounts[2]});
+        await stableCoin.approve(cdp.address, web3.utils.toWei(feeToAllow+0.0001, 'ether'), {from:bidder});
+        await cdp.transferInterest(0, {from: bidder});
         let cdpBalance = await stableCoin.balanceOf(cdp.address);
         assert.equal(parseFloat(cdpBalance/10**18).toFixed(4), parseFloat(feeToAllow/10**18).toFixed(4), "Wrong balance");
         await cdp.allowSurplusToAuction();
-        let initTx = await auction.initRuleBuyOut();
+        let initTx = await auction.initRuleBuyOut({from:bidder});
 
         truffleAssert.eventEmitted(initTx, 'buyOutInit', async (ev) => {
             assert.equal(ev.auctionID, 1, "Should be the first auction");
@@ -65,7 +75,7 @@ contract('Auction', (accounts) => {
     });
 
     it("should not allow to make a little bid", async () => {
-        await rule.approve(auction.address, 1, {from: accounts[2]});
+        await rule.approve(auction.address, 1, {from: ruleHolder});
         await truffleAssert.fails(
             auction.makeBid(1, 0),
             truffleAssert.ErrorType.REVERT,
@@ -73,21 +83,21 @@ contract('Auction', (accounts) => {
     });
 
     it("should make a bid", async () => {
-        await rule.transfer(bidder, 2,{from:ruleHolder});
-        await rule.approve(auction.address, 1, {from: bidder});
+        let bidAmount = web3.utils.toWei('100');
+        await rule.approve(auction.address, bidAmount, {from: bidder});
         await time.increase(1); //this is to claim to finish due to a.initTime!=a.lastTimeUpdated condition
-        let balanceBefore = await rule.balanceOf(bidder);
-        assert.equal(parseFloat(balanceBefore), 2, "Wrong balance before");
+        let balanceBefore = web3.utils.fromWei(await rule.balanceOf(bidder));
+        assert.equal(parseFloat(balanceBefore), 10000, "Wrong balance before");
 
-        let bidTx = await auction.makeBid(1, 1, {from: bidder});
+        let bidTx = await auction.makeBid(1, bidAmount, {from: bidder});
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(ev.auctionID, 1, "Should be correct auction");
-            assert.equal(ev.bidAmount, 1, "Should be correct amount");
+            assert.equal(ev.bidAmount, bidAmount, "Should be correct amount");
         });
 
-        let balanceAfter = await rule.balanceOf(bidder);
-        assert.equal(parseFloat(balanceAfter), 1, "Wrong balance after");
+        let balanceAfter = web3.utils.fromWei(await rule.balanceOf(bidder));
+        assert.equal(parseFloat(balanceAfter), 9900, "Wrong balance after");
     });
 
     it("should not allow to cancel a bid", async () => {
@@ -97,27 +107,28 @@ contract('Auction', (accounts) => {
             "Only bid owner may cancel it, if it wasn't canceled earlier");
 
         await truffleAssert.fails(
-            auction.cancelBid(1, {from: accounts[2]}),
+            auction.cancelBid(1, {from: bidder}),
             truffleAssert.ErrorType.REVERT,
             "You can not cancel a bid if it is a best one");
 
     });
 
     it("should cancel a bid and transfer funds back", async () => {
-        await rule.transfer(newBidder, 2,{from:ruleHolder});
-        await rule.approve(auction.address, 2, {from: newBidder});
-        await auction.makeBid(1, 2, {from: newBidder});
+        let bidAmount =  web3.utils.toWei('200');
+        await rule.transfer(newBidder, bidAmount,{from:ruleHolder});
+        await rule.approve(auction.address, bidAmount, {from: newBidder});
+        await auction.makeBid(1, bidAmount, {from: newBidder});
 
-        let balanceBefore = await rule.balanceOf(bidder);
-        assert.equal(parseFloat(balanceBefore), 1, "Wrong balance before");
+        let balanceBefore = web3.utils.fromWei(await rule.balanceOf(bidder));
+        assert.equal(parseFloat(balanceBefore), 9900, "Wrong balance before");
         let bidTx = await auction.cancelBid(1, {from: bidder});
 
 
         truffleAssert.eventEmitted(bidTx, 'bidCanceled', async (ev) => {
             assert.equal(ev.bidId, 1, "bid should be canceled");
         });
-        let balanceAfter = await rule.balanceOf(bidder);
-        assert.equal(parseFloat(balanceAfter), 2, "Wrong balance after");
+        let balanceAfter = web3.utils.fromWei(await rule.balanceOf(bidder));
+        assert.equal(parseFloat(balanceAfter), 10000, "Wrong balance after");
 
         let b = await auction.bids(1);
         assert.equal(b.canceled, true, "bid should be marked as canceled");
@@ -161,7 +172,7 @@ contract('Auction', (accounts) => {
         });
 
         let cdpRuleBalanceAfter = await rule.balanceOf(cdp.address);
-        assert.equal (cdpRuleBalanceAfter, 2, "balance should be 0");
+        assert.equal (cdpRuleBalanceAfter, web3.utils.toWei('200'), "balance should be 200");
         let bidderStableCoinBalanceAfter = await stableCoin.balanceOf(b.owner);
         assert.equal (parseFloat(bidderStableCoinBalanceAfter/10**18).toFixed(0), 84, "balance should be 84");
     });
