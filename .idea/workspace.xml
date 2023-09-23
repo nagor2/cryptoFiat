@@ -14,24 +14,27 @@
       <change afterPath="$PROJECT_DIR$/build/contracts/Auction (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/CDP (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/Commodity (2).json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/Context.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/DepositContract (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/ERC20 (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/IAuction (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/ICDP (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/ICart (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/IDAO (2).json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/IERC20.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/IERC20Metadata.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/IERC20MintableAndBurnable (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/INTDAO (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/IOracle (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/InflationFund (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/Platform (2).json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/ReentrancyGuard.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/Rule (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/WETH9 (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/cartContract (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/exchangeRateContract (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/stableCoin (2).json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/build/contracts/tokenTemplate (2).json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/deposit_test (2).js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/contracts/Auction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Auction.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
@@ -54,6 +57,7 @@
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Deposit.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Deposit.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deposit_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/deposit_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,10 +119,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/work/React/cryptofiat" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/YandexDisk/Работа/ICO/CryptoFiat/repo",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo" />
@@ -145,7 +155,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -339,6 +349,7 @@
       <workItem from="1692581136266" duration="596000" />
       <workItem from="1695088799983" duration="2696000" />
       <workItem from="1695266046881" duration="18681000" />
+      <workItem from="1695473434531" duration="280000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -421,7 +432,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
