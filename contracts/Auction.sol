@@ -53,24 +53,24 @@ contract Auction is ReentrancyGuard{
     }
 
     function renewContracts() public{
-        cdp = ICDP(dao.addresses('cdp'));
-        coin = IERC20(dao.addresses('stableCoin'));
-        rule = IERC20(dao.addresses('rule'));
+        cdp = ICDP(dao.addresses("cdp"));
+        coin = IERC20(dao.addresses("stableCoin"));
+        rule = IERC20(dao.addresses("rule"));
     }
 
     function initRuleBuyOut() nonReentrant external returns (uint256 auctionID){
         require (!ruleBuyOut, "Rule buyOut auction already exist");
-        require ((rule.balanceOf(msg.sender)>=rule.totalSupply()/100*dao.params('minRuleTokensToInitVotingPercent')), "not enough rule balance");
+        require ((rule.balanceOf(msg.sender)>=rule.totalSupply()/100*dao.params("minRuleTokensToInitVotingPercent")), "not enough rule balance");
 
         uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));
         require (allowed>0, "Can not transfer surplus from CDP");
 
-        coin.transferFrom(dao.addresses('cdp'), address(this), allowed);
+        coin.transferFrom(dao.addresses("cdp"), address(this), allowed);
 
-        auctionID = createNewAuction(dao.addresses('stableCoin'), allowed, dao.addresses('rule'), 0);
+        auctionID = createNewAuction(dao.addresses("stableCoin"), allowed, dao.addresses('rule'), 0);
         ruleBuyOut = true;
 
-        emit buyOutInit(auctionID, allowed, dao.addresses('stableCoin'));
+        emit buyOutInit(auctionID, allowed, dao.addresses("stableCoin"));
         return auctionID;
     }
 
@@ -85,19 +85,19 @@ contract Auction is ReentrancyGuard{
         if (coinsAmountNeeded>dao.params("maxCoinsForStabilization"))
             coinsAmountNeeded = dao.params("maxCoinsForStabilization");
 
-        auctionID = createNewAuction(dao.addresses('rule'), 0, dao.addresses('stableCoin'), coinsAmountNeeded);
+        auctionID = createNewAuction(dao.addresses("rule"), 0, dao.addresses("stableCoin"), coinsAmountNeeded);
         isCoinsBuyOutForStabilization = true;
 
-        emit buyOutInit(auctionID, 0, dao.addresses('rule'));
+        emit buyOutInit(auctionID, 0, dao.addresses("rule"));
         return auctionID;
     }
 
     function initCoinsBuyOut(uint256 posID, uint256 collateral) nonReentrant external returns (uint256 auctionID){
-        require (msg.sender == dao.addresses('cdp'), "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract");
-        IERC20 weth = IERC20(dao.addresses('weth'));
-        require(weth.transferFrom(dao.addresses('cdp'), address(this), collateral), "could not transfer weth for some reason");
+        require (msg.sender == dao.addresses("cdp"), "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract");
+        IERC20 weth = IERC20(dao.addresses("weth"));
+        require(weth.transferFrom(dao.addresses("cdp"), address(this), collateral), "could not transfer weth for some reason");
 
-        auctionID = createNewAuction (dao.addresses('weth'), collateral, dao.addresses('stableCoin'),0);
+        auctionID = createNewAuction (dao.addresses("weth"), collateral, dao.addresses("stableCoin"),0);
         auctions[auctionID].isMarginCall = true;
         emit liquidateCollateral(auctionID, posID, collateral);
 
@@ -126,15 +126,15 @@ contract Auction is ReentrancyGuard{
 
         if (a.bestBidId!=0){
             Bid storage bestBid = bids[a.bestBidId];
-            if (a.lotToken == dao.addresses('stableCoin') || a.lotToken == dao.addresses('weth'))
-                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100<=bidAmount, "your bid is not high enough");
-            if (a.lotToken == dao.addresses('rule'))
-                require(bidAmount>0 && bestBid.bidAmount*(100-dao.params('minAuctionPriceMove'))/100>=bidAmount, "your bid is not low enough");
+            if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses('weth'))
+                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=bidAmount, "your bid is not high enough");
+            if (a.lotToken == dao.addresses("rule"))
+                require(bidAmount>0 && bestBid.bidAmount*(100-dao.params("minAuctionPriceMove"))/100>=bidAmount, "your bid is not low enough");
         }
         require(bidAmount>0, "your bid is not high enough");
         IERC20 paymentToken = IERC20(address(a.paymentToken));
         if (a.lotToken == dao.addresses('rule')){
-            require(bidAmount<=rule.totalSupply()*dao.params('maxRuleEmissionPercent')/100, "too many rules for one emission");
+            require(bidAmount<=rule.totalSupply()*dao.params("maxRuleEmissionPercent")/100, "too many rules for one emission");
             require(paymentToken.transferFrom(msg.sender, address(this), a.paymentAmount), "You should first approve stableCoins to auction contract address");
         }
         else
@@ -161,14 +161,14 @@ contract Auction is ReentrancyGuard{
         require(a.initialized&&!a.finalized, "auctionId is wrong or it is already finished");
         Bid storage bestBid = bids[a.bestBidId];
 
-        if (a.lotToken == dao.addresses('stableCoin') || a.lotToken == dao.addresses('weth'))
-            require(newBidAmount>0 && bestBid.bidAmount*(100+dao.params('minAuctionPriceMove'))/100<=newBidAmount, "your bid is not high enough");
+        if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth"))
+            require(newBidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=newBidAmount, "your bid is not high enough");
         if (a.lotToken == dao.addresses('rule'))
-            require(newBidAmount>0 && bestBid.bidAmount*(100-dao.params('minAuctionPriceMove'))/100>=newBidAmount, "your bid is not high enough");
+            require(newBidAmount>0 && bestBid.bidAmount*(100-dao.params("minAuctionPriceMove"))/100>=newBidAmount, "your bid is not high enough");
 
         IERC20 paymentToken = IERC20(address(a.paymentToken));
 
-        if (a.lotToken == dao.addresses('stableCoin') || a.lotToken == dao.addresses('weth')){
+        if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth")){
             uint256 difference = newBidAmount-b.bidAmount;
             require(paymentToken.transferFrom(msg.sender, address(this), difference), "You should first approve payment to auction contract address");
         }
@@ -186,7 +186,7 @@ contract Auction is ReentrancyGuard{
         require(a.initialized, "the bid is made on non-existent auction");
         require(a.bestBidId!=bidId, "You can not cancel a bid if it is a best one");
         IERC20 paymentToken = IERC20(address(a.paymentToken));
-        if (a.lotToken == dao.addresses('rule'))
+        if (a.lotToken == dao.addresses("rule"))
             require(paymentToken.transfer(b.owner, a.paymentAmount), "we were not able to transfer your bid back");
         else
             require(paymentToken.transfer(b.owner, b.bidAmount), "we were not able to transfer your bid back");

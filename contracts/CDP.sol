@@ -55,37 +55,37 @@ contract CDP is ReentrancyGuard{
 
     constructor(address INTDAOaddress){
         dao = IDAO(INTDAOaddress);
-        dao.setAddressOnce('cdp',payable(address(this)));
-        dao.setAddressOnce('inflationSpender',payable(address(this)));
+        dao.setAddressOnce("cdp",payable(address(this)));
+        dao.setAddressOnce("inflationSpender",payable(address(this)));
         renewContracts();
     }
 
     function renewContracts() public{
-        coin = IERC20MintableAndBurnable(dao.addresses('stableCoin'));
-        rule = IERC20MintableAndBurnable(dao.addresses('rule'));
-        oracleCart = ICart(dao.addresses('cart'));
-        auction = IAuction(dao.addresses('auction'));
-        weth = IERC20(dao.addresses('weth'));
+        coin = IERC20MintableAndBurnable(dao.addresses("stableCoin"));
+        rule = IERC20MintableAndBurnable(dao.addresses("rule"));
+        oracleCart = ICart(dao.addresses("cart"));
+        auction = IAuction(dao.addresses("auction"));
+        weth = IERC20(dao.addresses("weth"));
     }
 
     function openCDP(uint256 stableCoinsToMint) nonReentrant external payable returns (uint256 posID){
         stableCoinsToMint = (stableCoinsToMint > getMaxStableCoinsToMint(msg.value))
                             ?getMaxStableCoinsToMint(msg.value):stableCoinsToMint;
 
-        require (stableCoinsToMint >= dao.params('minCoinsToMint'), "you can not mint less than 1 coin");
+        require (stableCoinsToMint >= dao.params("minCoinsToMint"), "you can not mint less than 1 coin");
 
         posID = numPositions++;
         Position storage p = positions[posID];
 
         p.coinsMinted = stableCoinsToMint;
         p.wethAmountLocked = msg.value;
-        (bool successTransfer, ) = dao.addresses('weth').call{value: msg.value}("");
-        require(successTransfer, 'Could not pass funds to weth contract for some reason');
+        (bool successTransfer, ) = dao.addresses("weth").call{value: msg.value}("");
+        require(successTransfer, "Could not pass funds to weth contract for some reason");
         p.owner = msg.sender;
         p.timeOpened = block.timestamp;
         p.lastTimeUpdated = block.timestamp;
         p.interestAmountRecorded = 0;
-        p.interestRate = dao.params('interestRate');
+        p.interestRate = dao.params("interestRate");
 
         coin.mint(msg.sender, stableCoinsToMint);
 
@@ -104,9 +104,9 @@ contract CDP is ReentrancyGuard{
     }
 
     function getMaxStableCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
-        uint256 price = oracleCart.getPrice('stb');
-        uint256 decimals = oracleCart.getDecimals('etc');
-        return ethValue * price * (100 - dao.params('collateralDiscount'))/(10**decimals)/100;
+        uint256 price = oracleCart.getPrice("stb");
+        uint256 decimals = oracleCart.getDecimals("etc");
+        return ethValue * price * (100 - dao.params("collateralDiscount"))/(10**decimals)/100;
     }
 
     function getMaxStableCoinsToMintForPos(uint256 posID) public view returns (uint256 maxAmount){
@@ -148,7 +148,7 @@ contract CDP is ReentrancyGuard{
         if (p.restrictInterestWithdrawal)
             require(p.owner == msg.sender, "Only owner may transfer interest");
         require(!p.onLiquidation, "This position is on liquidation");
-        require(coin.transferFrom(p.owner, address(this), totalCurrentFee(posID)), 'Was not able to transfer fee. Insufficient balance or allowance. Try to allow spending first');
+        require(coin.transferFrom(p.owner, address(this), totalCurrentFee(posID)), "Was not able to transfer fee. Insufficient balance or allowance. Try to allow spending first");
         p.interestAmountRecorded = 0;
         p.lastTimeUpdated = block.timestamp;
     }
@@ -160,11 +160,11 @@ contract CDP is ReentrancyGuard{
     }
 
     function allowSurplusToAuction() nonReentrant external{
-        uint256 stabilizationFundAmount = dao.params('stabilizationFundPercent')*coin.totalSupply()/100;
+        uint256 stabilizationFundAmount = dao.params("stabilizationFundPercent")*coin.totalSupply()/100;
         require (coin.balanceOf(address(this)) >= stabilizationFundAmount, "insufficient funds on CDP contract");
         uint256 surplus = coin.balanceOf(address(this)) - stabilizationFundAmount;
-        require (surplus >= dao.params('minCDPBalanceToInitBuyOut'), "not enough surplus to start buyOut");
-        require (coin.approve(dao.addresses('auction'), surplus), "could not approve coins for some reason");
+        require (surplus >= dao.params("minCDPBalanceToInitBuyOut"), "not enough surplus to start buyOut");
+        require (coin.approve(dao.addresses("auction"), surplus), "could not approve coins for some reason");
     }
 
     function claimMarginCall(uint256 posID) nonReentrant external returns (bool success){
@@ -173,8 +173,8 @@ contract CDP is ReentrancyGuard{
         require(!p.onLiquidation && !p.liquidated, "Position is already on liquidation or already liquidated");
         if (getMaxStableCoinsToMintForPos(posID) < p.coinsMinted) {
             p.onLiquidation = true;
-            uint256 currentAllowance = weth.allowance(dao.addresses('cdp'), dao.addresses('auction'));
-            require(weth.approve(dao.addresses('auction'), currentAllowance+p.wethAmountLocked), "could not approve weth for some reason");
+            uint256 currentAllowance = weth.allowance(dao.addresses("cdp"), dao.addresses("auction"));
+            require(weth.approve(dao.addresses("auction"), currentAllowance+p.wethAmountLocked), "could not approve weth for some reason");
             emit OnLiquidation(posID, block.timestamp);
             return true;
         }
@@ -244,18 +244,18 @@ contract CDP is ReentrancyGuard{
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         require(p.owner == msg.sender, "Only owner may update the position");
-        require (newStableCoinsAmount >= dao.params('minCoinsToMint'), "you can not mint less than 1 coin");
+        require (newStableCoinsAmount >= dao.params("minCoinsToMint"), "you can not mint less than 1 coin");
 
         p.interestAmountRecorded += interestAmountUnrecorded(posID);
         p.lastTimeUpdated = block.timestamp;
 
         if (msg.value>0) {
             p.wethAmountLocked += msg.value;
-            (bool successTransfer, ) = dao.addresses('weth').call{value: msg.value}("");
-            require(successTransfer, 'Could not pass funds to weth contract for some reason');
+            (bool successTransfer, ) = dao.addresses("weth").call{value: msg.value}("");
+            require(successTransfer, "Could not pass funds to weth contract for some reason");
         }
 
-        require(getMaxStableCoinsToMintForPos(posID) >= newStableCoinsAmount, 'not enough collateral to mint amount');
+        require(getMaxStableCoinsToMintForPos(posID) >= newStableCoinsAmount, "not enough collateral to mint amount");
 
         if (newStableCoinsAmount > p.coinsMinted) {
             uint256 difference = newStableCoinsAmount - p.coinsMinted;
@@ -283,7 +283,7 @@ contract CDP is ReentrancyGuard{
     function withdrawEther (uint256 posID, uint256 etherToWithdraw) nonReentrant external{
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
-        require(p.owner == msg.sender, 'Only owner may update the position');
+        require(p.owner == msg.sender, "Only owner may update the position");
         require (etherToWithdraw<p.wethAmountLocked, "You dont have enough weth locked on this pos");
         uint256 wethToLeave = p.wethAmountLocked - etherToWithdraw;
         uint256 maxCoins = getMaxStableCoinsToMint(wethToLeave) - totalCurrentFee(posID);
@@ -298,7 +298,7 @@ contract CDP is ReentrancyGuard{
     }
 
     function mintRule(address to, uint256 amount) external returns (bool success){
-        require (msg.sender == dao.addresses('auction'), "Only auction is allowed to claim mint");
+        require (msg.sender == dao.addresses("auction"), "Only auction is allowed to claim mint");
         rule.mint(to, amount);
         return true;
     }
