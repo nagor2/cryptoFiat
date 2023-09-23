@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.18;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./IDAO.sol";
 import "./ICDP.sol";
 
@@ -15,7 +16,7 @@ import "./ICDP.sol";
         bool closed;
     }
 
-contract DepositContract{
+contract DepositContract is ReentrancyGuard{
     IDAO immutable dao;
     IERC20 coin;
     ICDP cdp;
@@ -34,7 +35,7 @@ contract DepositContract{
         cdp = ICDP(dao.addresses('cdp'));
     }
 
-    function deposit() external{
+    function deposit() nonReentrant external{
         uint256 amount = coin.allowance(msg.sender, address(this));
         require (amount>0, "you have to approve coins first");
         require (coin.transferFrom(msg.sender, address(this), amount), "Could not transfer coins for some reason");
@@ -48,7 +49,7 @@ contract DepositContract{
         emit DepositOpened(counter, d.coinsDeposited, d.currentInterestRate, d.owner);
     }
 
-    function withdraw(uint256 id, uint256 amount) external{
+    function withdraw(uint256 id, uint256 amount) nonReentrant external{
         updateInterest(id);
         Deposit storage d = deposits[id];
         require(msg.sender == d.owner, "only owner may init withdrawal");
@@ -62,7 +63,7 @@ contract DepositContract{
             d.currentInterestRate = dao.params("depositRate");
     }
 
-    function topUp(uint256 id) external{
+    function topUp(uint256 id) nonReentrant external{
         updateInterest(id);
         Deposit storage d = deposits[id];
         require (!d.closed, "deposit is closed, open a new one, please");
@@ -88,7 +89,7 @@ contract DepositContract{
         return d.accumulatedInterest;
     }
 
-    function claimInterest(uint256 id) external{
+    function claimInterest(uint256 id) nonReentrant external{
         updateInterest(id);
         cdp.claimInterest(overallInterest(id), deposits[id].owner);
         deposits[id].accumulatedInterest = 0;

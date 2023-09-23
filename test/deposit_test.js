@@ -105,7 +105,7 @@ contract('Deposit', (accounts) => {
 
     it("should topUp deposit", async () => {
         await coin.approve(deposit.address, web3.utils.toWei('10', 'ether'), {from: owner});
-        await deposit.topUp(1);
+        await deposit.topUp(1, {from: owner});
         let d = await deposit.deposits(1);
         assert.equal(d.coinsDeposited, web3.utils.toWei('110', "ether"), "incorrect coinsDeposited");
         let balance = await coin.balanceOf(deposit.address);

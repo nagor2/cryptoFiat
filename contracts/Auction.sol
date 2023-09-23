@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.18;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./IDAO.sol";
 import "./ICDP.sol";
 
@@ -26,7 +27,7 @@ import "./ICDP.sol";
         bool canceled;
     }
 
-contract Auction {
+contract Auction is ReentrancyGuard{
     uint256 public auctionNum;
     uint256 public bidsNum;
     IERC20 coin;
@@ -57,7 +58,7 @@ contract Auction {
         rule = IERC20(dao.addresses('rule'));
     }
 
-    function initRuleBuyOut() external returns (uint256 auctionID){
+    function initRuleBuyOut() nonReentrant external returns (uint256 auctionID){
         require (!ruleBuyOut, "Rule buyOut auction already exist");
         require ((rule.balanceOf(msg.sender)>=rule.totalSupply()/100*dao.params('minRuleTokensToInitVotingPercent')), "not enough rule balance");
 
@@ -73,7 +74,7 @@ contract Auction {
         return auctionID;
     }
 
-    function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) external returns (uint256 auctionID){
+    function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) nonReentrant external returns (uint256 auctionID){
         require (!isCoinsBuyOutForStabilization, "CoinsBuyOutForStabilization already exists and not finished");
         uint256 actualStabilizationFund = coin.balanceOf(address(cdp));
         uint256 preferableStabilizationFund = coin.totalSupply() * dao.params("stabilizationFundPercent")/100;
@@ -91,7 +92,7 @@ contract Auction {
         return auctionID;
     }
 
-    function initCoinsBuyOut(uint256 posID, uint256 collateral) external returns (uint256 auctionID){
+    function initCoinsBuyOut(uint256 posID, uint256 collateral) nonReentrant external returns (uint256 auctionID){
         require (msg.sender == dao.addresses('cdp'), "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract");
         IERC20 weth = IERC20(dao.addresses('weth'));
         require(weth.transferFrom(dao.addresses('cdp'), address(this), collateral), "could not transfer weth for some reason");
@@ -119,7 +120,7 @@ contract Auction {
         return auctionID;
     }
 
-    function makeBid(uint256 auctionId, uint256 bidAmount) external returns (uint256 bidId){
+    function makeBid(uint256 auctionId, uint256 bidAmount) nonReentrant external returns (uint256 bidId){
         auctionEntity storage a = auctions[auctionId];
         require(a.initialized&&!a.finalized, "auctionId is wrong or it is already finished");
 
@@ -153,7 +154,7 @@ contract Auction {
         return bidId;
     }
 
-    function improveBid(uint256 bidId, uint256 newBidAmount) external{
+    function improveBid(uint256 bidId, uint256 newBidAmount) nonReentrant external{
         Bid storage b = bids[bidId];
         require(b.owner == msg.sender, "You may improve only your personal bids");
         auctionEntity storage a = auctions[b.auctionID];
@@ -178,7 +179,7 @@ contract Auction {
         emit newBid(b.auctionID, bidId, newBidAmount, b.owner);
     }
 
-    function cancelBid(uint256 bidId) external{
+    function cancelBid(uint256 bidId) nonReentrant external{
         Bid storage b = bids[bidId];
         require (b.owner==msg.sender && !b.canceled, "Only bid owner may cancel it, if it wasn't canceled earlier");
         auctionEntity storage a = auctions[b.auctionID];
@@ -193,7 +194,7 @@ contract Auction {
         b.canceled = true;
     }
 
-    function claimToFinalizeAuction(uint256 auctionID) external returns (bool success){
+    function claimToFinalizeAuction(uint256 auctionID) nonReentrant external returns (bool success){
         auctionEntity storage a = auctions[auctionID];
         if (a.isMarginCall)
             require (msg.sender == dao.addresses('cdp'), "Only CDP contract may finish this auction. Please, use finishMarginCall method.");

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.18;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./IDAO.sol";
 
 interface IERC20MintableAndBurnable is IERC20{
@@ -36,7 +37,7 @@ interface ICart{
         bool restrictInterestWithdrawal;
     }
 
-contract CDP {
+contract CDP is ReentrancyGuard{
     uint256 public numPositions;
     IDAO dao;
     ICart oracleCart;
@@ -67,7 +68,7 @@ contract CDP {
         weth = IERC20(dao.addresses('weth'));
     }
 
-    function openCDP(uint256 stableCoinsToMint) external payable returns (uint256 posID){
+    function openCDP(uint256 stableCoinsToMint) nonReentrant external payable returns (uint256 posID){
         stableCoinsToMint = (stableCoinsToMint > getMaxStableCoinsToMint(msg.value))
                             ?getMaxStableCoinsToMint(msg.value):stableCoinsToMint;
 
@@ -112,7 +113,7 @@ contract CDP {
         return getMaxStableCoinsToMint(positions[posID].wethAmountLocked) - totalCurrentFee(posID);
     }
 
-    function claimInterest(uint256 amount, address beneficiary) external{
+    function claimInterest(uint256 amount, address beneficiary) nonReentrant external{
         require(dao.isAuthorized(msg.sender), "only authorized address may do this");
         if (coin.balanceOf(address(this))>amount)
             coin.transfer(beneficiary, amount);
@@ -128,7 +129,7 @@ contract CDP {
         coin.mint(beneficiary,amount);
     }
 
-    function closeCDP(uint256 posID) external{
+    function closeCDP(uint256 posID) nonReentrant external{
         Position storage p = positions[posID];
         require(p.owner == msg.sender, "Only owner may close his position");
         require(!p.onLiquidation, "This position is on liquidation");
@@ -142,7 +143,7 @@ contract CDP {
         p.liquidated = true;
     }
 
-    function transferInterest(uint256 posID) external{
+    function transferInterest(uint256 posID) nonReentrant external{
         Position storage p = positions[posID];
         if (p.restrictInterestWithdrawal)
             require(p.owner == msg.sender, "Only owner may transfer interest");
@@ -158,7 +159,7 @@ contract CDP {
         p.restrictInterestWithdrawal = !p.restrictInterestWithdrawal;
     }
 
-    function allowSurplusToAuction() external{
+    function allowSurplusToAuction() nonReentrant external{
         uint256 stabilizationFundAmount = dao.params('stabilizationFundPercent')*coin.totalSupply()/100;
         require (coin.balanceOf(address(this)) >= stabilizationFundAmount, "insufficient funds on CDP contract");
         uint256 surplus = coin.balanceOf(address(this)) - stabilizationFundAmount;
@@ -166,7 +167,7 @@ contract CDP {
         require (coin.approve(dao.addresses('auction'), surplus), "could not approve coins for some reason");
     }
 
-    function claimMarginCall(uint256 posID) external returns (bool success){
+    function claimMarginCall(uint256 posID) nonReentrant external returns (bool success){
         Position storage p = positions[posID];
             require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp > dao.params('marginCallTimeLimit'), "Position is not marked on liquidation or owner still has time");
         require(!p.onLiquidation && !p.liquidated, "Position is already on liquidation or already liquidated");
@@ -183,14 +184,14 @@ contract CDP {
         }
     }
 
-    function startCoinsBuyOut(uint256 posID) external{
+    function startCoinsBuyOut(uint256 posID) nonReentrant external{
         Position storage p = positions[posID];
         require (p.onLiquidation && !p.liquidated && p.liquidationAuctionID == 0, "Position is not on liquidation or already liquidated, or auction was already started");
         p.liquidationAuctionID = auction.initCoinsBuyOut(posID, p.wethAmountLocked);
         p.wethAmountLocked = 0;
     }
 
-    function finishMarginCall(uint256 posID) external{
+    function finishMarginCall(uint256 posID) nonReentrant external{
         Position storage p = positions[posID];
         require(p.onLiquidation && !p.liquidated && p.liquidationAuctionID !=0, "Position is not on liquidation or was already liquidated or auction was not started");
         if (!auction.isFinalized(p.liquidationAuctionID))
@@ -239,7 +240,7 @@ contract CDP {
         }
     }
 
-    function updateCDP(uint posID, uint newStableCoinsAmount) external payable returns (bool success){
+    function updateCDP(uint posID, uint newStableCoinsAmount) nonReentrant external payable returns (bool success){
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         require(p.owner == msg.sender, "Only owner may update the position");
@@ -279,7 +280,7 @@ contract CDP {
         }
     }
 
-    function withdrawEther (uint256 posID, uint256 etherToWithdraw) external{
+    function withdrawEther (uint256 posID, uint256 etherToWithdraw) nonReentrant external{
         Position storage p = positions[posID];
         require(!p.onLiquidation, "This position is on liquidation");
         require(p.owner == msg.sender, 'Only owner may update the position');

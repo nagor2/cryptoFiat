@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.18;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract INTDAO {
+contract INTDAO is ReentrancyGuard{
     IERC20 ruleToken;
     mapping (uint256 => mapping(address => uint256)) votes;
 
@@ -85,7 +86,7 @@ contract INTDAO {
         emit NewVoting(votingID, name);
     }
 
-    function poolTokens() external returns (bool success){
+    function poolTokens() nonReentrant external returns (bool success) {
         uint256 amount = ruleToken.allowance(msg.sender, address(this));
         require (amount>0, "allow tokens first");
         require(ruleToken.transferFrom(msg.sender, address(this), amount), "Could not pool tokens for some reason");
@@ -94,7 +95,7 @@ contract INTDAO {
         return true;
     }
 
-    function returnTokens() external returns (bool) {
+    function returnTokens() nonReentrant external returns (bool) {
         require(pooled[msg.sender] > 0, 'You must have pooled tokens');
         if (activeVoting && votes[votingID][msg.sender]>0){
             votings[votingID].totalPositive -= votes[votingID][msg.sender];
@@ -105,7 +106,7 @@ contract INTDAO {
         return true;
     }
 
-    function vote(bool _vote) external{
+    function vote(bool _vote) nonReentrant external{
         require(activeVoting, "No active voting found");
         require(votings[votingID].startTime + params['votingDuration'] >= block.timestamp, "Voting is already inactive");
         require(pooled[msg.sender]>0, "You dont have pooled tokens to vote");
@@ -123,7 +124,7 @@ contract INTDAO {
         }
     }
 
-    function claimToFinalizeCurrentVoting() external{
+    function claimToFinalizeCurrentVoting() nonReentrant external{
         require (activeVoting, "There is no active voting");
         if (votings[votingID].totalPositive >= ruleToken.totalSupply() * params['absoluteMajority'] / 100) {
             finalizeCurrentVoting();
