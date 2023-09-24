@@ -26,13 +26,13 @@ contract DepositContract is ReentrancyGuard{
 
     constructor(address _INTDAOaddress){
         dao = IDAO(_INTDAOaddress);
-        dao.setAddressOnce('deposit',payable(address(this)));
+        dao.setAddressOnce("deposit",payable(address(this)));
         renewContracts();
     }
 
     function renewContracts() public {
-        coin = IERC20(dao.addresses('stableCoin'));
-        cdp = ICDP(dao.addresses('cdp'));
+        coin = IERC20(dao.addresses("stableCoin"));
+        cdp = ICDP(dao.addresses("cdp"));
     }
 
     function deposit() nonReentrant external{

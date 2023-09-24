@@ -118,7 +118,7 @@ contract('Deposit', (accounts) => {
 
     it("should withdraw funds", async () => {
         await deposit.withdraw(1, web3.utils.toWei('110', "ether"), {from:owner});
-        let d = await deposit.deposits(1);
+        let d = await deposit.deposits(1, {from:owner});
         assert.equal(d.coinsDeposited, web3.utils.toWei('0', "ether"), "incorrect coinsDeposited");
         let balance = await coin.balanceOf(deposit.address);
         assert.equal(parseFloat(balance/10**18), parseFloat("0"), "balance should decrease");

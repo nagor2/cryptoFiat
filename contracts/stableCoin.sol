@@ -12,12 +12,12 @@ contract stableCoin is ERC20{
     }
 
     function mint(address to, uint256 amount) external{
-        require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to mint');
+        require (msg.sender == dao.addresses("cdp"), "only collateral contract is authorized to mint");
         _mint(to, amount);
     }
 
     function burn(address from, uint256 amount) external{
-        require (msg.sender == dao.addresses('cdp'), 'only collateral contract is authorized to burn');
+        require (msg.sender == dao.addresses("cdp"), "only collateral contract is authorized to burn");
         _burn(from, amount);
     }
 }

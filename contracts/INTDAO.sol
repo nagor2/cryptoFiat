@@ -35,34 +35,34 @@ contract INTDAO is ReentrancyGuard{
     event VotingFailed (uint256 id);
 
     constructor (address WETH) {
-        params['interestRate'] = 9;
-        params['depositRate']=8;
-        params['liquidationFee'] = 13;
-        params['collateralDiscount'] = 30;
-        params['stabilizationFundPercent'] = 5;
-        params['quorum'] = 60;
-        params['majority'] = 50;
-        params['minCDPBalanceToInitBuyOut'] = 10**19;
-        params['absoluteMajority'] = 80;
-        params['minRuleTokensToInitVotingPercent'] = 1;
-        params['votingDuration'] = 1 days;
-        params['auctionTurnDuration'] = 15 minutes;
-        params['minAuctionPriceMove'] = 5;
-        params['minColleteral'] = 1*10^16; // minColleteral is 0.01 ETH
-        params['marginCallTimeLimit'] = 1 days;
-        params['annualInflationPercent'] = 1;
-        params['defaultDepositPeriod'] = 91 days;
-        params['maxCoinsForStabilization'] = 50*10**18;
-        params['maxRuleEmissionPercent'] = 1;
-        params['highVolatilityEventBarrierPercent'] = 5;
-        params['minCoinsToMint'] = 1;
+        params["interestRate"] = 9;
+        params["depositRate"]=8;
+        params["liquidationFee"] = 13;
+        params["collateralDiscount"] = 30;
+        params["stabilizationFundPercent"] = 5;
+        params["quorum"] = 60;
+        params["majority"] = 50;
+        params["minCDPBalanceToInitBuyOut"] = 10**19;
+        params["absoluteMajority"] = 80;
+        params["minRuleTokensToInitVotingPercent"] = 1;
+        params["votingDuration"] = 1 days;
+        params["auctionTurnDuration"] = 15 minutes;
+        params["minAuctionPriceMove"] = 5;
+        params["minColleteral"] = 1*10^16; // minColleteral is 0.01 ETH
+        params["marginCallTimeLimit"] = 1 days;
+        params["annualInflationPercent"] = 1;
+        params["defaultDepositPeriod"] = 91 days;
+        params["maxCoinsForStabilization"] = 50*10**18;
+        params["maxRuleEmissionPercent"] = 1;
+        params["highVolatilityEventBarrierPercent"] = 5;
+        params["minCoinsToMint"] = 1;
 
-        addresses['weth'] = WETH;
-        addresses['dao'] = address(this);
+        addresses["weth"] = WETH;
+        addresses["dao"] = address(this);
     }
 
     function renewContracts() public {
-        ruleToken = IERC20(addresses['rule']);
+        ruleToken = IERC20(addresses["rule"]);
     }
 
     function setAddressOnce(string memory addressName, address addr) external {
@@ -96,7 +96,7 @@ contract INTDAO is ReentrancyGuard{
     }
 
     function returnTokens() nonReentrant external returns (bool) {
-        require(pooled[msg.sender] > 0, 'You must have pooled tokens');
+        require(pooled[msg.sender] > 0, "You must have pooled tokens");
         if (activeVoting && votes[votingID][msg.sender]>0){
             votings[votingID].totalPositive -= votes[votingID][msg.sender];
         }
@@ -108,7 +108,7 @@ contract INTDAO is ReentrancyGuard{
 
     function vote(bool _vote) nonReentrant external{
         require(activeVoting, "No active voting found");
-        require(votings[votingID].startTime + params['votingDuration'] >= block.timestamp, "Voting is already inactive");
+        require(votings[votingID].startTime + params["votingDuration"] >= block.timestamp, "Voting is already inactive");
         require(pooled[msg.sender]>0, "You dont have pooled tokens to vote");
 
         if (_vote) {
@@ -126,12 +126,12 @@ contract INTDAO is ReentrancyGuard{
 
     function claimToFinalizeCurrentVoting() nonReentrant external{
         require (activeVoting, "There is no active voting");
-        if (votings[votingID].totalPositive >= ruleToken.totalSupply() * params['absoluteMajority'] / 100) {
+        if (votings[votingID].totalPositive >= ruleToken.totalSupply() * params["absoluteMajority"] / 100) {
             finalizeCurrentVoting();
             return;
         }
-        else if (votings[votingID].startTime + params['votingDuration'] <= block.timestamp) {
-            if (totalPooled >= params['quorum'] * ruleToken.totalSupply() / 100 && votings[votingID].totalPositive > (totalPooled - votings[votingID].totalPositive)) {
+        else if (votings[votingID].startTime + params["votingDuration"] <= block.timestamp) {
+            if (totalPooled >= params["quorum"] * ruleToken.totalSupply() / 100 && votings[votingID].totalPositive > (totalPooled - votings[votingID].totalPositive)) {
                 finalizeCurrentVoting();
                 return;
             }
@@ -155,6 +155,6 @@ contract INTDAO is ReentrancyGuard{
     }
 
     function isEnoughTokensPooledToInitVoting(address initiator) internal view returns (bool enough){
-        return pooled[initiator]>=ruleToken.totalSupply()*params['minRuleTokensToInitVotingPercent']/100;
+        return pooled[initiator]>=ruleToken.totalSupply()*params["minRuleTokensToInitVotingPercent"]/100;
     }
 }

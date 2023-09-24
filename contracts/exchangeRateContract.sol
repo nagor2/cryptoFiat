@@ -108,7 +108,7 @@ contract exchangeRateContract {
                 move = prevPrice - newPrice;
             else
                 move = newPrice - prevPrice;
-            if ((move * 100) / prevPrice > dao.params('highVolatilityEventBarrierPercent'))
+            if ((move * 100) / prevPrice > dao.params("highVolatilityEventBarrierPercent"))
                 emit highVolatility(id);
         }
         instruments[id].price = newPrice;

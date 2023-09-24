@@ -62,12 +62,12 @@ contract Auction is ReentrancyGuard{
         require (!ruleBuyOut, "Rule buyOut auction already exist");
         require ((rule.balanceOf(msg.sender)>=rule.totalSupply()/100*dao.params("minRuleTokensToInitVotingPercent")), "not enough rule balance");
 
-        uint256 allowed = coin.allowance(dao.addresses('cdp'), address(this));
+        uint256 allowed = coin.allowance(dao.addresses("cdp"), address(this));
         require (allowed>0, "Can not transfer surplus from CDP");
 
         coin.transferFrom(dao.addresses("cdp"), address(this), allowed);
 
-        auctionID = createNewAuction(dao.addresses("stableCoin"), allowed, dao.addresses('rule'), 0);
+        auctionID = createNewAuction(dao.addresses("stableCoin"), allowed, dao.addresses("rule"), 0);
         ruleBuyOut = true;
 
         emit buyOutInit(auctionID, allowed, dao.addresses("stableCoin"));
@@ -126,14 +126,14 @@ contract Auction is ReentrancyGuard{
 
         if (a.bestBidId!=0){
             Bid storage bestBid = bids[a.bestBidId];
-            if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses('weth'))
+            if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth"))
                 require(bidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=bidAmount, "your bid is not high enough");
             if (a.lotToken == dao.addresses("rule"))
                 require(bidAmount>0 && bestBid.bidAmount*(100-dao.params("minAuctionPriceMove"))/100>=bidAmount, "your bid is not low enough");
         }
         require(bidAmount>0, "your bid is not high enough");
         IERC20 paymentToken = IERC20(address(a.paymentToken));
-        if (a.lotToken == dao.addresses('rule')){
+        if (a.lotToken == dao.addresses("rule")){
             require(bidAmount<=rule.totalSupply()*dao.params("maxRuleEmissionPercent")/100, "too many rules for one emission");
             require(paymentToken.transferFrom(msg.sender, address(this), a.paymentAmount), "You should first approve stableCoins to auction contract address");
         }
@@ -163,7 +163,7 @@ contract Auction is ReentrancyGuard{
 
         if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth"))
             require(newBidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=newBidAmount, "your bid is not high enough");
-        if (a.lotToken == dao.addresses('rule'))
+        if (a.lotToken == dao.addresses("rule"))
             require(newBidAmount>0 && bestBid.bidAmount*(100-dao.params("minAuctionPriceMove"))/100>=newBidAmount, "your bid is not high enough");
 
         IERC20 paymentToken = IERC20(address(a.paymentToken));
@@ -197,10 +197,10 @@ contract Auction is ReentrancyGuard{
     function claimToFinalizeAuction(uint256 auctionID) nonReentrant external returns (bool success){
         auctionEntity storage a = auctions[auctionID];
         if (a.isMarginCall)
-            require (msg.sender == dao.addresses('cdp'), "Only CDP contract may finish this auction. Please, use finishMarginCall method.");
+            require (msg.sender == dao.addresses("cdp"), "Only CDP contract may finish this auction. Please, use finishMarginCall method.");
 
         require(a.initialized && !a.finalized, "the auction is finished or non-existent");
-        require(block.timestamp-a.lastTimeUpdated>=dao.params('auctionTurnDuration'), "it is too early to finalize, wait a bit");
+        require(block.timestamp-a.lastTimeUpdated>=dao.params("auctionTurnDuration"), "it is too early to finalize, wait a bit");
         require(a.bestBidId!=0 && a.initTime!=a.lastTimeUpdated, "there should be at least one bid");
 
         finalizeAuction(auctionID);
@@ -211,20 +211,20 @@ contract Auction is ReentrancyGuard{
         auctionEntity storage a = auctions[auctionID];
         Bid storage bestBid = bids[a.bestBidId];
 
-        if (a.lotToken == dao.addresses('stableCoin')){
+        if (a.lotToken == dao.addresses("stableCoin")){
             require(IERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount), "lotToken transfer failed for some reason");
-            require(IERC20(address(a.paymentToken)).transfer(dao.addresses('cdp'), bestBid.bidAmount), "paymentToken transfer failed for some reason");
+            require(IERC20(address(a.paymentToken)).transfer(dao.addresses("cdp"), bestBid.bidAmount), "paymentToken transfer failed for some reason");
             ruleBuyOut = false;
             emit buyOutFinished(auctionID, a.lotAmount, bestBid.bidAmount);
         }
-        if (a.lotToken == dao.addresses('rule')){
+        if (a.lotToken == dao.addresses("rule")){
             require(cdp.mintRule(bestBid.owner, bestBid.bidAmount), "could not mint rule");
-            require(coin.transfer(dao.addresses('cdp'), a.paymentAmount), "could not transfer coins");
+            require(coin.transfer(dao.addresses("cdp"), a.paymentAmount), "could not transfer coins");
             isCoinsBuyOutForStabilization = false;
         }
-        if (a.lotToken == dao.addresses('weth')){
+        if (a.lotToken == dao.addresses("weth")){
             require(IERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount));
-            require(IERC20(address(a.paymentToken)).transfer(dao.addresses('cdp'), bestBid.bidAmount));
+            require(IERC20(address(a.paymentToken)).transfer(dao.addresses("cdp"), bestBid.bidAmount));
             emit buyOutFinished(auctionID, a.lotAmount, bestBid.bidAmount);
         }
         a.finalized = true;

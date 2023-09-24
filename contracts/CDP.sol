@@ -169,7 +169,7 @@ contract CDP is ReentrancyGuard{
 
     function claimMarginCall(uint256 posID) nonReentrant external returns (bool success){
         Position storage p = positions[posID];
-            require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp > dao.params('marginCallTimeLimit'), "Position is not marked on liquidation or owner still has time");
+            require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp > dao.params("marginCallTimeLimit"), "Position is not marked on liquidation or owner still has time");
         require(!p.onLiquidation && !p.liquidated, "Position is already on liquidation or already liquidated");
         if (getMaxStableCoinsToMintForPos(posID) < p.coinsMinted) {
             p.onLiquidation = true;
@@ -200,7 +200,7 @@ contract CDP is ReentrancyGuard{
         uint256 paymentAmount = auction.getPaymentAmount(p.liquidationAuctionID);
 
         if (paymentAmount >=p.coinsMinted){
-            uint256 overallDebt = p.coinsMinted + totalCurrentFee(posID) + p.coinsMinted * dao.params('liquidationFee') / 100;
+            uint256 overallDebt = p.coinsMinted + totalCurrentFee(posID) + p.coinsMinted * dao.params("liquidationFee") / 100;
             if (paymentAmount > overallDebt)
                 coin.transfer(p.owner, paymentAmount - overallDebt);
             coin.burn(address(this), p.coinsMinted);

@@ -32,12 +32,12 @@ contract cartContract{
 
     constructor(address payable INTDAOaddress){
         dao = IDAO(INTDAOaddress);
-        dao.setAddressOnce('cart',payable(address(this)));
+        dao.setAddressOnce("cart",payable(address(this)));
         renewContracts();
     }
 
     function renewContracts() public {
-        oracle = IOracle(dao.addresses('oracle'));
+        oracle = IOracle(dao.addresses("oracle"));
     }
 
     function addItem(string memory symbol, uint256 share, uint256 initialPrice) public{
@@ -73,8 +73,8 @@ contract cartContract{
     }
 
     function getPrice(string memory symbol) public view returns (uint256) {
-        if (keccak256(bytes(symbol)) == keccak256(bytes('stb')))
-            return oracle.getPrice('etc') * 10**6 / getCurrentSharePrice();
+        if (keccak256(bytes(symbol)) == keccak256(bytes("stb")))
+            return oracle.getPrice("etc") * 10**6 / getCurrentSharePrice();
         return oracle.getPrice(symbol);
     }
 

@@ -14,14 +14,14 @@ contract InflationFund {
 
     constructor(address INTDAOaddress){
         dao = IDAO(INTDAOaddress);
-        dao.setAddressOnce('inflationFund',address(this));
+        dao.setAddressOnce("inflationFund",address(this));
         lastEmission = block.timestamp;
         renewContracts();
     }
 
     function renewContracts() public{
-        coin = IERC20(dao.addresses('stableCoin'));
-        cdp = ICDP(dao.addresses('cdp'));
+        coin = IERC20(dao.addresses("stableCoin"));
+        cdp = ICDP(dao.addresses("cdp"));
     }
 
     function claimEmission() external{

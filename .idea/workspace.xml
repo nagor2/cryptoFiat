@@ -11,9 +11,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
+      <change afterPath="$PROJECT_DIR$/build/contracts/Auction.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/Context.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/DepositContract.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/ERC20.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/IAuction.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/ICDP.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/ICart.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/IDAO.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/IERC20.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/IERC20Metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/IERC20MintableAndBurnable.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/IOracle.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/InflationFund.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/ReentrancyGuard.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/WETH9.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/cartContract.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Deposit.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Deposit.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/INTDAO.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/INTDAO.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Rule.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Rule.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/cart.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/cart.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/inflationFund.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/inflationFund.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/stableCoin.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/stableCoin.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deposit_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/deposit_test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,16 +104,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/YandexDisk/Работа/ICO/CryptoFiat/repo",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/YandexDisk/Работа/ICO/CryptoFiat/repo&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo" />
@@ -305,7 +334,9 @@
       <workItem from="1692581136266" duration="596000" />
       <workItem from="1695088799983" duration="2696000" />
       <workItem from="1695266046881" duration="18681000" />
-      <workItem from="1695473434531" duration="3502000" />
+      <workItem from="1695473434531" duration="3724000" />
+      <workItem from="1695520410333" duration="2217000" />
+      <workItem from="1695558518296" duration="802000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
