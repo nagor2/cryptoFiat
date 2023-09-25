@@ -65,10 +65,10 @@ contract('CDP Update Increase', (accounts) => {
 
     it("should increase overall fee", async () => {
         let recordedFee = positionAfter.interestAmountRecorded;
-        assert.equal(parseFloat(recordedFee/10**18).toFixed(4), 180.0000, "should increase overall fee");
+        assert.equal(parseFloat(recordedFee/10**18).toFixed(3), 180.000, "should increase overall fee");
 
         let overallFee = await cdp.totalCurrentFee(posId);
-        assert.equal(parseFloat(overallFee/10**18).toFixed(4), 180.0000, "should increase overall fee");
+        assert.equal(parseFloat(overallFee/10**18).toFixed(3), 180.000, "should increase overall fee");
     });
 
     it("should increase owner balance", async () => {

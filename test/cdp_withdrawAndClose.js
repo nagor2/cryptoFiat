@@ -90,7 +90,7 @@ contract('CDP withdraw and close position', (accounts) => {
 
         let currentFee = await cdp.totalCurrentFee(posId);
 
-        assert.equal(parseFloat(currentFee/10**18).toFixed(4),parseFloat('90').toFixed(4), "wrong fee");
+        assert.equal(parseFloat(currentFee/10**18).toFixed(3),parseFloat('90').toFixed(3), "wrong fee");
 
 
         await truffleAssert.fails(

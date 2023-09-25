@@ -72,7 +72,7 @@ contract CDP is ReentrancyGuard{
         stableCoinsToMint = (stableCoinsToMint > getMaxStableCoinsToMint(msg.value))
                             ?getMaxStableCoinsToMint(msg.value):stableCoinsToMint;
 
-        require (stableCoinsToMint >= dao.params("minCoinsToMint"), "you can not mint less than 1 coin");
+        require (stableCoinsToMint >= dao.params("minCoinsToMint")*10**18, "you can not mint less than 1 coin");
 
         posID = numPositions++;
         Position storage p = positions[posID];
