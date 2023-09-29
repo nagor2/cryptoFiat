@@ -3,7 +3,7 @@ pragma solidity 0.8.18;
 import "./IDAO.sol";
 
 contract exchangeRateContract {
-    IDAO dao;
+    IDAO immutable dao;
 
     uint16 public instrumentsCount;
 
@@ -33,7 +33,6 @@ contract exchangeRateContract {
 
     constructor(address _INTDAOaddress) payable{
         dao = IDAO(_INTDAOaddress);
-        dao.setAddressOnce("oracle", address(this));
         author = msg.sender;
         updater = msg.sender;
         beneficiary = msg.sender;

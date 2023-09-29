@@ -1,4 +1,5 @@
 const { time } = require('@openzeppelin/test-helpers');
+const { getContractAddress } = require('@ethersproject/address')
 
 var INTDAO = artifacts.require("./INTDAO.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
@@ -19,12 +20,22 @@ contract('Auction', (accounts) => {
     let newBidder = accounts[3];
     let ruleHolder = accounts[7];
 
+    async function a()  {
+        for (var i=-15; i<19; i++){
+            console.log(i+") "+await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))+i)}))
+        }
+    }
+
     before('should setup the contracts instance', async () => {
-        dao = await INTDAO.deployed();
-        stableCoin = await StableCoin.deployed(dao.address);
-        auction = await Auction.deployed(dao.address);
-        cdp = await CDP.deployed(dao.address);
-        rule = await Rule.deployed(dao.address, {from:ruleHolder});
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+        stableCoin = await StableCoin.deployed(futureDaoAddress, {from: accounts[0]});
+        rule = await Rule.deployed(futureDaoAddress, {from:ruleHolder});
+        auction = await Auction.deployed(futureDaoAddress, {from: accounts[0]});
+        cdp = await CDP.deployed(futureDaoAddress, {from: accounts[0]});
+        dao = await INTDAO.deployed([0x0, cdp.address, auction.address,0x0,0x0, 0x0, rule.address, stableCoin.address,0x0], {from: accounts[0]});
+
+        await cdp.renewContracts();
+        await auction.renewContracts();
     });
 
     it("should throw if little rule on balance to init auction", async () => {
@@ -37,7 +48,6 @@ contract('Auction', (accounts) => {
     it("should throw if little money on balance", async () => {
         let minAmount = web3.utils.fromWei(await rule.totalSupply()) /100 * await dao.params('minRuleTokensToInitVotingPercent');
         await rule.transfer(bidder, web3.utils.toWei(minAmount.toString()), {from:ruleHolder});
-
         await truffleAssert.fails(
             auction.initRuleBuyOut({from:bidder}),
             truffleAssert.ErrorType.REVERT,

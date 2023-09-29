@@ -1,6 +1,6 @@
 var INTDAO = artifacts.require("./INTDAO.sol");
 var Rule = artifacts.require("./Rule.sol");
-var Oracle = artifacts.require("./exchangeRateContract.sol");
+const { getContractAddress } = require('@ethersproject/address');
 
 const truffleAssert = require('truffle-assertions');
 const { time } = require('@openzeppelin/test-helpers');
@@ -8,17 +8,17 @@ const { time } = require('@openzeppelin/test-helpers');
 contract('DAO', (accounts) => {
 
     let dao;
-    let oracle;
     let ruleHolder;
     let ruleToken;
 
 
     before(async () => {
-        dao = await INTDAO.deployed();
-        oracle = await Oracle.deployed();
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+
         ruleHolder = accounts[7];
-        ruleToken = await Rule.deployed(dao.address);
-        await dao.renewContracts();
+        ruleToken = await Rule.deployed(futureDaoAddress);
+
+        dao = await INTDAO.deployed([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, ruleToken.address, 0x0, 0x0]);
     });
 
     it('deploys successfully', async () => {
@@ -32,13 +32,6 @@ contract('DAO', (accounts) => {
     it('addresses filled successfully', async () => {
         const address = await dao.address;
         assert.equal(await dao.addresses('dao'),address);
-    });
-
-    it('should set address only once', async () => {
-        await truffleAssert.fails(
-            dao.setAddressOnce('dao', accounts[2]),
-            truffleAssert.ErrorType.REVERT,
-            "address was already set");
     });
 
     it('should put rule tokens on balance', async () => {

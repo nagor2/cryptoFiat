@@ -1,4 +1,4 @@
-var Rule = artifacts.require("Rule");
+var rule = artifacts.require("Rule");
 var stableCoin = artifacts.require ("stableCoin");
 var exchangeRateContract = artifacts.require("exchangeRateContract");
 var INTDAO = artifacts.require("INTDAO");
@@ -8,8 +8,21 @@ var weth = artifacts.require("WETH9");
 var deposit = artifacts.require("DepositContract");
 var InflationFund = artifacts.require("inflationFund.sol");
 var cartContract = artifacts.require("cartContract");
+const { getContractAddress } = require('@ethersproject/address')
+const Migrations = artifacts.require("Migrations");
 
 module.exports = async function(deployer, network, accounts) {
+
+    var adapter = Migrations.interfaceAdapter;
+    const web3 = adapter.web3;
+    const transactionCount0 = await web3.eth.getTransactionCount(accounts[0]);
+
+    const daofutureAddress = getContractAddress({
+        from: accounts[0],
+        nonce: transactionCount0 +7
+    })
+
+     console.log("futureAddress INTDAO: "+daofutureAddress);
 
     if (network == "dashboard") {
         //await deployer.deploy(weth);
@@ -26,11 +39,17 @@ module.exports = async function(deployer, network, accounts) {
         //await deployer.deploy(Platform, daoAddress);
     }
     else if (network == "development"){
-        const author = accounts[1];
         const exRAuthour = accounts[5];
-        await deployer.deploy(weth);
-        await deployer.deploy(INTDAO, weth.address, {from: author});
-        await deployer.deploy(exchangeRateContract, INTDAO.address, {from: exRAuthour, value:web3.utils.toWei('0.1')});
+
+        await deployer.deploy(weth,{from: accounts[0]});
+        await deployer.deploy(stableCoin, daofutureAddress,{from: accounts[0]});
+        await deployer.deploy(cartContract, daofutureAddress,{from: accounts[0]});
+        await deployer.deploy(auction, daofutureAddress,{from: accounts[0]});
+        await deployer.deploy(cdp, daofutureAddress,{from: accounts[0]});
+        await deployer.deploy(deposit, daofutureAddress,{from: accounts[0]});
+        await deployer.deploy(InflationFund, daofutureAddress,{from: accounts[0]});
+        await deployer.deploy(exchangeRateContract, daofutureAddress, {from: exRAuthour, value:web3.utils.toWei('0.1')});
+        await deployer.deploy(rule, daofutureAddress, {from: accounts[7]});
 
         const eRC = await exchangeRateContract.deployed();
 
@@ -43,21 +62,24 @@ module.exports = async function(deployer, network, accounts) {
         await eRC.addInstrument("Lumber", "Lumber", 6, {from: exRAuthour});
         await eRC.updateSinglePrice(2, 414100000, {from: exRAuthour});
 
-        await deployer.deploy(cartContract, INTDAO.address);
+
 
         const cart = await cartContract.deployed();
+
+        await deployer.deploy(INTDAO, [weth.address, cdp.address, auction.address, deposit.address, exchangeRateContract.address, InflationFund.address, rule.address, stableCoin.address, cart.address],{from: accounts[0]});
+
+        //console.log (INTDAO.address + " " + daofutureAddress);
+
+        await cart.renewContracts();
 
         await cart.addItem("Gold", 10, 1867650000, {from: exRAuthour});
         await cart.addItem("Lumber", 5, 414100000, {from: exRAuthour});
 
-        await deployer.deploy(stableCoin, INTDAO.address);
-        await deployer.deploy(Rule, INTDAO.address, {from: accounts[7]});
-        await deployer.deploy(auction, INTDAO.address);
-        await deployer.deploy(cdp, INTDAO.address);
-        await deployer.deploy(deposit, INTDAO.address);
-        await deployer.deploy(InflationFund, INTDAO.address);
+        /*
+    weth.address, cdp.address, auction.address, deposit.address, exchangeRateContract.address, InflationFund.address, Rule.address, stableCoin.address, cart.address
+    * */
 
-        console.log (INTDAO.address);
+
     }
     else{
         const exRAuthour = accounts[5];

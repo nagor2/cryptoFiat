@@ -1,4 +1,6 @@
 const truffleAssert = require("truffle-assertions");
+const { getContractAddress } = require('@ethersproject/address')
+
 var INTDAO = artifacts.require("./INTDAO.sol");
 var ExRate = artifacts.require("./exchangeRateContract.sol");
 

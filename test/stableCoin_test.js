@@ -1,20 +1,19 @@
+const truffleAssert = require('truffle-assertions');
+const { getContractAddress } = require('@ethersproject/address')
+
 var INTDAO = artifacts.require("./INTDAO.sol");
 var stableCoin = artifacts.require("./stableCoin.sol");
-var Oracle = artifacts.require("./exchangeRateContract.sol");
-
-const truffleAssert = require('truffle-assertions');
 
 contract('stableCoin', (accounts) => {
 
     let dao;
-    let oracle;
     let coin;
 
-
     before(async () => {
-        dao = await INTDAO.deployed();
-        oracle = await Oracle.deployed(dao.address);
-        coin = await stableCoin.deployed();
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+        coin = await stableCoin.deployed(futureDaoAddress);
+        dao = await INTDAO.deployed([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, coin.address, 0x0]);
+
     });
 
     it('deploys successfully', async () => {

@@ -1,10 +1,11 @@
 const { time } = require('@openzeppelin/test-helpers');
+const truffleAssert = require('truffle-assertions');
+const { getContractAddress } = require('@ethersproject/address');
 
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
 var Deposit = artifacts.require("./DepositContract.sol");
-const truffleAssert = require('truffle-assertions');
 
 contract('Deposit', (accounts) => {
 
@@ -16,10 +17,16 @@ contract('Deposit', (accounts) => {
     const amount = web3.utils.toWei('100');
 
     before('should setup the contracts instance', async () => {
-        dao = await INTDAO.deployed(0x0);
-        coin = await StableCoin.deployed(dao.address);
-        cdp = await CDP.deployed(dao.address);
-        deposit = await Deposit.deployed(dao.address);
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+
+        coin = await StableCoin.deployed(futureDaoAddress);
+        cdp = await CDP.deployed(futureDaoAddress);
+        deposit = await Deposit.deployed(futureDaoAddress);
+
+        dao = await INTDAO.deployed([0x0, cdp.address, 0x0, deposit.address, 0x0, 0x0, 0x0, coin.address, 0x0]);
+
+        await cdp.renewContracts();
+        await deposit.renewContracts();
 
         await cdp.openCDP(web3.utils.toWei('1000'), {from: accounts[1], value: web3.utils.toWei('1')});
 

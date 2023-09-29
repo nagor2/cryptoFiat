@@ -4,12 +4,11 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./IDAO.sol";
 
 contract Rule is ERC20{
-    IDAO dao;
+    IDAO immutable dao;
 
     constructor(address _INTDAOaddress) ERC20("Rule token", "RLE"){
         _mint(msg.sender, 10**6*10**decimals());
         dao = IDAO(_INTDAOaddress);
-        dao.setAddressOnce("rule", payable(address(this)));
     }
 
     function mint(address to, uint256 amount) public{

@@ -4,11 +4,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./IDAO.sol";
 
 contract stableCoin is ERC20{
-    IDAO dao;
+    IDAO immutable dao;
 
     constructor(address _INTDAOaddress) ERC20("True Stable Coin", "TSC"){
         dao = IDAO(_INTDAOaddress);
-        dao.setAddressOnce("stableCoin", address(this));
     }
 
     function mint(address to, uint256 amount) external{

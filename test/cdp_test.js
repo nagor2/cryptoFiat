@@ -1,4 +1,5 @@
 const { time } = require('@openzeppelin/test-helpers');
+const { getContractAddress } = require('@ethersproject/address')
 
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
@@ -23,11 +24,17 @@ contract('CDP', (accounts) => {
 
     before('should setup the contracts instance', async () => {
         weth = await Weth.deployed();
-        dao = await INTDAO.deployed(weth.address);
-        rule = await Rule.deployed(dao.address);
-        oracle = await Oracle.deployed(dao.address);
-        stableCoin = await StableCoin.deployed(dao.address);
-        cdp = await CDP.deployed(dao.address);
+
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+
+        rule = await Rule.deployed(futureDaoAddress);
+        oracle = await Oracle.deployed(futureDaoAddress);
+        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        cdp = await CDP.deployed(futureDaoAddress);
+
+        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, oracle.address, 0x0, rule.address, stableCoin.address, 0x0]);
+
+        await cdp.renewContracts();
 
         posNumber = await cdp.numPositions();
 
@@ -57,6 +64,7 @@ contract('CDP', (accounts) => {
     });
 
     it("should mint max 2170 coins per 1 ether", async () => {
+
         const coins = await cdp.getMaxStableCoinsToMint(web3.utils.toWei('1', 'ether'));
         assert.equal(coins.toString(), 2170 * (10 ** 18).toString(), "should mint max 2170 coins per 1 ether");
     });

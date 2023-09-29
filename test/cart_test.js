@@ -1,3 +1,5 @@
+const { getContractAddress } = require('@ethersproject/address')
+
 var INTDAO = artifacts.require("./INTDAO.sol");
 var cartContract = artifacts.require("./cartContract.sol");
 var Oracle = artifacts.require("./exchangeRateContract.sol");
@@ -9,9 +11,15 @@ contract('Cart', (accounts) => {
     const exRAuthour = accounts[5];
 
     before('should setup the contracts instance', async () => {
-        dao = await INTDAO.deployed(0x0);
-        cart = await cartContract.deployed(dao.address);
-        eRC = await Oracle.deployed(dao.address);
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+
+        cart = await cartContract.deployed(futureDaoAddress);
+        eRC = await Oracle.deployed(futureDaoAddress);
+        dao = await INTDAO.deployed([0x0, 0x0, 0x0, 0x0, eRC.address, 0x0, 0x0, 0x0, cart.address], {from: accounts[0]});
+
+        await cart.renewContracts();
+        // weth, cdp, auction, deposit, exchangeRateContract, InflationFund, Rule, stableCoin, cart
+
         assert.equal (await cart.sharesCount(),15,"wrong sharesCount");
         assert.equal (await cart.itemsCount(),2,"wrong sharesCount");
     });
@@ -44,6 +52,9 @@ contract('Cart', (accounts) => {
         await eRC.updateSinglePrice(1, 1867650000, {from: exRAuthour}); //gold
         await eRC.updateSinglePrice(2, 414100000, {from: exRAuthour}); //lumber
     });
+
+
+    //TODO: add several tests
 
 });
 

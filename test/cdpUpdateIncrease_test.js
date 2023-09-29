@@ -1,8 +1,8 @@
 const { time } = require('@openzeppelin/test-helpers');
+const { getContractAddress } = require('@ethersproject/address');
 
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
-var Oracle = artifacts.require("./exchangeRateContract.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
 var Weth = artifacts.require("./WETH9.sol");
 
@@ -11,7 +11,6 @@ const truffleAssert = require('truffle-assertions');
 contract('CDP Update Increase', (accounts) => {
     let dao;
     let cdp;
-    let oracle;
     let stableCoin;
     let positionBefore;
     let positionAfter;
@@ -25,11 +24,15 @@ contract('CDP Update Increase', (accounts) => {
     const owner = accounts[2];
 
     before('should setup the contracts instance', async () => {
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+
         weth = await Weth.deployed();
-        dao = await INTDAO.deployed(weth.address);
-        oracle = await Oracle.deployed(dao.address);
-        stableCoin = await StableCoin.deployed(dao.address);
-        cdp = await CDP.deployed(dao.address);
+        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        cdp = await CDP.deployed(futureDaoAddress);
+
+        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
+
+        await cdp.renewContracts();
 
         positionTx = await cdp.openCDP(web3.utils.toWei('2000', 'ether'), {
             from: owner,

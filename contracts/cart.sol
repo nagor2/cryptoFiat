@@ -30,10 +30,8 @@ contract cartContract{
     event shareChanged(uint256 id);
 
 
-    constructor(address payable INTDAOaddress){
-        dao = IDAO(INTDAOaddress);
-        dao.setAddressOnce("cart",payable(address(this)));
-        renewContracts();
+    constructor(address payable _INTDAOaddress){
+        dao = IDAO(_INTDAOaddress);
     }
 
     function renewContracts() public {
@@ -46,7 +44,7 @@ contract cartContract{
         uint256 itemId = itemsCount++;
         cartItem storage c = items[itemId];
         c.share = share;
-        c.exists = true;
+        c.exists = true; //TODO: удалить, начать индексацию с 0
         c.symbol = symbol;
         c.initialPrice = initialPrice;
         sharesCount += share;

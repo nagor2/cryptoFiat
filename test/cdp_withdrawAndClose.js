@@ -1,5 +1,7 @@
 const truffleAssert = require("truffle-assertions");
 const { time } = require('@openzeppelin/test-helpers');
+const { getContractAddress } = require('@ethersproject/address')
+
 
 contract('CDP withdraw and close position', (accounts) => {
 
@@ -15,12 +17,17 @@ contract('CDP withdraw and close position', (accounts) => {
     let coin;
 
     before('should setup the contracts and open pos', async () => {
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
         weth = await Weth.deployed();
-        dao = await INTDAO.deployed(weth.address);
-        oracle = await Oracle.deployed(dao.address);
-        cdp = await CDP.deployed(dao.address);
-        coin = await StableCoin.deployed(dao.address);
 
+        oracle = await Oracle.deployed(futureDaoAddress);
+        cdp = await CDP.deployed(futureDaoAddress);
+        coin = await StableCoin.deployed(futureDaoAddress);
+
+        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, oracle.address, 0x0, 0x0, coin.address, 0x0]);
+
+        await cdp.renewContracts();
+        
         let posTx = await cdp.openCDP(web3.utils.toWei('1000', 'ether'), {
             from: owner,
             value: web3.utils.toWei('1', 'ether')

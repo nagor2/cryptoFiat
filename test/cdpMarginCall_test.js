@@ -1,6 +1,7 @@
 const truffleAssert = require("truffle-assertions");
 const { time } = require('@openzeppelin/test-helpers');
 const { expectEvent } = require('@openzeppelin/test-helpers');
+const { getContractAddress } = require('@ethersproject/address');
 
 contract('CDP margin call', (accounts) => {
 
@@ -25,13 +26,17 @@ contract('CDP margin call', (accounts) => {
     var Rule = artifacts.require("./Rule.sol");
 
     before('should setup the contracts instance', async () => {
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
         weth = await Weth.deployed();
-        dao = await INTDAO.deployed(weth.address);
-        rule = await Rule.deployed(dao.address);
-        oracle = await Oracle.deployed(dao.address);
-        stableCoin = await StableCoin.deployed(dao.address);
-        cdp = await CDP.deployed(dao.address);
-        auction = await Auction.deployed(dao.address);
+
+        rule = await Rule.deployed(futureDaoAddress);
+        oracle = await Oracle.deployed(futureDaoAddress);
+        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        cdp = await CDP.deployed(futureDaoAddress);
+        auction = await Auction.deployed(futureDaoAddress);
+
+        dao = await INTDAO.deployed([weth.address, cdp.address, auction.address, 0x0, oracle.address, 0x0, rule.address, stableCoin.address, 0x0]);
+
         await cdp.renewContracts();
         await auction.renewContracts();
     });
@@ -56,19 +61,18 @@ contract('CDP margin call', (accounts) => {
         truffleAssert.eventNotEmitted(markTx,'markedOnLiquidation');
         await oracle.updateSinglePrice(0, 1428000000, {from: author});
         markTx = await cdp.markToLiquidate(posId);
-        truffleAssert.eventEmitted(markTx, 'markedOnLiquidation', async (ev) => {
+        truffleAssert.eventEmitted(markTx, 'liquidationStatusChanged', async (ev) => {
             assert.equal(ev.posID, posId, 'positionID is wrong');
-            let block = await web3.eth.getBlock("latest");
-            assert.equal(ev.timestamp, block.timestamp, 'time is wrong');
+            assert.equal(ev.liquidationStatus, 1, 'liquidationStatus is wrong');
             let position = await cdp.positions(posId);
-            block = await web3.eth.getBlock("latest");
-            assert.equal(position.markedOnLiquidationTimestamp.toString(), block.timestamp, "time is wrong 2")
+            let block = await web3.eth.getBlock("latest");
+            assert.equal(position.markedOnLiquidationTimestamp.toString(), block.timestamp, "time is wrong")
         });
     });
 
     it("should set position on liquidation and claim margin call", async () => {
         const positionBefore = await cdp.positions(posId);
-        assert.isFalse (positionBefore.onLiquidation, "position should not be no liquidation");
+        assert.equal(parseInt(positionBefore.liquidationStatus), 1, "position should not be no liquidation");
 
         await truffleAssert.fails(
             cdp.claimMarginCall(posId),
@@ -80,17 +84,15 @@ contract('CDP margin call', (accounts) => {
 
         let liquidationTx = await cdp.claimMarginCall(posId);
 
-        truffleAssert.eventEmitted(liquidationTx, 'OnLiquidation', async (ev) => {
+        truffleAssert.eventEmitted(liquidationTx, 'liquidationStatusChanged', async (ev) => {
             assert.equal(ev.posID, posId, 'positionID is wrong');
-            let block = await web3.eth.getBlock("latest");
-            assert.equal(ev.timestamp, block.timestamp, 'time is wrong');
+            assert.equal(ev.liquidationStatus, 2, 'liquidationStatus is wrong');
         });
     });
 
     it("should init auction", async () => {
         const positionBefore = await cdp.positions(posId);
         assert.equal (positionBefore.liquidationAuctionID, 0, "there should be no liquidationAuctionID before");
-
 
         await truffleAssert.fails(
             auction.initCoinsBuyOut(posId, positionBefore.wethAmountLocked),
@@ -105,8 +107,6 @@ contract('CDP margin call', (accounts) => {
         expect(cdpWethBalanceBefore).to.eql(positionBefore.wethAmountLocked, "wrong balance auctionWethBalanceAfter");
 
         let liquidationTx = await cdp.startCoinsBuyOut(posId);
-
-
 
         await expectEvent.inTransaction(liquidationTx.tx, auction, 'liquidateCollateral', { auctionID:web3.utils.toBN(1), posID:web3.utils.toBN(posId), collateral:positionBefore.wethAmountLocked});
 
@@ -168,7 +168,7 @@ contract('CDP margin call', (accounts) => {
         let position = await cdp.positions(posId);
         let bidId;
 
-        assert.isFalse(position.liquidated, "position should not be liquidated");
+        assert.equal(parseInt(position.liquidationStatus), 2, "position should not be liquidated");
 
         await stableCoin.approve(auction.address, web3.utils.toWei('50'),{from:recipient})
 
@@ -242,7 +242,7 @@ contract('CDP margin call', (accounts) => {
         await cdp.finishMarginCall(posId);
         position = await cdp.positions(posId);
 
-        assert.isTrue(position.liquidated, "position should be liquidated");
+        assert.equal(parseInt(position.liquidationStatus), 3, "position should be liquidated");
         assert.equal(await stableCoin.totalSupply(),web3.utils.toWei('2000'), "wrong total supply")
         assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('19000'), "wrong rule balance")
     });

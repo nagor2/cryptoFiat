@@ -34,7 +34,7 @@ contract INTDAO is ReentrancyGuard{
     event VotingSucceed (uint256 id);
     event VotingFailed (uint256 id);
 
-    constructor (address WETH) {
+    constructor (address[] memory _addresses) {
         params["interestRate"] = 9;
         params["depositRate"]=8;
         params["liquidationFee"] = 13;
@@ -57,23 +57,26 @@ contract INTDAO is ReentrancyGuard{
         params["highVolatilityEventBarrierPercent"] = 5;
         params["minCoinsToMint"] = 1;
 
-        addresses["weth"] = WETH;
+        addresses["weth"] = _addresses[0];
+        addresses["cdp"] = _addresses[1];
+        addresses["auction"] = _addresses[2];
+        addresses["deposit"] = _addresses[3];
+        addresses["oracle"] = _addresses[4];
+        addresses["inflationFund"] = _addresses[5];
+        addresses["rule"] = _addresses[6];
+        addresses["stableCoin"] = _addresses[7];
+        addresses["cart"] = _addresses[8];
+
+        addresses["inflationSpender"] = _addresses[1];
+        isAuthorized[_addresses[3]]=true;
+        isAuthorized[_addresses[5]]=true;
+
         addresses["dao"] = address(this);
+        renewContracts();
     }
 
     function renewContracts() public {
         ruleToken = IERC20(addresses["rule"]);
-    }
-
-    function setAddressOnce(string memory addressName, address addr) external {
-        require (addresses[addressName] == address(0), "address was already set");
-        addresses[addressName] = addr;
-        //a certain pool of names, check not to expand addresses
-        bytes32 hash = keccak256(bytes(addressName));
-        if (hash == keccak256(bytes("deposit")) ||
-            hash == keccak256(bytes("inflationFund"))) {
-            isAuthorized[addr] = true;
-        }
     }
 
     function addVoting(uint256 votingType, string memory name, uint value, address addr, bool decision) external{

@@ -1,4 +1,5 @@
 const { time } = require('@openzeppelin/test-helpers');
+const { getContractAddress } = require('@ethersproject/address')
 
 var INTDAO = artifacts.require("./INTDAO.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
@@ -14,15 +15,17 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
     let auction;
     let cdp;
     let rule;
-    let cart;
 
     before('should setup the contracts instance', async () => {
-        dao = await INTDAO.deployed();
-        stableCoin = await StableCoin.deployed(dao.address);
-        auction = await Auction.deployed(dao.address);
-        cdp = await CDP.deployed(dao.address);
-        rule = await Rule.deployed(dao.address);
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        auction = await Auction.deployed(futureDaoAddress);
+        cdp = await CDP.deployed(futureDaoAddress);
+        rule = await Rule.deployed(futureDaoAddress);
+        dao = await INTDAO.deployed([0x0, cdp.address, auction.address,0x0,0x0, 0x0, rule.address, stableCoin.address,0x0]);
+
         await auction.renewContracts();
+        await cdp.renewContracts();
     });
 
     it("should init and execute coins buyOut for stabilization", async () => {

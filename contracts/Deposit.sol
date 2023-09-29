@@ -26,8 +26,6 @@ contract DepositContract is ReentrancyGuard{
 
     constructor(address _INTDAOaddress){
         dao = IDAO(_INTDAOaddress);
-        dao.setAddressOnce("deposit",payable(address(this)));
-        renewContracts();
     }
 
     function renewContracts() public {

@@ -5,18 +5,16 @@ import "./IDAO.sol";
 import "./ICDP.sol";
 
 contract InflationFund {
-    IDAO dao;
+    IDAO immutable dao;
     IERC20 coin;
     ICDP cdp;
 
     uint256 public lastEmission;
-    event inflationEmission(uint256 amount);
+    event inflationEmission(uint256 amount, address spender);
 
-    constructor(address INTDAOaddress){
-        dao = IDAO(INTDAOaddress);
-        dao.setAddressOnce("inflationFund",address(this));
+    constructor(address _INTDAOaddress){
+        dao = IDAO(_INTDAOaddress);
         lastEmission = block.timestamp;
-        renewContracts();
     }
 
     function renewContracts() public{
@@ -30,11 +28,7 @@ contract InflationFund {
         uint256 amount = period/365 days*dao.params("annualInflationPercent")*coin.totalSupply()/100;
         lastEmission = block.timestamp;
         require (amount>0, "nothing to emit");
-        cdp.claimEmission(amount,address(this));
-        emit inflationEmission(amount);
-    }
-
-    function claimTransfer() external{
-        coin.transfer(dao.addresses("inflationSpender"), coin.balanceOf(address(this)));
+        cdp.claimEmission(amount, dao.addresses("inflationSpender"));
+        emit inflationEmission(amount, dao.addresses("inflationSpender"));
     }
 }
