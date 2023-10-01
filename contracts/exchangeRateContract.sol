@@ -18,7 +18,7 @@ contract exchangeRateContract {
     bool public finalized;
 
     struct Instrument {
-        uint128 price;
+        uint256 price;
         uint128 timeStamp;
     }
 
@@ -78,7 +78,7 @@ contract exchangeRateContract {
         emit severalPricesUpdateRequest(ids);
     }
 
-    function updateSeveralPrices(uint16[] memory ids, uint128[] memory prices) external onlyUpdater{
+    function updateSeveralPrices(uint16[] memory ids, uint256[] memory prices) external onlyUpdater{
         uint length = ids.length;
         require(length==prices.length, "arrays length");
         for (uint16 i = 0; i < length;) {
@@ -94,14 +94,14 @@ contract exchangeRateContract {
         emit profit(address(this).balance);
     }
 
-    function updateSinglePrice(uint16 id, uint128 newPrice) external onlyUpdater{
+    function updateSinglePrice(uint16 id, uint256 newPrice) external onlyUpdater{
         updPrice (id, newPrice);
     }
 
-    function updPrice(uint16 id, uint128 newPrice) internal {
+    function updPrice(uint16 id, uint256 newPrice) internal {
         instruments[id].timeStamp = uint128(block.timestamp);
-        uint128 prevPrice = instruments[id].price;
-        uint128 move;
+        uint256 prevPrice = instruments[id].price;
+        uint256 move;
         if (prevPrice!=0){
             if (prevPrice >= newPrice)
                 move = prevPrice - newPrice;
@@ -111,13 +111,13 @@ contract exchangeRateContract {
                 emit highVolatility(id);
         }
         instruments[id].price = newPrice;
-        emit priceUpdated (id);
+        emit priceUpdated(id);
     }
 
     function addInstrument(string memory symbol, string memory name, uint8 decimals) external onlyUpdater returns (uint16 id){
         InstrumentDescription storage newInstrumentDescription = dictionary[symbol];
         require (bytes(newInstrumentDescription.name).length == 0, "Symbol already exist, use updateInstrument");
-        newInstrumentDescription.id = instrumentsCount++;
+        newInstrumentDescription.id = ++instrumentsCount;
         newInstrumentDescription.name = name;
         newInstrumentDescription.decimals = decimals;
         instruments[newInstrumentDescription.id].timeStamp = uint128(block.timestamp);
@@ -132,11 +132,11 @@ contract exchangeRateContract {
         newInstrumentDescription.decimals = decimals;
     }
 
-    function getPrice(string memory symbol) external view returns (uint128) {
+    function getPrice(string memory symbol) external view returns (uint256) {
         return instruments[dictionary[symbol].id].price;
     }
 
-    function timeStamp(string memory symbol) external view returns (uint128) {
+    function timeStamp(string memory symbol) external view returns (uint256) {
         return instruments[dictionary[symbol].id].timeStamp;
     }
 

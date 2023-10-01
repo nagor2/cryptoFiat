@@ -54,13 +54,13 @@ module.exports = async function(deployer, network, accounts) {
         const eRC = await exchangeRateContract.deployed();
 
         await eRC.addInstrument("etc", "Ethereum", 6, {from: exRAuthour});
-        await eRC.updateSinglePrice(0, 3100000000, {from: exRAuthour});
+        await eRC.updateSinglePrice(1, 3100000000, {from: exRAuthour});
 
         await eRC.addInstrument("Gold", "Gold", 6, {from: exRAuthour});
-        await eRC.updateSinglePrice(1, 1867650000, {from: exRAuthour});
+        await eRC.updateSinglePrice(2, 1867650000, {from: exRAuthour});
 
         await eRC.addInstrument("Lumber", "Lumber", 6, {from: exRAuthour});
-        await eRC.updateSinglePrice(2, 414100000, {from: exRAuthour});
+        await eRC.updateSinglePrice(3, 414100000, {from: exRAuthour});
 
 
 
@@ -89,13 +89,13 @@ module.exports = async function(deployer, network, accounts) {
         const eRC = await exchangeRateContract.deployed();
 
         await eRC.addInstrument("etc", "Ethereum", 6, {from: exRAuthour});
-        await eRC.updateSinglePrice(0, 3100000000, {from: exRAuthour});
+        await eRC.updateSinglePrice(1, 3100000000, {from: exRAuthour});
 
         await eRC.addInstrument("Gold", "Gold", 6, {from: exRAuthour});
-        await eRC.updateSinglePrice(1, 1867650000, {from: exRAuthour});
+        await eRC.updateSinglePrice(2, 1867650000, {from: exRAuthour});
 
         await eRC.addInstrument("Lumber", "Lumber", 6, {from: exRAuthour});
-        await eRC.updateSinglePrice(2, 414100000, {from: exRAuthour});
+        await eRC.updateSinglePrice(3, 414100000, {from: exRAuthour});
 
         await deployer.deploy(cartContract, INTDAO.address);
 

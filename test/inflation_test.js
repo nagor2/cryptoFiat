@@ -22,8 +22,8 @@ contract('Inflation', (accounts) => {
 
         dao = await INTDAO.deployed([0x0, cdp.address, 0x0, 0x0, 0x0, inflationFund.address, 0x0, coin.address, 0x0]);
 
-        cdp.renewContracts();
-        inflationFund.renewContracts();
+        await cdp.renewContracts();
+        await inflationFund.renewContracts();
     });
 
     it("should fail, because to early", async () => {

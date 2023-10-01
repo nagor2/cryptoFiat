@@ -87,7 +87,7 @@ contract CDP is ReentrancyGuard{
 
     function interestAmountUnrecorded(uint32 posID) public view returns (uint256 interestAmount) {
         Position storage p = positions[posID];
-        return p.coinsMinted * (block.timestamp - p.lastTimeUpdated) * p.interestRate / 31536000 / 100;
+        return p.coinsMinted * (block.timestamp - p.lastTimeUpdated) * p.interestRate / 365 days / 100;
     }
 
     function totalCurrentFee(uint32 posID) public view returns (uint256 fee){
@@ -123,12 +123,12 @@ contract CDP is ReentrancyGuard{
     function closeCDP(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
         require(p.owner == msg.sender, "Only owner may close his position");
-        require(p.liquidationStatus < 2, "This position is on liquidation or liquidated already");
-        changeStatus(posID, 4);
+        require(p.liquidationStatus < 2, "This position is on liquidation or already liquidated/closed");
         uint256 overallDebt = totalCurrentFee(posID)+p.coinsMinted;
         require(coin.transferFrom(p.owner, address(this), overallDebt), "Could not transfer coins for some reason. You have to allow coins first");
         require (weth.transfer(p.owner, p.wethAmountLocked), "Could not transfer collateral for some reason");
         coin.burn(address(this), p.coinsMinted);
+        changeStatus(posID, 4);
     }
 
     function transferInterest(uint32 posID) nonReentrant external{
@@ -173,10 +173,9 @@ contract CDP is ReentrancyGuard{
         p.wethAmountLocked = 0;
     }
 
-    //(tut oshibka paymentAmount)
-    function finishMarginCall(uint32 posID) external{
+    function finishMarginCall(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
-        require(p.liquidationStatus == 2 && p.liquidationAuctionID !=0, "Position is not on liquidation or was already liquidated or auction was not started");
+        require(p.liquidationStatus == 2 && p.liquidationAuctionID !=0, "Position is not on liquidation or was already liquidated or auction was already started");
         if (!auction.isFinalized(p.liquidationAuctionID))
             require(auction.claimToFinalizeAuction(p.liquidationAuctionID), "could not finalize auction");
 
@@ -190,7 +189,7 @@ contract CDP is ReentrancyGuard{
             changeStatus(posID, 3);
             return;
         }
-        else { //TODO: after auction somthing passed here
+        else {
             if (coin.balanceOf(address(this)) >= p.coinsMinted){
                 coin.burn(address(this), p.coinsMinted);
                 changeStatus(posID, 3);
@@ -200,7 +199,7 @@ contract CDP is ReentrancyGuard{
                 uint256 toBurn = coin.balanceOf(address(this));
                 coin.burn(address(this), toBurn);
                 p.coinsMinted -= uint128(toBurn);
-                auction.initCoinsBuyOutForStabilization(p.coinsMinted - paymentAmount);
+                auction.initCoinsBuyOutForStabilization(p.coinsMinted - paymentAmount); //TODO: after auction somthing passed here
             }
         }
     }
@@ -215,19 +214,17 @@ contract CDP is ReentrancyGuard{
     function markToLiquidate(uint32 posID) external{
         Position storage p = positions[posID];
         require (p.markedOnLiquidationTimestamp == 0 && p.liquidationStatus == 0, "wrong liquidationStatus");
-        if (getMaxStableCoinsToMintForPos(posID) < p.coinsMinted) {
-            p.markedOnLiquidationTimestamp = uint32(block.timestamp);
-            changeStatus(posID, 1);
-        }
+        require(getMaxStableCoinsToMintForPos(posID) < p.coinsMinted, "collateral is enough");
+        p.markedOnLiquidationTimestamp = uint32(block.timestamp);
+        changeStatus(posID, 1);
     }
 
     function eraseMarkToLiquidate(uint32 posID) public{
         Position storage p = positions[posID];
         require (p.markedOnLiquidationTimestamp >0 && p.liquidationStatus == 1, "This position is not marked or on liquidation/liquidated");
-        if (getMaxStableCoinsToMintForPos(posID) > p.coinsMinted) {
-            p.markedOnLiquidationTimestamp = 0;
-            changeStatus(posID, 0);
-        }
+        require(getMaxStableCoinsToMintForPos(posID) > p.coinsMinted);
+        p.markedOnLiquidationTimestamp = 0;
+        changeStatus(posID, 0);
     }
 
     function updateCDP(uint32 posID, uint newStableCoinsAmount) nonReentrant external payable returns (bool success){

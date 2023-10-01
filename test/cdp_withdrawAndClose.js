@@ -69,7 +69,7 @@ contract('CDP withdraw and close position', (accounts) => {
             "you want to keep not enough weth to cover emission and current fee"
         );
 
-        await oracle.updateSinglePrice(0, 5100000000, {from: accounts[5]});
+        await oracle.updateSinglePrice(1, 5100000000, {from: accounts[5]});
 
         let posTx = await cdp.withdrawEther(posId, web3.utils.toWei('0.4', 'ether'), {from:owner});
 

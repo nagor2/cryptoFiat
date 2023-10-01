@@ -36,7 +36,7 @@ contract DepositContract is ReentrancyGuard{
     function deposit() nonReentrant external{
         uint256 amount = coin.allowance(msg.sender, address(this));
         require (amount>0, "you have to approve coins first");
-        require (coin.transferFrom(msg.sender, address(this), amount), "Could not transfer coins for some reason");
+        coin.transferFrom(msg.sender, address(this), amount);
         Deposit storage d = deposits[++counter];
         d.owner = msg.sender;
         d.lastTimeUpdated = block.timestamp;

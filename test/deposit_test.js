@@ -58,7 +58,6 @@ contract('Deposit', (accounts) => {
     });
 
     it("should deposit", async () => {
-
         await coin.transfer(owner, amount, {from: accounts[1]});
         await coin.approve(deposit.address, amount, {from: owner});
 
@@ -82,7 +81,6 @@ contract('Deposit', (accounts) => {
 
     it("should create valid deposit", async () => {
         let d = await deposit.deposits(1);
-
         assert.equal(d.owner, owner, "incorrect owner");
         assert.equal(d.coinsDeposited, amount, "incorrect amount");
         assert.equal(d.currentInterestRate, 8, "incorrect rate");
@@ -111,7 +109,7 @@ contract('Deposit', (accounts) => {
     });
 
     it("should topUp deposit", async () => {
-        await coin.approve(deposit.address, web3.utils.toWei('10', 'ether'), {from: owner});
+        await coin.approve(deposit.address, web3.utils.toWei('10'), {from: owner});
         await deposit.topUp(1, {from: owner});
         let d = await deposit.deposits(1);
         assert.equal(d.coinsDeposited, web3.utils.toWei('110', "ether"), "incorrect coinsDeposited");

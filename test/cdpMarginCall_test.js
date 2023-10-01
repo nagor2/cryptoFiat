@@ -56,11 +56,14 @@ contract('CDP margin call', (accounts) => {
     });
 
     it("should not mark pos on liquidation if eth value is still enough and mark if not", async () => {
-        await oracle.updateSinglePrice(0, 3000000000, {from: author});
+        await oracle.updateSinglePrice(1, 3000000000, {from: author});
+        await truffleAssert.fails(
+            cdp.markToLiquidate(posId),
+            truffleAssert.ErrorType.REVERT,
+            "collateral is enough"
+        );
+        await oracle.updateSinglePrice(1, 1428000000, {from: author});
         let markTx = await cdp.markToLiquidate(posId);
-        truffleAssert.eventNotEmitted(markTx,'markedOnLiquidation');
-        await oracle.updateSinglePrice(0, 1428000000, {from: author});
-        markTx = await cdp.markToLiquidate(posId);
         truffleAssert.eventEmitted(markTx, 'liquidationStatusChanged', async (ev) => {
             assert.equal(ev.posID, posId, 'positionID is wrong');
             assert.equal(ev.liquidationStatus, 1, 'liquidationStatus is wrong');
@@ -249,7 +252,7 @@ contract('CDP margin call', (accounts) => {
 
 
     it("should set quotes back to initial values auction", async () => {
-        await oracle.updateSinglePrice(0, 3100000000, {from: author});
+        await oracle.updateSinglePrice(1, 3100000000, {from: author});
     });
 
 });

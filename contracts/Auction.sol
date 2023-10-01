@@ -54,7 +54,7 @@ contract Auction is ReentrancyGuard{
         rule = IERC20(dao.addresses("rule"));
     }
 
-    function initRuleBuyOut() nonReentrant external returns (uint32 auctionID){ //TODO: зарефакторить!
+    function initRuleBuyOut() nonReentrant external returns (uint32 auctionID){
         require (!ruleBuyOut, "Rule buyOut auction already exist");
         require ((rule.balanceOf(msg.sender)>=rule.totalSupply()/100*dao.params("minRuleTokensToInitVotingPercent")), "not enough rule balance");
 

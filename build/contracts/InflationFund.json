@@ -59,11 +59,11 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.18+commit.87f61d96\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_INTDAOaddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"}],\"name\":\"inflationEmission\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"claimEmission\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastEmission\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renewContracts\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/inflationFund.sol\":\"InflationFund\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":2},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bd39944e8fc06be6dbe2dd1d8449b5336e23c6a7ba3e8e9ae5ae0f37f35283f5\",\"dweb:/ipfs/QmPV3FGYjVwvKSgAXKUN3r9T9GwniZz83CxBpM7vyj2G53\"]},\"project:/contracts/ICDP.sol\":{\"keccak256\":\"0x278fabc3196b0560b55d902d2173ae5f949ea49df76412333889c3602e8dfe4d\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://3111be0eb1e5ace99eac5376d58fb9c7c1558d3a40ac17c009245b5657113e68\",\"dweb:/ipfs/QmS9YJUbQA3KaditzNHDFYFvbgT5hR7KtNHGmw4RWoXxVG\"]},\"project:/contracts/IDAO.sol\":{\"keccak256\":\"0xb3d294179cdd49f377a3699ec64300fe3be4da76e43d80d4ffb827e31d088078\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://cb675604c92e3650d64d33134ecd1443f076e4afa11c83e64a7c2f5add9f832b\",\"dweb:/ipfs/QmZQWtFBWkv5SNgayUp1ZsahqqP65GqzKhCGEdVySpkdnR\"]},\"project:/contracts/inflationFund.sol\":{\"keccak256\":\"0x3bff5b3c50f4b7418ea9a407e3b14e56206d8c487a8db100b9b77e60249bf42a\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://a8e0f7b2d1bcb12cafde1770def4376b49acd1c0de3f89116ec26760e4e4fb10\",\"dweb:/ipfs/QmTkPDf6rPeaFFoTNwqEz7dngmbcoBELxL2C6bmWM9HB8C\"]}},\"version\":1}",
-  "bytecode": "0x60a060405234801561001057600080fd5b5060405161075b38038061075b83398101604081905261002f91610044565b6001600160a01b031660805242600255610074565b60006020828403121561005657600080fd5b81516001600160a01b038116811461006d57600080fd5b9392505050565b6080516106b16100aa6000396000818160a30152818161015b015281816102f5015281816103ff01526104e601526106b16000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806323d86a6514610046578063313310ad146100505780638dfdc0ca14610058575b600080fd5b61004e610073565b005b61004e6101ea565b61006160025481565b60405190815260200160405180910390f35b60405163bdfe7d4760e01b815260206004820152600a60248201526939ba30b13632a1b7b4b760b11b60448201527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063bdfe7d4790606401602060405180830381865afa1580156100f2573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101169190610589565b600080546001600160a01b0319166001600160a01b0392831617905560405163bdfe7d4760e01b815260206004820152600360248201526206364760ec1b60448201527f00000000000000000000000000000000000000000000000000000000000000009091169063bdfe7d4790606401602060405180830381865afa1580156101a4573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c89190610589565b600180546001600160a01b0319166001600160a01b0392909216919091179055565b6000600254426101fa91906105cf565b90506301e1338081101561024a5760405162461bcd60e51b8152602060048201526012602482015271746f6f206561726c7920746f20636c61696d60701b60448201526064015b60405180910390fd5b60008054604080516318160ddd60e01b815290516064926001600160a01b0316916318160ddd9160048083019260209291908290030181865afa158015610295573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102b991906105e8565b60405163145f822b60e01b8152602060048201526016602482015275185b9b9d585b125b999b185d1a5bdb94195c98d95b9d60521b60448201527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063145f822b90606401602060405180830381865afa158015610344573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061036891906105e8565b6103766301e1338086610601565b6103809190610623565b61038a9190610623565b6103949190610601565b426002559050806103d95760405162461bcd60e51b815260206004820152600f60248201526e1b9bdd1a1a5b99c81d1bc8195b5a5d608a1b6044820152606401610241565b60015460405163bdfe7d4760e01b81526001600160a01b0391821691635c412bb29184917f0000000000000000000000000000000000000000000000000000000000000000169063bdfe7d47906104329060040161063a565b602060405180830381865afa15801561044f573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104739190610589565b6040518363ffffffff1660e01b8152600401610490929190610664565b600060405180830381600087803b1580156104aa57600080fd5b505af11580156104be573d6000803e3d6000fd5b505050507f863ed4e99eb44ef4e047733d4055c3f50b3e649e29fe07a455908d2f55d576c6817f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663bdfe7d476040518163ffffffff1660e01b815260040161052e9061063a565b602060405180830381865afa15801561054b573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061056f9190610589565b60405161057d929190610664565b60405180910390a15050565b60006020828403121561059b57600080fd5b81516001600160a01b03811681146105b257600080fd5b9392505050565b634e487b7160e01b600052601160045260246000fd5b818103818111156105e2576105e26105b9565b92915050565b6000602082840312156105fa57600080fd5b5051919050565b60008261061e57634e487b7160e01b600052601260045260246000fd5b500490565b80820281158282048414176105e2576105e26105b9565b60208082526010908201526f34b7333630ba34b7b729b832b73232b960811b604082015260600190565b9182526001600160a01b031660208201526040019056fea26469706673582212208f9fe42e1e4bfb0d58758d27cabae54c4ab98f771b78821677b15ec336ce3de364736f6c63430008120033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c806323d86a6514610046578063313310ad146100505780638dfdc0ca14610058575b600080fd5b61004e610073565b005b61004e6101ea565b61006160025481565b60405190815260200160405180910390f35b60405163bdfe7d4760e01b815260206004820152600a60248201526939ba30b13632a1b7b4b760b11b60448201527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063bdfe7d4790606401602060405180830381865afa1580156100f2573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101169190610589565b600080546001600160a01b0319166001600160a01b0392831617905560405163bdfe7d4760e01b815260206004820152600360248201526206364760ec1b60448201527f00000000000000000000000000000000000000000000000000000000000000009091169063bdfe7d4790606401602060405180830381865afa1580156101a4573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c89190610589565b600180546001600160a01b0319166001600160a01b0392909216919091179055565b6000600254426101fa91906105cf565b90506301e1338081101561024a5760405162461bcd60e51b8152602060048201526012602482015271746f6f206561726c7920746f20636c61696d60701b60448201526064015b60405180910390fd5b60008054604080516318160ddd60e01b815290516064926001600160a01b0316916318160ddd9160048083019260209291908290030181865afa158015610295573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102b991906105e8565b60405163145f822b60e01b8152602060048201526016602482015275185b9b9d585b125b999b185d1a5bdb94195c98d95b9d60521b60448201527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063145f822b90606401602060405180830381865afa158015610344573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061036891906105e8565b6103766301e1338086610601565b6103809190610623565b61038a9190610623565b6103949190610601565b426002559050806103d95760405162461bcd60e51b815260206004820152600f60248201526e1b9bdd1a1a5b99c81d1bc8195b5a5d608a1b6044820152606401610241565b60015460405163bdfe7d4760e01b81526001600160a01b0391821691635c412bb29184917f0000000000000000000000000000000000000000000000000000000000000000169063bdfe7d47906104329060040161063a565b602060405180830381865afa15801561044f573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104739190610589565b6040518363ffffffff1660e01b8152600401610490929190610664565b600060405180830381600087803b1580156104aa57600080fd5b505af11580156104be573d6000803e3d6000fd5b505050507f863ed4e99eb44ef4e047733d4055c3f50b3e649e29fe07a455908d2f55d576c6817f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663bdfe7d476040518163ffffffff1660e01b815260040161052e9061063a565b602060405180830381865afa15801561054b573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061056f9190610589565b60405161057d929190610664565b60405180910390a15050565b60006020828403121561059b57600080fd5b81516001600160a01b03811681146105b257600080fd5b9392505050565b634e487b7160e01b600052601160045260246000fd5b818103818111156105e2576105e26105b9565b92915050565b6000602082840312156105fa57600080fd5b5051919050565b60008261061e57634e487b7160e01b600052601260045260246000fd5b500490565b80820281158282048414176105e2576105e26105b9565b60208082526010908201526f34b7333630ba34b7b729b832b73232b960811b604082015260600190565b9182526001600160a01b031660208201526040019056fea26469706673582212208f9fe42e1e4bfb0d58758d27cabae54c4ab98f771b78821677b15ec336ce3de364736f6c63430008120033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.18+commit.87f61d96\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_INTDAOaddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"}],\"name\":\"inflationEmission\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"claimEmission\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastEmission\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renewContracts\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/inflationFund.sol\":\"InflationFund\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":2},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bd39944e8fc06be6dbe2dd1d8449b5336e23c6a7ba3e8e9ae5ae0f37f35283f5\",\"dweb:/ipfs/QmPV3FGYjVwvKSgAXKUN3r9T9GwniZz83CxBpM7vyj2G53\"]},\"project:/contracts/ICDP.sol\":{\"keccak256\":\"0x1cb0daa96f2b5cb41a9c33c9dc5b73c01243ee557d32debecbee991caf236d51\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://522bad60bfc0b3044a47a133979c2e1a3df0616b17653913ac0172a688a34fd2\",\"dweb:/ipfs/QmNkKn2pCWTJeqd2Zhri11hpqovxuqacpjSRocBLqKJWgH\"]},\"project:/contracts/IDAO.sol\":{\"keccak256\":\"0xb3d294179cdd49f377a3699ec64300fe3be4da76e43d80d4ffb827e31d088078\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://cb675604c92e3650d64d33134ecd1443f076e4afa11c83e64a7c2f5add9f832b\",\"dweb:/ipfs/QmZQWtFBWkv5SNgayUp1ZsahqqP65GqzKhCGEdVySpkdnR\"]},\"project:/contracts/inflationFund.sol\":{\"keccak256\":\"0x3bff5b3c50f4b7418ea9a407e3b14e56206d8c487a8db100b9b77e60249bf42a\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://a8e0f7b2d1bcb12cafde1770def4376b49acd1c0de3f89116ec26760e4e4fb10\",\"dweb:/ipfs/QmTkPDf6rPeaFFoTNwqEz7dngmbcoBELxL2C6bmWM9HB8C\"]}},\"version\":1}",
+  "bytecode": "0x60a060405234801561001057600080fd5b5060405161075b38038061075b83398101604081905261002f91610044565b6001600160a01b031660805242600255610074565b60006020828403121561005657600080fd5b81516001600160a01b038116811461006d57600080fd5b9392505050565b6080516106b16100aa6000396000818160a30152818161015b015281816102f5015281816103ff01526104e601526106b16000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806323d86a6514610046578063313310ad146100505780638dfdc0ca14610058575b600080fd5b61004e610073565b005b61004e6101ea565b61006160025481565b60405190815260200160405180910390f35b60405163bdfe7d4760e01b815260206004820152600a60248201526939ba30b13632a1b7b4b760b11b60448201527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063bdfe7d4790606401602060405180830381865afa1580156100f2573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101169190610589565b600080546001600160a01b0319166001600160a01b0392831617905560405163bdfe7d4760e01b815260206004820152600360248201526206364760ec1b60448201527f00000000000000000000000000000000000000000000000000000000000000009091169063bdfe7d4790606401602060405180830381865afa1580156101a4573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c89190610589565b600180546001600160a01b0319166001600160a01b0392909216919091179055565b6000600254426101fa91906105cf565b90506301e1338081101561024a5760405162461bcd60e51b8152602060048201526012602482015271746f6f206561726c7920746f20636c61696d60701b60448201526064015b60405180910390fd5b60008054604080516318160ddd60e01b815290516064926001600160a01b0316916318160ddd9160048083019260209291908290030181865afa158015610295573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102b991906105e8565b60405163145f822b60e01b8152602060048201526016602482015275185b9b9d585b125b999b185d1a5bdb94195c98d95b9d60521b60448201527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063145f822b90606401602060405180830381865afa158015610344573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061036891906105e8565b6103766301e1338086610601565b6103809190610623565b61038a9190610623565b6103949190610601565b426002559050806103d95760405162461bcd60e51b815260206004820152600f60248201526e1b9bdd1a1a5b99c81d1bc8195b5a5d608a1b6044820152606401610241565b60015460405163bdfe7d4760e01b81526001600160a01b0391821691635c412bb29184917f0000000000000000000000000000000000000000000000000000000000000000169063bdfe7d47906104329060040161063a565b602060405180830381865afa15801561044f573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104739190610589565b6040518363ffffffff1660e01b8152600401610490929190610664565b600060405180830381600087803b1580156104aa57600080fd5b505af11580156104be573d6000803e3d6000fd5b505050507f863ed4e99eb44ef4e047733d4055c3f50b3e649e29fe07a455908d2f55d576c6817f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663bdfe7d476040518163ffffffff1660e01b815260040161052e9061063a565b602060405180830381865afa15801561054b573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061056f9190610589565b60405161057d929190610664565b60405180910390a15050565b60006020828403121561059b57600080fd5b81516001600160a01b03811681146105b257600080fd5b9392505050565b634e487b7160e01b600052601160045260246000fd5b818103818111156105e2576105e26105b9565b92915050565b6000602082840312156105fa57600080fd5b5051919050565b60008261061e57634e487b7160e01b600052601260045260246000fd5b500490565b80820281158282048414176105e2576105e26105b9565b60208082526010908201526f34b7333630ba34b7b729b832b73232b960811b604082015260600190565b9182526001600160a01b031660208201526040019056fea26469706673582212208ad1f4ab0e68ca16eab2c0f1ae64c59ef4404939d471bf6e903818a26238cabd64736f6c63430008120033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c806323d86a6514610046578063313310ad146100505780638dfdc0ca14610058575b600080fd5b61004e610073565b005b61004e6101ea565b61006160025481565b60405190815260200160405180910390f35b60405163bdfe7d4760e01b815260206004820152600a60248201526939ba30b13632a1b7b4b760b11b60448201527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063bdfe7d4790606401602060405180830381865afa1580156100f2573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101169190610589565b600080546001600160a01b0319166001600160a01b0392831617905560405163bdfe7d4760e01b815260206004820152600360248201526206364760ec1b60448201527f00000000000000000000000000000000000000000000000000000000000000009091169063bdfe7d4790606401602060405180830381865afa1580156101a4573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c89190610589565b600180546001600160a01b0319166001600160a01b0392909216919091179055565b6000600254426101fa91906105cf565b90506301e1338081101561024a5760405162461bcd60e51b8152602060048201526012602482015271746f6f206561726c7920746f20636c61696d60701b60448201526064015b60405180910390fd5b60008054604080516318160ddd60e01b815290516064926001600160a01b0316916318160ddd9160048083019260209291908290030181865afa158015610295573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102b991906105e8565b60405163145f822b60e01b8152602060048201526016602482015275185b9b9d585b125b999b185d1a5bdb94195c98d95b9d60521b60448201527f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063145f822b90606401602060405180830381865afa158015610344573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061036891906105e8565b6103766301e1338086610601565b6103809190610623565b61038a9190610623565b6103949190610601565b426002559050806103d95760405162461bcd60e51b815260206004820152600f60248201526e1b9bdd1a1a5b99c81d1bc8195b5a5d608a1b6044820152606401610241565b60015460405163bdfe7d4760e01b81526001600160a01b0391821691635c412bb29184917f0000000000000000000000000000000000000000000000000000000000000000169063bdfe7d47906104329060040161063a565b602060405180830381865afa15801561044f573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104739190610589565b6040518363ffffffff1660e01b8152600401610490929190610664565b600060405180830381600087803b1580156104aa57600080fd5b505af11580156104be573d6000803e3d6000fd5b505050507f863ed4e99eb44ef4e047733d4055c3f50b3e649e29fe07a455908d2f55d576c6817f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663bdfe7d476040518163ffffffff1660e01b815260040161052e9061063a565b602060405180830381865afa15801561054b573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061056f9190610589565b60405161057d929190610664565b60405180910390a15050565b60006020828403121561059b57600080fd5b81516001600160a01b03811681146105b257600080fd5b9392505050565b634e487b7160e01b600052601160045260246000fd5b818103818111156105e2576105e26105b9565b92915050565b6000602082840312156105fa57600080fd5b5051919050565b60008261061e57634e487b7160e01b600052601260045260246000fd5b500490565b80820281158282048414176105e2576105e26105b9565b60208082526010908201526f34b7333630ba34b7b729b832b73232b960811b604082015260600190565b9182526001600160a01b031660208201526040019056fea26469706673582212208ad1f4ab0e68ca16eab2c0f1ae64c59ef4404939d471bf6e903818a26238cabd64736f6c63430008120033",
   "immutableReferences": {
-    "6074": [
+    "6053": [
       {
         "length": 32,
         "start": 163
@@ -2772,29 +2772,29 @@
   "sourceMap": "169:962:15:-:0;;;358:121;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;-1:-1:-1;;;;;404:26:15;;;456:15;441:12;:30;169:962;;14:290:18;84:6;137:2;125:9;116:7;112:23;108:32;105:52;;;153:1;150;143:12;105:52;179:16;;-1:-1:-1;;;;;224:31:18;;214:42;;204:70;;270:1;267;260:12;204:70;293:5;14:290;-1:-1:-1;;;14:290:18:o;:::-;169:962:15;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "169:962:15:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;487:136;;;:::i;:::-;;631:497;;;:::i;259:27::-;;;;;;;;;160:25:18;;;148:2;133:18;259:27:15;;;;;;;487:136;544:27;;-1:-1:-1;;;544:27:15;;398:2:18;544:27:15;;;380:21:18;437:2;417:18;;;410:30;-1:-1:-1;;;456:18:18;;;449:40;544:3:15;-1:-1:-1;;;;;544:13:15;;;;506:18:18;;544:27:15;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;530:4;:42;;-1:-1:-1;;;;;;530:42:15;-1:-1:-1;;;;;530:42:15;;;;;;594:20;;-1:-1:-1;;;594:20:15;;1032:2:18;594:20:15;;;1014:21:18;1071:1;1051:18;;;1044:29;-1:-1:-1;;;1089:18:18;;;1082:33;594:3:15;:13;;;;;;1132:18:18;;594:20:15;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;583:3;:32;;-1:-1:-1;;;;;;583:32:15;-1:-1:-1;;;;;583:32:15;;;;;;;;;;487:136::o;631:497::-;675:14;710:12;;692:15;:30;;;;:::i;:::-;675:47;;750:8;742:6;:16;;733:48;;;;-1:-1:-1;;;733:48:15;;1628:2:18;733:48:15;;;1610:21:18;1667:2;1647:18;;;1640:30;-1:-1:-1;;;1686:18:18;;;1679:48;1744:18;;733:48:15;;;;;;;;;792:14;862:4;;:18;;;-1:-1:-1;;;862:18:15;;;;881:3;;-1:-1:-1;;;;;862:4:15;;:16;;:18;;;;;;;;;;;;;;:4;:18;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;825:36;;-1:-1:-1;;;825:36:15;;2164:2:18;825:36:15;;;2146:21:18;2203:2;2183:18;;;2176:30;-1:-1:-1;;;2222:18:18;;;2215:52;825:3:15;-1:-1:-1;;;;;825:10:15;;;;2284:18:18;;825:36:15;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;809:15;816:8;809:6;:15;:::i;:::-;:52;;;;:::i;:::-;:71;;;;:::i;:::-;:75;;;;:::i;:::-;910:15;895:12;:30;792:92;-1:-1:-1;945:8:15;936:37;;;;-1:-1:-1;;;936:37:15;;2910:2:18;936:37:15;;;2892:21:18;2949:2;2929:18;;;2922:30;-1:-1:-1;;;2968:18:18;;;2961:45;3023:18;;936:37:15;2708:339:18;936:37:15;984:3;;1010:33;;-1:-1:-1;;;1010:33:15;;-1:-1:-1;;;;;984:3:15;;;;:17;;1002:6;;1010:3;:13;;;;:33;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;984:60;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1060;1078:6;1086:3;-1:-1:-1;;;;;1086:13:15;;:33;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;1060:60;;;;;;;:::i;:::-;;;;;;;;664:464;;631:497::o;535:290:18:-;605:6;658:2;646:9;637:7;633:23;629:32;626:52;;;674:1;671;664:12;626:52;700:16;;-1:-1:-1;;;;;745:31:18;;735:42;;725:70;;791:1;788;781:12;725:70;814:5;535:290;-1:-1:-1;;;535:290:18:o;1161:127::-;1222:10;1217:3;1213:20;1210:1;1203:31;1253:4;1250:1;1243:15;1277:4;1274:1;1267:15;1293:128;1360:9;;;1381:11;;;1378:37;;;1395:18;;:::i;:::-;1293:128;;;;:::o;1773:184::-;1843:6;1896:2;1884:9;1875:7;1871:23;1867:32;1864:52;;;1912:1;1909;1902:12;1864:52;-1:-1:-1;1935:16:18;;1773:184;-1:-1:-1;1773:184:18:o;2313:217::-;2353:1;2379;2369:132;;2423:10;2418:3;2414:20;2411:1;2404:31;2458:4;2455:1;2448:15;2486:4;2483:1;2476:15;2369:132;-1:-1:-1;2515:9:18;;2313:217::o;2535:168::-;2608:9;;;2639;;2656:15;;;2650:22;;2636:37;2626:71;;2677:18;;:::i;3052:340::-;3254:2;3236:21;;;3293:2;3273:18;;;3266:30;-1:-1:-1;;;3327:2:18;3312:18;;3305:46;3383:2;3368:18;;3052:340::o;3397:274::-;3571:25;;;-1:-1:-1;;;;;3632:32:18;3627:2;3612:18;;3605:60;3559:2;3544:18;;3397:274::o",
   "source": "// SPDX-License-Identifier: UNLICENSED\r\npragma solidity 0.8.18;\r\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\r\nimport \"./IDAO.sol\";\r\nimport \"./ICDP.sol\";\r\n\r\ncontract InflationFund {\r\n    IDAO immutable dao;\r\n    IERC20 coin;\r\n    ICDP cdp;\r\n\r\n    uint256 public lastEmission;\r\n    event inflationEmission(uint256 amount, address spender);\r\n\r\n    constructor(address _INTDAOaddress){\r\n        dao = IDAO(_INTDAOaddress);\r\n        lastEmission = block.timestamp;\r\n    }\r\n\r\n    function renewContracts() public{\r\n        coin = IERC20(dao.addresses(\"stableCoin\"));\r\n        cdp = ICDP(dao.addresses(\"cdp\"));\r\n    }\r\n\r\n    function claimEmission() external{\r\n        uint256 period = block.timestamp - lastEmission;\r\n        require (period>=365 days, \"too early to claim\");\r\n        uint256 amount = period/365 days*dao.params(\"annualInflationPercent\")*coin.totalSupply()/100;\r\n        lastEmission = block.timestamp;\r\n        require (amount>0, \"nothing to emit\");\r\n        cdp.claimEmission(amount, dao.addresses(\"inflationSpender\"));\r\n        emit inflationEmission(amount, dao.addresses(\"inflationSpender\"));\r\n    }\r\n}\r\n",
-  "sourcePath": "C:\\Users\\d.nagornykh\\YandexDisk\\Работа\\ICO\\CryptoFiat\\repo\\contracts\\inflationFund.sol",
+  "sourcePath": "D:\\YandexDisk\\Работа\\ICO\\CryptoFiat\\repo\\contracts\\inflationFund.sol",
   "ast": {
     "absolutePath": "project:/contracts/inflationFund.sol",
     "exportedSymbols": {
       "ICDP": [
-        4205
+        4193
       ],
       "IDAO": [
-        4229
+        4217
       ],
       "IERC20": [
         729
       ],
       "InflationFund": [
-        6193
+        6172
       ]
     },
-    "id": 6194,
+    "id": 6173,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6068,
+        "id": 6047,
         "literals": [
           "solidity",
           "0.8",
@@ -2806,10 +2806,10 @@
       {
         "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "id": 6069,
+        "id": 6048,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 6194,
+        "scope": 6173,
         "sourceUnit": 730,
         "src": "65:56:15",
         "symbolAliases": [],
@@ -2818,11 +2818,11 @@
       {
         "absolutePath": "project:/contracts/IDAO.sol",
         "file": "./IDAO.sol",
-        "id": 6070,
+        "id": 6049,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 6194,
-        "sourceUnit": 4230,
+        "scope": 6173,
+        "sourceUnit": 4218,
         "src": "123:20:15",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2830,11 +2830,11 @@
       {
         "absolutePath": "project:/contracts/ICDP.sol",
         "file": "./ICDP.sol",
-        "id": 6071,
+        "id": 6050,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 6194,
-        "sourceUnit": 4206,
+        "scope": 6173,
+        "sourceUnit": 4194,
         "src": "145:20:15",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2846,9 +2846,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 6193,
+        "id": 6172,
         "linearizedBaseContracts": [
-          6193
+          6172
         ],
         "name": "InflationFund",
         "nameLocation": "178:13:15",
@@ -2856,36 +2856,36 @@
         "nodes": [
           {
             "constant": false,
-            "id": 6074,
+            "id": 6053,
             "mutability": "immutable",
             "name": "dao",
             "nameLocation": "214:3:15",
             "nodeType": "VariableDeclaration",
-            "scope": 6193,
+            "scope": 6172,
             "src": "199:18:15",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IDAO_$4229",
+              "typeIdentifier": "t_contract$_IDAO_$4217",
               "typeString": "contract IDAO"
             },
             "typeName": {
-              "id": 6073,
+              "id": 6052,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 6072,
+                "id": 6051,
                 "name": "IDAO",
                 "nameLocations": [
                   "199:4:15"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 4229,
+                "referencedDeclaration": 4217,
                 "src": "199:4:15"
               },
-              "referencedDeclaration": 4229,
+              "referencedDeclaration": 4217,
               "src": "199:4:15",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IDAO_$4229",
+                "typeIdentifier": "t_contract$_IDAO_$4217",
                 "typeString": "contract IDAO"
               }
             },
@@ -2893,12 +2893,12 @@
           },
           {
             "constant": false,
-            "id": 6077,
+            "id": 6056,
             "mutability": "mutable",
             "name": "coin",
             "nameLocation": "231:4:15",
             "nodeType": "VariableDeclaration",
-            "scope": 6193,
+            "scope": 6172,
             "src": "224:11:15",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2907,10 +2907,10 @@
               "typeString": "contract IERC20"
             },
             "typeName": {
-              "id": 6076,
+              "id": 6055,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 6075,
+                "id": 6054,
                 "name": "IERC20",
                 "nameLocations": [
                   "224:6:15"
@@ -2930,36 +2930,36 @@
           },
           {
             "constant": false,
-            "id": 6080,
+            "id": 6059,
             "mutability": "mutable",
             "name": "cdp",
             "nameLocation": "247:3:15",
             "nodeType": "VariableDeclaration",
-            "scope": 6193,
+            "scope": 6172,
             "src": "242:8:15",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ICDP_$4205",
+              "typeIdentifier": "t_contract$_ICDP_$4193",
               "typeString": "contract ICDP"
             },
             "typeName": {
-              "id": 6079,
+              "id": 6058,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 6078,
+                "id": 6057,
                 "name": "ICDP",
                 "nameLocations": [
                   "242:4:15"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 4205,
+                "referencedDeclaration": 4193,
                 "src": "242:4:15"
               },
-              "referencedDeclaration": 4205,
+              "referencedDeclaration": 4193,
               "src": "242:4:15",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ICDP_$4205",
+                "typeIdentifier": "t_contract$_ICDP_$4193",
                 "typeString": "contract ICDP"
               }
             },
@@ -2968,12 +2968,12 @@
           {
             "constant": false,
             "functionSelector": "8dfdc0ca",
-            "id": 6082,
+            "id": 6061,
             "mutability": "mutable",
             "name": "lastEmission",
             "nameLocation": "274:12:15",
             "nodeType": "VariableDeclaration",
-            "scope": 6193,
+            "scope": 6172,
             "src": "259:27:15",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2982,7 +2982,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 6081,
+              "id": 6060,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "259:7:15",
@@ -2996,23 +2996,23 @@
           {
             "anonymous": false,
             "eventSelector": "863ed4e99eb44ef4e047733d4055c3f50b3e649e29fe07a455908d2f55d576c6",
-            "id": 6088,
+            "id": 6067,
             "name": "inflationEmission",
             "nameLocation": "299:17:15",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 6087,
+              "id": 6066,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6084,
+                  "id": 6063,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "amount",
                   "nameLocation": "325:6:15",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6088,
+                  "scope": 6067,
                   "src": "317:14:15",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3021,7 +3021,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 6083,
+                    "id": 6062,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "317:7:15",
@@ -3034,13 +3034,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 6086,
+                  "id": 6065,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "spender",
                   "nameLocation": "341:7:15",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6088,
+                  "scope": 6067,
                   "src": "333:15:15",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3049,7 +3049,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6085,
+                    "id": 6064,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "333:7:15",
@@ -3068,26 +3068,26 @@
           },
           {
             "body": {
-              "id": 6104,
+              "id": 6083,
               "nodeType": "Block",
               "src": "393:86:15",
               "statements": [
                 {
                   "expression": {
-                    "id": 6097,
+                    "id": 6076,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 6093,
+                      "id": 6072,
                       "name": "dao",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6074,
+                      "referencedDeclaration": 6053,
                       "src": "404:3:15",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IDAO_$4229",
+                        "typeIdentifier": "t_contract$_IDAO_$4217",
                         "typeString": "contract IDAO"
                       }
                     },
@@ -3096,11 +3096,11 @@
                     "rightHandSide": {
                       "arguments": [
                         {
-                          "id": 6095,
+                          "id": 6074,
                           "name": "_INTDAOaddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 6090,
+                          "referencedDeclaration": 6069,
                           "src": "415:14:15",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -3115,18 +3115,18 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 6094,
+                        "id": 6073,
                         "name": "IDAO",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 4229,
+                        "referencedDeclaration": 4217,
                         "src": "410:4:15",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_IDAO_$4229_$",
+                          "typeIdentifier": "t_type$_t_contract$_IDAO_$4217_$",
                           "typeString": "type(contract IDAO)"
                         }
                       },
-                      "id": 6096,
+                      "id": 6075,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3138,33 +3138,33 @@
                       "src": "410:20:15",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IDAO_$4229",
+                        "typeIdentifier": "t_contract$_IDAO_$4217",
                         "typeString": "contract IDAO"
                       }
                     },
                     "src": "404:26:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IDAO_$4229",
+                      "typeIdentifier": "t_contract$_IDAO_$4217",
                       "typeString": "contract IDAO"
                     }
                   },
-                  "id": 6098,
+                  "id": 6077,
                   "nodeType": "ExpressionStatement",
                   "src": "404:26:15"
                 },
                 {
                   "expression": {
-                    "id": 6102,
+                    "id": 6081,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 6099,
+                      "id": 6078,
                       "name": "lastEmission",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6082,
+                      "referencedDeclaration": 6061,
                       "src": "441:12:15",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -3175,7 +3175,7 @@
                     "operator": "=",
                     "rightHandSide": {
                       "expression": {
-                        "id": 6100,
+                        "id": 6079,
                         "name": "block",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -3186,7 +3186,7 @@
                           "typeString": "block"
                         }
                       },
-                      "id": 6101,
+                      "id": 6080,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3206,13 +3206,13 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 6103,
+                  "id": 6082,
                   "nodeType": "ExpressionStatement",
                   "src": "441:30:15"
                 }
               ]
             },
-            "id": 6105,
+            "id": 6084,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -3220,17 +3220,17 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6091,
+              "id": 6070,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6090,
+                  "id": 6069,
                   "mutability": "mutable",
                   "name": "_INTDAOaddress",
                   "nameLocation": "378:14:15",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6105,
+                  "scope": 6084,
                   "src": "370:22:15",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3239,7 +3239,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6089,
+                    "id": 6068,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "370:7:15",
@@ -3255,12 +3255,12 @@
               "src": "369:24:15"
             },
             "returnParameters": {
-              "id": 6092,
+              "id": 6071,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "393:0:15"
             },
-            "scope": 6193,
+            "scope": 6172,
             "src": "358:121:15",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -3268,23 +3268,23 @@
           },
           {
             "body": {
-              "id": 6126,
+              "id": 6105,
               "nodeType": "Block",
               "src": "519:104:15",
               "statements": [
                 {
                   "expression": {
-                    "id": 6115,
+                    "id": 6094,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 6108,
+                      "id": 6087,
                       "name": "coin",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6077,
+                      "referencedDeclaration": 6056,
                       "src": "530:4:15",
                       "typeDescriptions": {
                         "typeIdentifier": "t_contract$_IERC20_$729",
@@ -3299,7 +3299,7 @@
                           "arguments": [
                             {
                               "hexValue": "737461626c65436f696e",
-                              "id": 6112,
+                              "id": 6091,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -3322,18 +3322,18 @@
                               }
                             ],
                             "expression": {
-                              "id": 6110,
+                              "id": 6089,
                               "name": "dao",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6074,
+                              "referencedDeclaration": 6053,
                               "src": "544:3:15",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_IDAO_$4229",
+                                "typeIdentifier": "t_contract$_IDAO_$4217",
                                 "typeString": "contract IDAO"
                               }
                             },
-                            "id": 6111,
+                            "id": 6090,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -3341,14 +3341,14 @@
                             "memberLocation": "548:9:15",
                             "memberName": "addresses",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 4214,
+                            "referencedDeclaration": 4202,
                             "src": "544:13:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
                               "typeString": "function (string memory) view external returns (address)"
                             }
                           },
-                          "id": 6113,
+                          "id": 6092,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -3372,7 +3372,7 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 6109,
+                        "id": 6088,
                         "name": "IERC20",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -3383,7 +3383,7 @@
                           "typeString": "type(contract IERC20)"
                         }
                       },
-                      "id": 6114,
+                      "id": 6093,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3405,26 +3405,26 @@
                       "typeString": "contract IERC20"
                     }
                   },
-                  "id": 6116,
+                  "id": 6095,
                   "nodeType": "ExpressionStatement",
                   "src": "530:42:15"
                 },
                 {
                   "expression": {
-                    "id": 6124,
+                    "id": 6103,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 6117,
+                      "id": 6096,
                       "name": "cdp",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6080,
+                      "referencedDeclaration": 6059,
                       "src": "583:3:15",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ICDP_$4205",
+                        "typeIdentifier": "t_contract$_ICDP_$4193",
                         "typeString": "contract ICDP"
                       }
                     },
@@ -3436,7 +3436,7 @@
                           "arguments": [
                             {
                               "hexValue": "636470",
-                              "id": 6121,
+                              "id": 6100,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -3459,18 +3459,18 @@
                               }
                             ],
                             "expression": {
-                              "id": 6119,
+                              "id": 6098,
                               "name": "dao",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6074,
+                              "referencedDeclaration": 6053,
                               "src": "594:3:15",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_IDAO_$4229",
+                                "typeIdentifier": "t_contract$_IDAO_$4217",
                                 "typeString": "contract IDAO"
                               }
                             },
-                            "id": 6120,
+                            "id": 6099,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -3478,14 +3478,14 @@
                             "memberLocation": "598:9:15",
                             "memberName": "addresses",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 4214,
+                            "referencedDeclaration": 4202,
                             "src": "594:13:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
                               "typeString": "function (string memory) view external returns (address)"
                             }
                           },
-                          "id": 6122,
+                          "id": 6101,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -3509,18 +3509,18 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 6118,
+                        "id": 6097,
                         "name": "ICDP",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 4205,
+                        "referencedDeclaration": 4193,
                         "src": "589:4:15",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ICDP_$4205_$",
+                          "typeIdentifier": "t_type$_t_contract$_ICDP_$4193_$",
                           "typeString": "type(contract ICDP)"
                         }
                       },
-                      "id": 6123,
+                      "id": 6102,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3532,24 +3532,24 @@
                       "src": "589:26:15",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ICDP_$4205",
+                        "typeIdentifier": "t_contract$_ICDP_$4193",
                         "typeString": "contract ICDP"
                       }
                     },
                     "src": "583:32:15",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ICDP_$4205",
+                      "typeIdentifier": "t_contract$_ICDP_$4193",
                       "typeString": "contract ICDP"
                     }
                   },
-                  "id": 6125,
+                  "id": 6104,
                   "nodeType": "ExpressionStatement",
                   "src": "583:32:15"
                 }
               ]
             },
             "functionSelector": "23d86a65",
-            "id": 6127,
+            "id": 6106,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -3557,18 +3557,18 @@
             "nameLocation": "496:14:15",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6106,
+              "id": 6085,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "510:2:15"
             },
             "returnParameters": {
-              "id": 6107,
+              "id": 6086,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "519:0:15"
             },
-            "scope": 6193,
+            "scope": 6172,
             "src": "487:136:15",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -3576,23 +3576,23 @@
           },
           {
             "body": {
-              "id": 6191,
+              "id": 6170,
               "nodeType": "Block",
               "src": "664:464:15",
               "statements": [
                 {
                   "assignments": [
-                    6131
+                    6110
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 6131,
+                      "id": 6110,
                       "mutability": "mutable",
                       "name": "period",
                       "nameLocation": "683:6:15",
                       "nodeType": "VariableDeclaration",
-                      "scope": 6191,
+                      "scope": 6170,
                       "src": "675:14:15",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -3601,7 +3601,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 6130,
+                        "id": 6109,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "675:7:15",
@@ -3613,20 +3613,20 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 6136,
+                  "id": 6115,
                   "initialValue": {
                     "commonType": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 6135,
+                    "id": 6114,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "expression": {
-                        "id": 6132,
+                        "id": 6111,
                         "name": "block",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -3637,7 +3637,7 @@
                           "typeString": "block"
                         }
                       },
-                      "id": 6133,
+                      "id": 6112,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3654,11 +3654,11 @@
                     "nodeType": "BinaryOperation",
                     "operator": "-",
                     "rightExpression": {
-                      "id": 6134,
+                      "id": 6113,
                       "name": "lastEmission",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6082,
+                      "referencedDeclaration": 6061,
                       "src": "710:12:15",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -3682,17 +3682,17 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 6140,
+                        "id": 6119,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
-                          "id": 6138,
+                          "id": 6117,
                           "name": "period",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 6131,
+                          "referencedDeclaration": 6110,
                           "src": "742:6:15",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -3703,7 +3703,7 @@
                         "operator": ">=",
                         "rightExpression": {
                           "hexValue": "333635",
-                          "id": 6139,
+                          "id": 6118,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3726,7 +3726,7 @@
                       },
                       {
                         "hexValue": "746f6f206561726c7920746f20636c61696d",
-                        "id": 6141,
+                        "id": 6120,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -3752,7 +3752,7 @@
                           "typeString": "literal_string \"too early to claim\""
                         }
                       ],
-                      "id": 6137,
+                      "id": 6116,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -3766,7 +3766,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 6142,
+                    "id": 6121,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3782,23 +3782,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 6143,
+                  "id": 6122,
                   "nodeType": "ExpressionStatement",
                   "src": "733:48:15"
                 },
                 {
                   "assignments": [
-                    6145
+                    6124
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 6145,
+                      "id": 6124,
                       "mutability": "mutable",
                       "name": "amount",
                       "nameLocation": "800:6:15",
                       "nodeType": "VariableDeclaration",
-                      "scope": 6191,
+                      "scope": 6170,
                       "src": "792:14:15",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -3807,7 +3807,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 6144,
+                        "id": 6123,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "792:7:15",
@@ -3819,13 +3819,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 6160,
+                  "id": 6139,
                   "initialValue": {
                     "commonType": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 6159,
+                    "id": 6138,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3835,7 +3835,7 @@
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       },
-                      "id": 6157,
+                      "id": 6136,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3845,7 +3845,7 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 6153,
+                        "id": 6132,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3855,17 +3855,17 @@
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           },
-                          "id": 6148,
+                          "id": 6127,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
-                            "id": 6146,
+                            "id": 6125,
                             "name": "period",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6131,
+                            "referencedDeclaration": 6110,
                             "src": "809:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -3876,7 +3876,7 @@
                           "operator": "/",
                           "rightExpression": {
                             "hexValue": "333635",
-                            "id": 6147,
+                            "id": 6126,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -3903,7 +3903,7 @@
                           "arguments": [
                             {
                               "hexValue": "616e6e75616c496e666c6174696f6e50657263656e74",
-                              "id": 6151,
+                              "id": 6130,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -3926,18 +3926,18 @@
                               }
                             ],
                             "expression": {
-                              "id": 6149,
+                              "id": 6128,
                               "name": "dao",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6074,
+                              "referencedDeclaration": 6053,
                               "src": "825:3:15",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_IDAO_$4229",
+                                "typeIdentifier": "t_contract$_IDAO_$4217",
                                 "typeString": "contract IDAO"
                               }
                             },
-                            "id": 6150,
+                            "id": 6129,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -3945,14 +3945,14 @@
                             "memberLocation": "829:6:15",
                             "memberName": "params",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 4221,
+                            "referencedDeclaration": 4209,
                             "src": "825:10:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
                               "typeString": "function (string memory) view external returns (uint256)"
                             }
                           },
-                          "id": 6152,
+                          "id": 6131,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -3981,18 +3981,18 @@
                         "expression": {
                           "argumentTypes": [],
                           "expression": {
-                            "id": 6154,
+                            "id": 6133,
                             "name": "coin",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6077,
+                            "referencedDeclaration": 6056,
                             "src": "862:4:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_contract$_IERC20_$729",
                               "typeString": "contract IERC20"
                             }
                           },
-                          "id": 6155,
+                          "id": 6134,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -4007,7 +4007,7 @@
                             "typeString": "function () view external returns (uint256)"
                           }
                         },
-                        "id": 6156,
+                        "id": 6135,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -4033,7 +4033,7 @@
                     "operator": "/",
                     "rightExpression": {
                       "hexValue": "313030",
-                      "id": 6158,
+                      "id": 6137,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -4058,17 +4058,17 @@
                 },
                 {
                   "expression": {
-                    "id": 6164,
+                    "id": 6143,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 6161,
+                      "id": 6140,
                       "name": "lastEmission",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6082,
+                      "referencedDeclaration": 6061,
                       "src": "895:12:15",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -4079,7 +4079,7 @@
                     "operator": "=",
                     "rightHandSide": {
                       "expression": {
-                        "id": 6162,
+                        "id": 6141,
                         "name": "block",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -4090,7 +4090,7 @@
                           "typeString": "block"
                         }
                       },
-                      "id": 6163,
+                      "id": 6142,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -4110,7 +4110,7 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 6165,
+                  "id": 6144,
                   "nodeType": "ExpressionStatement",
                   "src": "895:30:15"
                 },
@@ -4122,17 +4122,17 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 6169,
+                        "id": 6148,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
-                          "id": 6167,
+                          "id": 6146,
                           "name": "amount",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 6145,
+                          "referencedDeclaration": 6124,
                           "src": "945:6:15",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -4143,7 +4143,7 @@
                         "operator": ">",
                         "rightExpression": {
                           "hexValue": "30",
-                          "id": 6168,
+                          "id": 6147,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -4165,7 +4165,7 @@
                       },
                       {
                         "hexValue": "6e6f7468696e6720746f20656d6974",
-                        "id": 6170,
+                        "id": 6149,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -4191,7 +4191,7 @@
                           "typeString": "literal_string \"nothing to emit\""
                         }
                       ],
-                      "id": 6166,
+                      "id": 6145,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -4205,7 +4205,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 6171,
+                    "id": 6150,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4221,7 +4221,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 6172,
+                  "id": 6151,
                   "nodeType": "ExpressionStatement",
                   "src": "936:37:15"
                 },
@@ -4229,11 +4229,11 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 6176,
+                        "id": 6155,
                         "name": "amount",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6145,
+                        "referencedDeclaration": 6124,
                         "src": "1002:6:15",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -4244,7 +4244,7 @@
                         "arguments": [
                           {
                             "hexValue": "696e666c6174696f6e5370656e646572",
-                            "id": 6179,
+                            "id": 6158,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -4267,18 +4267,18 @@
                             }
                           ],
                           "expression": {
-                            "id": 6177,
+                            "id": 6156,
                             "name": "dao",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6074,
+                            "referencedDeclaration": 6053,
                             "src": "1010:3:15",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IDAO_$4229",
+                              "typeIdentifier": "t_contract$_IDAO_$4217",
                               "typeString": "contract IDAO"
                             }
                           },
-                          "id": 6178,
+                          "id": 6157,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -4286,14 +4286,14 @@
                           "memberLocation": "1014:9:15",
                           "memberName": "addresses",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 4214,
+                          "referencedDeclaration": 4202,
                           "src": "1010:13:15",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
                             "typeString": "function (string memory) view external returns (address)"
                           }
                         },
-                        "id": 6180,
+                        "id": 6159,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -4322,18 +4322,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 6173,
+                        "id": 6152,
                         "name": "cdp",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6080,
+                        "referencedDeclaration": 6059,
                         "src": "984:3:15",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ICDP_$4205",
+                          "typeIdentifier": "t_contract$_ICDP_$4193",
                           "typeString": "contract ICDP"
                         }
                       },
-                      "id": 6175,
+                      "id": 6154,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -4341,14 +4341,14 @@
                       "memberLocation": "988:13:15",
                       "memberName": "claimEmission",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 4204,
+                      "referencedDeclaration": 4192,
                       "src": "984:17:15",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_address_$returns$__$",
                         "typeString": "function (uint256,address) external"
                       }
                     },
-                    "id": 6181,
+                    "id": 6160,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4364,7 +4364,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 6182,
+                  "id": 6161,
                   "nodeType": "ExpressionStatement",
                   "src": "984:60:15"
                 },
@@ -4372,11 +4372,11 @@
                   "eventCall": {
                     "arguments": [
                       {
-                        "id": 6184,
+                        "id": 6163,
                         "name": "amount",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6145,
+                        "referencedDeclaration": 6124,
                         "src": "1078:6:15",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -4387,7 +4387,7 @@
                         "arguments": [
                           {
                             "hexValue": "696e666c6174696f6e5370656e646572",
-                            "id": 6187,
+                            "id": 6166,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -4410,18 +4410,18 @@
                             }
                           ],
                           "expression": {
-                            "id": 6185,
+                            "id": 6164,
                             "name": "dao",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6074,
+                            "referencedDeclaration": 6053,
                             "src": "1086:3:15",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IDAO_$4229",
+                              "typeIdentifier": "t_contract$_IDAO_$4217",
                               "typeString": "contract IDAO"
                             }
                           },
-                          "id": 6186,
+                          "id": 6165,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -4429,14 +4429,14 @@
                           "memberLocation": "1090:9:15",
                           "memberName": "addresses",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 4214,
+                          "referencedDeclaration": 4202,
                           "src": "1086:13:15",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
                             "typeString": "function (string memory) view external returns (address)"
                           }
                         },
-                        "id": 6188,
+                        "id": 6167,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -4464,18 +4464,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 6183,
+                      "id": 6162,
                       "name": "inflationEmission",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6088,
+                      "referencedDeclaration": 6067,
                       "src": "1060:17:15",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_address_$returns$__$",
                         "typeString": "function (uint256,address)"
                       }
                     },
-                    "id": 6189,
+                    "id": 6168,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4491,14 +4491,14 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 6190,
+                  "id": 6169,
                   "nodeType": "EmitStatement",
                   "src": "1055:65:15"
                 }
               ]
             },
             "functionSelector": "313310ad",
-            "id": 6192,
+            "id": 6171,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -4506,25 +4506,25 @@
             "nameLocation": "640:13:15",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6128,
+              "id": 6107,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "653:2:15"
             },
             "returnParameters": {
-              "id": 6129,
+              "id": 6108,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "664:0:15"
             },
-            "scope": 6193,
+            "scope": 6172,
             "src": "631:497:15",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 6194,
+        "scope": 6173,
         "src": "169:962:15",
         "usedErrors": []
       }
@@ -4537,7 +4537,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.14",
-  "updatedAt": "2023-09-29T08:17:48.163Z",
+  "updatedAt": "2023-10-01T08:25:02.740Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
