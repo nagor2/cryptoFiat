@@ -159,10 +159,11 @@ it("should generate additional fee", async () => {
 
         let buyOutInitTx = await auction.initRuleBuyOut({from:accounts[7]});
 
-        truffleAssert.eventEmitted(buyOutInitTx, 'buyOutInit', async (ev) => {
+        truffleAssert.eventEmitted(buyOutInitTx, 'newAuction', async (ev) => {
             assert.equal(ev.auctionID, 1, "Should be the first auction");
             assert.equal(parseFloat(ev.lotAmount/10**18).toFixed(0), 134, "Should be correct amount");
             assert.equal(ev.lotAddress, stableCoin.address, "Should be correct address");
+            assert.equal(ev.paymentAmount, 0, "Should be correct address");
         });
     });
 });

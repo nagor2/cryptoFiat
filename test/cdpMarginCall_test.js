@@ -76,6 +76,7 @@ contract('CDP margin call', (accounts) => {
     it("should set position on liquidation and claim margin call", async () => {
         const positionBefore = await cdp.positions(posId);
         assert.equal(parseInt(positionBefore.liquidationStatus), 1, "position should not be no liquidation");
+        assert.equal (positionBefore.liquidationAuctionID, 0, "there should be no liquidationAuctionID before");
 
         await truffleAssert.fails(
             cdp.claimMarginCall(posId),
@@ -83,25 +84,7 @@ contract('CDP margin call', (accounts) => {
             "Position is not marked on liquidation or owner still has time"
         );
 
-        await time.increase(time.duration.days(1)+1);
-
-        let liquidationTx = await cdp.claimMarginCall(posId);
-
-        truffleAssert.eventEmitted(liquidationTx, 'liquidationStatusChanged', async (ev) => {
-            assert.equal(ev.posID, posId, 'positionID is wrong');
-            assert.equal(ev.liquidationStatus, 2, 'liquidationStatus is wrong');
-        });
-    });
-
-    it("should init auction", async () => {
-        const positionBefore = await cdp.positions(posId);
-        assert.equal (positionBefore.liquidationAuctionID, 0, "there should be no liquidationAuctionID before");
-
-        await truffleAssert.fails(
-            auction.initCoinsBuyOut(posId, positionBefore.wethAmountLocked),
-            truffleAssert.ErrorType.REVERT,
-            "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract"
-        );
+        await time.increase(await dao.params("marginCallTimeLimit"));
 
         const auctionWethBalanceBefore = await weth.balanceOf(auction.address);
         assert.equal(auctionWethBalanceBefore, 0, "wrong balance auctionWethBalanceBefore");
@@ -109,12 +92,23 @@ contract('CDP margin call', (accounts) => {
         const cdpWethBalanceBefore = await weth.balanceOf(cdp.address);
         expect(cdpWethBalanceBefore).to.eql(positionBefore.wethAmountLocked, "wrong balance auctionWethBalanceAfter");
 
-        let liquidationTx = await cdp.startCoinsBuyOut(posId);
 
-        await expectEvent.inTransaction(liquidationTx.tx, auction, 'liquidateCollateral', { auctionID:web3.utils.toBN(1), posID:web3.utils.toBN(posId), collateral:positionBefore.wethAmountLocked});
+        let liquidationTx = await cdp.claimMarginCall(posId);
+
+        truffleAssert.eventEmitted(liquidationTx, 'liquidationStatusChanged', async (ev) => {
+            assert.equal(ev.posID, posId, 'positionID is wrong');
+            assert.equal(ev.liquidationStatus, 2, 'liquidationStatus is wrong');
+        });
+
+        truffleAssert.eventEmitted(liquidationTx, 'liquidateCollateral', async (ev) => {
+            assert.equal(ev.posID, posId, 'positionID is wrong');
+            assert.equal(ev.auctionID, 1, 'auctionID is wrong');
+            assert.equal(parseFloat(ev.collateral/10**18).toFixed(5), parseFloat(positionBefore.wethAmountLocked/10**18).toFixed(5), 'wethAmountLocked is wrong');
+        });
+
+        await expectEvent.inTransaction(liquidationTx.tx, auction, 'newAuction', { auctionID:web3.utils.toBN(1), lotAmount:positionBefore.wethAmountLocked, lotAddress:await dao.addresses('weth'), paymentAmount:web3.utils.toBN(0)});
 
         const auctionWethBalanceAfter = await weth.balanceOf(auction.address);
-
         expect(auctionWethBalanceAfter).to.eql(positionBefore.wethAmountLocked, "wrong balance auctionWethBalanceAfter");
 
         const cdpWethBalanceAfter = await weth.balanceOf(cdp.address);
@@ -132,7 +126,7 @@ contract('CDP margin call', (accounts) => {
         let bidId;
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
-            bidId = ev.bidId.toNumber();
+            bidId = ev.bidID.toNumber();
             assert.equal (ev.owner, recipient, "wrong bid owner");
             assert.equal (ev.bidAmount, web3.utils.toWei('1800'), "wrong bid amount");
         })
@@ -152,7 +146,7 @@ contract('CDP margin call', (accounts) => {
         bidTx = await auction.improveBid(bidId, web3.utils.toWei('1900'),{from:recipient});
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
-            assert.equal (ev.bidId.toNumber(), bidId, "wrong bid id");
+            assert.equal (ev.bidID.toNumber(), bidId, "wrong bid id");
             assert.equal (ev.owner, recipient, "wrong bid owner");
             assert.equal (ev.bidAmount, web3.utils.toWei('1900'), "wrong bid amount");
         })
@@ -192,7 +186,7 @@ contract('CDP margin call', (accounts) => {
         let bidTx = await auction.makeBid(auctionId, web3.utils.toWei('10000'),{from:recipient});
 
         truffleAssert.eventEmitted(bidTx, 'newBid',async (ev) => {
-            bidId = ev.bidId.toNumber();
+            bidId = ev.bidID.toNumber();
             assert.equal (ev.owner, recipient, "wrong bid owner");
         })
 
@@ -211,7 +205,7 @@ contract('CDP margin call', (accounts) => {
         bidTx = await auction.improveBid(bidId, web3.utils.toWei('9000'),{from:recipient});
 
         truffleAssert.eventEmitted(bidTx, 'newBid',async (ev) => {
-            assert.equal (bidId, ev.bidId.toNumber(), "wrong bid owner");
+            assert.equal (bidId, ev.bidID.toNumber(), "wrong bid owner");
             assert.equal (ev.owner, recipient, "wrong bid owner");
             assert.equal (ev.bidAmount, web3.utils.toWei('9000'), "wrong bid amount");
         })

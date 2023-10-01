@@ -11,43 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/cdpSeveralAuctionsToClose.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Auction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Auction.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/CDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/CDP.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Context.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Context.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/DepositContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/DepositContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ERC20.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ERC20.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IAuction.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IAuction.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ICDP.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ICDP.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ICart.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ICart.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IDAO.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IDAO.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IERC20.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IERC20.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IERC20Metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IERC20Metadata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IERC20MintableAndBurnable.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IERC20MintableAndBurnable.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/INTDAO.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/INTDAO.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/IOracle.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/IOracle.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/InflationFund.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/InflationFund.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Migrations.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Migrations.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/ReentrancyGuard.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/ReentrancyGuard.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/Rule.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/Rule.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/WETH9.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/WETH9.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/cartContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/cartContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/exchangeRateContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/contracts/stableCoin.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/contracts/stableCoin.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Deposit.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Deposit.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/cart.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/cart.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/exchangeRateContract.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cart_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cart_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/auction_stubFund.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_stubFund.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpFee_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cdpMarginCall_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpMarginCall_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdp_withdrawAndClose.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/deposit_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/deposit_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/exchangeRate_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/exchangeRate_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/inflation_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/inflation_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cdpSeveralAuctionsToClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpSeveralAuctionsToClose.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

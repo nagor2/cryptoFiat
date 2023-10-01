@@ -14,7 +14,7 @@ import "./ICDP.sol";
         uint256 paymentAmount;
         uint256 initTime;
         uint256 lastTimeUpdated;
-        uint32 bestBidId;
+        uint32 bestBidID;
     }
 
     struct Bid {
@@ -38,11 +38,10 @@ contract Auction is ReentrancyGuard{
     mapping(uint32 => auctionEntity) public auctions;
     mapping (uint32 => Bid) public bids;
 
-    event buyOutInit(uint32 auctionID, uint256 lotAmount, address lotAddress);
-    event buyOutFinished(uint32 auctionID, uint256 lotAmount, uint256 bestBid);
-    event newBid(uint32 auctionID, uint256 bidId, uint256 bidAmount, address owner);
-    event bidCanceled(uint256 bidId);
-    event liquidateCollateral(uint32 auctionID, uint256 posID, uint256 collateral);
+    event newAuction(uint32 auctionID, uint256 lotAmount, address lotAddress, uint256 paymentAmount);
+    event auctionFinished(uint32 auctionID, uint256 lotAmount, uint32 bestBidID);
+    event newBid(uint32 auctionID, uint32 bidID, uint256 bidAmount, address owner);
+    event bidCanceled(uint256 bidID);
 
     constructor(address _INTDAOaddress){
         dao = IDAO(_INTDAOaddress);
@@ -65,8 +64,6 @@ contract Auction is ReentrancyGuard{
 
         auctionID = createNewAuction(dao.addresses("stableCoin"), allowed, dao.addresses("rule"), 0);
         ruleBuyOut = true;
-
-        emit buyOutInit(auctionID, allowed, dao.addresses("stableCoin"));
         return auctionID;
     }
 
@@ -83,19 +80,12 @@ contract Auction is ReentrancyGuard{
 
         auctionID = createNewAuction(dao.addresses("rule"), 0, dao.addresses("stableCoin"), coinsAmountNeeded);
         isCoinsBuyOutForStabilization = true;
-
-        emit buyOutInit(auctionID, 0, dao.addresses("rule"));
         return auctionID;
     }
 
-    function initCoinsBuyOut(uint32 posID, uint128 collateral) nonReentrant external returns (uint32 auctionID){
-        require (msg.sender == dao.addresses("cdp"), "Only CDP contract may invoke this method. Please, use startCoinsBuyOut in CDP contract");
-        IERC20 weth = IERC20(dao.addresses("weth"));
-        require(weth.transferFrom(dao.addresses("cdp"), address(this), collateral), "could not transfer weth for some reason");
-
-        auctionID = createNewAuction (dao.addresses("weth"), collateral, dao.addresses("stableCoin"),0);
-        emit liquidateCollateral(auctionID, posID, collateral);
-
+    function initCoinsBuyOut(uint128 collateral) nonReentrant external returns (uint32 auctionID){
+        require (msg.sender == dao.addresses("cdp"), "Only CDP contract may invoke this method. Please, use claimMarginCall in CDP contract");
+        auctionID = createNewAuction(dao.addresses("weth"), collateral, dao.addresses("stableCoin"),0);
         return auctionID;
     }
 
@@ -111,16 +101,18 @@ contract Auction is ReentrancyGuard{
         a.paymentAmount = paymentAmount;
         a.lastTimeUpdated = block.timestamp;
         a.initTime = block.timestamp;
-        a.bestBidId = 0;
+        a.bestBidID = 0;
+
+        emit newAuction(auctionID, lotAmount, lotToken, paymentAmount);
         return auctionID;
     }
 
-    function makeBid(uint32 auctionId, uint256 bidAmount) nonReentrant external returns (uint32 bidId){
-        auctionEntity storage a = auctions[auctionId];
-        require(a.initialized&&!a.finalized, "auctionId is wrong or it is already finished");
+    function makeBid(uint32 auctionID, uint256 bidAmount) nonReentrant external returns (uint32 bidID){
+        auctionEntity storage a = auctions[auctionID];
+        require(a.initialized&&!a.finalized, "auctionID is wrong or it is already finished");
 
-        if (a.bestBidId!=0){
-            Bid storage bestBid = bids[a.bestBidId];
+        if (a.bestBidID !=0){
+            Bid storage bestBid = bids[a.bestBidID];
             if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth"))
                 require(bidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=bidAmount, "your bid is not high enough");
             if (a.lotToken == dao.addresses("rule"))
@@ -135,26 +127,26 @@ contract Auction is ReentrancyGuard{
         else
             require(paymentToken.transferFrom(msg.sender, address(this), bidAmount), "You should first approve bidAmount to auction contract address");
 
-        bidId = ++bidsNum;
-        Bid storage b = bids[bidId];
+        bidID = ++bidsNum;
+        Bid storage b = bids[bidID];
         b.owner = msg.sender;
-        b.auctionID = auctionId;
+        b.auctionID = auctionID;
         b.bidAmount = bidAmount;
         b.time = block.timestamp;
         b.canceled = false;
 
-        a.bestBidId = bidId;
+        a.bestBidID = bidID;
         a.lastTimeUpdated = block.timestamp;
-        emit newBid(auctionId, bidId, bidAmount, b.owner);
-        return bidId;
+        emit newBid(auctionID, bidID, bidAmount, b.owner);
+        return bidID;
     }
 
-    function improveBid(uint32 bidId, uint256 newBidAmount) nonReentrant external{
-        Bid storage b = bids[bidId];
+    function improveBid(uint32 bidID, uint256 newBidAmount) nonReentrant external{
+        Bid storage b = bids[bidID];
         require(b.owner == msg.sender, "You may improve only your personal bids");
         auctionEntity storage a = auctions[b.auctionID];
-        require(a.initialized&&!a.finalized, "auctionId is wrong or it is already finished");
-        Bid storage bestBid = bids[a.bestBidId];
+        require(a.initialized&&!a.finalized, "auctionID is wrong or it is already finished");
+        Bid storage bestBid = bids[a.bestBidID];
 
         if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth"))
             require(newBidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=newBidAmount, "your bid is not high enough");
@@ -170,33 +162,33 @@ contract Auction is ReentrancyGuard{
 
         b.bidAmount = newBidAmount;
         a.lastTimeUpdated = block.timestamp;
-        a.bestBidId = bidId;
-        emit newBid(b.auctionID, bidId, newBidAmount, b.owner);
+        a.bestBidID = bidID;
+        emit newBid(b.auctionID, bidID, newBidAmount, b.owner);
     }
 
-    function cancelBid(uint32 bidId) nonReentrant external{
-        Bid storage b = bids[bidId];
+    function cancelBid(uint32 bidID) nonReentrant external{
+        Bid storage b = bids[bidID];
         require (b.owner==msg.sender && !b.canceled, "Only bid owner may cancel it, if it wasn't canceled earlier");
         auctionEntity storage a = auctions[b.auctionID];
         require(a.initialized, "the bid is made on non-existent auction");
-        require(a.bestBidId!=bidId, "You can not cancel a bid if it is a best one");
+        require(a.bestBidID != bidID, "You can not cancel a bid if it is a best one");
         IERC20 paymentToken = IERC20(address(a.paymentToken));
         if (a.lotToken == dao.addresses("rule"))
             require(paymentToken.transfer(b.owner, a.paymentAmount), "we were not able to transfer your bid back");
         else
             require(paymentToken.transfer(b.owner, b.bidAmount), "we were not able to transfer your bid back");
-        emit bidCanceled(bidId);
+        emit bidCanceled(bidID);
         b.canceled = true;
     }
 
     function claimToFinalizeAuction(uint32 auctionID) nonReentrant external returns (bool success){
         auctionEntity storage a = auctions[auctionID];
         if (a.lotToken == dao.addresses("weth"))
-            require (msg.sender == dao.addresses("cdp"), "Only CDP contract may finish this auction. Please, use finishMarginCall method.");
+            require (msg.sender == dao.addresses("cdp"), "Only CDP contract may finish this auction. Please, use finishMarginCall method");
 
         require(a.initialized && !a.finalized, "the auction is finished or non-existent");
         require(block.timestamp-a.lastTimeUpdated>=dao.params("auctionTurnDuration"), "it is too early to finalize, wait a bit");
-        require(a.bestBidId!=0 && a.initTime!=a.lastTimeUpdated, "there should be at least one bid");
+        require(a.bestBidID !=0 && a.initTime!=a.lastTimeUpdated, "there should be at least one bid");
 
         finalizeAuction(auctionID);
         return true;
@@ -204,13 +196,12 @@ contract Auction is ReentrancyGuard{
 
     function finalizeAuction(uint32 auctionID) internal {
         auctionEntity storage a = auctions[auctionID];
-        Bid storage bestBid = bids[a.bestBidId];
+        Bid storage bestBid = bids[a.bestBidID];
 
         if (a.lotToken == dao.addresses("stableCoin")){
             require(IERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount), "lotToken transfer failed for some reason");
             require(IERC20(address(a.paymentToken)).transfer(dao.addresses("cdp"), bestBid.bidAmount), "paymentToken transfer failed for some reason");
             ruleBuyOut = false;
-            emit buyOutFinished(auctionID, a.lotAmount, bestBid.bidAmount);
         }
         if (a.lotToken == dao.addresses("rule")){
             require(cdp.mintRule(bestBid.owner, bestBid.bidAmount), "could not mint rule");
@@ -220,13 +211,13 @@ contract Auction is ReentrancyGuard{
         if (a.lotToken == dao.addresses("weth")){
             require(IERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount));
             require(IERC20(address(a.paymentToken)).transfer(dao.addresses("cdp"), bestBid.bidAmount));
-            emit buyOutFinished(auctionID, a.lotAmount, bestBid.bidAmount);
         }
         a.finalized = true;
+        emit auctionFinished(auctionID, a.lotAmount, a.bestBidID);
     }
 
-    function isFinalized(uint32 auctionId) external view returns (bool finalized){
-        return auctions[auctionId].finalized;
+    function isFinalized(uint32 auctionID) external view returns (bool finalized){
+        return auctions[auctionID].finalized;
     }
 
     function getPaymentAmount(uint32 auctionID) external view returns (uint256){
@@ -234,6 +225,6 @@ contract Auction is ReentrancyGuard{
     }
 
     function getBestBidAmount(uint32 auctionID) external view returns (uint256){
-        return bids[auctions[auctionID].bestBidId].bidAmount;
+        return bids[auctions[auctionID].bestBidID].bidAmount;
     }
 }

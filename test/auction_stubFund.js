@@ -49,11 +49,12 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         let auctionTx = await auction.initCoinsBuyOutForStabilization(paymentAmount);
 
-        truffleAssert.eventEmitted(auctionTx, 'buyOutInit', async (ev) => {
+        truffleAssert.eventEmitted(auctionTx, 'newAuction', async (ev) => {
             assert.equal(ev.auctionID, 1, "Should be the first auction");
             auctionId = ev.auctionID;
             assert.equal(parseFloat(ev.lotAmount/10**18).toFixed(0), 0, "Should be zero amount");
             assert.equal(ev.lotAddress, rule.address, "Should be correct address");
+            assert.equal(parseFloat(ev.paymentAmount/10**18).toFixed(5), parseFloat(paymentAmount/10**18).toFixed(5), "Should be correct paymentAmount");
         });
 
         let a = await auction.auctions(auctionId);
@@ -90,7 +91,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(parseFloat(ev.auctionID), auctionId, "Should be the first auction");
-            bidIdToImprove = parseFloat(ev.bidId);
+            bidIdToImprove = parseFloat(ev.bidID);
             assert.equal(parseFloat(ev.bidAmount/10**18).toFixed(0), 1000, "Should be correct amount");
         });
 
@@ -114,7 +115,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(parseFloat(ev.auctionID), auctionId, "Should be the first auction");
-            bidIdToCancel = parseFloat(ev.bidId);
+            bidIdToCancel = parseFloat(ev.bidID);
             assert.equal(parseFloat(ev.bidAmount/10**18).toFixed(0), 950, "Should be correct amount");
         });
 
@@ -131,7 +132,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
 
         truffleAssert.eventEmitted(bidTx, 'newBid', async (ev) => {
             assert.equal(parseFloat(ev.auctionID), auctionId, "Should be correct auction");
-            assert.equal(parseFloat(ev.bidId), bidIdToImprove, "Should be correct auction");
+            assert.equal(parseFloat(ev.bidID), bidIdToImprove, "Should be correct bidIdToImprove");
             assert.equal(parseFloat(ev.bidAmount/10**18).toFixed(1), 902.5, "Should be correct amount");
         });
 

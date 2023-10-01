@@ -10,8 +10,8 @@ interface IERC20MintableAndBurnable is IERC20{
 }
 
 interface IAuction{
-    function initCoinsBuyOut(uint32 posID, uint128 collateral) external returns (uint32 auctionID);
-    function isFinalized(uint32 auctionId) external view returns (bool finalized);
+    function initCoinsBuyOut(uint128 collateral) external returns (uint32 auctionID);
+    function isFinalized(uint32 auctionID) external view returns (bool finalized);
     function claimToFinalizeAuction(uint32 auctionID) external returns (bool success);
     function getPaymentAmount(uint32 auctionID) external view returns (uint256);
     function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) external returns (uint256 auctionID);
@@ -49,6 +49,7 @@ contract CDP is ReentrancyGuard{
     event PositionOpened (address owner, uint256 posID);
     event PositionUpdated (uint32 posID, uint256 newStableCoinsAmount, uint256 wethLocked);
     event liquidationStatusChanged (uint32 posID, uint24 liquidationStatus);
+    event liquidateCollateral(uint32 auctionID, uint32 posID, uint256 collateral);
 
     constructor(address INTDAOaddress){
         dao = IDAO(INTDAOaddress);
@@ -158,18 +159,13 @@ contract CDP is ReentrancyGuard{
 
     function claimMarginCall(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
-        require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp > dao.params("marginCallTimeLimit"), "Position is not marked on liquidation or owner still has time");
+        require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp >= dao.params("marginCallTimeLimit"), "Position is not marked on liquidation or owner still has time");
         require(p.liquidationStatus == 1, "Wrong liquidation status");
         require(getMaxStableCoinsToMintForPos(posID) < p.coinsMinted, "Collateral is enough, should erase mark");
         changeStatus(posID, 2);
-        uint256 currentAllowance = weth.allowance(dao.addresses("cdp"), dao.addresses("auction"));
-        require(weth.approve(dao.addresses("auction"), currentAllowance+p.wethAmountLocked), "could not approve weth for some reason");
-    }
-
-    function startCoinsBuyOut(uint32 posID) nonReentrant external{
-        Position storage p = positions[posID];
-        require (p.liquidationStatus == 2 && p.liquidationAuctionID == 0, "Position is not on liquidation or auction was already started");
-        p.liquidationAuctionID = auction.initCoinsBuyOut(posID, p.wethAmountLocked);
+        require(weth.transfer(dao.addresses("auction"), p.wethAmountLocked), "could not transfer weth for some reason");
+        p.liquidationAuctionID = auction.initCoinsBuyOut(p.wethAmountLocked);
+        emit liquidateCollateral(p.liquidationAuctionID, posID, p.wethAmountLocked);
         p.wethAmountLocked = 0;
     }
 
@@ -198,8 +194,8 @@ contract CDP is ReentrancyGuard{
             else {
                 uint256 toBurn = coin.balanceOf(address(this));
                 coin.burn(address(this), toBurn);
+                auction.initCoinsBuyOutForStabilization(p.coinsMinted - toBurn); //TODO: after auction somthing passed here
                 p.coinsMinted -= uint128(toBurn);
-                auction.initCoinsBuyOutForStabilization(p.coinsMinted - paymentAmount); //TODO: after auction somthing passed here
             }
         }
     }

@@ -68,10 +68,11 @@ contract('Auction', (accounts) => {
         await cdp.allowSurplusToAuction();
         let initTx = await auction.initRuleBuyOut({from:bidder});
 
-        truffleAssert.eventEmitted(initTx, 'buyOutInit', async (ev) => {
+        truffleAssert.eventEmitted(initTx, 'newAuction', async (ev) => {
             assert.equal(ev.auctionID, 1, "Should be the first auction");
             assert.equal(parseFloat(ev.lotAmount/10**18).toFixed(0), 84, "Should be correct amount");
             assert.equal(ev.lotAddress, stableCoin.address, "Should be correct address");
+            assert.equal(ev.paymentAmount, 0, "Should be correct address");
         });
 
         assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(0), 84, "ballance of auction should increase");
@@ -81,7 +82,7 @@ contract('Auction', (accounts) => {
         await truffleAssert.fails(
             auction.makeBid(100, 100),
             truffleAssert.ErrorType.REVERT,
-            "auctionId is wrong or it is already finished");
+            "auctionID is wrong or it is already finished");
     });
 
     it("should not allow to make a little bid", async () => {
@@ -135,7 +136,7 @@ contract('Auction', (accounts) => {
 
 
         truffleAssert.eventEmitted(bidTx, 'bidCanceled', async (ev) => {
-            assert.equal(ev.bidId, 1, "bid should be canceled");
+            assert.equal(ev.bidID, 1, "bid should be canceled");
         });
         let balanceAfter = web3.utils.fromWei(await rule.balanceOf(bidder));
         assert.equal(parseFloat(balanceAfter), 10000, "Wrong balance after");
@@ -169,16 +170,16 @@ contract('Auction', (accounts) => {
         let cdpRuleBalanceBefore = await rule.balanceOf(cdp.address);
         assert.equal (cdpRuleBalanceBefore, 0, "balance should be 0");
         let a = await auction.auctions(auctionToFinish);
-        let b = await auction.bids(a.bestBidId);
+        let b = await auction.bids(a.bestBidID);
         let bidderStableCoinBalanceBefore = await stableCoin.balanceOf(b.owner);
         assert.equal (bidderStableCoinBalanceBefore, 0, "balance should be 0");
 
         let auFinishTx = await auction.claimToFinalizeAuction(auctionToFinish);
 
-        await truffleAssert.eventEmitted(auFinishTx, 'buyOutFinished', async (ev) => {
+        await truffleAssert.eventEmitted(auFinishTx, 'auctionFinished', async (ev) => {
             assert.equal(ev.auctionID, auctionToFinish, "id should be correct");
             assert.equal(parseFloat(ev.lotAmount/10**18).toFixed(0), 84, "stableCoinAmount should be correct");
-            expect(ev.bestBid).to.eql(b.bidAmount, "rulePassedToCDP should be correct");
+            expect(ev.bestBidID).to.eql(a.bestBidID, "bid id should be correct");
         });
 
         let cdpRuleBalanceAfter = await rule.balanceOf(cdp.address);
