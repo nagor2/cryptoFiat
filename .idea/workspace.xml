@@ -12,12 +12,8 @@
   <component name="ChangeListManager">
     <list default="true" id="af10c3f5-430f-4e6f-a9ec-5a5c7645908f" name="Changes" comment="Not working code. Check later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Auction.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Auction.sol" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/CDP.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/CDP.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/auction_stubFund.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_stubFund.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/auction_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/auction_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpFee_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpFee_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cdpMarginCall_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpMarginCall_test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cart_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cart_test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cdpSeveralAuctionsToClose.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/cdpSeveralAuctionsToClose.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,11 +76,10 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "last_opened_file_path": "D:/YandexDisk/Работа/ICO/oracle"
-  }
-}]]></component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="B:\YandexDisk\Работа\ICO\CryptoFiat\repo" />
@@ -111,7 +106,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -311,6 +306,7 @@
       <workItem from="1695699756404" duration="13817000" />
       <workItem from="1695719481458" duration="2678000" />
       <workItem from="1695869647941" duration="26007000" />
+      <workItem from="1696314621175" duration="4732000" />
     </task>
     <task id="LOCAL-00001" summary="1st test commit">
       <created>1641184818680</created>
@@ -415,6 +411,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -428,6 +425,12 @@
     <MESSAGE value="Some problems with open CDP" />
     <MESSAGE value="Not working code. Check later" />
     <option name="LAST_COMMIT_MESSAGE" value="Not working code. Check later" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1696314634380">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1696314634380" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -186,16 +186,16 @@ contract CDP is ReentrancyGuard{
             return;
         }
         else {
-            if (coin.balanceOf(address(this)) >= p.coinsMinted){
+            uint256 balance = coin.balanceOf(address(this));
+            if (balance >= p.coinsMinted){
                 coin.burn(address(this), p.coinsMinted);
                 changeStatus(posID, 3);
                 return;
             }
             else {
-                uint256 toBurn = coin.balanceOf(address(this));
-                coin.burn(address(this), toBurn);
-                auction.initCoinsBuyOutForStabilization(p.coinsMinted - toBurn); //TODO: after auction somthing passed here
-                p.coinsMinted -= uint128(toBurn);
+                coin.burn(address(this), balance);
+                p.coinsMinted -= uint128(balance);
+                auction.initCoinsBuyOutForStabilization(p.coinsMinted);
             }
         }
     }

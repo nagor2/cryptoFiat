@@ -81,10 +81,10 @@ contract('CDP several auctions to close position', (accounts) => {
     it("should bid and finish auction", async () => {
         await oracle.updateSinglePrice(1, 3100000000, {from: accounts[5]});
         await cdp.openCDP(web3.utils.toWei('2000'), {from:bidder, value: web3.utils.toWei('1')})
-        await stableCoin.transfer(await dao.addresses('cdp'), web3.utils.toWei('100'), {from:bidder});
+        await stableCoin.transfer(await dao.addresses('cdp'), web3.utils.toWei('10'), {from:bidder});
 
-        await stableCoin.approve(await dao.addresses('auction'), web3.utils.toWei('500'), {from:bidder});
-        await auction.makeBid(1,web3.utils.toWei('500'), {from:bidder});
+        await stableCoin.approve(await dao.addresses('auction'), web3.utils.toWei('980'), {from:bidder});
+        await auction.makeBid(1,web3.utils.toWei('980'), {from:bidder});
         await time.increase(await dao.params("auctionTurnDuration"));
 
         await truffleAssert.fails(
@@ -94,7 +94,7 @@ contract('CDP several auctions to close position', (accounts) => {
 
         let tx = await cdp.finishMarginCall(0);
 
-        await expectEvent.inTransaction(tx.tx, auction, 'newAuction', { auctionID:web3.utils.toBN(2), lotAmount:web3.utils.toBN(0), lotAddress:await dao.addresses('rule'), paymentAmount:web3.utils.toBN(web3.utils.toWei('400'))});
+        await expectEvent.inTransaction(tx.tx, auction, 'newAuction', { auctionID:web3.utils.toBN(2), lotAmount:web3.utils.toBN(0), lotAddress:await dao.addresses('rule'), paymentAmount:web3.utils.toBN(web3.utils.toWei('10'))});
 
     });
 
