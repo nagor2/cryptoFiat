@@ -67,7 +67,7 @@ contract DepositContract is ReentrancyGuard{
         require (!d.closed, "deposit is closed, open a new one, please");
         uint256 amount = coin.allowance(msg.sender, address(this));
         require (amount>0, "You should approve first");
-        coin.transferFrom(msg.sender, address(this), amount);
+        require (coin.transferFrom(msg.sender, address(this), amount), "Could not transfer coins for some reason");
         if (block.timestamp>d.period)
             d.currentInterestRate = dao.params("depositRate");
         d.coinsDeposited += amount;

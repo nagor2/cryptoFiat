@@ -44,10 +44,10 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(weth,{from: accounts[0]});
         await deployer.deploy(stableCoin, daofutureAddress,{from: accounts[0]});
         await deployer.deploy(cartContract, daofutureAddress,{from: accounts[0]});
-        await deployer.deploy(auction, daofutureAddress,{from: accounts[0]});
-        await deployer.deploy(cdp, daofutureAddress,{from: accounts[0]});
-        await deployer.deploy(deposit, daofutureAddress,{from: accounts[0]});
-        await deployer.deploy(InflationFund, daofutureAddress,{from: accounts[0]});
+        const auctionContract = await deployer.deploy(auction, daofutureAddress,{from: accounts[0]});
+        const cdpContract = await deployer.deploy(cdp, daofutureAddress,{from: accounts[0]});
+        const depositContract = await deployer.deploy(deposit, daofutureAddress,{from: accounts[0]});
+        const inflationContract = await deployer.deploy(InflationFund, daofutureAddress,{from: accounts[0]});
         await deployer.deploy(exchangeRateContract, daofutureAddress, {from: exRAuthour, value:web3.utils.toWei('0.1')});
         await deployer.deploy(rule, daofutureAddress, {from: accounts[7]});
 
@@ -74,6 +74,13 @@ module.exports = async function(deployer, network, accounts) {
 
         await cart.addItem("Gold", 10, 1867650000, {from: exRAuthour});
         await cart.addItem("Lumber", 5, 414100000, {from: exRAuthour});
+
+        await auctionContract.renewContracts();
+        await cdpContract.renewContracts();
+        await depositContract.renewContracts();
+        await inflationContract.renewContracts();
+
+
 
         /*
     weth.address, cdp.address, auction.address, deposit.address, exchangeRateContract.address, InflationFund.address, Rule.address, stableCoin.address, cart.address
