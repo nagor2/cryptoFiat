@@ -20,9 +20,9 @@ contract DepositContract is ReentrancyGuard{
     IDAO immutable dao;
     IERC20 coin;
     ICDP cdp;
-    uint256 public counter;
-    mapping(uint256 => Deposit) public deposits;
-    event DepositOpened(uint256 id, uint256 amount, uint256 rate, address owner);
+    uint32 public counter;
+    mapping(uint32 => Deposit) public deposits;
+    event DepositOpened(uint32 indexed id, uint256 amount, uint256 rate, address indexed owner);
 
     constructor(address _INTDAOaddress){
         dao = IDAO(_INTDAOaddress);
@@ -47,7 +47,7 @@ contract DepositContract is ReentrancyGuard{
         emit DepositOpened(counter, d.coinsDeposited, d.currentInterestRate, d.owner);
     }
 
-    function withdraw(uint256 id, uint256 amount) nonReentrant external{
+    function withdraw(uint32 id, uint256 amount) nonReentrant external{
         updateInterest(id);
         Deposit storage d = deposits[id];
         require(msg.sender == d.owner, "only owner may init withdrawal");
@@ -61,7 +61,7 @@ contract DepositContract is ReentrancyGuard{
             d.currentInterestRate = dao.params("depositRate");
     }
 
-    function topUp(uint256 id) nonReentrant external{
+    function topUp(uint32 id) nonReentrant external{
         updateInterest(id);
         Deposit storage d = deposits[id];
         require (!d.closed, "deposit is closed, open a new one, please");
@@ -73,12 +73,12 @@ contract DepositContract is ReentrancyGuard{
         d.coinsDeposited += amount;
     }
 
-    function overallInterest(uint256 id) public view returns (uint256 interest){
+    function overallInterest(uint32 id) public view returns (uint256 interest){
         Deposit storage d = deposits[id];
         return d.coinsDeposited*(block.timestamp - d.lastTimeUpdated)/1 days*d.currentInterestRate/36500 + d.accumulatedInterest;
     }
 
-    function updateInterest(uint256 id) public returns (uint256 accumulated){
+    function updateInterest(uint32 id) public returns (uint256 accumulated){
         Deposit storage d = deposits[id];
         d.accumulatedInterest = overallInterest(id);
         d.lastTimeUpdated = block.timestamp;
@@ -87,7 +87,7 @@ contract DepositContract is ReentrancyGuard{
         return d.accumulatedInterest;
     }
 
-    function claimInterest(uint256 id) nonReentrant external{
+    function claimInterest(uint32 id) nonReentrant external{
         updateInterest(id);
         cdp.claimInterest(overallInterest(id), deposits[id].owner);
         deposits[id].accumulatedInterest = 0;

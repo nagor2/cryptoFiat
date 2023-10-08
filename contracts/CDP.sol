@@ -46,10 +46,10 @@ contract CDP is ReentrancyGuard{
     IERC20 weth;
 
     mapping(uint32 => Position) public positions;
-    event PositionOpened (address owner, uint256 posID);
-    event PositionUpdated (uint32 posID, uint256 newStableCoinsAmount, uint256 wethLocked);
-    event liquidationStatusChanged (uint32 posID, uint24 liquidationStatus);
-    event liquidateCollateral(uint32 auctionID, uint32 posID, uint256 collateral);
+    event PositionOpened (address indexed owner, uint256 indexed posID);
+    event PositionUpdated (uint32 indexed posID, uint256 newStableCoinsAmount, uint256 wethLocked);
+    event liquidationStatusChanged (uint32 indexed posID, uint24 liquidationStatus);
+    event liquidateCollateral(uint32 indexed auctionID, uint32 indexed posID, uint256 collateral);
 
     constructor(address INTDAOaddress){
         dao = IDAO(INTDAOaddress);

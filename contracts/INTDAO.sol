@@ -5,14 +5,14 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract INTDAO is ReentrancyGuard{
     IERC20 ruleToken;
-    mapping (uint256 => mapping(address => uint256)) votes;
+    mapping (uint32 => mapping(address => uint256)) votes;
 
-    mapping (uint256=>Voting) public votings;
-    uint256 public votingID;
+    mapping (uint32=>Voting) public votings;
+    uint32 public votingID;
 
     struct Voting {
         uint256 totalPositive;
-        uint256 votingType;
+        uint8 votingType;
         string name;
         uint256 value;
         address addr;
@@ -30,9 +30,9 @@ contract INTDAO is ReentrancyGuard{
     mapping (address => uint256) public pooled;
     uint256 public totalPooled;
 
-    event NewVoting (uint256 id, string name);
-    event VotingSucceed (uint256 id);
-    event VotingFailed (uint256 id);
+    event NewVoting (uint32 indexed id, string indexed name);
+    event VotingSucceed (uint32 indexed id);
+    event VotingFailed (uint32 indexed id);
 
     constructor (address[] memory _addresses) {
         params["interestRate"] = 9;
@@ -79,7 +79,7 @@ contract INTDAO is ReentrancyGuard{
         ruleToken = IERC20(addresses["rule"]);
     }
 
-    function addVoting(uint256 votingType, string memory name, uint value, address addr, bool decision) external{
+    function addVoting(uint8 votingType, string memory name, uint value, address addr, bool decision) external{
         require(!activeVoting, "There is an active voting");
         require(votingType>0&&votingType<5, "Incorrect voteing type");
         require(isEnoughTokensPooledToInitVoting(msg.sender), "Too little tokens to init voting");

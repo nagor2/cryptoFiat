@@ -38,10 +38,10 @@ contract Auction is ReentrancyGuard{
     mapping(uint32 => auctionEntity) public auctions;
     mapping (uint32 => Bid) public bids;
 
-    event newAuction(uint32 auctionID, uint256 lotAmount, address lotAddress, uint256 paymentAmount);
-    event auctionFinished(uint32 auctionID, uint256 lotAmount, uint32 bestBidID);
-    event newBid(uint32 auctionID, uint32 bidID, uint256 bidAmount, address owner);
-    event bidCanceled(uint256 bidID);
+    event newAuction(uint32 indexed auctionID, uint256 lotAmount, address lotAddress, uint256 paymentAmount);
+    event auctionFinished(uint32 indexed auctionID, uint256 lotAmount, uint32 bestBidID);
+    event newBid(uint32 indexed auctionID, uint32 indexed bidID, uint256 bidAmount, address owner);
+    event bidCanceled(uint256 indexed bidID);
 
     constructor(address _INTDAOaddress){
         dao = IDAO(_INTDAOaddress);
