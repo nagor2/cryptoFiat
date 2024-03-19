@@ -8,6 +8,7 @@
     "web3": "^4.0.3"
   },
   "devDependencies": {
-    "@openzeppelin/test-helpers": "^0.5.15"
+    "@openzeppelin/test-helpers": "^0.5.15",
+    "truffle-plugin-verify": "^0.6.7"
   }
 }

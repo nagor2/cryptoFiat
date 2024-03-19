@@ -44,7 +44,15 @@ module.exports = {
       host: "127.0.0.1",
       port: 7545,
       network_id: "*"
-    }
+    },
+
+    etc:{
+      network_id: 61,
+      verify: {
+        apiUrl: 'https://etc.blockscout.com/api',
+        explorerUrl: 'https://etc.blockscout.com/address',
+      },
+    },
 
 
     // Useful for testing. The `development` name is special - truffle uses it by default
@@ -125,6 +133,7 @@ module.exports = {
     //   }
     // }
   // }
+  plugins: ['truffle-plugin-verify'],
 };
 
 const path = require("path");
