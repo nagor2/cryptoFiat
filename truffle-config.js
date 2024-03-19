@@ -37,7 +37,7 @@ module.exports = {
     port: 24012,
     gasPrice: 100000000
   },
-
+  plugins: ["truffle-plugin-verify"],
   networks: {
 
     development: {

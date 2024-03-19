@@ -17,30 +17,51 @@ module.exports = async function(deployer, network, accounts) {
     const web3 = adapter.web3;
     const transactionCount0 = await web3.eth.getTransactionCount(accounts[0]);
 
-    const daofutureAddress = getContractAddress({
-        from: accounts[0],
-        nonce: transactionCount0 +7
-    })
-
-     console.log("futureAddress INTDAO: "+daofutureAddress);
-
     if (network == "dashboard") {
         //await deployer.deploy(weth);
         //await deployer.deploy(INTDAO, '0x82A618305706B14e7bcf2592D4B9324A366b6dAd'); //weth.address
-        let daoAddress = '0xd1c5A469191E45a4D06D725681F2B73a402737b4';
+        //let daoAddress = '0xd1c5A469191E45a4D06D725681F2B73a402737b4';
         //await deployer.deploy(exchangeRateContract, daoAddress);
         //await deployer.deploy(cartContract, daoAddress);
         //await deployer.deploy(stableCoin, daoAddress);
         //await deployer.deploy(Rule, daoAddress);
         //await deployer.deploy(auction, daoAddress);
-        await deployer.deploy(cdp, daoAddress);
+        //await deployer.deploy(cdp, daoAddress);
         //await deployer.deploy(deposit, daoAddress);
         //await deployer.deploy(InflationFund, daoAddress);
         //await deployer.deploy(Platform, daoAddress);
+
+        const daofutureAddress = getContractAddress({
+            from: accounts[0],
+            nonce: transactionCount0 + 8
+        })
+        console.log("futureAddress INTDAO: "+daofutureAddress);
+        //await deployer.deploy(weth);
+        await deployer.deploy(stableCoin, daofutureAddress);
+        await deployer.deploy(cartContract, daofutureAddress);
+        const auctionContract = await deployer.deploy(auction, daofutureAddress);
+        const cdpContract = await deployer.deploy(cdp, daofutureAddress);
+        const depositContract = await deployer.deploy(deposit, daofutureAddress);
+        const inflationContract = await deployer.deploy(InflationFund, daofutureAddress);
+        await deployer.deploy(exchangeRateContract, daofutureAddress);
+        await deployer.deploy(rule, daofutureAddress);
+        const cart = await cartContract.deployed();
+
+        await deployer.deploy(INTDAO, ['0x82A618305706B14e7bcf2592D4B9324A366b6dAd', cdp.address, auction.address, deposit.address, exchangeRateContract.address, InflationFund.address, rule.address, stableCoin.address, cart.address],{from: accounts[0]});
+        await cart.renewContracts();
+        await auctionContract.renewContracts();
+        await cdpContract.renewContracts();
+        await depositContract.renewContracts();
+        await inflationContract.renewContracts();
     }
     else if (network == "development"){
-        const exRAuthour = accounts[5];
 
+        const daofutureAddress = getContractAddress({
+            from: accounts[0],
+            nonce: transactionCount0 + 7
+        })
+
+        const exRAuthour = accounts[5];
         await deployer.deploy(weth,{from: accounts[0]});
         await deployer.deploy(stableCoin, daofutureAddress,{from: accounts[0]});
         await deployer.deploy(cartContract, daofutureAddress,{from: accounts[0]});
