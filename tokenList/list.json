@@ -11,7 +11,18 @@
       "symbol": "TSC",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/nagor2/cryptoFiat/Oracle/tokenList/logo.png"
+    },
+
+    {
+      "chainId": 61,
+      "address": "0xBd349Bc6c3B3b2005d2Ba5D9D5b01C9DE0354D67",
+      "name": "Rule token",
+      "symbol": "RLE",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/nagor2/cryptoFiat/Oracle/tokenList/rule-logo.png"
     }
+
+
   ],
   "version": {
     "major": 3,
