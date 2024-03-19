@@ -1,7 +1,7 @@
 {
-  "name": "EtcswapV2",
+  "name": "TSC ecosystem list",
   "logoURI": "https://raw.githubusercontent.com/etcswap/token-list/main/etc-swap-list-logo.png",
-  "keywords": ["ethereum classic2", "etc2", "etc swap2"],
+  "keywords": ["ethereum classic2", "TSC", "Rule"],
   "timestamp": "2024-01-13T00:00:00.000+00:00",
   "tokens": [
     {
