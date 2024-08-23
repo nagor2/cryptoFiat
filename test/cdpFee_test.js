@@ -21,7 +21,7 @@ before('should setup the contracts instance', async () => {
     cdp = await CDP.deployed(futureDaoAddress);
     auction = await Auction.deployed(futureDaoAddress);
 
-    dao = await INTDAO.deployed([0x0, cdp.address, auction.address, 0x0, 0x0, 0x0, rule.address, stableCoin.address, 0x0]);
+    dao = await INTDAO.deployed([0x0, cdp.address, auction.address, 0x0, 0x0, rule.address, stableCoin.address, 0x0]);
 
     await cdp.renewContracts();
     await auction.renewContracts();

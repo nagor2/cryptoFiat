@@ -1,0 +1,6 @@
+
+Balancer
+================
+
+There is a dotflat/eth liquidity pool, so as a price of ether changes, there is always a way to earn on a price change. If a price of ether goes up,
+it becomes profitable to borrow dotflat and provide a pool with it until the price comes back to indicative and you can easily buy them back and return the debt.

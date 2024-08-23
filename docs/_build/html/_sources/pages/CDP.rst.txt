@@ -1,0 +1,9 @@
+.. autosummary::
+   :toctree: _autosummary
+
+CDP
+=================
+
+.. autosolcontract:: CDP
+    :members:
+    :exclude-members: changeStatus

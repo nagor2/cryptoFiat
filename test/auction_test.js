@@ -32,7 +32,7 @@ contract('Auction', (accounts) => {
         rule = await Rule.deployed(futureDaoAddress, {from:ruleHolder});
         auction = await Auction.deployed(futureDaoAddress, {from: accounts[0]});
         cdp = await CDP.deployed(futureDaoAddress, {from: accounts[0]});
-        dao = await INTDAO.deployed([0x0, cdp.address, auction.address,0x0,0x0, 0x0, rule.address, stableCoin.address,0x0], {from: accounts[0]});
+        dao = await INTDAO.deployed([0x0, cdp.address, auction.address,0x0,0x0, rule.address, stableCoin.address,0x0], {from: accounts[0]});
 
         await cdp.renewContracts();
         await auction.renewContracts();

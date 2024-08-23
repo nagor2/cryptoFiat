@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; dotflat  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Dotflat documentation" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            dotflat
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#about">About</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dotflat">Dotflat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interest-dao">Interest DAO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#faq">FAQ</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-is-it-collateralized">How is it collateralized?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-is-it-stable">Why is it stable?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-an-indicative-price">What is an indicative price?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-the-stabilization-fund-and-how-it-is-refilled">What is the stabilization fund and how it is refilled?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#were-does-annual-interest-on-deposit-come-from">Were does annual interest on deposit come from?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-if-stabilization-fund-is-empty">What if stabilization fund is empty?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">What if stabilization fund is empty?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#minting-dotflat-coins">Minting dotflat coins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#buy-dotflat">Buy dotflat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#depositing-dotflat">Depositing dotflat</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contracts.html">Contracts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#dotflat">Dotflat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#cdp">CDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#auction">Auction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#deposit">Deposit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#dao">DAO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#basket">Basket</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#exchangerate">exchangeRate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#rule">Rule</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellframe.html">Cellframe integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oracles.html">Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="balancer.html">Balancer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="positions-checker.html">Positions checker bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="positions-checker-users.html">Positions checker bot for users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auctions-bot.html">Auctions bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voting-bot.html">Voting bot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="seealso.html">See also</a></li>
+<li class="toctree-l1"><a class="reference external" href="        &lt;!--LiveInternet counter--&gt;&lt;a href=&quot;https://www.liveinternet.ru/click&quot;">        &lt;!--LiveInternet counter--&gt;&lt;a href=&quot;https://www.liveinternet.ru/click&quot;</a></li>
+<li class="toctree-l1"><a class="reference external" href="        &quot;https://counter.yadro.ru/hit?t52.6;r&quot;+escape(d.referrer)+">        &quot;https://counter.yadro.ru/hit?t52.6;r&quot;+escape(d.referrer)+</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">dotflat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pages/introduction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p>“Only when the last tree has died and the last river been poisoned and the last fish been caught will we realise we cannot eat money” — Cree Indian Proverb.</p>
+<section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
+<section id="about">
+<h2>About<a class="headerlink" href="#about" title="Link to this heading"></a></h2>
+<p>As the blockchain any cryptocurrencies emerged, appeared an opportunity to posses assets and transfer them securely and with no authority.
+But cryptocurrencies themselves are volatile, so people invented stablecoins - coins, which are somehow pegged to fiat currencies exchange rates.
+Some of them are backed, but even in this case, it is hard to check the collateral, because it is kept outside the blockchain.
+And even if you can check the fact of collateral existence, it is hard to guarantee that it will be used for its purposes if something goes wrong.</p>
+<p>For that reason the dotflat was created - the collateral is always kept on the blockchain and can be obtained as the terms are completed.</p>
+<p>Another reason to create new stablecoin is to avoid connection with fiat currencies. The evident reason is inflation which can not be controlled.
+For that purpose we decided to create a stablecoin, pegged to some basket of goods and commodities to make them stable against inflation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This introduction text</p>
+</div>
+</section>
+<section id="dotflat">
+<h2>Dotflat<a class="headerlink" href="#dotflat" title="Link to this heading"></a></h2>
+<p>Dotflat is a collateralized stablecoin with permanent purchasing power and credit type of emission.
+Collateralized means that each dotflat is emitted only if sufficient collateral in ether is provided.
+Collateral is stored on the smart contract, so you can always check it by yourself on etherscan or any other blockchain explorer.</p>
+<p>What do we mean by permanent purchasing power? As we all know, fiat currencies suffer inflation. Than means, that you can buy less eggs, coffee, meat or whatever
+with 10 dollars today, than 10 years before. So, stablecoins like USDT are stable only if you compare it with US dollar. We decided to make dotflat coin stable
+against the basket of commoditis, which include such goods as rice, orange juice, coffee, pork, copper, gold and so on.</p>
+<p>The change of the quotes on the exchanges are an online indicator for the system. Holding dotflat means, that in future you will be able to buy in average the same amount of those commodities.</p>
+</section>
+<section id="interest-dao">
+<h2>Interest DAO<a class="headerlink" href="#interest-dao" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Decentralized_autonomous_organization">DAO</a> stands for decentralized autonomous organization with no
+central authority. It is in whole is managed and regulated by its interconnected smart contracts.
+The smart contract is a program, executed on a blockchain, as if articles of association are written in code and executed automatically.
+All the code is permanent and can not be changed by anybody. Only the parameters of the system may by changed from their initial values
+by the voting among governance token holders. The governance tokens of Interest DAO are called Rule tokens.
+Anybody is free to obtain Rules on the Auction or elsewhere, so the DAO becomes decentralized and regulated by the community.</p>
+<p>More detailed terms of DAO are described in contract section.</p>
+</section>
+<section id="faq">
+<h2>FAQ<a class="headerlink" href="#faq" title="Link to this heading"></a></h2>
+<section id="how-is-it-collateralized">
+<h3>How is it collateralized?<a class="headerlink" href="#how-is-it-collateralized" title="Link to this heading"></a></h3>
+<p>Dotflat is a collateralized with excessive amount of native cryptocurrency - the ether. Each piece of ether is held on the contract with a discount.
+For example, if 100 dotflat coins were minted, it means that the balance of CDP contract should not be less then ether, sufficient to buy 142.85 dotflat.</p>
+</section>
+<section id="why-is-it-stable">
+<h3>Why is it stable?<a class="headerlink" href="#why-is-it-stable" title="Link to this heading"></a></h3>
+<p>Dotflat is pegged to basket price in the code. If the basket price raise, holder of debt position should increase collateral or decrease emission.</p>
+</section>
+<section id="what-is-an-indicative-price">
+<h3>What is an indicative price?<a class="headerlink" href="#what-is-an-indicative-price" title="Link to this heading"></a></h3>
+<p>Indicative price is the price on which smart-contract are oriented. It is calculated as 1 US dollar * (price change of the basket since deploy).
+Market prices of dotflat may vary, but they tend to be equal to indicative.</p>
+</section>
+<section id="what-is-the-stabilization-fund-and-how-it-is-refilled">
+<h3>What is the stabilization fund and how it is refilled?<a class="headerlink" href="#what-is-the-stabilization-fund-and-how-it-is-refilled" title="Link to this heading"></a></h3>
+<p>Coming soon</p>
+</section>
+<section id="were-does-annual-interest-on-deposit-come-from">
+<h3>Were does annual interest on deposit come from?<a class="headerlink" href="#were-does-annual-interest-on-deposit-come-from" title="Link to this heading"></a></h3>
+<p>Coming soon</p>
+</section>
+<section id="what-if-stabilization-fund-is-empty">
+<h3>What if stabilization fund is empty?<a class="headerlink" href="#what-if-stabilization-fund-is-empty" title="Link to this heading"></a></h3>
+<p>Coming soon</p>
+</section>
+<section id="id1">
+<h3>What if stabilization fund is empty?<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Coming soon</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Dotflat documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dmitry Nagornykh.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

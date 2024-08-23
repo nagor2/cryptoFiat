@@ -22,7 +22,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         auction = await Auction.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
         rule = await Rule.deployed(futureDaoAddress);
-        dao = await INTDAO.deployed([0x0, cdp.address, auction.address,0x0,0x0, 0x0, rule.address, stableCoin.address,0x0]);
+        dao = await INTDAO.deployed([0x0, cdp.address, auction.address,0x0,0x0, rule.address, stableCoin.address,0x0]);
 
         await auction.renewContracts();
         await cdp.renewContracts();

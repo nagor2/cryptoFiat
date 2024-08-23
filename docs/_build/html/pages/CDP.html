@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CDP &mdash; dotflat  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Contracts" href="contracts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            dotflat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CDP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contracts.html">Contracts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contracts.html#auction">Auction</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">dotflat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="contracts.html">Contracts</a></li>
+      <li class="breadcrumb-item active">CDP</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pages/CDP.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <table class="autosummary longtable docutils align-default">
+<tbody>
+</tbody>
+</table>
+<section id="cdp">
+<h1>CDP<a class="headerlink" href="#cdp" title="Permalink to this heading"></a></h1>
+<dl class="sol contract">
+<dt class="sig sig-object sol" id="CDP">
+<em><span class="pre">contract</span> </em><span class="sig-name descname"><span class="pre">CDP</span></span> <span class="pre">is</span> <span class="pre">ReentrancyGuard</span><a class="headerlink" href="#CDP" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Title<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Collateral debt position contract</p>
+</dd>
+<dt class="field-even">Author<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nagornykh Dmitry</p>
+</dd>
+</dl>
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.numPositions">
+<span class="pre">uint32</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">numPositions</span></span><a class="headerlink" href="#CDP.numPositions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.dao">
+<span class="pre">IDAO</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">dao</span></span><a class="headerlink" href="#CDP.dao" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.oracleCart">
+<span class="pre">ICart</span> <span class="sig-name descname"><span class="pre">oracleCart</span></span><a class="headerlink" href="#CDP.oracleCart" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.coin">
+<span class="pre">IERC20MintableAndBurnable</span> <span class="sig-name descname"><span class="pre">coin</span></span><a class="headerlink" href="#CDP.coin" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.auction">
+<span class="pre">IAuction</span> <span class="sig-name descname"><span class="pre">auction</span></span><a class="headerlink" href="#CDP.auction" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.rule">
+<span class="pre">IERC20MintableAndBurnable</span> <span class="sig-name descname"><span class="pre">rule</span></span><a class="headerlink" href="#CDP.rule" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.weth">
+<span class="pre">IERC20</span> <span class="sig-name descname"><span class="pre">weth</span></span><a class="headerlink" href="#CDP.weth" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.positions">
+<span class="pre">mapping</span> <span class="pre">(uint32</span> <span class="pre">=&gt;</span> <span class="pre">Position)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">positions</span></span><a class="headerlink" href="#CDP.positions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol event">
+<dt class="sig sig-object sol" id="CDP.PositionOpened(address,uint256)">
+<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">PositionOpened</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">indexed</span> <span class="pre">owner</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">indexed</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.PositionOpened(address,uint256)" title="Permalink to this definition"></a><br /><a class="headerlink" href="#CDP.PositionOpened(address,uint256)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol event">
+<dt class="sig sig-object sol" id="CDP.PositionUpdated(uint32,uint256,uint256)">
+<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">PositionUpdated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">newStableCoinsAmount</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">wethLocked</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Permalink to this definition"></a><br /><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol event">
+<dt class="sig sig-object sol" id="CDP.liquidationStatusChanged(uint32,uint24)">
+<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">liquidationStatusChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint24</span> <span class="pre">liquidationStatus</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.liquidationStatusChanged(uint32,uint24)" title="Permalink to this definition"></a><br /><a class="headerlink" href="#CDP.liquidationStatusChanged(uint32,uint24)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol event">
+<dt class="sig sig-object sol" id="CDP.liquidateCollateral(uint32,uint32,uint256)">
+<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">liquidateCollateral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">auctionID</span></em>, <em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">collateral</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.liquidateCollateral(uint32,uint32,uint256)" title="Permalink to this definition"></a><br /><a class="headerlink" href="#CDP.liquidateCollateral(uint32,uint32,uint256)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol constructor">
+<dt class="sig sig-object sol" id="CDP.constructor">
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.constructor" title="Permalink to this definition"></a><br /><a class="headerlink" href="#CDP.constructor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.renewContracts()">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">renewContracts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CDP.renewContracts()" title="Permalink to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.renewContracts()" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.openCDP(uint256)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">openCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">stableCoinsToMint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.openCDP(uint256)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.openCDP(uint256)" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stableCoinsToMint</strong> – The number os stable coins to mint</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.interestAmountUnrecorded(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">interestAmountUnrecorded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.interestAmountUnrecorded(uint32)" title="Permalink to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">interestAmount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.interestAmountUnrecorded(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.totalCurrentFee(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">totalCurrentFee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.totalCurrentFee(uint32)" title="Permalink to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">fee</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.totalCurrentFee(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.getMaxStableCoinsToMint(uint256)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getMaxStableCoinsToMint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">ethValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.getMaxStableCoinsToMint(uint256)" title="Permalink to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.getMaxStableCoinsToMint(uint256)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.getMaxStableCoinsToMintForPos(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getMaxStableCoinsToMintForPos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.getMaxStableCoinsToMintForPos(uint32)" title="Permalink to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">maxAmount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.getMaxStableCoinsToMintForPos(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.claimInterest(uint256,address)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">beneficiary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimInterest(uint256,address)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.claimInterest(uint256,address)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.claimEmission(uint256,address)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimEmission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">beneficiary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimEmission(uint256,address)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.claimEmission(uint256,address)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.closeCDP(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">closeCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.closeCDP(uint32)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.closeCDP(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.transferInterest(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">transferInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.transferInterest(uint32)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.transferInterest(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.switchRestrictInterestWithdrawal(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">switchRestrictInterestWithdrawal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.switchRestrictInterestWithdrawal(uint32)" title="Permalink to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.switchRestrictInterestWithdrawal(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.allowSurplusToAuction()">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">allowSurplusToAuction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CDP.allowSurplusToAuction()" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.allowSurplusToAuction()" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.claimMarginCall(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimMarginCall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimMarginCall(uint32)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.claimMarginCall(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.finishMarginCall(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">finishMarginCall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.finishMarginCall(uint32)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.finishMarginCall(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.markToLiquidate(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">markToLiquidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.markToLiquidate(uint32)" title="Permalink to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.markToLiquidate(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.eraseMarkToLiquidate(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">eraseMarkToLiquidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.eraseMarkToLiquidate(uint32)" title="Permalink to this definition"></a><br /> <em><span class="pre">public</span></em><br /><a class="headerlink" href="#CDP.eraseMarkToLiquidate(uint32)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.updateCDP(uint32,uint)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">updateCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint</span> <span class="pre">newStableCoinsAmount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.updateCDP(uint32,uint)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.updateCDP(uint32,uint)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.withdrawEther(uint32,uint128)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">withdrawEther</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint128</span> <span class="pre">etherToWithdraw</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.withdrawEther(uint32,uint128)" title="Permalink to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.withdrawEther(uint32,uint128)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.burnRule()">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">burnRule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CDP.burnRule()" title="Permalink to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.burnRule()" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="CDP.mintRule(address,uint256)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mintRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.mintRule(address,uint256)" title="Permalink to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.mintRule(address,uint256)" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="contracts.html" class="btn btn-neutral float-left" title="Contracts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dmitry Nagornykh.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

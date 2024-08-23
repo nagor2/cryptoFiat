@@ -1,0 +1,6 @@
+
+Positions checker bot for users
+======================================
+
+To keep your debt position safe from margin-call, user who borrows money should always check the sufficiency of collateral.
+To avoid hand-check, you can use a bot for checking your positions and message you or provide collateral from your account.

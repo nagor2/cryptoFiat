@@ -24,7 +24,7 @@ contract('CDP withdraw and close position', (accounts) => {
         cdp = await CDP.deployed(futureDaoAddress);
         coin = await StableCoin.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, oracle.address, 0x0, 0x0, coin.address, 0x0]);
+        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, oracle.address, 0x0, coin.address, 0x0]);
 
         await cdp.renewContracts();
         

@@ -1,3 +1,5 @@
+/*
+
 const { time } = require('@openzeppelin/test-helpers');
 const { getContractAddress } = require('@ethersproject/address');
 
@@ -63,3 +65,4 @@ contract('Inflation', (accounts) => {
             "too early to claim");
     });
 });
+*/

@@ -30,7 +30,7 @@ contract('CDP Update Increase', (accounts) => {
         stableCoin = await StableCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
 
         await cdp.renewContracts();
 

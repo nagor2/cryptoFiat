@@ -35,7 +35,7 @@ contract('CDP margin call', (accounts) => {
         cdp = await CDP.deployed(futureDaoAddress);
         auction = await Auction.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([weth.address, cdp.address, auction.address, 0x0, oracle.address, 0x0, rule.address, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([weth.address, cdp.address, auction.address, 0x0, oracle.address, rule.address, stableCoin.address, 0x0]);
 
         await cdp.renewContracts();
         await auction.renewContracts();

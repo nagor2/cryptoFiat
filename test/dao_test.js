@@ -18,7 +18,7 @@ contract('DAO', (accounts) => {
         ruleHolder = accounts[7];
         ruleToken = await Rule.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, ruleToken.address, 0x0, 0x0]);
+        dao = await INTDAO.deployed([0x0, 0x0, 0x0, 0x0, 0x0, ruleToken.address, 0x0, 0x0]);
     });
 
     it('deploys successfully', async () => {

@@ -1,0 +1,300 @@
+
+Contracts
+================
+
+In this section you can find the description of each contract of the system with all the external functions and public variables.
+
+It is more developers information for better understanding of how system works in details.
+
+Dotflat
+---------------
+.. note::
+    This is a stablecoin token. It is a simple ERC20 token, which can be minted and burned **ONLY** by CDP contract and those authorized in DAO.
+
+.. autosolcontract:: stableCoin
+    :members:
+
+CDP
+---------------
+
+.. note::
+
+    This contract is one of the most important contracts of the DAO. It mints dotflat coins, holds all the collateral
+    and stabilization fund in dotflat coins and burns dotflat stablecoins when the position is closed.
+
+.. note::
+
+    Borrowing dotflat tokens assumes an annual interest, determined by the DAO contract. For now it is 9% per annum.
+
+.. note::
+
+    Inside the contract each debt position is stored as the following structure.
+
+    .. code-block::
+
+                struct Position {
+                    uint128 coinsMinted;
+                    uint128 wethAmountLocked;
+                    uint128 interestAmountRecorded;
+                    uint32 timeOpened;
+                    uint32 lastTimeUpdated;
+                    uint24 interestRate;
+                    uint32 markedOnLiquidationTimestamp;
+                    uint24 liquidationStatus;
+                    uint32 liquidationAuctionID;
+                    bool restrictInterestWithdrawal;
+                    address owner;
+                }
+
+    | ***coinsMinted*** - number of minted coins for now.
+    | ***wethAmountLocked*** - collateral.
+    | ***interestAmountRecorded*** - the amount of interest to pay till last position update.
+    | ***timeOpened*** - when the position was opened.
+    | ***lastTimeUpdated*** - when it was last updated.
+    | ***interestRate*** - annual percent of the debt.
+    | ***markedOnLiquidationTimestamp*** - when position was marked on liquidation.
+    | ***liquidationStatus*** - 0 - ok, 1- markedOnLiquidation, 2 - onLiquidation, 3 - liquidated, 4 - closed;
+    | ***liquidationAuctionID*** - ID of the auction, which sells collateral.
+    | ***owner*** - address of the position owner.
+    | ***restrictInterestWithdrawal*** - set this flag using ***switchRestrictInterestWithdrawal()*** method if you dont want the system makes you pay interest any time it needs money.
+    By default, the system may ask for your dotflat (only the interest, not the whole debt) anytime it needs it as a payment for the debt, but you may want to pay it in the end, for example.
+
+.. warning::
+    If you use this contract for borrowing dotflat, be aware, that you have to instantly observe sufficiency of your
+    collateral by yourself, as the price of ether changes frequently and significantly. If your collateral
+    becomes insufficient due to ether price decrease or due to commodities prices increase, your ether could be sold
+    at auction. Margin call has a 13% fee for it, set in DAO contract (liquidationFee).
+
+    | The system checks sufficiency of the collateral, and if it is not, it may mark a position on liquidation by setting ***liquidationStatus*** as *markedOnLiquidation* and a *liquidationStatusChanged* event is fired.
+    Since that, an owner has some time (*marginCallTimeLimit* regulated by DAO, for now it is 1 day) to top up collateral or reduce emission of dotflat by returning some of them.
+    If nothing happens and in 1 day collateral is still not sufficient, the system liquidates the collateral through the auction and owner of position can do nothing about it.
+
+.. autosolcontract:: CDP
+    :members:
+    :exclude-members: changeStatus
+
+Auction
+---------------
+.. note::
+    This contract is used for initiating and managing auctions and bids.
+    Inside the contract each auction is stored as the following structure.
+
+    .. code-block::
+
+                struct auctionEntity {
+                        bool initialized;
+                        bool finalized;
+                        address lotToken;
+                        uint lotAmount;
+                        address paymentToken;
+                        uint256 paymentAmount;
+                        uint256 initTime;
+                        uint256 lastTimeUpdated;
+                        uint32 bestBidID;
+                    }
+
+    | ***initialized*** - .
+    | ***finalized*** - .
+    | ***lotToken*** - .
+    | ***lotAmount*** -
+    | ***paymentToken*** -
+    | ***paymentAmount*** -
+    | ***initTime*** -
+    | ***lastTimeUpdated*** -
+    | ***bestBidID*** -
+
+
+    | And the bid stored as follows:
+
+    .. code-block::
+
+                    struct Bid {
+                        address owner;
+                        uint32 auctionID;
+                        uint256 bidAmount;
+                        uint256 time;
+                        bool canceled;
+                    }
+
+    | ***owner*** - address of the owner.
+    | ***auctionID*** - .
+    | ***bidAmount*** - .
+    | ***time*** -
+    | ***canceled*** - .
+
+.. note::
+    There are 3 types of auctions, that may be created:
+    - Selling the collateral of debt position if the holder of the position has not provided sufficient collateral for
+    the stablecoins he has minted.
+
+.. autosolcontract:: Auction
+    :members:
+    :exclude-members: finalizeAuction, createNewAuction
+
+
+Deposit
+---------------
+.. note::
+
+    This contract is used for depositing stablecoins and earning annual interest. The amount of interest is renewed
+    every block.
+    Inside the contract each deposit is stored as the following structure.
+
+    .. code-block::
+
+                struct Deposit {
+                    address owner;
+                    uint256 coinsDeposited;
+                    uint256 timeOpened;
+                    uint256 period;
+                    uint256 currentInterestRate;
+                    uint256 lastTimeUpdated;
+                    uint256 accumulatedInterest;
+                    bool closed;
+                }
+
+    | ***owner*** - address of the owner.
+    | ***coinsDeposited*** - amount of funds deposited.
+    | ***timeOpened*** - when the deposit was opened.
+    | ***period*** - the period of the deposit. It is set as ***timeOpened*** plus ***defaultDepositPeriod*** from DAO contract. It is used for the situations, when interest rate may be changed, but the current deposit should be effected by the change.
+    | ***currentInterestRate*** - interest rate of the deposit.
+    | ***lastTimeUpdated*** - when deposit was updated.
+    | ***accumulatedInterest*** - as owner may top up deposit or withdraw funds, we should remember the interest, accumulated before the change.
+    | ***closed*** - if the deposit already closed;
+    
+
+.. autosolcontract:: DepositContract
+    :members:
+
+DAO
+---------------
+.. note::
+    This contract is the main contract of the system. It stores all the valuable parameters of the system as well as all the address of contracts
+    participating in the system. Also, this contact is responsible for managing voting for Rule holders.
+
+    If any user has enough Rules to init the voting (*minRuleTokensToInitVotingPercent* for now it is set to 1%), he may propose a
+    voting for the change of any parameter of the system or significant address, to pause/unpause or authorize contracts.
+
+    To participate in a voting after it was initialized, user has to pool his tokens on DAO contact address to approve his
+    ownership and to avoid passing his tokens to other users until the voting is over.
+
+    If there is a quorum (*quorum* is now set to 60% of total Rule supply), the decision could be made.
+    A voting has a 1 day duration (*votingDuration*), but it is an optional parameter, which could be changed by another voting.
+
+    The decision effects the system if it has the *majority* of positive votes. For now, the majority is 50% (optional parameter).
+
+    If there is an absolute majority of positive votes (*absoluteMajority* is 80% of total Rule supply), the voting may be finished immediately.
+
+    After the voting is finished, can return his Rule tokens from DAO contract. If he returns his tokens before the voting is finished,
+    his vote will not be taken in consideration.
+
+    Each voting is stored as the following structure
+
+    .. code-block::
+
+        struct Voting {
+            uint256 totalPositive;
+            uint8 votingType;
+            string name;
+            uint256 value;
+            address addr;
+            uint256 startTime;
+            bool decision;
+        }
+
+    | ***totalPositive*** - total positive votes on voting.
+    | ***votingType*** - type of the voting: 1 - set the param value, 2 - set the address, 3 - pause/unpause a contract, 4 - authorize/unauthorize a contract.
+    | ***name*** - name of the parameter or contract.
+    | ***value*** -  value for the parameter (type 1 voting).
+    | ***addr*** -  value for the address (type 2 voting).
+    | ***startTime*** -  start time of the voting;
+    | ***decision*** -  bool decision for 3 and 4 type voting; If it set to false and voting has majority positive votes, the contract will be set unpaused/unauthorized correspondingly.
+
+    Initial parameters are as follows:
+
+        .. code-block::
+
+            params["interestRate"] = 9;
+            params["depositRate"]=8;
+            params["liquidationFee"] = 13;
+            params["collateralDiscount"] = 30;
+            params["stabilizationFundPercent"] = 5;
+            params["quorum"] = 60;
+            params["majority"] = 50;
+            params["minCDPBalanceToInitBuyOut"] = 10**19;
+            params["absoluteMajority"] = 80;
+            params["minRuleTokensToInitVotingPercent"] = 1;
+            params["votingDuration"] = 1 days;
+            params["auctionTurnDuration"] = 15 minutes;
+            params["minAuctionPriceMove"] = 5;
+            params["marginCallTimeLimit"] = 1 days;
+            params["defaultDepositPeriod"] = 91 days;
+            params["maxCoinsForStabilization"] = 50*10**18;
+            params["maxRuleEmissionPercent"] = 1;
+            params["highVolatilityEventBarrierPercent"] = 5;
+            params["minCoinsToMint"] = 1;
+
+.. autosolcontract:: INTDAO
+    :members:
+    :exclude-members: finalizeCurrentVoting, isEnoughTokensPooledToInitVoting
+
+Basket
+---------------
+.. note::
+    This contract is used to store all the commodities, with initial prices and the share of each commodity.
+    It also has a ***getEthereumVSCommoditiesPriceChange*** method to calculate the number of dotflat coins per 1 ether according to the current prices.
+
+    Item are stored it in the structure
+    .. code-block::
+
+            struct basketItem {
+                string symbol;
+                uint16 share;
+                uint256 initialPrice;
+            }
+
+    | ***symbol*** - symbol of the basket item.
+    | ***share*** - share of an item in the basket.
+    | ***initialPrice*** - price of the item when it was first added.
+
+.. autosolcontract:: basketContract
+    :members:
+
+
+exchangeRate
+---------------
+.. note::
+    This contract is created to receive and store quotes of all needed instruments from oracle.
+    Quotes are taken from exchanges. Oracle has it's own schedule to write down fresh quotes.
+    User may invoke one of the methods with a list of instruments if he wants them to be updated out of schedule.
+
+    For saving gas, instruments are stored in two structures
+
+    .. code-block::
+
+            struct Instrument {
+                uint256 price;
+                uint128 timeStamp;
+            }
+
+            struct InstrumentDescription {
+                uint16 id;
+                string name;
+                uint8 decimals;
+            }
+
+.. autosolcontract:: exchangeRateContract
+    :members:
+    :exclude-members: onlyAuthor, onlyUpdater
+
+
+Rule
+---------------
+.. note::
+    This is a governance token, a simple ERC20 contract, which can be minted and burned ***ONLY*** by CDP contract and authorized once.
+    It is minted when CDP contract is lack of funds in stabilization fund to refill it and burned when stabilization fund exceeds its limit.
+    As there is a difference between debt and deposit rate, sooner or later as time goes, the Rule tokens will be in demand and thus their price
+    should grow.
+
+.. autosolcontract:: Rule
+    :members:

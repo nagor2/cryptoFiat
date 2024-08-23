@@ -41,7 +41,7 @@ contract('Exchange Rate', (accounts) => {
         assert.equal (price, 100, "wrong price");
         price = await exRate.getPrice("Gold");
         assert.equal (price, 102, "wrong price");
-        price = await exRate.getPrice("etc");
+        price = await exRate.getPrice("eth");
         assert.equal (price, 101, "wrong price");
     });
 

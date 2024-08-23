@@ -1,0 +1,6 @@
+
+Positions checker bot
+=====================
+
+There is a bot, which frequently checks the sufficiency of collaterals of each debt position, and if any is lack of collateral, tries to
+initiate the auction to sell it, as liquidation of collateral is a public function. The more detailed mechanism, you can check also check CDP and Auction contracts description.

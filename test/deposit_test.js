@@ -23,13 +23,11 @@ contract('Deposit', (accounts) => {
         cdp = await CDP.deployed(futureDaoAddress);
         deposit = await Deposit.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([0x0, cdp.address, 0x0, deposit.address, 0x0, 0x0, 0x0, coin.address, 0x0]);
+        dao = await INTDAO.deployed([0x0, cdp.address, 0x0, deposit.address, 0x0, 0x0, coin.address, 0x0]);
 
         await cdp.renewContracts();
         await deposit.renewContracts();
-
         await cdp.openCDP(web3.utils.toWei('1000'), {from: accounts[1], value: web3.utils.toWei('1')});
-
         await coin.transfer(cdp.address, web3.utils.toWei('10', 'ether'), {from: accounts[1]}); //topUp stabFund
     });
 
@@ -86,7 +84,6 @@ contract('Deposit', (accounts) => {
         assert.equal(d.currentInterestRate, 8, "incorrect rate");
     });
 
-
     it("should pay interest", async () => {
         await time.increase(time.duration.years(1));
         let interest = await deposit.overallInterest(1);
@@ -114,7 +111,7 @@ contract('Deposit', (accounts) => {
         let d = await deposit.deposits(1);
         assert.equal(d.coinsDeposited, web3.utils.toWei('110', "ether"), "incorrect coinsDeposited");
         let balance = await coin.balanceOf(deposit.address);
-        assert.equal(parseFloat(balance/10**18).toFixed(4), parseFloat("110").toFixed(4), "balance should increase");
+        assert.equal(balance, web3.utils.toWei("110"), "balance should increase");
         await time.increase(time.duration.years(1));
         await deposit.claimInterest(1);
         let allowance = await coin.allowance(cdp.address, owner);
