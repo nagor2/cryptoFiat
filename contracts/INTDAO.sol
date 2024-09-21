@@ -28,10 +28,10 @@ contract INTDAO is ReentrancyGuard{
         bool decision;
     }
 
-    /// @notice Active voting presence flag as there can be only one active voting.
+    /// @notice Active voting presence flag, as there can be only one active voting.
     bool public activeVoting;
 
-    /// @notice Storage for params
+    /// @notice Storage for parameters
     mapping (string => uint256) public params;
 
     /// @notice Storage for addresses
@@ -49,22 +49,22 @@ contract INTDAO is ReentrancyGuard{
     /// @notice Total pooled tokens
     uint256 public totalPooled;
 
-    /// @notice Event is emitted when new voting is created
+    /// @notice Event emitted when new voting is created
     /// @param id ID of the voting
-    /// @param name Name of the param or address
-    /// @param indexedName The same as name, introduced for dapps usage.
+    /// @param name Name of the parameter or address
+    /// @param indexedName The same as name, introduced for dapp usage
     event NewVoting (uint32 indexed id, string name, string indexed indexedName);
 
-    /// @notice Event is emitted when voting is succeed
+    /// @notice Event emitted when voting succeeds
     /// @param id ID of the voting
     event VotingSucceed (uint32 indexed id);
 
-    /// @notice Event is emitted when voting is finished but failed.
+    /// @notice Event emitted when voting finishes but fails
     /// @param id ID of the voting
     event VotingFailed (uint32 indexed id);
 
-    /// @notice Constructor of Interest DAO contract where all the parameters of system are initialized.
-    /// @param _addresses Initial address of each contract in the DAO.
+    /// @notice Constructor of the Interest DAO contract, where all the parameters of the system are initialized
+    /// @param _addresses Initial addresses of each contract in the DAO
     constructor (address[] memory _addresses) {
         params["interestRate"] = 9;
         params["depositRate"]=8;
@@ -86,33 +86,32 @@ contract INTDAO is ReentrancyGuard{
         params["highVolatilityEventBarrierPercent"] = 5;
         params["minCoinsToMint"] = 1;
 
-        addresses["weth"] = _addresses[0];
-        addresses["cdp"] = _addresses[1];
-        addresses["auction"] = _addresses[2];
-        addresses["deposit"] = _addresses[3];
-        addresses["oracle"] = _addresses[4];
-        addresses["rule"] = _addresses[5];
-        addresses["stableCoin"] = _addresses[6];
-        addresses["basket"] = _addresses[7];
+        addresses["cdp"] = _addresses[0];
+        addresses["auction"] = _addresses[1];
+        addresses["deposit"] = _addresses[2];
+        addresses["oracle"] = _addresses[3];
+        addresses["rule"] = _addresses[4];
+        addresses["stableCoin"] = _addresses[5];
+        addresses["basket"] = _addresses[6];
 
-        isAuthorized[_addresses[1]]=true;
-        isAuthorized[_addresses[3]]=true;
+        isAuthorized[_addresses[0]]=true;
+        isAuthorized[_addresses[2]]=true;
 
         addresses["dao"] = address(this);
         renewContracts();
     }
 
-    /// @notice This method is used to change the Rule token address if it was changed during the voting for some reason.
+    /// @notice This method is used to change the Rule token address if it was changed during voting for some reason
     function renewContracts() public {
         ruleToken = IERC20(addresses["rule"]);
     }
 
-    /// @notice Method to init a new voting
-    /// @param votingType - type of the voting.
-    /// @param name - name of the parameter of address.
-    /// @param value - value of the parameter (for type 1 voting).
-    /// @param addr - value for the address (for type 2 voting).
-    /// @param decision - (True/False) for 3 and 4 type voting.
+    /// @notice Method to initiate a new voting
+    /// @param votingType Type of the voting
+    /// @param name Name of the parameter or address
+    /// @param value Value of the parameter (for type 1 voting)
+    /// @param addr Address value (for type 2 voting)
+    /// @param decision True/False for type 3 and 4 voting
     function addVoting(uint8 votingType, string memory name, uint value, address addr, bool decision) external{
         require(!activeVoting, "There is an active voting");
         require(votingType>0&&votingType<5, "Incorrect voteing type");
@@ -123,8 +122,8 @@ contract INTDAO is ReentrancyGuard{
         emit NewVoting(votingID, name, name);
     }
 
-    /// @notice pool tokens on the contract to participate in voting.
-    /// @return success True if succeed.
+    /// @notice Pool tokens on the contract to participate in voting
+    /// @return success True if successful
     function poolTokens() nonReentrant external returns (bool success) {
         uint256 amount = ruleToken.allowance(msg.sender, address(this));
         require (amount>0, "allow tokens first");
@@ -134,8 +133,8 @@ contract INTDAO is ReentrancyGuard{
         return true;
     }
 
-    /// @notice return tokens from contract after voting is finished.
-    /// @return True if succeed.
+    /// @notice Return tokens from the contract after voting is finished
+    /// @return True if successful
     function returnTokens() nonReentrant external returns (bool) {
         require(pooled[msg.sender] > 0, "You must have pooled tokens");
         if (activeVoting && votes[votingID][msg.sender]>0){
@@ -147,8 +146,8 @@ contract INTDAO is ReentrancyGuard{
         return true;
     }
 
-    /// @notice Vote on the current voting.
-    /// @param _vote True/False for For/Against the proposal.
+    /// @notice Vote on the current voting
+    /// @param _vote True/False for For/Against the proposal
     function vote(bool _vote) nonReentrant external{
         require(activeVoting, "No active voting found");
         require(votings[votingID].startTime + params["votingDuration"] >= block.timestamp, "Voting is already inactive");
@@ -167,7 +166,7 @@ contract INTDAO is ReentrancyGuard{
         }
     }
 
-    /// @notice Claim to fihish voting.
+    /// @notice Claim to finish voting
     function claimToFinalizeCurrentVoting() nonReentrant external{
         require (activeVoting, "There is no active voting");
         if (votings[votingID].totalPositive >= ruleToken.totalSupply() * params["absoluteMajority"] / 100) {

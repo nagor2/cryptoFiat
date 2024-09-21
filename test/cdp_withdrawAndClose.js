@@ -8,7 +8,6 @@ contract('CDP withdraw and close position', (accounts) => {
     var CDP = artifacts.require("./CDP.sol");
     var INTDAO = artifacts.require("./INTDAO.sol");
     var Oracle = artifacts.require("./exchangeRateContract.sol");
-    var Weth = artifacts.require("./WETH9.sol");
     var StableCoin = artifacts.require("./stableCoin.sol");
 
     let posId;
@@ -18,13 +17,12 @@ contract('CDP withdraw and close position', (accounts) => {
 
     before('should setup the contracts and open pos', async () => {
         const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
-        weth = await Weth.deployed();
 
         oracle = await Oracle.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
         coin = await StableCoin.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, oracle.address, 0x0, coin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, oracle.address, 0x0, coin.address, 0x0]);
 
         await cdp.renewContracts();
         
@@ -42,23 +40,24 @@ contract('CDP withdraw and close position', (accounts) => {
 
     it ("should init position", async ()=>{
         let position = await cdp.positions(posId);
-        assert.equal(position.wethAmountLocked, web3.utils.toWei('1', 'ether'), "wethLocked is wrong");
-        assert.equal(await weth.balanceOf(cdp.address), web3.utils.toWei('1', 'ether'), "wethLocked is wrong");
+        assert.equal(position.ethAmountLocked, web3.utils.toWei('1', 'ether'), "ethLocked is wrong");
+        assert.equal(await web3.eth.getBalance(cdp.address), web3.utils.toWei('1', 'ether'), "ethLocked is wrong");
     });
 
     it("should withdrawEther", async () => {
         let toWithdraw = web3.utils.toWei('0.1', 'ether');
-        assert.equal(await weth.balanceOf(owner), 0, "weth balance is wrong");
-        await cdp.withdrawEther(posId, toWithdraw, {from:owner});
-        assert.equal(await weth.balanceOf(owner), toWithdraw, "wethLocked is wrong");
-        assert.equal(await weth.balanceOf(cdp.address), web3.utils.toWei('0.9', 'ether'), "wethLocked is wrong");
+        let ownerBalanceBefore = await web3.eth.getBalance(owner);
+        let tx = await cdp.withdrawEther(posId, toWithdraw, {from:owner});
+        //console.dir (tx);
+        assert.equal(await web3.eth.getBalance(owner), web3.utils.toBN(ownerBalanceBefore).sub(web3.utils.toBN(tx.receipt.gasUsed*tx.receipt.effectiveGasPrice)).add(web3.utils.toBN(toWithdraw)).toString(), "eth balance of owner is wrong");
+        assert.equal(await web3.eth.getBalance(cdp.address), web3.utils.toWei('0.9', 'ether'), "cdp.address balance is wrong");
     });
 
     it("should fail if claimed amount is too big", async () => {
         await truffleAssert.fails(
             cdp.withdrawEther(posId, web3.utils.toWei('0.91', 'ether'), {from:owner}),
             truffleAssert.ErrorType.REVERT,
-            "You dont have enough weth locked on this pos"
+            "You dont have enough eth locked on this pos"
         );
 
         await time.increase(time.duration.years(1));
@@ -66,20 +65,20 @@ contract('CDP withdraw and close position', (accounts) => {
         await truffleAssert.fails(
             cdp.withdrawEther(posId, web3.utils.toWei('0.4', 'ether'), {from:owner}),
             truffleAssert.ErrorType.REVERT,
-            "you want to keep not enough weth to cover emission and current fee"
+            "you want to keep not enough eth to cover emission and current fee"
         );
 
         await oracle.updateSinglePrice(1, 5100000000, {from: accounts[5]});
-
+        let ownerBalanceBefore = await web3.eth.getBalance(owner);
         let posTx = await cdp.withdrawEther(posId, web3.utils.toWei('0.4', 'ether'), {from:owner});
 
         truffleAssert.eventEmitted(posTx, 'PositionUpdated', async (ev) => {
             assert.equal(posId, ev.posID.toNumber(), "id is wrong");
             assert.equal(web3.utils.toWei('1000', 'ether'), ev.newStableCoinsAmount, "newStableCoinsAmount is wrong");
-            assert.equal(web3.utils.toWei('0.5', 'ether'), ev.wethLocked, "wethLocked is wrong");
+            assert.equal(web3.utils.toWei('0.5', 'ether'), ev.ethLocked, "ethLocked is wrong");
         });
 
-        assert.equal(await weth.balanceOf(owner), web3.utils.toWei('0.5', 'ether'), "wethLocked is wrong");
+        assert.equal(await web3.eth.getBalance(owner), web3.utils.toBN(ownerBalanceBefore).sub(web3.utils.toBN(posTx.receipt.gasUsed*posTx.receipt.effectiveGasPrice)).add(web3.utils.toBN(web3.utils.toWei('0.4', 'ether'))).toString(), "ethLocked is wrong");
     });
 
     it("should close position", async () => {
@@ -105,10 +104,10 @@ contract('CDP withdraw and close position', (accounts) => {
             truffleAssert.ErrorType.REVERT,
             "Only owner may close his position"
         );
+        let ownerBalanceBefore = await web3.eth.getBalance(owner);
+        let tx = await cdp.closeCDP(posId,{from:owner});
 
-        await cdp.closeCDP(posId,{from:owner});
-
-        assert.equal(await weth.balanceOf(owner), web3.utils.toWei('1', 'ether'), "weth on balance is wrong");
+        assert.equal(await web3.eth.getBalance(owner), web3.utils.toBN(ownerBalanceBefore).sub(web3.utils.toBN(tx.receipt.gasUsed*tx.receipt.effectiveGasPrice)).add(web3.utils.toBN(web3.utils.toWei('0.5', 'ether'))).toString(), "weth on balance is wrong");
 
         assert.equal(parseFloat(await coin.totalSupply()/10**18).toFixed(4), 200.0000, "wrong totalSupply");
 

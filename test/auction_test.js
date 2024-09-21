@@ -32,7 +32,7 @@ contract('Auction', (accounts) => {
         rule = await Rule.deployed(futureDaoAddress, {from:ruleHolder});
         auction = await Auction.deployed(futureDaoAddress, {from: accounts[0]});
         cdp = await CDP.deployed(futureDaoAddress, {from: accounts[0]});
-        dao = await INTDAO.deployed([0x0, cdp.address, auction.address,0x0,0x0, rule.address, stableCoin.address,0x0], {from: accounts[0]});
+        dao = await INTDAO.deployed([cdp.address, auction.address,0x0,0x0, rule.address, stableCoin.address,0x0], {from: accounts[0]});
 
         await cdp.renewContracts();
         await auction.renewContracts();
@@ -71,8 +71,8 @@ contract('Auction', (accounts) => {
         truffleAssert.eventEmitted(initTx, 'newAuction', async (ev) => {
             assert.equal(ev.auctionID, 1, "Should be the first auction");
             assert.equal(parseFloat(ev.lotAmount/10**18).toFixed(0), 84, "Should be correct amount");
-            assert.equal(ev.lotAddress, stableCoin.address, "Should be correct address");
-            assert.equal(ev.paymentAmount, 0, "Should be correct address");
+            assert.equal(ev.lotAddress, stableCoin.address, "Should be correct stableCoin address");
+            assert.equal(ev.paymentAmount, 0, "Should be correct paymentAmount");
         });
 
         assert.equal(parseFloat(await stableCoin.balanceOf(auction.address)/10**18).toFixed(0), 84, "ballance of auction should increase");
@@ -182,10 +182,15 @@ contract('Auction', (accounts) => {
             expect(ev.bestBidID).to.eql(a.bestBidID, "bid id should be correct");
         });
 
-        let cdpRuleBalanceAfter = await rule.balanceOf(cdp.address);
-        assert.equal (cdpRuleBalanceAfter, web3.utils.toWei('200'), "balance should be 200");
+        //console.log(cdp.address+" here "+await dao.addresses("cdp"));
+
         let bidderStableCoinBalanceAfter = await stableCoin.balanceOf(b.owner);
+
         assert.equal (parseFloat(bidderStableCoinBalanceAfter/10**18).toFixed(0), 84, "balance should be 84");
+
+        let cdpRuleBalanceAfter = await rule.balanceOf(cdp.address);
+        assert.equal (cdpRuleBalanceAfter.toString(), web3.utils.toWei('200'), "balance should be 200");
+
     });
 });
 

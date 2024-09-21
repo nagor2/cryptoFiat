@@ -19,12 +19,12 @@ contract('CDP Update Decrease', (accounts) => {
     const ownerId = 2;
 
     before('should setup the contracts instance', async () => {
-        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-5)})
 
         stableCoin = await StableCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([0x0, cdp.address, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
 
         await cdp.renewContracts();
 
@@ -56,7 +56,7 @@ contract('CDP Update Decrease', (accounts) => {
 
     it("should not change ethAmount locked", async () => {
         position = await cdp.positions(posId);
-        assert.equal(position.wethAmountLocked, web3.utils.toWei('1','ether'), "ethAmountLocked should be 1 ether");
+        assert.equal(position.ethAmountLocked, web3.utils.toWei('1','ether'), "ethAmountLocked should be 1 ether");
     });
 
     it("should decrease owner's balance", async () => {

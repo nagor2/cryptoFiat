@@ -6,7 +6,6 @@ const assert = require("assert");
 contract('CDP several auctions to close position', (accounts) => {
     let dao;
     let cdp;
-    let weth;
     let oracle;
     let stableCoin;
     let auction;
@@ -21,20 +20,27 @@ contract('CDP several auctions to close position', (accounts) => {
     var Oracle = artifacts.require("./exchangeRateContract.sol");
     var StableCoin = artifacts.require("./stableCoin.sol");
     var Auction = artifacts.require("./Auction.sol");
-    var Weth = artifacts.require("./WETH9.sol");
     var Rule = artifacts.require("./Rule.sol");
 
     before('should setup the contracts instance', async () => {
-        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
-        weth = await Weth.deployed();
 
+        let futureDaoAddress;
+/*
+        for (var i=-10; i< 10; i++){
+            futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))+i)})
+            console.log(i+") "+futureDaoAddress);
+        }*/
+
+        futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-5)})
         rule = await Rule.deployed(futureDaoAddress);
         oracle = await Oracle.deployed(futureDaoAddress, {from:accounts[5]});
         stableCoin = await StableCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
         auction = await Auction.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([weth.address, cdp.address, auction.address, 0x0, oracle.address, rule.address, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, auction.address, 0x0, oracle.address, rule.address, stableCoin.address, 0x0]);
+
+        //console.log(dao.address)
 
         await cdp.renewContracts();
         await auction.renewContracts();
@@ -73,7 +79,7 @@ contract('CDP several auctions to close position', (accounts) => {
             assert.equal(ev.collateral, web3.utils.toWei('1'), "liquidationStatus should be set to 1");
         });
 
-        await expectEvent.inTransaction(tx.tx, auction, 'newAuction', { auctionID:web3.utils.toBN(1), lotAmount:web3.utils.toWei('1'), lotAddress:await dao.addresses('weth'), paymentAmount:web3.utils.toBN(0)});
+        await expectEvent.inTransaction(tx.tx, auction, 'newAuction', { auctionID:web3.utils.toBN(1), lotAmount:web3.utils.toWei('1'), lotAddress:'0x0000000000000000000000000000000000000000', paymentAmount:web3.utils.toBN(0)});
 
         assert.equal((await cdp.positions(posId)).liquidationAuctionID, 1, "wrong auction id");
     });

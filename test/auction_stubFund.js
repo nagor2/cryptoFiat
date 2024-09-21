@@ -17,12 +17,22 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
     let rule;
 
     before('should setup the contracts instance', async () => {
-        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
+
+        let futureDaoAddress= await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-5)})
+/*
+        for (var i=-10; i< 10; i++){
+            futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))+i)})
+            console.log(i+") "+futureDaoAddress);
+        }
+*/
+
         stableCoin = await StableCoin.deployed(futureDaoAddress);
         auction = await Auction.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
         rule = await Rule.deployed(futureDaoAddress);
-        dao = await INTDAO.deployed([0x0, cdp.address, auction.address,0x0,0x0, rule.address, stableCoin.address,0x0]);
+        dao = await INTDAO.deployed([cdp.address, auction.address,0x0,0x0, rule.address, stableCoin.address,0x0]);
+
+        //console.log (futureDaoAddress+"      "+dao.address);
 
         await auction.renewContracts();
         await cdp.renewContracts();

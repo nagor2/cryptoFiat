@@ -128,6 +128,17 @@ contract('Deposit', (accounts) => {
         assert.equal(parseFloat(balance/10**18).toFixed(5), parseFloat("110").toFixed(5), "balance should increase");
     });
 
+    it("should pay the interest as deposit is closed", async () => {
+        await coin.transfer(cdp.address, web3.utils.toWei('20', 'ether'), {from: accounts[1]}); //topUp stabFund
+        await coin.approve(deposit.address, web3.utils.toWei('100'), {from: owner});
+        await deposit.deposit({from: owner})
+        await time.increase(time.duration.years(1));
+        let balanceBefore = parseInt(await coin.balanceOf(owner)/10**18);
+        await deposit.withdraw(2, web3.utils.toWei('100', "ether"), {from:owner});
+        let balanceAfter = await coin.balanceOf(owner);
+        assert.equal(balanceBefore+108, parseInt(balanceAfter/10**18), "balance should increase");
+    });
+
     //TODO: check depositOpened event
 
     /*TODO: Тут возникают вопросы! Периодичность выплат, как быть со сложным процентом? – пока что решил не углубляться

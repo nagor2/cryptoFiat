@@ -6,6 +6,7 @@ import "./IDAO.sol";
 import "./ICDP.sol";
 
     struct auctionEntity {
+        uint8 auctionType;  // 1 - Rule buyout, 2 -  stablecoins buyout, 3 - collateral liquidation
         bool initialized;
         bool finalized;
         address lotToken;
@@ -25,7 +26,7 @@ import "./ICDP.sol";
         bool canceled;
     }
 
-/// @title A contract for different types of auctions
+/// @title A Contract for Different Types of Auctions
 contract Auction is ReentrancyGuard{
     /// @notice Auctions counter
     uint32 public auctionNum;
@@ -41,55 +42,56 @@ contract Auction is ReentrancyGuard{
     ICDP cdp;
     /// @notice Governance token interface
     IERC20 rule;
-    /// @notice Flag, that shows if there is an active auction to top up stabilization fund.
+    /// @notice Flag indicating that there is an active auction to top up the stabilization fund.
     bool isCoinsBuyOutForStabilization;
-    /// @notice Flag, that shows if there is an active auction for governance tokens buyout.
+    /// @notice Flag indicating that there is an active auction for governance token buyout.
     bool ruleBuyOut;
-    /// @notice All the existing auctions are stored in this mapping.
+    /// @notice Mapping storing all existing auctions.
     mapping(uint32 => auctionEntity) public auctions;
-    /// @notice All the existing bids are stored in this mapping.
+    /// @notice Mapping storing all existing bids.
     mapping (uint32 => Bid) public bids;
 
-    /// @notice This event is fired when a new auction is created. Follow this events to participate in auctions.
-    /// @param auctionID The id of new auction.
-    /// @param lotAmount The amount of certain asset, which the winner will get.
+    /// @notice This event is emitted when a new auction is created. Follow this event to participate in auctions.
+    /// @param auctionType Type of the auction 1 - Rule buyout, 2 - stablecoins buyout, 3 - collateral liquidation
+    /// @param auctionID The ID of the new auction.
+    /// @param lotAmount The amount of the asset that the winner will receive.
     /// @param lotAddress Token address of the asset.
-    /// @param paymentAmount The minimum amount of payment for the lot the auction should receive. It is a non-zero value only
-    /// if we need to top up the stabilization fund of the system with certain amount of stablecoins.
+    /// @param paymentAmount The minimum amount of payment required for the lot.
+    /// This is non-zero only if topping up the stabilization fund with a certain amount of stablecoins.
     /// @dev You can catch this event to participate in auction automatically.
-    event newAuction(uint32 indexed auctionID, uint256 lotAmount, address lotAddress, uint256 paymentAmount);
+    event newAuction(uint8 auctionType, uint32 indexed auctionID, uint256 lotAmount, address lotAddress, uint256 paymentAmount);
 
-    /// @notice This event is fired when a new auction is finished.
-    /// @param auctionID The id of a finished auction.
-    /// @param lotAmount The amount of certain asset, which the winner will receive.
-    /// @param bestBidID The id of best bid.
+    /// @notice This event is emitted when an auction finishes.
+    /// @param auctionID The ID of the finished auction.
+    /// @param lotAmount The amount of the asset that the winner will receive.
+    /// @param bestBidID The ID of the best bid.
     event auctionFinished(uint32 indexed auctionID, uint256 lotAmount, uint32 bestBidID);
 
-    /// @notice This event is fired when a new bid is created or bid is improved. Follow this events to improve your bids.
-    /// @param auctionID The id of new auction.
-    /// @param bidID The id of the bid.
-    /// @param bidAmount Amount of a bid.
-    /// @param owner Bidder address.
+    /// @notice This event is emitted when a new bid is created or an existing bid is improved. Follow this event to improve your bids.
+    /// @param auctionID The ID of the auction.
+    /// @param bidID The ID of the bid.
+    /// @param bidAmount The amount of the bid.
+    /// @param owner Address of the bidder.
     event newBid(uint32 indexed auctionID, uint32 indexed bidID, uint256 bidAmount, address owner);
 
-    /// @notice This event is fired when a new bid is canceled. You can not cancel your bid, if your bid is the best one for now.
-    /// @param bidID The id of the bid.
+    /// @notice This event is emitted when a bid is canceled. You cannot cancel your bid if it is currently the best one.
+    /// @param bidID The ID of the bid.
     event bidCanceled(uint256 indexed bidID);
 
-    /// @notice Constructor for auction contract.
-    /// @param _INTDAOaddress - the address of main DAO contract.
+    /// @notice Constructor for the auction contract.
+    /// @param _INTDAOaddress The address of the main DAO contract.
     constructor(address _INTDAOaddress){
         dao = IDAO(_INTDAOaddress);
     }
 
-    /// @notice This method is used to reinit needed interfaces when the addresses of contracts to use are changed by voting or to init interfaces just after deploy.
+    /// @notice Reinitialize the needed interfaces when the addresses of contracts are changed by voting or initialize interfaces after deployment.
     function renewContracts() external{
         cdp = ICDP(dao.addresses("cdp"));
         coin = IERC20(dao.addresses("stableCoin"));
         rule = IERC20(dao.addresses("rule"));
     }
 
-    /// @notice This method is used when stabilization fund on CDP contract exceeds its limit for Rule buy out.
+    /// @notice Initiates an auction for Rule buyout when the stabilization fund on the CDP contract exceeds its limit.
     /// @return auctionID New auction ID.
     function initRuleBuyOut() nonReentrant external returns (uint32 auctionID){
         require (!ruleBuyOut, "Rule buyOut auction already exist");
@@ -98,16 +100,14 @@ contract Auction is ReentrancyGuard{
         uint256 allowed = coin.allowance(dao.addresses("cdp"), address(this));
         require (allowed>0, "Can not transfer surplus from CDP");
 
-        coin.transferFrom(dao.addresses("cdp"), address(this), allowed);
+        require (coin.transferFrom(dao.addresses("cdp"), address(this), allowed), "could not transfer coins for some reason");
 
-        auctionID = createNewAuction(dao.addresses("stableCoin"), allowed, dao.addresses("rule"), 0);
+        auctionID = createNewAuction(1, allowed, 0);
         ruleBuyOut = true;
-        return auctionID;
     }
 
-    /// @notice Inits stablecoins buyout for stabilization fund, if it is low. The stabilization fund should always be a certain
-    /// percent from stablecoin total supply (stabilizationFundPercent parameter in DAO contract). Maximum stablecoins per one auction is regulated by maxCoinsForStabilization parameter in DAO contract.
-    /// @param coinsAmountNeeded Needed amount of stablecoins.
+    /// @notice Initiates a stablecoin buyout for the stabilization fund if it is low. The stabilization fund should always be a certain percentage of the total stablecoin supply (as defined by the stabilizationFundPercent parameter in the DAO contract). The maximum stablecoins per auction is regulated by the maxCoinsForStabilization parameter in the DAO contract.
+    /// @param coinsAmountNeeded The amount of stablecoins needed.
     /// @return auctionID New auction ID.
     function initCoinsBuyOutForStabilization(uint256 coinsAmountNeeded) nonReentrant external returns (uint32 auctionID){
         require (!isCoinsBuyOutForStabilization, "CoinsBuyOutForStabilization already exists and not finished");
@@ -120,42 +120,49 @@ contract Auction is ReentrancyGuard{
         if (coinsAmountNeeded>dao.params("maxCoinsForStabilization"))
             coinsAmountNeeded = dao.params("maxCoinsForStabilization");
 
-        auctionID = createNewAuction(dao.addresses("rule"), 0, dao.addresses("stableCoin"), coinsAmountNeeded);
+        auctionID = createNewAuction(2, 0, coinsAmountNeeded);
         isCoinsBuyOutForStabilization = true;
-        return auctionID;
     }
 
-    /// @notice Inits auction if margin-call occurred and system needs to sell the collateral.
-    /// @param collateral Ether collateral amount.
+    /// @notice Initiates an auction if a margin call occurs and the system needs to sell the collateral.
     /// @return auctionID New auction ID.
-    function initCoinsBuyOut(uint128 collateral) nonReentrant external returns (uint32 auctionID){
+    function initCoinsBuyOut() nonReentrant payable external returns (uint32 auctionID){
         require (msg.sender == dao.addresses("cdp"), "Only CDP contract may invoke this method. Please, use claimMarginCall in CDP contract");
-        auctionID = createNewAuction(dao.addresses("weth"), collateral, dao.addresses("stableCoin"),0);
-        return auctionID;
+        auctionID = createNewAuction(3, msg.value, 0);
     }
 
-    function createNewAuction(address lotToken, uint256 lotAmount, address paymentToken, uint256 paymentAmount) internal returns (uint32 auctionID){
+    function createNewAuction(uint8 auctionType, uint256 lotAmount, uint256 paymentAmount) internal returns (uint32 auctionID){
         auctionID = ++auctionNum;
         auctionEntity storage a = auctions[auctionID];
 
+        if (auctionType == 1) {
+            a.lotToken = dao.addresses("stableCoin");
+            a.paymentToken = dao.addresses("rule");
+        }
+        if (auctionType == 2) {
+            a.lotToken = dao.addresses("rule");
+            a.paymentToken = dao.addresses("stableCoin");
+        }
+        if (auctionType == 3) {
+            a.lotToken = address(0);
+            a.paymentToken = dao.addresses("stableCoin");
+        }
+
+        a.auctionType = auctionType;
         a.initialized = true;
         a.finalized = false;
-        a.lotToken = lotToken;
         a.lotAmount = lotAmount;
-        a.paymentToken = paymentToken;
         a.paymentAmount = paymentAmount;
         a.lastTimeUpdated = block.timestamp;
         a.initTime = block.timestamp;
         a.bestBidID = 0;
 
-        emit newAuction(auctionID, lotAmount, lotToken, paymentAmount);
-        return auctionID;
+        emit newAuction(auctionType, auctionID, lotAmount, a.lotToken, paymentAmount);
     }
 
-    /// @notice Use this method to make a new bid. Make sure that you allowed needed amount of bid for Auction contract address.
-    /// minAuctionPriceMove percent is the param from DAO contract, which means that you have to improve the previous best bid on a certain percent.
-    /// @param auctionID The ID of auction to participate in.
-    /// @param bidAmount The amount of bid user wants to make.
+    /// @notice Use this method to place a new bid. Ensure you have allowed the needed amount for the Auction contract address. The minAuctionPriceMove percentage (from the DAO contract) means you must improve the previous best bid by a certain percentage.
+    /// @param auctionID The ID of the auction to participate in.
+    /// @param bidAmount The amount of the bid.
     /// @return bidID New bid ID.
     function makeBid(uint32 auctionID, uint256 bidAmount) nonReentrant external returns (uint32 bidID){
         auctionEntity storage a = auctions[auctionID];
@@ -163,14 +170,14 @@ contract Auction is ReentrancyGuard{
 
         if (a.bestBidID !=0){
             Bid storage bestBid = bids[a.bestBidID];
-            if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth"))
-                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=bidAmount, "your bid is not high enough");
-            if (a.lotToken == dao.addresses("rule"))
+            if (a.auctionType == 2)
                 require(bidAmount>0 && bestBid.bidAmount*(100-dao.params("minAuctionPriceMove"))/100>=bidAmount, "your bid is not low enough");
+            else
+                require(bidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=bidAmount, "your bid is not high enough");
         }
         require(bidAmount>0, "your bid is not high enough");
         IERC20 paymentToken = IERC20(address(a.paymentToken));
-        if (a.lotToken == dao.addresses("rule")){
+        if (a.auctionType == 2){
             require(bidAmount<=rule.totalSupply()*dao.params("maxRuleEmissionPercent")/100, "too many rules for one emission");
             require(paymentToken.transferFrom(msg.sender, address(this), a.paymentAmount), "You should first approve stableCoins to auction contract address");
         }
@@ -188,12 +195,11 @@ contract Auction is ReentrancyGuard{
         a.bestBidID = bidID;
         a.lastTimeUpdated = block.timestamp;
         emit newBid(auctionID, bidID, bidAmount, b.owner);
-        return bidID;
     }
 
     /// @notice Use this method to improve your own bid.
     /// @param bidID The ID of your bid.
-    /// @param newBidAmount New bid amount.
+    /// @param newBidAmount The new bid amount.
     function improveBid(uint32 bidID, uint256 newBidAmount) nonReentrant external{
         Bid storage b = bids[bidID];
         require(b.owner == msg.sender, "You may improve only your personal bids");
@@ -201,14 +207,14 @@ contract Auction is ReentrancyGuard{
         require(a.initialized&&!a.finalized, "auctionID is wrong or it is already finished");
         Bid storage bestBid = bids[a.bestBidID];
 
-        if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth"))
-            require(newBidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=newBidAmount, "your bid is not high enough");
-        if (a.lotToken == dao.addresses("rule"))
+        if (a.auctionType == 2)
             require(newBidAmount>0 && bestBid.bidAmount*(100-dao.params("minAuctionPriceMove"))/100>=newBidAmount, "your bid is not high enough");
+        else
+            require(newBidAmount>0 && bestBid.bidAmount*(100+dao.params("minAuctionPriceMove"))/100<=newBidAmount, "your bid is not high enough");
 
         IERC20 paymentToken = IERC20(address(a.paymentToken));
 
-        if (a.lotToken == dao.addresses("stableCoin") || a.lotToken == dao.addresses("weth")){
+        if (a.auctionType == 1 || a.auctionType == 3){
             uint256 difference = newBidAmount-b.bidAmount;
             require(paymentToken.transferFrom(msg.sender, address(this), difference), "You should first approve payment to auction contract address");
         }
@@ -219,7 +225,7 @@ contract Auction is ReentrancyGuard{
         emit newBid(b.auctionID, bidID, newBidAmount, b.owner);
     }
 
-    /// @notice Use this method to cancel your own bid. Notice, that you can not cancel your bid if it is the best one for now.
+    /// @notice Use this method to cancel your own bid. Note that you cannot cancel your bid if it is currently the best one.
     /// @param bidID The ID of your bid.
     function cancelBid(uint32 bidID) nonReentrant external{
         Bid storage b = bids[bidID];
@@ -228,7 +234,7 @@ contract Auction is ReentrancyGuard{
         require(a.initialized, "the bid is made on non-existent auction");
         require(a.bestBidID != bidID, "You can not cancel a bid if it is a best one");
         IERC20 paymentToken = IERC20(address(a.paymentToken));
-        if (a.lotToken == dao.addresses("rule"))
+        if (a.auctionType == 2)
             require(paymentToken.transfer(b.owner, a.paymentAmount), "we were not able to transfer your bid back");
         else
             require(paymentToken.transfer(b.owner, b.bidAmount), "we were not able to transfer your bid back");
@@ -236,12 +242,11 @@ contract Auction is ReentrancyGuard{
         b.canceled = true;
     }
 
-    /// @notice If there is no more bids made and the timeout has expired, you can claim to finalize the auction.
-    /// Notice, that when the collateral is sold through auction, you have to use another method - finishMarginCall from CDP contract.
+    /// @notice If there are no more bids and the timeout has expired, you can claim to finalize the auction. For auctions involving collateral, use the finishMarginCall method from the CDP contract.
     /// @param auctionID The ID of the auction to finalize.
     function claimToFinalizeAuction(uint32 auctionID) nonReentrant external returns (bool success){
         auctionEntity storage a = auctions[auctionID];
-        if (a.lotToken == dao.addresses("weth"))
+        if (a.auctionType == 3)
             require (msg.sender == dao.addresses("cdp"), "Only CDP contract may finish this auction. Please, use finishMarginCall method");
 
         require(a.initialized && !a.finalized, "the auction is finished or non-existent");
@@ -256,37 +261,37 @@ contract Auction is ReentrancyGuard{
         auctionEntity storage a = auctions[auctionID];
         Bid storage bestBid = bids[a.bestBidID];
 
-        if (a.lotToken == dao.addresses("stableCoin")){
+        if (a.auctionType == 1){
             require(IERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount), "lotToken transfer failed for some reason");
             require(IERC20(address(a.paymentToken)).transfer(dao.addresses("cdp"), bestBid.bidAmount), "paymentToken transfer failed for some reason");
             ruleBuyOut = false;
         }
-        if (a.lotToken == dao.addresses("rule")){
+        if (a.auctionType == 2){
             require(cdp.mintRule(bestBid.owner, bestBid.bidAmount), "could not mint rule");
             require(coin.transfer(dao.addresses("cdp"), a.paymentAmount), "could not transfer coins");
             isCoinsBuyOutForStabilization = false;
         }
-        if (a.lotToken == dao.addresses("weth")){
-            require(IERC20(address(a.lotToken)).transfer(bestBid.owner, a.lotAmount));
-            require(IERC20(address(a.paymentToken)).transfer(dao.addresses("cdp"), bestBid.bidAmount));
+        if (a.auctionType == 3){
+            require(payable(bestBid.owner).send(a.lotAmount), "could not transfer collateral");
+            require(IERC20(address(a.paymentToken)).transfer(dao.addresses("cdp"), bestBid.bidAmount), "could not transfer coins");
         }
         a.finalized = true;
         emit auctionFinished(auctionID, a.lotAmount, a.bestBidID);
     }
 
-    /// @notice This method just shows, whether a certain auction is finished or not.
+    /// @notice Shows whether a certain auction is finished or not.
     /// @param auctionID The ID of the auction.
     function isFinalized(uint32 auctionID) external view returns (bool finalized){
         return auctions[auctionID].finalized;
     }
 
-    /// @notice This method shows paymentAmount of an auction. It is mainly used when collateral is sold.
+    /// @notice Shows the payment amount required for an auction. This is mainly used when collateral is sold.
     /// @param auctionID The ID of the auction.
     function getPaymentAmount(uint32 auctionID) external view returns (uint256){
         return auctions[auctionID].paymentAmount;
     }
 
-    /// @notice This method shows current best bid amount of an auction.
+    /// @notice Shows the current best bid amount for an auction.
     /// @param auctionID The ID of the auction.
     function getBestBidAmount(uint32 auctionID) external view returns (uint256){
         return bids[auctions[auctionID].bestBidID].bidAmount;

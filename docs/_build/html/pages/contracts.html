@@ -115,13 +115,13 @@
              
   <section id="contracts">
 <h1>Contracts<a class="headerlink" href="#contracts" title="Link to this heading"></a></h1>
-<p>In this section you can find the description of each contract of the system with all the external functions and public variables.</p>
-<p>It is more developers information for better understanding of how system works in details.</p>
+<p>In this section, you can find the description of each contract in the system, along with all the external functions and public variables.</p>
+<p>This section is intended more for developers to better understand how the system works in detail.</p>
 <section id="dotflat">
 <h2>Dotflat<a class="headerlink" href="#dotflat" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This is a stablecoin token. It is a simple ERC20 token, which can be minted and burned <strong>ONLY</strong> by CDP contract and those authorized in DAO.</p>
+<p>This is a stablecoin token. It is a simple ERC-20 token, which can be minted and burned ONLY by CDP contract and those authorized in the DAO.</p>
 </div>
 <dl class="sol contract">
 <dt class="sig sig-object sol" id="stableCoin">
@@ -156,7 +156,7 @@
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#stableCoin.mint(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#stableCoin.mint(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Minting additional stablecoins. Only authorized address can execute it.</p>
+<dd class="field-odd"><p>Minting additional stablecoins. Only an authorized address can execute this function.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -172,7 +172,7 @@
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">from</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#stableCoin.burn(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#stableCoin.burn(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Burning stablecoins. Only authorized address can execute it.</p>
+<dd class="field-odd"><p>Burning stablecoins. Only an authorized address can execute this function.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -190,16 +190,15 @@
 <h2>CDP<a class="headerlink" href="#cdp" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This contract is one of the most important contracts of the DAO. It mints dotflat coins, holds all the collateral
-and stabilization fund in dotflat coins and burns dotflat stablecoins when the position is closed.</p>
+<p>This contract is one of the most important contracts of the DAO. It mints Dotflat coins, holds all the collateral and the stabilization fund in Dotflat coins, and burns Dotflat stablecoins when the position is closed.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Borrowing dotflat tokens assumes an annual interest, determined by the DAO contract. For now it is 9% per annum.</p>
+<p>Borrowing Dotflat tokens assumes an annual interest, determined by the DAO contract. For now, it is at 9% per annum.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Inside the contract each debt position is stored as the following structure.</p>
+<p>Inside the contract, each debt position is stored as the following structure.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Position</span> <span class="p">{</span>
     <span class="n">uint128</span> <span class="n">coinsMinted</span><span class="p">;</span>
     <span class="n">uint128</span> <span class="n">wethAmountLocked</span><span class="p">;</span>
@@ -218,29 +217,27 @@ and stabilization fund in dotflat coins and burns dotflat stablecoins when the p
 <div class="line-block">
 <div class="line"><strong>*coinsMinted*</strong> - number of minted coins for now.</div>
 <div class="line"><strong>*wethAmountLocked*</strong> - collateral.</div>
-<div class="line"><strong>*interestAmountRecorded*</strong> - the amount of interest to pay till last position update.</div>
+<div class="line"><strong>*interestAmountRecorded*</strong> -  the amount of interest to pay until last position update.</div>
 <div class="line"><strong>*timeOpened*</strong> - when the position was opened.</div>
 <div class="line"><strong>*lastTimeUpdated*</strong> - when it was last updated.</div>
 <div class="line"><strong>*interestRate*</strong> - annual percent of the debt.</div>
-<div class="line"><strong>*markedOnLiquidationTimestamp*</strong> - when position was marked on liquidation.</div>
+<div class="line"><strong>*markedOnLiquidationTimestamp*</strong> - when the position was marked on liquidation.</div>
 <div class="line"><strong>*liquidationStatus*</strong> - 0 - ok, 1- markedOnLiquidation, 2 - onLiquidation, 3 - liquidated, 4 - closed;</div>
 <div class="line"><strong>*liquidationAuctionID*</strong> - ID of the auction, which sells collateral.</div>
 <div class="line"><strong>*owner*</strong> - address of the position owner.</div>
-<div class="line"><strong>*restrictInterestWithdrawal*</strong> - set this flag using <strong>*switchRestrictInterestWithdrawal()*</strong> method if you dont want the system makes you pay interest any time it needs money.</div>
+<div class="line"><strong>*restrictInterestWithdrawal*</strong> - set this flag using <strong>*switchRestrictInterestWithdrawal()*</strong> method if you don’t want the system to make you pay interest any time it needs money.</div>
 </div>
-<p>By default, the system may ask for your dotflat (only the interest, not the whole debt) anytime it needs it as a payment for the debt, but you may want to pay it in the end, for example.</p>
+<p>By default, the system may ask for your Dotflat (only the interest, not the whole debt) anytime it needs it as a payment for the debt, but you may want to pay it in the end, for example.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>If you use this contract for borrowing dotflat, be aware, that you have to instantly observe sufficiency of your
-collateral by yourself, as the price of ether changes frequently and significantly. If your collateral
-becomes insufficient due to ether price decrease or due to commodities prices increase, your ether could be sold
-at auction. Margin call has a 13% fee for it, set in DAO contract (liquidationFee).</p>
-<div class="line-block">
-<div class="line">The system checks sufficiency of the collateral, and if it is not, it may mark a position on liquidation by setting <strong>*liquidationStatus*</strong> as <em>markedOnLiquidation</em> and a <em>liquidationStatusChanged</em> event is fired.</div>
-</div>
-<p>Since that, an owner has some time (<em>marginCallTimeLimit</em> regulated by DAO, for now it is 1 day) to top up collateral or reduce emission of dotflat by returning some of them.
-If nothing happens and in 1 day collateral is still not sufficient, the system liquidates the collateral through the auction and owner of position can do nothing about it.</p>
+<p>If you use this contract for borrowing dotflat, be aware that you have to constantly monitor the sufficiency of
+your collateral yourself, as the price of ether changes frequently and significantly. If your collateral becomes
+insufficient due to a decrease in the Ether price or an increase in commodity prices, your Ether could be sold at auction.
+A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
+<p>The system checks the sufficiency of the collateral, and if it is insufficient, it may mark the position for liquidation by setting <em>liquidationStatus</em> as markedOnLiquidation and a liquidationStatusChanged event is fired.</p>
+<p>After that, the owner has some time (marginCallTimeLimit regulated by the DAO; for now, it is 1 day) to top up the collateral or reduce the emission of Dotflat by returning some of the tokens.</p>
+<p>If nothing happens and the collateral is still insufficient after 1 day, the system liquidates the collateral through auction, and the owner of the position can do nothing about it.</p>
 </div>
 <dl class="sol contract">
 <dt class="sig sig-object sol" id="CDP">
@@ -311,16 +308,6 @@ If nothing happens and in 1 day collateral is still not sufficient, the system l
 </dd></dl>
 
 <dl class="sol statevar">
-<dt class="sig sig-object sol" id="CDP.weth">
-<span class="pre">IERC20</span> <span class="sig-name descname"><span class="pre">weth</span></span><a class="headerlink" href="#CDP.weth" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Wrapped ether interface</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="sol statevar">
 <dt class="sig sig-object sol" id="CDP.positions">
 <span class="pre">mapping</span> <span class="pre">(uint32</span> <span class="pre">=&gt;</span> <span class="pre">Position)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">positions</span></span><a class="headerlink" href="#CDP.positions" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -335,7 +322,7 @@ If nothing happens and in 1 day collateral is still not sufficient, the system l
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">PositionOpened</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">indexed</span> <span class="pre">owner</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">indexed</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.PositionOpened(address,uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.PositionOpened(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event is emitted when the new position is opened.</p>
+<dd class="field-odd"><p>This event is emitted when a new position is opened.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -348,16 +335,16 @@ If nothing happens and in 1 day collateral is still not sufficient, the system l
 
 <dl class="sol event">
 <dt class="sig sig-object sol" id="CDP.PositionUpdated(uint32,uint256,uint256)">
-<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">PositionUpdated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">newStableCoinsAmount</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">wethLocked</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Link to this definition"></a></dt>
+<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">PositionUpdated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">newStableCoinsAmount</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">ethLocked</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event is emitted when the new position is updated.</p>
+<dd class="field-odd"><p>This event is emitted when a position is updated.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>posID</strong> – ID of the position.</p></li>
 <li><p><strong>newStableCoinsAmount</strong> – New amount of stablecoins borrowed.</p></li>
-<li><p><strong>wethLocked</strong> – Current collateral amount.</p></li>
+<li><p><strong>ethLocked</strong> – Current collateral amount.</p></li>
 </ul>
 </dd>
 </dl>
@@ -368,7 +355,7 @@ If nothing happens and in 1 day collateral is still not sufficient, the system l
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">liquidationStatusChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint24</span> <span class="pre">liquidationStatus</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.liquidationStatusChanged(uint32,uint24)" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.liquidationStatusChanged(uint32,uint24)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event is emitted when the position liquidationStatus is updated.</p>
+<dd class="field-odd"><p>This event is emitted when the position’s liquidation status is updated.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -384,13 +371,13 @@ If nothing happens and in 1 day collateral is still not sufficient, the system l
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">liquidateCollateral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">auctionID</span></em>, <em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">collateral</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.liquidateCollateral(uint32,uint32,uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.liquidateCollateral(uint32,uint32,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event is emitted when the position set on liquidation.</p>
+<dd class="field-odd"><p>This event is emitted when a position is set for liquidation.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>auctionID</strong> – ID of the corresponding auction.</p></li>
 <li><p><strong>posID</strong> – ID of the position.</p></li>
-<li><p><strong>collateral</strong> – Amount the collateral to sell.</p></li>
+<li><p><strong>collateral</strong> – Amount of collateral to sell.</p></li>
 </ul>
 </dd>
 </dl>
@@ -401,11 +388,11 @@ If nothing happens and in 1 day collateral is still not sufficient, the system l
 <span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constructor for CDP contract.</p>
+<dd class="field-odd"><p>Constructor for the CDP contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>_INTDAOaddress</strong> – the address of main DAO contract.</p></li>
+<li><p><strong>_INTDAOaddress</strong> – Address of the main DAO contract.</p></li>
 </ul>
 </dd>
 </dl>
@@ -416,7 +403,7 @@ If nothing happens and in 1 day collateral is still not sufficient, the system l
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">renewContracts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CDP.renewContracts()" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.renewContracts()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to reinit needed interfaces when the addresses of contracts to use are changed by voting or to init interfaces just after deploy.</p>
+<dd class="field-odd"><p>This method is used to reinitialize the needed interfaces when the addresses of contracts are changed by voting or to initialize interfaces just after deployment.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -426,17 +413,15 @@ If nothing happens and in 1 day collateral is still not sufficient, the system l
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">openCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">stableCoinsToMint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.openCDP(uint256)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.openCDP(uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Use this method to borrow stablecoins. To use it, you have to provide sufficient collateral in ether.
-Be aware, that collateral is converted to weth (wrapped ether) and stored as a wrapped ether token on the contract address.
-The new minted stablecoins will be passed to the caller account.</p>
+<dd class="field-odd"><p>Use this method to borrow stablecoins. To use it, you must provide sufficient collateral in Ether. The collateral is converted to WETH (wrapped ether) and stored as a wrapped Ether token in the contract address. The newly minted stablecoins will be sent to the caller’s account.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>stableCoinsToMint</strong> – The number of stablecoins to mint</p></li>
+<li><p><strong>stableCoinsToMint</strong> – Number of stablecoins to mint.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The ID of you collateral debt position is returned.</p>
+<dd class="field-odd"><p>The ID of your collateral debt position is returned.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -446,7 +431,7 @@ The new minted stablecoins will be passed to the caller account.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">interestAmountUnrecorded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.interestAmountUnrecorded(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">interestAmount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.interestAmountUnrecorded(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Yet not stored interest, of the debt position. It depends on the debt, the rate and time since the last position update.</p>
+<dd class="field-odd"><p>Interest that has not yet been recorded for the debt position. It depends on the debt, the rate, and the time since the last position update.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -454,7 +439,7 @@ The new minted stablecoins will be passed to the caller account.</p>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>interestAmount The amount of not stored interest.</p>
+<dd class="field-odd"><p>interestAmount The amount of unrecorded interest.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -464,7 +449,7 @@ The new minted stablecoins will be passed to the caller account.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">totalCurrentFee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.totalCurrentFee(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">fee</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.totalCurrentFee(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Shows overall interest of the debt position (stored and not stored).</p>
+<dd class="field-odd"><p>Shows the overall interest of the debt position (both stored and unrecorded).</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -472,7 +457,7 @@ The new minted stablecoins will be passed to the caller account.</p>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>fee The amount of overall interest to pay.</p>
+<dd class="field-odd"><p>fee The total interest to pay.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -482,7 +467,7 @@ The new minted stablecoins will be passed to the caller account.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getMaxStableCoinsToMint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">ethValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.getMaxStableCoinsToMint(uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.getMaxStableCoinsToMint(uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Shows how many coins can be minted with a certain ether collateral according to the current prices and collateral discount.</p>
+<dd class="field-odd"><p>Shows how many coins can be minted with a given Ether collateral according to the current prices and collateral discount.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -490,7 +475,7 @@ The new minted stablecoins will be passed to the caller account.</p>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>amount The maximum amount of stablecoins one can mint by providing a certain collateral.</p>
+<dd class="field-odd"><p>amount The maximum amount of stablecoins one can mint with a given collateral.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -500,7 +485,7 @@ The new minted stablecoins will be passed to the caller account.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getMaxStableCoinsToMintForPos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.getMaxStableCoinsToMintForPos(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">maxAmount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.getMaxStableCoinsToMintForPos(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Shows how many coins can be minted for a certain position as amount of collateral or its price changed. It takes in consideration the amount of accumulated fee for the debt.</p>
+<dd class="field-odd"><p>Shows how many coins can be minted for a specific position considering changes in collateral amount or price. It accounts for the accumulated fee for the debt.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -508,7 +493,7 @@ The new minted stablecoins will be passed to the caller account.</p>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>maxAmount The maximum amount of stablecoins one can mint in this position.</p>
+<dd class="field-odd"><p>maxAmount The maximum amount of stablecoins one can mint for this position.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -518,12 +503,12 @@ The new minted stablecoins will be passed to the caller account.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">beneficiary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimInterest(uint256,address)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.claimInterest(uint256,address)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is for authorized contract by DAO only. For example Deposit contract may claim interest for deposit owner and they will be transferred form stabilization fund.
-If there is not enough funds, all available are transferred and allowance is given for the rest of the sum for future spending.</p>
+<dd class="field-odd"><p>This method is for contracts authorized by the DAO only. For example, a Deposit contract may claim interest for the deposit owner, and the interest will be transferred from the stabilization fund.
+If there are not enough funds, all available funds are transferred, and an allowance is given for the remaining amount for future spending.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>amount</strong> – The amount of interest to transfer.</p></li>
+<li><p><strong>amount</strong> – Amount of interest to transfer.</p></li>
 <li><p><strong>beneficiary</strong> – Address of the beneficiary.</p></li>
 </ul>
 </dd>
@@ -535,11 +520,11 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimEmission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">beneficiary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimEmission(uint256,address)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.claimEmission(uint256,address)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is for authorized contract by DAO only. For example, some new contract may claim emission according to its terms.</p>
+<dd class="field-odd"><p>This method is for authorized contracts by the DAO only. For example, a new contract may claim emission according to its terms.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>amount</strong> – The amount stablecoins to mint.</p></li>
+<li><p><strong>amount</strong> – Amount of stablecoins to mint.</p></li>
 <li><p><strong>beneficiary</strong> – Address of the beneficiary.</p></li>
 </ul>
 </dd>
@@ -551,7 +536,7 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">closeCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.closeCDP(uint32)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.closeCDP(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to return collateral to the owner if he returns the overall debt and interest. It is for the owner of the position only.</p>
+<dd class="field-odd"><p>This method is used to return collateral to the owner if they return the total debt and interest. It is for the position owner only.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -581,7 +566,7 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">switchRestrictInterestWithdrawal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.switchRestrictInterestWithdrawal(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.switchRestrictInterestWithdrawal(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to allow or disallow paying interest for position by the owner only. By default, is set false, which means that any user can force the owner of the position to pay the current interest for his debt anytime on call.</p>
+<dd class="field-odd"><p>This method allows or disallows paying interest for a position by the owner only. By default, it is set to false, meaning that any user can force the owner to pay the current interest for their debt at any time on call.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -596,7 +581,7 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">allowSurplusToAuction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CDP.allowSurplusToAuction()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.allowSurplusToAuction()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If stabilization fund exceed a certain percent (stabilizationFundPercent DAO param) of total dotflat stablecoins emission, anyone can allow spending to Auction contract for further governance tokens buy out init.</p>
+<dd class="field-odd"><p>If the stabilization fund exceeds a certain percentage (stabilizationFundPercent DAO param) of the total Dotflat stablecoin emission, anyone can allow spending to the Auction contract for further governance token buyouts.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -606,7 +591,7 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimMarginCall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimMarginCall(uint32)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.claimMarginCall(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If debt position is lack of collateral and is marked for liquidation, anyone may claim margin call for it and sell collateral through the auction.</p>
+<dd class="field-odd"><p>If a debt position lacks collateral and is marked for liquidation, anyone may claim a margin call for it and sell the collateral through the auction.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -621,7 +606,7 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">finishMarginCall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.finishMarginCall(uint32)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.finishMarginCall(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If the auction for margin call finished, the contract may proceed the rest of the actions.</p>
+<dd class="field-odd"><p>If the auction for the margin call has finished, the contract may proceed with the remaining actions.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -636,7 +621,7 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">markToLiquidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.markToLiquidate(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.markToLiquidate(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If debt position is lack of collateral, anyone may point this out by marking it on liquidation.</p>
+<dd class="field-odd"><p>If a debt position lacks collateral, anyone may mark it for liquidation.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -651,7 +636,7 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">eraseMarkToLiquidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.eraseMarkToLiquidate(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /><a class="headerlink" href="#CDP.eraseMarkToLiquidate(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If debt position has enough collateral but was earlier marked on liquidation, anyone may erase this mark.</p>
+<dd class="field-odd"><p>If a debt position has enough collateral but was previously marked for liquidation, anyone may remove this mark.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -666,16 +651,16 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">updateCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint</span> <span class="pre">newStableCoinsAmount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.updateCDP(uint32,uint)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.updateCDP(uint32,uint)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Change the amount of minted stablecoins or top up the amount of collateral. To withdraw collateral use withdrawEther function.</p>
+<dd class="field-odd"><p>Change the amount of minted stablecoins or increase the amount of collateral. To withdraw collateral, use the withdrawEther function.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>posID</strong> – ID of the position.</p></li>
-<li><p><strong>newStableCoinsAmount</strong> – ID of the position.</p></li>
+<li><p><strong>newStableCoinsAmount</strong> – New amount of stablecoins.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>success If succeed.</p>
+<dd class="field-odd"><p>success Whether or not the operation succeeded.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -685,7 +670,7 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">withdrawEther</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint128</span> <span class="pre">etherToWithdraw</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.withdrawEther(uint32,uint128)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.withdrawEther(uint32,uint128)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Withdraw ether from position if it exceeds the minimum collateral value due to ether price change, for example.</p>
+<dd class="field-odd"><p>Withdraw Ether from a position if it exceeds the minimum collateral value due to Ether price changes, for example.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -701,8 +686,8 @@ If there is not enough funds, all available are transferred and allowance is giv
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">burnRule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CDP.burnRule()" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.burnRule()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Anyone can burn (eliminate) all Rule tokens, placed on the CDP contract’s address. If not accidentally,
-Rules can be on the balance of the contract only after Rule buy out auction.</p>
+<dd class="field-odd"><p>Anyone can burn (eliminate) all Rule tokens held by the CDP contract. If not done accidentally,
+ule tokens can only be on the contract’s balance after a Rule buyout auction.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -712,8 +697,8 @@ Rules can be on the balance of the contract only after Rule buy out auction.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mintRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.mintRule(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.mintRule(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If stabilization fund has not enough funds, one may init the auction to top it up with dotflat stablecoins.
-The winner of that auction receives his reward in Rule tokens, minted by CDP contract.</p>
+<dd class="field-odd"><p>If the stabilization fund lacks sufficient funds, one may initiate an auction to top it up with dotflat stablecoins.
+The auction winner receives their reward in Rule tokens minted by the CDP contract.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -775,14 +760,16 @@ Inside the contract each auction is stored as the following structure.</p>
 <p class="admonition-title">Note</p>
 <p>There are 3 types of auctions, that may be created:
 - Selling the collateral of debt position if the holder of the position has not provided sufficient collateral for
-the stablecoins he has minted.</p>
+the stablecoins he has minted.
+- Rule tokens buyout if the stabilization fund exceeds its limit to reduce Rule total supply.
+- Dotflat buyout to top up stabilization fund with newly Rule token minted as a reward.</p>
 </div>
 <dl class="sol contract">
 <dt class="sig sig-object sol" id="Auction">
 <em><span class="pre">contract</span> </em><span class="sig-name descname"><span class="pre">Auction</span></span> <span class="pre">is</span> <span class="pre">ReentrancyGuard</span><a class="headerlink" href="#Auction" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Title<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A contract for different types of auctions</p>
+<dd class="field-odd"><p>A Contract for Different Types of Auctions</p>
 </dd>
 </dl>
 <dl class="sol statevar">
@@ -850,7 +837,7 @@ the stablecoins he has minted.</p>
 <span class="pre">bool</span> <span class="sig-name descname"><span class="pre">isCoinsBuyOutForStabilization</span></span><a class="headerlink" href="#Auction.isCoinsBuyOutForStabilization" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Flag, that shows if there is an active auction to top up stabilization fund.</p>
+<dd class="field-odd"><p>Flag indicating that there is an active auction to top up the stabilization fund.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -860,7 +847,7 @@ the stablecoins he has minted.</p>
 <span class="pre">bool</span> <span class="sig-name descname"><span class="pre">ruleBuyOut</span></span><a class="headerlink" href="#Auction.ruleBuyOut" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Flag, that shows if there is an active auction for governance tokens buyout.</p>
+<dd class="field-odd"><p>Flag indicating that there is an active auction for governance token buyout.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -870,7 +857,7 @@ the stablecoins he has minted.</p>
 <span class="pre">mapping</span> <span class="pre">(uint32</span> <span class="pre">=&gt;</span> <span class="pre">auctionEntity)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">auctions</span></span><a class="headerlink" href="#Auction.auctions" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>All the existing auctions are stored in this mapping.</p>
+<dd class="field-odd"><p>Mapping storing all existing auctions.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -880,26 +867,27 @@ the stablecoins he has minted.</p>
 <span class="pre">mapping</span> <span class="pre">(uint32</span> <span class="pre">=&gt;</span> <span class="pre">Bid)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">bids</span></span><a class="headerlink" href="#Auction.bids" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>All the existing bids are stored in this mapping.</p>
+<dd class="field-odd"><p>Mapping storing all existing bids.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="sol event">
-<dt class="sig sig-object sol" id="Auction.newAuction(uint32,uint256,address,uint256)">
-<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">newAuction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">auctionID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">lotAmount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">lotAddress</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">paymentAmount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.newAuction(uint32,uint256,address,uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#Auction.newAuction(uint32,uint256,address,uint256)" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="Auction.newAuction(uint8,uint32,uint256,address,uint256)">
+<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">newAuction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint8</span> <span class="pre">auctionType</span></em>, <em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">auctionID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">lotAmount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">lotAddress</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">paymentAmount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.newAuction(uint8,uint32,uint256,address,uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#Auction.newAuction(uint8,uint32,uint256,address,uint256)" title="Link to this definition"></a></dt>
 <dd><p>You can catch this event to participate in auction automatically.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event is fired when a new auction is created. Follow this events to participate in auctions.</p>
+<dd class="field-odd"><p>This event is emitted when a new auction is created. Follow this event to participate in auctions.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>auctionID</strong> – The id of new auction.</p></li>
-<li><p><strong>lotAmount</strong> – The amount of certain asset, which the winner will get.</p></li>
+<li><p><strong>auctionType</strong> – Type of the auction 1 - Rule buyout, 2 - stablecoins buyout, 3 - collateral liquidation</p></li>
+<li><p><strong>auctionID</strong> – The ID of the new auction.</p></li>
+<li><p><strong>lotAmount</strong> – The amount of the asset that the winner will receive.</p></li>
 <li><p><strong>lotAddress</strong> – Token address of the asset.</p></li>
-<li><p><strong>paymentAmount</strong> – The minimum amount of payment for the lot the auction should receive. It is a non-zero value only
-if we need to top up the stabilization fund of the system with certain amount of stablecoins.</p></li>
+<li><p><strong>paymentAmount</strong> – The minimum amount of payment required for the lot.
+This is non-zero only if topping up the stabilization fund with a certain amount of stablecoins.</p></li>
 </ul>
 </dd>
 </dl>
@@ -910,13 +898,13 @@ if we need to top up the stabilization fund of the system with certain amount of
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">auctionFinished</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">auctionID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">lotAmount</span></em>, <em class="sig-param"><span class="pre">uint32</span> <span class="pre">bestBidID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.auctionFinished(uint32,uint256,uint32)" title="Link to this definition"></a><br /><a class="headerlink" href="#Auction.auctionFinished(uint32,uint256,uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event is fired when a new auction is finished.</p>
+<dd class="field-odd"><p>This event is emitted when an auction finishes.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>auctionID</strong> – The id of a finished auction.</p></li>
-<li><p><strong>lotAmount</strong> – The amount of certain asset, which the winner will receive.</p></li>
-<li><p><strong>bestBidID</strong> – The id of best bid.</p></li>
+<li><p><strong>auctionID</strong> – The ID of the finished auction.</p></li>
+<li><p><strong>lotAmount</strong> – The amount of the asset that the winner will receive.</p></li>
+<li><p><strong>bestBidID</strong> – The ID of the best bid.</p></li>
 </ul>
 </dd>
 </dl>
@@ -927,14 +915,14 @@ if we need to top up the stabilization fund of the system with certain amount of
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">newBid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">auctionID</span></em>, <em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">bidID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">bidAmount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">owner</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.newBid(uint32,uint32,uint256,address)" title="Link to this definition"></a><br /><a class="headerlink" href="#Auction.newBid(uint32,uint32,uint256,address)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event is fired when a new bid is created or bid is improved. Follow this events to improve your bids.</p>
+<dd class="field-odd"><p>This event is emitted when a new bid is created or an existing bid is improved. Follow this event to improve your bids.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>auctionID</strong> – The id of new auction.</p></li>
-<li><p><strong>bidID</strong> – The id of the bid.</p></li>
-<li><p><strong>bidAmount</strong> – Amount of a bid.</p></li>
-<li><p><strong>owner</strong> – Bidder address.</p></li>
+<li><p><strong>auctionID</strong> – The ID of the auction.</p></li>
+<li><p><strong>bidID</strong> – The ID of the bid.</p></li>
+<li><p><strong>bidAmount</strong> – The amount of the bid.</p></li>
+<li><p><strong>owner</strong> – Address of the bidder.</p></li>
 </ul>
 </dd>
 </dl>
@@ -945,11 +933,11 @@ if we need to top up the stabilization fund of the system with certain amount of
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">bidCanceled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">indexed</span> <span class="pre">bidID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.bidCanceled(uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#Auction.bidCanceled(uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event is fired when a new bid is canceled. You can not cancel your bid, if your bid is the best one for now.</p>
+<dd class="field-odd"><p>This event is emitted when a bid is canceled. You cannot cancel your bid if it is currently the best one.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>bidID</strong> – The id of the bid.</p></li>
+<li><p><strong>bidID</strong> – The ID of the bid.</p></li>
 </ul>
 </dd>
 </dl>
@@ -960,11 +948,11 @@ if we need to top up the stabilization fund of the system with certain amount of
 <span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#Auction.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constructor for auction contract.</p>
+<dd class="field-odd"><p>Constructor for the auction contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>_INTDAOaddress</strong> – the address of main DAO contract.</p></li>
+<li><p><strong>_INTDAOaddress</strong> – The address of the main DAO contract.</p></li>
 </ul>
 </dd>
 </dl>
@@ -975,7 +963,7 @@ if we need to top up the stabilization fund of the system with certain amount of
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">renewContracts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Auction.renewContracts()" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#Auction.renewContracts()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to reinit needed interfaces when the addresses of contracts to use are changed by voting or to init interfaces just after deploy.</p>
+<dd class="field-odd"><p>Reinitialize the needed interfaces when the addresses of contracts are changed by voting or initialize interfaces after deployment.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -985,7 +973,7 @@ if we need to top up the stabilization fund of the system with certain amount of
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">initRuleBuyOut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Auction.initRuleBuyOut()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.initRuleBuyOut()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used when stabilization fund on CDP contract exceeds its limit for Rule buy out.</p>
+<dd class="field-odd"><p>Initiates an auction for Rule buyout when the stabilization fund on the CDP contract exceeds its limit.</p>
 </dd>
 <dt class="field-even">Return<span class="colon">:</span></dt>
 <dd class="field-even"><p>auctionID New auction ID.</p>
@@ -998,12 +986,11 @@ if we need to top up the stabilization fund of the system with certain amount of
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">initCoinsBuyOutForStabilization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">coinsAmountNeeded</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.initCoinsBuyOutForStabilization(uint256)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.initCoinsBuyOutForStabilization(uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Inits stablecoins buyout for stabilization fund, if it is low. The stabilization fund should always be a certain
-percent from stablecoin total supply (stabilizationFundPercent parameter in DAO contract). Maximum stablecoins per one auction is regulated by maxCoinsForStabilization parameter in DAO contract.</p>
+<dd class="field-odd"><p>Initiates a stablecoin buyout for the stabilization fund if it is low. The stabilization fund should always be a certain percentage of the total stablecoin supply (as defined by the stabilizationFundPercent parameter in the DAO contract). The maximum stablecoins per auction is regulated by the maxCoinsForStabilization parameter in the DAO contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>coinsAmountNeeded</strong> – Needed amount of stablecoins.</p></li>
+<li><p><strong>coinsAmountNeeded</strong> – The amount of stablecoins needed.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
@@ -1013,19 +1000,14 @@ percent from stablecoin total supply (stabilizationFundPercent parameter in DAO 
 </dd></dl>
 
 <dl class="sol function">
-<dt class="sig sig-object sol" id="Auction.initCoinsBuyOut(uint128)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">initCoinsBuyOut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint128</span> <span class="pre">collateral</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.initCoinsBuyOut(uint128)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.initCoinsBuyOut(uint128)" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="Auction.initCoinsBuyOut()">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">initCoinsBuyOut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Auction.initCoinsBuyOut()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.initCoinsBuyOut()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Inits auction if margin-call occurred and system needs to sell the collateral.</p>
+<dd class="field-odd"><p>Initiates an auction if a margin call occurs and the system needs to sell the collateral.</p>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>collateral</strong> – Ether collateral amount.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>auctionID New auction ID.</p>
+<dt class="field-even">Return<span class="colon">:</span></dt>
+<dd class="field-even"><p>auctionID New auction ID.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1035,13 +1017,12 @@ percent from stablecoin total supply (stabilizationFundPercent parameter in DAO 
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">makeBid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">bidAmount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.makeBid(uint32,uint256)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">bidID</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.makeBid(uint32,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Use this method to make a new bid. Make sure that you allowed needed amount of bid for Auction contract address.
-minAuctionPriceMove percent is the param from DAO contract, which means that you have to improve the previous best bid on a certain percent.</p>
+<dd class="field-odd"><p>Use this method to place a new bid. Ensure you have allowed the needed amount for the Auction contract address. The minAuctionPriceMove percentage (from the DAO contract) means you must improve the previous best bid by a certain percentage.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>auctionID</strong> – The ID of auction to participate in.</p></li>
-<li><p><strong>bidAmount</strong> – The amount of bid user wants to make.</p></li>
+<li><p><strong>auctionID</strong> – The ID of the auction to participate in.</p></li>
+<li><p><strong>bidAmount</strong> – The amount of the bid.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
@@ -1060,7 +1041,7 @@ minAuctionPriceMove percent is the param from DAO contract, which means that you
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>bidID</strong> – The ID of your bid.</p></li>
-<li><p><strong>newBidAmount</strong> – New bid amount.</p></li>
+<li><p><strong>newBidAmount</strong> – The new bid amount.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1071,7 +1052,7 @@ minAuctionPriceMove percent is the param from DAO contract, which means that you
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">cancelBid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">bidID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.cancelBid(uint32)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#Auction.cancelBid(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Use this method to cancel your own bid. Notice, that you can not cancel your bid if it is the best one for now.</p>
+<dd class="field-odd"><p>Use this method to cancel your own bid. Note that you cannot cancel your bid if it is currently the best one.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1086,8 +1067,7 @@ minAuctionPriceMove percent is the param from DAO contract, which means that you
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimToFinalizeAuction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.claimToFinalizeAuction(uint32)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.claimToFinalizeAuction(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If there is no more bids made and the timeout has expired, you can claim to finalize the auction.
-Notice, that when the collateral is sold through auction, you have to use another method - finishMarginCall from CDP contract.</p>
+<dd class="field-odd"><p>If there are no more bids and the timeout has expired, you can claim to finalize the auction. For auctions involving collateral, use the finishMarginCall method from the CDP contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1102,7 +1082,7 @@ Notice, that when the collateral is sold through auction, you have to use anothe
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">isFinalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.isFinalized(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">finalized</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.isFinalized(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method just shows, whether a certain auction is finished or not.</p>
+<dd class="field-odd"><p>Shows whether a certain auction is finished or not.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1117,7 +1097,7 @@ Notice, that when the collateral is sold through auction, you have to use anothe
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getPaymentAmount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.getPaymentAmount(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.getPaymentAmount(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method shows paymentAmount of an auction. It is mainly used when collateral is sold.</p>
+<dd class="field-odd"><p>Shows the payment amount required for an auction. This is mainly used when collateral is sold.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1132,7 +1112,7 @@ Notice, that when the collateral is sold through auction, you have to use anothe
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getBestBidAmount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.getBestBidAmount(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.getBestBidAmount(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method shows current best bid amount of an auction.</p>
+<dd class="field-odd"><p>Shows the current best bid amount for an auction.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1178,7 +1158,12 @@ Inside the contract each deposit is stored as the following structure.</p>
 <dl class="sol contract">
 <dt class="sig sig-object sol" id="DepositContract">
 <em><span class="pre">contract</span> </em><span class="sig-name descname"><span class="pre">DepositContract</span></span> <span class="pre">is</span> <span class="pre">ReentrancyGuard</span><a class="headerlink" href="#DepositContract" title="Link to this definition"></a></dt>
-<dd><dl class="sol statevar">
+<dd><dl class="field-list simple">
+<dt class="field-odd">Title<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Deposit contract</p>
+</dd>
+</dl>
+<dl class="sol statevar">
 <dt class="sig sig-object sol" id="DepositContract.dao">
 <span class="pre">IDAO</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">dao</span></span><a class="headerlink" href="#DepositContract.dao" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -1223,7 +1208,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 <span class="pre">mapping</span> <span class="pre">(uint32</span> <span class="pre">=&gt;</span> <span class="pre">Deposit)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">deposits</span></span><a class="headerlink" href="#DepositContract.deposits" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Deposits storage</p>
+<dd class="field-odd"><p>Mapping storing all deposits.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1233,14 +1218,14 @@ Inside the contract each deposit is stored as the following structure.</p>
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">DepositOpened</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">id</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">rate</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">indexed</span> <span class="pre">owner</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.DepositOpened(uint32,uint256,uint256,address)" title="Link to this definition"></a><br /><a class="headerlink" href="#DepositContract.DepositOpened(uint32,uint256,uint256,address)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This event emitted when the new deposit is opened</p>
+<dd class="field-odd"><p>Emitted when a new deposit is opened.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – ID of the deposit</p></li>
-<li><p><strong>amount</strong> – How many stablecoins were deposited.</p></li>
-<li><p><strong>rate</strong> – Annual interest on this deposit.</p></li>
-<li><p><strong>owner</strong> – Deposit owner’s address.</p></li>
+<li><p><strong>id</strong> – ID of the deposit.</p></li>
+<li><p><strong>amount</strong> – Amount of stablecoins deposited.</p></li>
+<li><p><strong>rate</strong> – Annual interest rate on the deposit.</p></li>
+<li><p><strong>owner</strong> – Address of the deposit owner.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1251,11 +1236,11 @@ Inside the contract each deposit is stored as the following structure.</p>
 <span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#DepositContract.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constructor for Deposit contract.</p>
+<dd class="field-odd"><p>Constructor for the Deposit contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>_INTDAOaddress</strong> – the address of main DAO contract.</p></li>
+<li><p><strong>_INTDAOaddress</strong> – Address of the main DAO contract.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1266,7 +1251,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">renewContracts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.renewContracts()" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#DepositContract.renewContracts()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to reinit needed interfaces when the addresses of contracts to use are changed by voting or to init interfaces just after deploy.</p>
+<dd class="field-odd"><p>Reinitialize the needed interfaces when the addresses of contracts are changed by voting or initialize interfaces just after deployment.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1276,8 +1261,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">deposit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.deposit()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#DepositContract.deposit()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to deposit stablecoins. Before the call you need to allow spending for this contract.
-As the result, the new DepositOpened event is emitted with the owner in parameters mentioned.</p>
+<dd class="field-odd"><p>Deposits stablecoins into the contract. Ensure that spending is allowed for this contract address before calling this function. A DepositOpened event is emitted with the owner and other relevant parameters.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1287,13 +1271,12 @@ As the result, the new DepositOpened event is emitted with the owner in paramete
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">withdraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">id</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.withdraw(uint32,uint256)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#DepositContract.withdraw(uint32,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to withdraw stablecoins from the deposit. Of course, only the owner of the deposit is able to withdraw.
-If there are no funds left on the deposit, it is considered closed.</p>
+<dd class="field-odd"><p>Withdraws stablecoins from the deposit. Only the owner of the deposit can withdraw funds. If the deposit balance reaches zero, it is considered closed.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – the ID of the deposit.</p></li>
-<li><p><strong>amount</strong> – the amount of funds to withdraw.</p></li>
+<li><p><strong>id</strong> – The ID of the deposit.</p></li>
+<li><p><strong>amount</strong> – The amount of funds to withdraw.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1304,12 +1287,11 @@ If there are no funds left on the deposit, it is considered closed.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">topUp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.topUp(uint32)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#DepositContract.topUp(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to top up the deposit if it is not closed. Be aware, that you accidentally can top up someone else’s deposit.
-Mind the id of the deposit and assure you are the owner of it. As with <em>deposit</em> function, you have to allow spending first.</p>
+<dd class="field-odd"><p>Tops up an existing deposit if it is not closed. Ensure that you are the owner of the deposit and that you have allowed spending for the contract. You may accidentally top up someone else’s deposit, so verify the deposit ID carefully.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – the ID of the deposit.</p></li>
+<li><p><strong>id</strong> – The ID of the deposit.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1320,11 +1302,11 @@ Mind the id of the deposit and assure you are the owner of it. As with <em>depos
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">overallInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.overallInterest(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">interest</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#DepositContract.overallInterest(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Overall interest of given deposit.</p>
+<dd class="field-odd"><p>Returns the overall accumulated interest for a given deposit.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – the ID of the deposit.</p></li>
+<li><p><strong>id</strong> – The ID of the deposit.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
@@ -1338,15 +1320,15 @@ Mind the id of the deposit and assure you are the owner of it. As with <em>depos
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">updateInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.updateInterest(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">accumulated</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#DepositContract.updateInterest(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Write down the current overall interest to storage. Usually, there is no need for user to invoke this function unless he wants to change his interest rate to current, if it is changed.</p>
+<dd class="field-odd"><p>Updates the stored interest to reflect the current rate. Users generally do not need to invoke this unless they want to update their interest rate to the current one if it has changed.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – the ID of the deposit.</p></li>
+<li><p><strong>id</strong> – The ID of the deposit.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>accumulated Overall accumulated interest</p>
+<dd class="field-odd"><p>accumulated Overall accumulated interest.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1356,17 +1338,20 @@ Mind the id of the deposit and assure you are the owner of it. As with <em>depos
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.claimInterest(uint32)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#DepositContract.claimInterest(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Claim your earnings with keeping funds on the deposit. Owner’s earnings will be transferred from the stabilization fund (CDP balance of stablecoins) if it is not empty.
-If CDP balance is not enough, the contract will transfer all available funds to the user and will give allowance to spend the rest of the sum.
-To top up the stabilization fund anyone can init the auction. See the initCoinsBuyOutForStabilization function in Auction contract for more information.</p>
+<dd class="field-odd"><p>Claims the accumulated interest while keeping the principal funds in the deposit. The owner’s earnings will be transferred from the stabilization fund (CDP balance of stablecoins) if available. If the CDP balance is insufficient, the contract will transfer all available funds to the user and provide an allowance to spend the remaining amount. To top up the stabilization fund, one can initiate an auction using the initCoinsBuyOutForStabilization function in the Auction contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – the ID of the deposit.</p></li>
+<li><p><strong>id</strong> – The ID of the deposit.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="sol function">
+<dt class="sig sig-object sol" id="DepositContract.getInterest(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.getInterest(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">internal</span></em><br /><a class="headerlink" href="#DepositContract.getInterest(uint32)" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -1375,19 +1360,14 @@ To top up the stabilization fund anyone can init the auction. See the initCoinsB
 <h2>DAO<a class="headerlink" href="#dao" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This contract is the main contract of the system. It stores all the valuable parameters of the system as well as all the address of contracts
-participating in the system. Also, this contact is responsible for managing voting for Rule holders.</p>
-<p>If any user has enough Rules to init the voting (<em>minRuleTokensToInitVotingPercent</em> for now it is set to 1%), he may propose a
-voting for the change of any parameter of the system or significant address, to pause/unpause or authorize contracts.</p>
-<p>To participate in a voting after it was initialized, user has to pool his tokens on DAO contact address to approve his
-ownership and to avoid passing his tokens to other users until the voting is over.</p>
-<p>If there is a quorum (<em>quorum</em> is now set to 60% of total Rule supply), the decision could be made.
-A voting has a 1 day duration (<em>votingDuration</em>), but it is an optional parameter, which could be changed by another voting.</p>
-<p>The decision effects the system if it has the <em>majority</em> of positive votes. For now, the majority is 50% (optional parameter).</p>
-<p>If there is an absolute majority of positive votes (<em>absoluteMajority</em> is 80% of total Rule supply), the voting may be finished immediately.</p>
-<p>After the voting is finished, can return his Rule tokens from DAO contract. If he returns his tokens before the voting is finished,
-his vote will not be taken in consideration.</p>
-<p>Each voting is stored as the following structure</p>
+<p>This contract is the main contract of the system. It stores all the valuable parameters of the system as well as all the addresses of contracts participating in the system. Also, this contract is responsible for managing voting for Rule holders.</p>
+<p>If any user has enough Rules to initiate voting (minRuleTokensToInitVotingPercent; for now, it is set to 1%), he or she may propose a vote for the change of any parameter of the system or a significant address, to pause/unpause or authorize contracts.</p>
+<p>To participate in a vote after it is initialized, a user has to pool tokens in the DAO contract address to prove ownership and to avoid passing tokens to other users until the voting is over.</p>
+<p>If there is a quorum (quorum is now set to 60% of the total Rule supply), a decision can be made. A vote has a 1-day duration (votingDuration), but this is an optional parameter that can be changed by another vote.</p>
+<p>The decision affects the system if it has the majority of positive votes. For now, the majority is 50% (optional parameter).</p>
+<p>If there is an absolute majority of positive votes (absoluteMajority is 80% of the total Rule supply), the vote may be finished immediately.</p>
+<p>After the vote is finished, the user can return pooled Rule tokens from the DAO contract. If the user returns tokens before the vote is finished, the vote will not be taken into consideration.</p>
+<p>Each vote is stored as the following structure:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Voting</span> <span class="p">{</span>
     <span class="n">uint256</span> <span class="n">totalPositive</span><span class="p">;</span>
     <span class="n">uint8</span> <span class="n">votingType</span><span class="p">;</span>
@@ -1401,12 +1381,12 @@ his vote will not be taken in consideration.</p>
 </div>
 <div class="line-block">
 <div class="line"><strong>*totalPositive*</strong> - total positive votes on voting.</div>
-<div class="line"><strong>*votingType*</strong> - type of the voting: 1 - set the param value, 2 - set the address, 3 - pause/unpause a contract, 4 - authorize/unauthorize a contract.</div>
+<div class="line"><strong>*votingType*</strong> - type of the vote: 1 - set the parameter value, 2 - set the address, 3 - pause/unpause a contract, 4 - authorize/deauthorize a contract.</div>
 <div class="line"><strong>*name*</strong> - name of the parameter or contract.</div>
 <div class="line"><strong>*value*</strong> -  value for the parameter (type 1 voting).</div>
 <div class="line"><strong>*addr*</strong> -  value for the address (type 2 voting).</div>
 <div class="line"><strong>*startTime*</strong> -  start time of the voting;</div>
-<div class="line"><strong>*decision*</strong> -  bool decision for 3 and 4 type voting; If it set to false and voting has majority positive votes, the contract will be set unpaused/unauthorized correspondingly.</div>
+<div class="line"><strong>*decision*</strong> -  bool decision for 3 and 4 type voting; If it is set to false and the vote has a majority of positive votes, the contract will be set to unpause/unauthorize correspondingly.</div>
 </div>
 <p>Initial parameters are as follows:</p>
 <blockquote>
@@ -1486,7 +1466,7 @@ his vote will not be taken in consideration.</p>
 <span class="pre">bool</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">activeVoting</span></span><a class="headerlink" href="#INTDAO.activeVoting" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Active voting presence flag as there can be only one active voting.</p>
+<dd class="field-odd"><p>Active voting presence flag, as there can be only one active voting.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1496,7 +1476,7 @@ his vote will not be taken in consideration.</p>
 <span class="pre">mapping</span> <span class="pre">(string</span> <span class="pre">=&gt;</span> <span class="pre">uint256)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#INTDAO.params" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Storage for params</p>
+<dd class="field-odd"><p>Storage for parameters</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1556,13 +1536,13 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">NewVoting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">id</span></em>, <em class="sig-param"><span class="pre">string</span> <span class="pre">name</span></em>, <em class="sig-param"><span class="pre">string</span> <span class="pre">indexed</span> <span class="pre">indexedName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.NewVoting(uint32,string,string)" title="Link to this definition"></a><br /><a class="headerlink" href="#INTDAO.NewVoting(uint32,string,string)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Event is emitted when new voting is created</p>
+<dd class="field-odd"><p>Event emitted when new voting is created</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>id</strong> – ID of the voting</p></li>
-<li><p><strong>name</strong> – Name of the param or address</p></li>
-<li><p><strong>indexedName</strong> – The same as name, introduced for dapps usage.</p></li>
+<li><p><strong>name</strong> – Name of the parameter or address</p></li>
+<li><p><strong>indexedName</strong> – The same as name, introduced for dapp usage</p></li>
 </ul>
 </dd>
 </dl>
@@ -1573,7 +1553,7 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">VotingSucceed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.VotingSucceed(uint32)" title="Link to this definition"></a><br /><a class="headerlink" href="#INTDAO.VotingSucceed(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Event is emitted when voting is succeed</p>
+<dd class="field-odd"><p>Event emitted when voting succeeds</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1588,7 +1568,7 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">VotingFailed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.VotingFailed(uint32)" title="Link to this definition"></a><br /><a class="headerlink" href="#INTDAO.VotingFailed(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Event is emitted when voting is finished but failed.</p>
+<dd class="field-odd"><p>Event emitted when voting finishes but fails</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1603,11 +1583,11 @@ his vote will not be taken in consideration.</p>
 <span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address[]</span> <span class="pre">memory</span> <span class="pre">_addresses</span></em><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#INTDAO.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constructor of Interest DAO contract where all the parameters of system are initialized.</p>
+<dd class="field-odd"><p>Constructor of the Interest DAO contract, where all the parameters of the system are initialized</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>_addresses</strong> – Initial address of each contract in the DAO.</p></li>
+<li><p><strong>_addresses</strong> – Initial addresses of each contract in the DAO</p></li>
 </ul>
 </dd>
 </dl>
@@ -1618,7 +1598,7 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">renewContracts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.renewContracts()" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /><a class="headerlink" href="#INTDAO.renewContracts()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to change the Rule token address if it was changed during the voting for some reason.</p>
+<dd class="field-odd"><p>This method is used to change the Rule token address if it was changed during voting for some reason</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1628,15 +1608,15 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">addVoting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint8</span> <span class="pre">votingType</span></em>, <em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">name</span></em>, <em class="sig-param"><span class="pre">uint</span> <span class="pre">value</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">addr</span></em>, <em class="sig-param"><span class="pre">bool</span> <span class="pre">decision</span></em><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.addVoting(uint8,string,uint,address,bool)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#INTDAO.addVoting(uint8,string,uint,address,bool)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Method to init a new voting</p>
+<dd class="field-odd"><p>Method to initiate a new voting</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>votingType</strong> – type of the voting.</p></li>
-<li><p><strong>name</strong> – name of the parameter of address.</p></li>
-<li><p><strong>value</strong> – value of the parameter (for type 1 voting).</p></li>
-<li><p><strong>addr</strong> – value for the address (for type 2 voting).</p></li>
-<li><p><strong>decision</strong> – (True/False) for 3 and 4 type voting.</p></li>
+<li><p><strong>votingType</strong> – Type of the voting</p></li>
+<li><p><strong>name</strong> – Name of the parameter or address</p></li>
+<li><p><strong>value</strong> – Value of the parameter (for type 1 voting)</p></li>
+<li><p><strong>addr</strong> – Address value (for type 2 voting)</p></li>
+<li><p><strong>decision</strong> – True/False for type 3 and 4 voting</p></li>
 </ul>
 </dd>
 </dl>
@@ -1647,10 +1627,10 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">poolTokens</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.poolTokens()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#INTDAO.poolTokens()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pool tokens on the contract to participate in voting.</p>
+<dd class="field-odd"><p>Pool tokens on the contract to participate in voting</p>
 </dd>
 <dt class="field-even">Return<span class="colon">:</span></dt>
-<dd class="field-even"><p>success True if succeed.</p>
+<dd class="field-even"><p>success True if successful</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1660,10 +1640,10 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">returnTokens</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.returnTokens()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#INTDAO.returnTokens()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>return tokens from contract after voting is finished.</p>
+<dd class="field-odd"><p>Return tokens from the contract after voting is finished</p>
 </dd>
 <dt class="field-even">Return<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if succeed.</p>
+<dd class="field-even"><p>True if successful</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1673,11 +1653,11 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">vote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">_vote</span></em><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.vote(bool)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#INTDAO.vote(bool)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Vote on the current voting.</p>
+<dd class="field-odd"><p>Vote on the current voting</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>_vote</strong> – True/False for For/Against the proposal.</p></li>
+<li><p><strong>_vote</strong> – True/False for For/Against the proposal</p></li>
 </ul>
 </dd>
 </dl>
@@ -1688,7 +1668,7 @@ his vote will not be taken in consideration.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimToFinalizeCurrentVoting</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.claimToFinalizeCurrentVoting()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#INTDAO.claimToFinalizeCurrentVoting()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Claim to fihish voting.</p>
+<dd class="field-odd"><p>Claim to finish voting</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1700,8 +1680,7 @@ his vote will not be taken in consideration.</p>
 <h2>Basket<a class="headerlink" href="#basket" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This contract is used to store all the commodities, with initial prices and the share of each commodity.
-It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to calculate the number of dotflat coins per 1 ether according to the current prices.</p>
+<p>This contract is used to store all the commodities with initial prices and the share of each commodity. It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to calculate the number of Dotflat coins per 1 ether according to the current prices.</p>
 <p>Item are stored it in the structure
 .. code-block:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">basketItem</span> <span class="p">{</span>
@@ -1725,7 +1704,7 @@ It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to c
 <span class="pre">IDAO</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">dao</span></span><a class="headerlink" href="#basketContract.dao" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DAO interface to interact with (initializes in constructor).</p>
+<dd class="field-odd"><p>DAO interface to interact with (initializes in constructor)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1775,7 +1754,7 @@ It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to c
 <span class="pre">mapping</span> <span class="pre">(uint16</span> <span class="pre">=&gt;</span> <span class="pre">basketItem)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">items</span></span><a class="headerlink" href="#basketContract.items" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Mapping to store all the items. Each basketItem is a struct of (symbol, share, initialPrice)</p>
+<dd class="field-odd"><p>Mapping to store all the items. Each basketItem is a struct of (symbol, share, initialPrice).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1785,7 +1764,7 @@ It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to c
 <span class="pre">mapping</span> <span class="pre">(string</span> <span class="pre">=&gt;</span> <span class="pre">uint16)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">dictionary</span></span><a class="headerlink" href="#basketContract.dictionary" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Mapping to store pairs (symbol, itemID)</p>
+<dd class="field-odd"><p>Mapping to store pairs (symbol, itemID).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1795,11 +1774,11 @@ It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to c
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">instrumentAdded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.instrumentAdded(uint16)" title="Link to this definition"></a><br /><a class="headerlink" href="#basketContract.instrumentAdded(uint16)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Fired when the new instrument is added</p>
+<dd class="field-odd"><p>Emitted when a new instrument is added.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – Item id</p></li>
+<li><p><strong>id</strong> – Item ID.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1810,11 +1789,11 @@ It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to c
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">shareChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.shareChanged(uint16)" title="Link to this definition"></a><br /><a class="headerlink" href="#basketContract.shareChanged(uint16)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Fired when the new share of a certain instrument is changed.</p>
+<dd class="field-odd"><p>Emitted when the share of a certain instrument is changed.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – Item id</p></li>
+<li><p><strong>id</strong> – Item ID.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1825,11 +1804,11 @@ It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to c
 <span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">addresspayable</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#basketContract.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constructor for basket contract.</p>
+<dd class="field-odd"><p>Constructor for the basket contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>_INTDAOaddress</strong> – the address of main DAO contract.</p></li>
+<li><p><strong>_INTDAOaddress</strong> – The address of the main DAO contract.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1840,7 +1819,7 @@ It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to c
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">renewContracts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.renewContracts()" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#basketContract.renewContracts()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used when the addresses of contracts to use are changed by voting or just after deploy.</p>
+<dd class="field-odd"><p>This method is used when the addresses of contracts to use are changed by voting or just after deployment.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1850,14 +1829,12 @@ It also has a <strong>*getEthereumVSCommoditiesPriceChange*</strong> method to c
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">addItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em>, <em class="sig-param"><span class="pre">uint16</span> <span class="pre">share</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">initialPrice</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.addItem(string,uint16,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#basketContract.addItem(string,uint16,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is to add additional commodity to the basket by the authorized address only.
-Event with new item ID is emmited.</p>
+<dd class="field-odd"><p>This method is to add an additional commodity to the basket by the authorized address only. An event with a new item ID is emitted.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>symbol</strong> – The symbol of new item. For example, ‘Copper’.</p></li>
-<li><p><strong>share</strong> – The share of new item. The share is used to estimate the weight of a certain item in the basket, let it be 10 shares of Brent oil, 20 shares of Gold and 5 shares of orange juice.
-, so the price change of gold may be more significant for the whole basket than the orange juice price change.</p></li>
+<li><p><strong>symbol</strong> – The symbol of the new item. For example, ‘Copper’.</p></li>
+<li><p><strong>share</strong> – The share of the new item. The share is used to estimate the weight of a certain item in the basket, so the price change of gold may be more significant for the whole basket than the orange juice price change.</p></li>
 <li><p><strong>initialPrice</strong> – Initial price of an item. For instance, 2500 USD for gold.</p></li>
 </ul>
 </dd>
@@ -1869,12 +1846,12 @@ Event with new item ID is emmited.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">setShare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em>, <em class="sig-param"><span class="pre">uint16</span> <span class="pre">share</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.setShare(uint16,uint16)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#basketContract.setShare(uint16,uint16)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is used to change a share (or a weight) of particular item in the basket.</p>
+<dd class="field-odd"><p>This method is used to change the share (or weight) of a particular item in the basket.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>id</strong> – Item ID.</p></li>
-<li><p><strong>share</strong> – New share of the item in the basket. To delete a particular item for basket you may set a 0 share.</p></li>
+<li><p><strong>share</strong> – New share of the item in the basket. To delete a particular item from the basket, you may set a 0 share.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1885,13 +1862,10 @@ Event with new item ID is emmited.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getCurrentSharePriceChange</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.getCurrentSharePriceChange()" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">priceChange</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#basketContract.getCurrentSharePriceChange()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Method is used to calculate price change of 1 share of the basket. The total shares of all items are stored in sharesCount.
-For each item in a basket method multiplies the share of an item by it’s price change (current item price - initial item price) and
-then sums it getting the overallBasketPrice.</p>
+<dd class="field-odd"><p>Method is used to calculate the price change of 1 share of the basket. The total shares of all items are stored in sharesCount. For each item in the basket, the method multiplies the share of an item by its price change (current item price - initial item price) and then sums it to get the overallBasketPrice.</p>
 </dd>
 <dt class="field-even">Return<span class="colon">:</span></dt>
-<dd class="field-even"><p>priceChange The method returns an overallBasketPrice divided by sharesCount. Thus we can estimate the change of one basket share price
-according to the price change of each item in the basket and its share in it.</p>
+<dd class="field-even"><p>priceChange The method returns the overallBasketPrice divided by sharesCount. Thus, we can estimate the change of one basket share price according to the price change of each item in the basket and its share in it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1901,7 +1875,7 @@ according to the price change of each item in the basket and its share in it.</p
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getEthereumVSCommoditiesPriceChange</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.getEthereumVSCommoditiesPriceChange()" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#basketContract.getEthereumVSCommoditiesPriceChange()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Returns an actual price of ethereum versus basket share price change.</p>
+<dd class="field-odd"><p>Returns the actual price of Ethereum versus basket share price change.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1911,11 +1885,11 @@ according to the price change of each item in the basket and its share in it.</p
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getPrice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.getPrice(string)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#basketContract.getPrice(string)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Returns an actual price of given commodity.</p>
+<dd class="field-odd"><p>Returns the actual price of the given commodity.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>symbol</strong> – The symbol of the item in the basket. For example, ‘GLD’</p></li>
+<li><p><strong>symbol</strong> – The symbol of the item in the basket. For example, ‘GLD’.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1926,8 +1900,7 @@ according to the price change of each item in the basket and its share in it.</p
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getDecimals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.getDecimals(string)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint8</span> <span class="pre">_decimals</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#basketContract.getDecimals(string)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>getDecimals returns the precision (the number of decimals) for each item in a basket as a price is stored as integer.
-For example, if a price is 460000 and an item has 5 decimals, it means, that the price is 4.6 per one quote of an item.</p>
+<dd class="field-odd"><p>getDecimals returns the precision (the number of decimals) for each item in the basket as the price is stored as an integer. For example, if a price is 460000 and an item has 5 decimals, it means the price is 4.6 per one quote of an item.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1939,10 +1912,8 @@ For example, if a price is 460000 and an item has 5 decimals, it means, that the
 <h2>exchangeRate<a class="headerlink" href="#exchangerate" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This contract is created to receive and store quotes of all needed instruments from oracle.
-Quotes are taken from exchanges. Oracle has it’s own schedule to write down fresh quotes.
-User may invoke one of the methods with a list of instruments if he wants them to be updated out of schedule.</p>
-<p>For saving gas, instruments are stored in two structures</p>
+<p>This contract is created to receive and store quotes of all needed instruments from the oracle. Quotes are taken from exchanges. The oracle has its own schedule to write down fresh quotes. A user may invoke one of the methods with a list of instruments if he wants them to be updated out of schedule.</p>
+<p>To save gas, instruments are stored in two structures.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Instrument</span> <span class="p">{</span>
     <span class="n">uint256</span> <span class="n">price</span><span class="p">;</span>
     <span class="n">uint128</span> <span class="n">timeStamp</span><span class="p">;</span>
@@ -1979,7 +1950,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">uint16</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">instrumentsCount</span></span><a class="headerlink" href="#exchangeRateContract.instrumentsCount" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>counter for instruments</p>
+<dd class="field-odd"><p>Counter for instruments.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1989,7 +1960,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">uint256</span> <span class="pre">constant</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">updOnePriceGasCost</span></span><a class="headerlink" href="#exchangeRateContract.updOnePriceGasCost" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>gas prices to pay if someone wants oracle to send quotes update out of schedule for one instrument.</p>
+<dd class="field-odd"><p>Gas price to pay if someone wants the oracle to send a quote update out of schedule for one instrument.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1999,7 +1970,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">uint256</span> <span class="pre">constant</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">updSeveralPricesCost</span></span><a class="headerlink" href="#exchangeRateContract.updSeveralPricesCost" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>gas prices to pay if someone wants oracle to send quotes update out of schedule for several instruments.</p>
+<dd class="field-odd"><p>Gas price to pay if someone wants the oracle to send a quote update out of schedule for several instruments.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2009,7 +1980,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">uint256</span> <span class="pre">constant</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">updAdditionalPrice</span></span><a class="headerlink" href="#exchangeRateContract.updAdditionalPrice" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>gas prices to pay if someone wants oracle to send quotes update out of schedule for every additional instrument in a bundle.</p>
+<dd class="field-odd"><p>Gas price to pay if someone wants the oracle to send a quote update out of schedule for every additional instrument in a bundle.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2019,7 +1990,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">address</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">author</span></span><a class="headerlink" href="#exchangeRateContract.author" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>author of this contract address</p>
+<dd class="field-odd"><p>Address of the author of this contract.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2029,7 +2000,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">address</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">beneficiary</span></span><a class="headerlink" href="#exchangeRateContract.beneficiary" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Address to receive profit, gained by this contract for out of schedule updates.</p>
+<dd class="field-odd"><p>Address to receive profit gained by this contract from out-of-schedule updates.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2049,7 +2020,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">bool</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">finalized</span></span><a class="headerlink" href="#exchangeRateContract.finalized" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The contract may be finalized, which means, that beneficiary address can not be changed anymore.</p>
+<dd class="field-odd"><p>The contract may be finalized, which means the beneficiary address cannot be changed anymore.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2059,7 +2030,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">mapping</span> <span class="pre">(uint16</span> <span class="pre">=&gt;</span> <span class="pre">Instrument)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">instruments</span></span><a class="headerlink" href="#exchangeRateContract.instruments" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Instrument storage</p>
+<dd class="field-odd"><p>Instrument storage.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2069,7 +2040,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="pre">mapping</span> <span class="pre">(string</span> <span class="pre">=&gt;</span> <span class="pre">InstrumentDescription)</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">dictionary</span></span><a class="headerlink" href="#exchangeRateContract.dictionary" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>InstrumentDescription dictionary</p>
+<dd class="field-odd"><p>InstrumentDescription dictionary.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2079,11 +2050,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.constructor" title="Link to this definition"></a><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#exchangeRateContract.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constructor for exchangeRateContract contract.</p>
+<dd class="field-odd"><p>Constructor for the exchangeRateContract contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>_INTDAOaddress</strong> – the address of main DAO contract.</p></li>
+<li><p><strong>_INTDAOaddress</strong> – The address of the main DAO contract.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2094,11 +2065,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">priceUpdateRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.priceUpdateRequest(uint16)" title="Link to this definition"></a><br /><a class="headerlink" href="#exchangeRateContract.priceUpdateRequest(uint16)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Emitted when someone requested to update a single quote</p>
+<dd class="field-odd"><p>Emitted when someone requests to update a single quote.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – Id of the instrument</p></li>
+<li><p><strong>id</strong> – ID of the instrument.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2109,11 +2080,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">severalPricesUpdateRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16[]</span> <span class="pre">ids</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.severalPricesUpdateRequest(uint16[])" title="Link to this definition"></a><br /><a class="headerlink" href="#exchangeRateContract.severalPricesUpdateRequest(uint16[])" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Emitted when someone requested to update a several quotes</p>
+<dd class="field-odd"><p>Emitted when someone requests to update several quotes.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ids</strong> – Array of ids.</p></li>
+<li><p><strong>ids</strong> – Array of IDs.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2124,11 +2095,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">priceUpdated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.priceUpdated(uint16)" title="Link to this definition"></a><br /><a class="headerlink" href="#exchangeRateContract.priceUpdated(uint16)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Emitted when price of the certain instrument is updated</p>
+<dd class="field-odd"><p>Emitted when the price of a certain instrument is updated.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – Id of the instrument</p></li>
+<li><p><strong>id</strong> – ID of the instrument.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2139,11 +2110,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">profit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">profit</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.profit(uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#exchangeRateContract.profit(uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Event for transferring the profit of the contract</p>
+<dd class="field-odd"><p>Event for transferring the profit of the contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>profit</strong> – Amount of profit obtained</p></li>
+<li><p><strong>profit</strong> – Amount of profit obtained.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2154,11 +2125,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">highVolatility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.highVolatility(uint16)" title="Link to this definition"></a><br /><a class="headerlink" href="#exchangeRateContract.highVolatility(uint16)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Event emitted when the price of given instrument changes more than highVolatilityEventBarrierPercent from DAO</p>
+<dd class="field-odd"><p>Event emitted when the price of a given instrument changes more than the highVolatilityEventBarrierPercent from DAO.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – Id of the instrument</p></li>
+<li><p><strong>id</strong> – ID of the instrument.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2169,11 +2140,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">changeBeneficiaryAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">addresspayable</span> <span class="pre">newAddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.changeBeneficiaryAddress(addresspayable)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">onlyAuthor</span><br /><a class="headerlink" href="#exchangeRateContract.changeBeneficiaryAddress(addresspayable)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Change the address to receive profit</p>
+<dd class="field-odd"><p>Change the address to receive profit.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>newAddress</strong> – New address</p></li>
+<li><p><strong>newAddress</strong> – New address.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2184,7 +2155,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">finalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.finalize()" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">onlyAuthor</span><br /><a class="headerlink" href="#exchangeRateContract.finalize()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Make the change of beneficiary address impossible</p>
+<dd class="field-odd"><p>Make the change of the beneficiary address impossible.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2194,7 +2165,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">changeUpdaterAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">addresspayable</span> <span class="pre">newAddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.changeUpdaterAddress(addresspayable)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">onlyAuthor</span><br /><a class="headerlink" href="#exchangeRateContract.changeUpdaterAddress(addresspayable)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Change the address to get transactions with quotes from</p>
+<dd class="field-odd"><p>Change the address to receive transactions with quotes.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -2209,11 +2180,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">requestPriceUpdate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.requestPriceUpdate(uint16)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#exchangeRateContract.requestPriceUpdate(uint16)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Request of price update. A payable function.</p>
+<dd class="field-odd"><p>Request a price update. A payable function.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – Id of the instrument</p></li>
+<li><p><strong>id</strong> – ID of the instrument.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2224,11 +2195,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">requestMultiplePricesUpdate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16[]</span> <span class="pre">memory</span> <span class="pre">ids</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.requestMultiplePricesUpdate(uint16[])" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#exchangeRateContract.requestMultiplePricesUpdate(uint16[])" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Request of several prices update</p>
+<dd class="field-odd"><p>Request multiple prices update.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ids</strong> – Array of ids</p></li>
+<li><p><strong>ids</strong> – Array of IDs.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2239,11 +2210,11 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">updateSeveralPrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16[]</span> <span class="pre">memory</span> <span class="pre">ids</span></em>, <em class="sig-param"><span class="pre">uint256[]</span> <span class="pre">memory</span> <span class="pre">prices</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.updateSeveralPrices(uint16[],uint256[])" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">onlyUpdater</span><br /><a class="headerlink" href="#exchangeRateContract.updateSeveralPrices(uint16[],uint256[])" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Updating several prices. Only updater address may invoke it.</p>
+<dd class="field-odd"><p>Update several prices. Only the updater address may invoke it.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ids</strong> – Array of ids</p></li>
+<li><p><strong>ids</strong> – Array of IDs</p></li>
 <li><p><strong>ids</strong> – Array of prices</p></li>
 </ul>
 </dd>
@@ -2255,7 +2226,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">transferProfit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.transferProfit()" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#exchangeRateContract.transferProfit()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Method to transfer profit</p>
+<dd class="field-odd"><p>Method to transfer profit.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2265,12 +2236,12 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">updateSinglePrice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">newPrice</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.updateSinglePrice(uint16,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">onlyUpdater</span><br /><a class="headerlink" href="#exchangeRateContract.updateSinglePrice(uint16,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Method to update single price</p>
+<dd class="field-odd"><p>Method to update a single price.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>id</strong> – ID of the instrument</p></li>
-<li><p><strong>newPrice</strong> – New price</p></li>
+<li><p><strong>id</strong> – ID of the instrument.</p></li>
+<li><p><strong>newPrice</strong> – New price.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2290,13 +2261,13 @@ User may invoke one of the methods with a list of instruments if he wants them t
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>symbol</strong> – Symbol of the instrument</p></li>
-<li><p><strong>name</strong> – Name of the instrument</p></li>
-<li><p><strong>decimals</strong> – Number of decimals in price.</p></li>
+<li><p><strong>symbol</strong> – Symbol of the instrument.</p></li>
+<li><p><strong>name</strong> – Name of the instrument.</p></li>
+<li><p><strong>decimals</strong> – Number of decimals in the price.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>id ID of new instrument.</p>
+<dd class="field-odd"><p>id ID of the new instrument.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2306,13 +2277,13 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">updateInstrument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em>, <em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">name</span></em>, <em class="sig-param"><span class="pre">uint8</span> <span class="pre">decimals</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.updateInstrument(string,string,uint8)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">onlyUpdater</span><br /><a class="headerlink" href="#exchangeRateContract.updateInstrument(string,string,uint8)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Method to update name and decimals of the instrument. For updater only.</p>
+<dd class="field-odd"><p>Method to update the name and decimals of the instrument. For updater only.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>symbol</strong> – Symbol of the instrument</p></li>
-<li><p><strong>name</strong> – Name of the instrument</p></li>
-<li><p><strong>decimals</strong> – Number of decimals in price.</p></li>
+<li><p><strong>symbol</strong> – Symbol of the instrument.</p></li>
+<li><p><strong>name</strong> – Name of the instrument.</p></li>
+<li><p><strong>decimals</strong> – Number of decimals in the price.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2323,15 +2294,15 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getPrice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.getPrice(string)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#exchangeRateContract.getPrice(string)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Getter of the current price of the instrument</p>
+<dd class="field-odd"><p>Getter of the current price of the instrument.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>symbol</strong> – Symbol of the instrument</p></li>
+<li><p><strong>symbol</strong> – Symbol of the instrument.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Price</p>
+<dd class="field-odd"><p>Price.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2341,7 +2312,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">timeStamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.timeStamp(string)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#exchangeRateContract.timeStamp(string)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Getter of the last time the price was updated for the given instrument</p>
+<dd class="field-odd"><p>Getter of the last time the price was updated for the given instrument.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -2359,7 +2330,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getDecimals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em><span class="sig-paren">)</span><a class="headerlink" href="#exchangeRateContract.getDecimals(string)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint8</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#exchangeRateContract.getDecimals(string)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Getter of decimals for the given instrument</p>
+<dd class="field-odd"><p>Getter of decimals for the given instrument.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -2379,10 +2350,7 @@ User may invoke one of the methods with a list of instruments if he wants them t
 <h2>Rule<a class="headerlink" href="#rule" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This is a governance token, a simple ERC20 contract, which can be minted and burned <strong>*ONLY*</strong> by CDP contract and authorized once.
-It is minted when CDP contract is lack of funds in stabilization fund to refill it and burned when stabilization fund exceeds its limit.
-As there is a difference between debt and deposit rate, sooner or later as time goes, the Rule tokens will be in demand and thus their price
-should grow.</p>
+<p>This is a governance token, a simple ERC-20 contract, which can be minted and burned <strong>*ONLY*</strong> by the CDP contract. It is minted when the CDP contract lacks funds in the stabilization fund to refill it, and burned when the stabilization fund exceeds its limit. As there is a difference between debt and deposit rates, sooner or later the Rule tokens will be in demand, and thus their price should grow.</p>
 </div>
 <dl class="sol contract">
 <dt class="sig sig-object sol" id="Rule">
@@ -2402,11 +2370,11 @@ should grow.</p>
 <span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.constructor" title="Link to this definition"></a><br /> <span class="pre">ERC20</span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">&quot;Rule</span> <span class="pre">token&quot;</span></em>, <em class="sig-param"><span class="pre">&quot;RLE&quot;</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Rule.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constructor for Rule contract. It mints initial Rule supply to the creator.</p>
+<dd class="field-odd"><p>Constructor for the Rule contract. It mints the initial Rule supply to the creator.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>_INTDAOaddress</strong> – address of the main DAO contract.</p></li>
+<li><p><strong>_INTDAOaddress</strong> – Address of the main DAO contract.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2417,7 +2385,7 @@ should grow.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.mint(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /><a class="headerlink" href="#Rule.mint(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Minting additional Rule tokens. Only authorized address can execute it.</p>
+<dd class="field-odd"><p>Mint additional Rule tokens. Only an authorized address can execute it.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -2433,7 +2401,7 @@ should grow.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">from</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.burn(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /><a class="headerlink" href="#Rule.burn(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Burning Rule tokens. Only authorized address can execute it.</p>
+<dd class="field-odd"><p>Burn Rule tokens. Only an authorized address can execute it.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">

@@ -4,7 +4,6 @@ const { getContractAddress } = require('@ethersproject/address');
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
 var StableCoin = artifacts.require("./stableCoin.sol");
-var Weth = artifacts.require("./WETH9.sol");
 
 const truffleAssert = require('truffle-assertions');
 
@@ -18,19 +17,16 @@ contract('CDP Update Increase', (accounts) => {
     let positionUpdate;
     let pos;
     let fee;
-    let weth;
     let id;
     let posId;
     const owner = accounts[2];
 
     before('should setup the contracts instance', async () => {
-        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
-
-        weth = await Weth.deployed();
+        const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-5)})
         stableCoin = await StableCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([weth.address, cdp.address, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
 
         await cdp.renewContracts();
 
@@ -95,11 +91,11 @@ contract('CDP Update Increase', (accounts) => {
     });
 
     it("should increase ethAmount locked", async () => {
-        assert.equal(positionAfter.wethAmountLocked, web3.utils.toWei('2','ether'), "ethAmountLocked should be 2 ethers");
+        assert.equal(positionAfter.ethAmountLocked, web3.utils.toWei('2','ether'), "ethAmountLocked should be 2 ethers");
     });
 
     it("should put 1 ether on contract's balance", async () => {
-        const contractBalance = await weth.balanceOf(cdp.address);
+        const contractBalance = await web3.eth.getBalance(cdp.address);
         assert.equal(contractBalance, web3.utils.toWei('2','ether'), "contract's balance should be 2 ethers");
     });
 

@@ -15,7 +15,7 @@ contract('Basket', (accounts) => {
 
         basket = await basketContract.deployed(futureDaoAddress);
         eRC = await Oracle.deployed(futureDaoAddress);
-        dao = await INTDAO.deployed([0x0, 0x0, 0x0, 0x0, eRC.address, 0x0, 0x0, basket.address], {from: accounts[0]});
+        dao = await INTDAO.deployed([0x0, 0x0, 0x0, eRC.address, 0x0, 0x0, basket.address], {from: accounts[0]});
 
         await basket.renewContracts();
 

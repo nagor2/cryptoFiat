@@ -14,7 +14,7 @@ contract stableCoin is ERC20{
         dao = IDAO(_INTDAOaddress);
     }
 
-    /// @notice Minting additional stablecoins. Only authorized address can execute it.
+    /// @notice Minting additional stablecoins. Only an authorized address can execute this function.
     /// @param to Address to receive newly minted stablecoins.
     /// @param amount Amount of stablecoins to mint.
     function mint(address to, uint256 amount) external{
@@ -22,7 +22,7 @@ contract stableCoin is ERC20{
         _mint(to, amount);
     }
 
-    /// @notice Burning stablecoins. Only authorized address can execute it.
+    /// @notice Burning stablecoins. Only an authorized address can execute this function.
     /// @param from Address to burn stablecoins from.
     /// @param amount Amount of stablecoins to burn.
     function burn(address from, uint256 amount) external{
