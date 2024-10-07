@@ -26,7 +26,7 @@ import "./ICDP.sol";
         bool canceled;
     }
 
-/// @title A Contract for Different Types of Auctions
+/// @title A Contract for Different Types of Auctions  asdfasdf
 contract Auction is ReentrancyGuard{
     /// @notice Auctions counter
     uint32 public auctionNum;
