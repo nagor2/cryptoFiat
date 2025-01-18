@@ -71,7 +71,7 @@ contract INTDAO is ReentrancyGuard{
         params["liquidationFee"] = 13;
         params["collateralDiscount"] = 30;
         params["stabilizationFundPercent"] = 5;
-        params["quorum"] = 60;
+        params["quorum"] = 75;
         params["majority"] = 50;
         params["minCDPBalanceToInitBuyOut"] = 10**19;
         params["absoluteMajority"] = 80;

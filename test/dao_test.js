@@ -153,7 +153,7 @@ contract('DAO', (accounts) => {
             assert.equal(ev.value, web3.utils.toWei('400000'), "wrong value");
         });*/
 
-        await ruleToken.approve(dao.address, web3.utils.toWei('200000', "ether"), {from: ruleHolder});
+        await ruleToken.approve(dao.address, web3.utils.toWei('350000', "ether"), {from: ruleHolder});
 
         await dao.poolTokens({from: ruleHolder});
 
