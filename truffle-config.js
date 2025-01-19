@@ -54,6 +54,24 @@ module.exports = {
       },
     },
 
+    holesky:{
+      network_id: 17000,
+      verify: {
+        apiUrl: 'https://api-holesky.etherscan.io/api',
+        apiKey: 'NBB56NWUCB86TPF4JUN6W8XM5FFZXV1JCK',
+        explorerUrl: 'https://holesky.etherscan.io/address',
+      },
+    },
+
+    eth:{
+      network_id: 1,
+      verify: {
+        apiUrl: 'https://api.etherscan.io',
+        apiKey: 'NBB56NWUCB86TPF4JUN6W8XM5FFZXV1JCK',
+        explorerUrl: 'https://etherscan.io/address',
+      },
+    },
+
 
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
@@ -101,7 +119,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.19",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.19",    // 0.8.19 / 26 Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       settings: {          // See the solidity docs for advice about optimization and evmVersion
         optimizer: {

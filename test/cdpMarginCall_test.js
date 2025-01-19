@@ -7,9 +7,8 @@ contract('CDP margin call', (accounts) => {
 
     let dao;
     let cdp;
-    let weth;
     let oracle;
-    let stableCoin;
+    let flatCoin;
     let auction;
     let posId;
     let rule;
@@ -20,7 +19,7 @@ contract('CDP margin call', (accounts) => {
     var CDP = artifacts.require("./CDP.sol");
     var INTDAO = artifacts.require("./INTDAO.sol");
     var Oracle = artifacts.require("./exchangeRateContract.sol");
-    var StableCoin = artifacts.require("./stableCoin.sol");
+    var FlatCoin = artifacts.require("./flatCoin.sol");
     var Auction = artifacts.require("./Auction.sol");
     var Rule = artifacts.require("./Rule.sol");
 
@@ -37,11 +36,11 @@ contract('CDP margin call', (accounts) => {
 
         rule = await Rule.deployed(futureDaoAddress);
         oracle = await Oracle.deployed(futureDaoAddress);
-        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        flatCoin = await FlatCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
         auction = await Auction.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([cdp.address, auction.address, 0x0, oracle.address, rule.address, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, auction.address, 0x0, oracle.address, rule.address, flatCoin.address, 0x0]);
 
        // console.log (dao.address);
 
@@ -58,9 +57,9 @@ contract('CDP margin call', (accounts) => {
         });
 
         const position = await cdp.positions(posId);
-        let actualBalance = await stableCoin.balanceOf(position.owner);
+        let actualBalance = await flatCoin.balanceOf(position.owner);
         assert.equal(actualBalance.toString(),web3.utils.toWei(String(coinsMintAmount)),"smth wrong");
-        await stableCoin.transfer(recipient, web3.utils.toWei(String(coinsMintAmount)),{from:owner})
+        await flatCoin.transfer(recipient, web3.utils.toWei(String(coinsMintAmount)),{from:owner})
     });
 
     it("should not mark pos on liquidation if eth value is still enough and mark if not", async () => {
@@ -89,7 +88,7 @@ contract('CDP margin call', (accounts) => {
         await truffleAssert.fails(
             cdp.claimMarginCall(posId),
             truffleAssert.ErrorType.REVERT,
-            "Position is not marked on liquidation or owner still has time"
+            "position not on liquidation or owner still has time"
         );
 
         await time.increase(await dao.params("marginCallTimeLimit"));
@@ -128,7 +127,7 @@ contract('CDP margin call', (accounts) => {
     it("should finishMarginCall and decrease coinsMinted and totalSupply (with bids improvement)", async () => {
         let position = await cdp.positions(posId);
         await time.increase(1);
-        await stableCoin.approve(auction.address, web3.utils.toWei('1900'),{from:recipient})
+        await flatCoin.approve(auction.address, web3.utils.toWei('1900'),{from:recipient})
         let bidTx = await auction.makeBid(position.liquidationAuctionID, web3.utils.toWei('1800'),{from:recipient});
         let bidId;
 
@@ -141,13 +140,13 @@ contract('CDP margin call', (accounts) => {
         await truffleAssert.fails(
             auction.improveBid(bidId, web3.utils.toWei('1801'),{from:recipient}),
             truffleAssert.ErrorType.REVERT,
-            "your bid is not high enough"
+            "not high enough"
         );
 
         await truffleAssert.fails(
             auction.improveBid(bidId, web3.utils.toWei('9000')),
             truffleAssert.ErrorType.REVERT,
-            "You may improve only your personal bids"
+            "not owner"
         );
 
         bidTx = await auction.improveBid(bidId, web3.utils.toWei('1900'),{from:recipient});
@@ -163,7 +162,7 @@ contract('CDP margin call', (accounts) => {
         await cdp.finishMarginCall(posId);
 
         position = await cdp.positions(posId);
-        assert.equal(await stableCoin.totalSupply(), web3.utils.toWei('2100'), "wrong total supply");
+        assert.equal(await flatCoin.totalSupply(), web3.utils.toWei('2100'), "wrong total supply");
         assert.equal(position.coinsMinted, web3.utils.toWei('100'), "wrong coins minted");
     });
 
@@ -174,7 +173,7 @@ contract('CDP margin call', (accounts) => {
 
         assert.equal(parseInt(position.liquidationStatus), 2, "position should not be liquidated");
 
-        await stableCoin.approve(auction.address, web3.utils.toWei('50'),{from:recipient})
+        await flatCoin.approve(auction.address, web3.utils.toWei('50'),{from:recipient})
 
         const auctionId = (parseInt(position.liquidationAuctionID)+1); //next auction in loop
 
@@ -187,7 +186,7 @@ contract('CDP margin call', (accounts) => {
         await truffleAssert.fails(
             auction.makeBid(auctionId, web3.utils.toWei('10001'),{from:recipient}),
             truffleAssert.ErrorType.REVERT,
-            "too many rules for one emission"
+            "too many rules"
         );
 
         let bidTx = await auction.makeBid(auctionId, web3.utils.toWei('10000'),{from:recipient});
@@ -200,13 +199,13 @@ contract('CDP margin call', (accounts) => {
         await truffleAssert.fails(
             auction.improveBid(bidId, web3.utils.toWei('9950'),{from:recipient}),
             truffleAssert.ErrorType.REVERT,
-            "your bid is not high enough"
+            "not low enough"
         );
 
         await truffleAssert.fails(
             auction.improveBid(bidId, web3.utils.toWei('9000')),
             truffleAssert.ErrorType.REVERT,
-            "You may improve only your personal bids"
+            "not owner"
         );
 
         bidTx = await auction.improveBid(bidId, web3.utils.toWei('9000'),{from:recipient});
@@ -220,22 +219,22 @@ contract('CDP margin call', (accounts) => {
         await time.increase(time.duration.minutes(15)+1);
         await auction.claimToFinalizeAuction(auctionId);
 
-        assert.equal(await stableCoin.totalSupply(),web3.utils.toWei('2100'), "wrong total supply")
+        assert.equal(await flatCoin.totalSupply(),web3.utils.toWei('2100'), "wrong total supply")
         assert.equal(position.coinsMinted,web3.utils.toWei('100'), "wrong coinsMinted")
         assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('9000'),  "wrong rule balance")
-        assert.equal(await stableCoin.balanceOf(cdp.address),web3.utils.toWei('50'), "wrong cdp balance")
+        assert.equal(await flatCoin.balanceOf(cdp.address),web3.utils.toWei('50'), "wrong cdp balance")
     });
 
     it("should create the last coinsBuyOut", async () => {
         await cdp.finishMarginCall(posId);
         let position = await cdp.positions(posId);
-        assert.equal(await stableCoin.totalSupply(),web3.utils.toWei('2050'), "wrong total supply");
+        assert.equal(await flatCoin.totalSupply(),web3.utils.toWei('2050'), "wrong total supply");
         assert.equal(position.coinsMinted,web3.utils.toWei('50'), "wrong coins minted");
 
         const auctionId = (parseInt(position.liquidationAuctionID)+2);
         await time.increase(1);
 
-        await stableCoin.approve(auction.address, web3.utils.toWei('50'),{from:recipient})
+        await flatCoin.approve(auction.address, web3.utils.toWei('50'),{from:recipient})
 
         await auction.makeBid(auctionId, web3.utils.toWei('10000'),{from:recipient});
 
@@ -247,10 +246,9 @@ contract('CDP margin call', (accounts) => {
         position = await cdp.positions(posId);
 
         assert.equal(parseInt(position.liquidationStatus), 3, "position should be liquidated");
-        assert.equal(await stableCoin.totalSupply(),web3.utils.toWei('2000'), "wrong total supply")
+        assert.equal(await flatCoin.totalSupply(),web3.utils.toWei('2000'), "wrong total supply")
         assert.equal(await rule.balanceOf(recipient),web3.utils.toWei('19000'), "wrong rule balance")
     });
-
 
     it("should set quotes back to initial values auction", async () => {
         await oracle.updateSinglePrice(1, 3100000000, {from: author});

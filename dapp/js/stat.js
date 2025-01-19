@@ -4878,7 +4878,7 @@ function buyTokens(id){
 
 function allowCoinsToToken(id){
     let amount = document.getElementById('allowCoinsToToken-id-'+id).value;
-    stableCoin.methods.approve(mintedTokens[id]._address, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+    flatCoin.methods.approve(mintedTokens[id]._address, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
         alert('success');
     });
 }

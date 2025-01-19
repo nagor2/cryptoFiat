@@ -5,7 +5,7 @@ var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
 var Rule = artifacts.require("./Rule.sol");
 var Oracle = artifacts.require("./exchangeRateContract.sol");
-var StableCoin = artifacts.require("./stableCoin.sol");
+var FlatCoin = artifacts.require("./flatCoin.sol");
 const truffleAssert = require('truffle-assertions');
 
 contract('CDP', (accounts) => {
@@ -15,7 +15,7 @@ contract('CDP', (accounts) => {
     let rule;
     let oracle;
     let expectedOwner;
-    let stableCoin;
+    let flatCoin;
     let posNumber;
     let positionIDtx;
     let positionID;
@@ -25,10 +25,10 @@ contract('CDP', (accounts) => {
 
         rule = await Rule.deployed(futureDaoAddress);
         oracle = await Oracle.deployed(futureDaoAddress);
-        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        flatCoin = await FlatCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, oracle.address, rule.address, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, oracle.address, rule.address, flatCoin.address, 0x0]);
 
         await cdp.renewContracts();
 
@@ -61,7 +61,7 @@ contract('CDP', (accounts) => {
 
     it("should mint max 2170 coins per 1 ether", async () => {
 
-        const coins = await cdp.getMaxStableCoinsToMint(web3.utils.toWei('1', 'ether'));
+        const coins = await cdp.getMaxFlatCoinsToMint(web3.utils.toWei('1', 'ether'));
         assert.equal(coins.toString(), 2170 * (10 ** 18).toString(), "should mint max 2170 coins per 1 ether");
     });
 
@@ -74,7 +74,7 @@ contract('CDP', (accounts) => {
         const position = await cdp.positions(posNumber);
         const owner = await position.owner;
         const coinsMinted = await position.coinsMinted;
-        const ballance = await stableCoin.balanceOf(owner);
+        const ballance = await flatCoin.balanceOf(owner);
         assert.equal(coinsMinted.toString(), ballance.toString(), "notEqual mint coins");
     });
 
@@ -101,7 +101,7 @@ contract('CDP', (accounts) => {
         await truffleAssert.fails(
             cdp.updateCDP(positionID, web3.utils.toWei('100', 'ether'), {from: wrongAccount}),
             truffleAssert.ErrorType.REVERT,
-            "Only owner may update the position"
+            "only owner"
         );
     });
 });

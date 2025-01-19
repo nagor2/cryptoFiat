@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 /// @title Interest DAO
 contract INTDAO is ReentrancyGuard{
+    /// @notice contract address
+    address public immutable address_this;
 
     /// @notice Rule token interface
     IERC20 ruleToken;
@@ -65,7 +67,7 @@ contract INTDAO is ReentrancyGuard{
 
     /// @notice Constructor of the Interest DAO contract, where all the parameters of the system are initialized
     /// @param _addresses Initial addresses of each contract in the DAO
-    constructor (address[] memory _addresses) {
+    constructor (address[] memory _addresses) payable{
         params["interestRate"] = 9;
         params["depositRate"]=8;
         params["liquidationFee"] = 13;
@@ -91,18 +93,19 @@ contract INTDAO is ReentrancyGuard{
         addresses["deposit"] = _addresses[2];
         addresses["oracle"] = _addresses[3];
         addresses["rule"] = _addresses[4];
-        addresses["stableCoin"] = _addresses[5];
+        addresses["flatCoin"] = _addresses[5];
         addresses["basket"] = _addresses[6];
 
         isAuthorized[_addresses[0]]=true;
         isAuthorized[_addresses[2]]=true;
 
-        addresses["dao"] = address(this);
+        address_this = address(this);
+        addresses["dao"] = address_this;
         renewContracts();
     }
 
     /// @notice This method is used to change the Rule token address if it was changed during voting for some reason
-    function renewContracts() public {
+    function renewContracts() public{
         ruleToken = IERC20(addresses["rule"]);
     }
 
@@ -114,8 +117,8 @@ contract INTDAO is ReentrancyGuard{
     /// @param decision True/False for type 3 and 4 voting
     function addVoting(uint8 votingType, string memory name, uint value, address addr, bool decision) external{
         require(!activeVoting, "There is an active voting");
-        require(votingType>0&&votingType<5, "Incorrect voteing type");
-        require(isEnoughTokensPooledToInitVoting(msg.sender), "Too little tokens to init voting");
+        require(votingType>0&&votingType<5, "wrong type");
+        require(isEnoughTokensPooledToInitVoting(msg.sender), "Too little to init");
         votingID++;
         votings[votingID] = Voting(0, votingType, name, value, addr, block.timestamp, decision);
         activeVoting = true;
@@ -125,9 +128,9 @@ contract INTDAO is ReentrancyGuard{
     /// @notice Pool tokens on the contract to participate in voting
     /// @return success True if successful
     function poolTokens() nonReentrant external returns (bool success) {
-        uint256 amount = ruleToken.allowance(msg.sender, address(this));
+        uint256 amount = ruleToken.allowance(msg.sender, address_this);
         require (amount>0, "allow tokens first");
-        require(ruleToken.transferFrom(msg.sender, address(this), amount), "Could not pool tokens for some reason");
+        require(ruleToken.transferFrom(msg.sender, address_this, amount), "pool failed");
         pooled[msg.sender] += amount;
         totalPooled += amount;
         return true;
@@ -136,11 +139,11 @@ contract INTDAO is ReentrancyGuard{
     /// @notice Return tokens from the contract after voting is finished
     /// @return True if successful
     function returnTokens() nonReentrant external returns (bool) {
-        require(pooled[msg.sender] > 0, "You must have pooled tokens");
+        require(pooled[msg.sender] > 0, "nothing pooled");
         if (activeVoting && votes[votingID][msg.sender]>0){
             votings[votingID].totalPositive -= votes[votingID][msg.sender];
         }
-        ruleToken.transfer(msg.sender, pooled[msg.sender]);
+        require(ruleToken.transfer(msg.sender, pooled[msg.sender]), "transfer failed");
         totalPooled -= pooled[msg.sender];
         pooled[msg.sender] = 0;
         return true;
@@ -149,9 +152,9 @@ contract INTDAO is ReentrancyGuard{
     /// @notice Vote on the current voting
     /// @param _vote True/False for For/Against the proposal
     function vote(bool _vote) nonReentrant external{
-        require(activeVoting, "No active voting found");
-        require(votings[votingID].startTime + params["votingDuration"] >= block.timestamp, "Voting is already inactive");
-        require(pooled[msg.sender]>0, "You dont have pooled tokens to vote");
+        require(activeVoting, "No active voting");
+        require(votings[votingID].startTime + params["votingDuration"] >= block.timestamp, "inactive");
+        require(pooled[msg.sender]>0, "nothing pooled");
 
         if (_vote) {
             uint256 _votesToAdd = pooled[msg.sender] - votes[votingID][msg.sender];
@@ -168,7 +171,7 @@ contract INTDAO is ReentrancyGuard{
 
     /// @notice Claim to finish voting
     function claimToFinalizeCurrentVoting() nonReentrant external{
-        require (activeVoting, "There is no active voting");
+        require (activeVoting, "No active voting");
         if (votings[votingID].totalPositive >= ruleToken.totalSupply() * params["absoluteMajority"] / 100) {
             finalizeCurrentVoting();
             return;

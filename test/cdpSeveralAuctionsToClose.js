@@ -7,7 +7,7 @@ contract('CDP several auctions to close position', (accounts) => {
     let dao;
     let cdp;
     let oracle;
-    let stableCoin;
+    let flatCoin;
     let auction;
     const posId = 0;
     let rule;
@@ -18,7 +18,7 @@ contract('CDP several auctions to close position', (accounts) => {
     var CDP = artifacts.require("./CDP.sol");
     var INTDAO = artifacts.require("./INTDAO.sol");
     var Oracle = artifacts.require("./exchangeRateContract.sol");
-    var StableCoin = artifacts.require("./stableCoin.sol");
+    var FlatCoin = artifacts.require("./flatCoin.sol");
     var Auction = artifacts.require("./Auction.sol");
     var Rule = artifacts.require("./Rule.sol");
 
@@ -34,11 +34,11 @@ contract('CDP several auctions to close position', (accounts) => {
         futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-5)})
         rule = await Rule.deployed(futureDaoAddress);
         oracle = await Oracle.deployed(futureDaoAddress, {from:accounts[5]});
-        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        flatCoin = await FlatCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
         auction = await Auction.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([cdp.address, auction.address, 0x0, oracle.address, rule.address, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, auction.address, 0x0, oracle.address, rule.address, flatCoin.address, 0x0]);
 
         //console.log(dao.address)
 
@@ -48,8 +48,8 @@ contract('CDP several auctions to close position', (accounts) => {
 
     it("should open a cdp", async () => {
         await cdp.openCDP(web3.utils.toWei('1000'), {from:owner, value: web3.utils.toWei('1')})
-        assert.equal(await stableCoin.totalSupply(), web3.utils.toWei('1000'), "wrong totalSupply");
-        assert.equal(await stableCoin.balanceOf(owner), web3.utils.toWei('1000'), "wrong balanceOf owner");
+        assert.equal(await flatCoin.totalSupply(), web3.utils.toWei('1000'), "wrong totalSupply");
+        assert.equal(await flatCoin.balanceOf(owner), web3.utils.toWei('1000'), "wrong balanceOf owner");
     });
 
     it("should change a quote and mark to liquidate position", async () => {
@@ -87,16 +87,16 @@ contract('CDP several auctions to close position', (accounts) => {
     it("should bid and finish auction", async () => {
         await oracle.updateSinglePrice(1, 3100000000, {from: accounts[5]});
         await cdp.openCDP(web3.utils.toWei('2000'), {from:bidder, value: web3.utils.toWei('1')})
-        await stableCoin.transfer(await dao.addresses('cdp'), web3.utils.toWei('10'), {from:bidder});
+        await flatCoin.transfer(await dao.addresses('cdp'), web3.utils.toWei('10'), {from:bidder});
 
-        await stableCoin.approve(await dao.addresses('auction'), web3.utils.toWei('980'), {from:bidder});
+        await flatCoin.approve(await dao.addresses('auction'), web3.utils.toWei('980'), {from:bidder});
         await auction.makeBid(1,web3.utils.toWei('980'), {from:bidder});
         await time.increase(await dao.params("auctionTurnDuration"));
 
         await truffleAssert.fails(
             auction.claimToFinalizeAuction(1),
             truffleAssert.ErrorType.REVERT,
-            "Only CDP contract may finish this auction. Please, use finishMarginCall method");
+            "CDP only");
 
         let tx = await cdp.finishMarginCall(0);
 

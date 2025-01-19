@@ -9,9 +9,9 @@ This section is intended more for developers to better understand how the system
 Dotflat
 ---------------
 .. note::
-    This is a stablecoin token. It is a simple ERC-20 token, which can be minted and burned ONLY by CDP contract and those authorized in the DAO.
+    This is a flatcoin token. It is a simple ERC-20 token, which can be minted and burned ONLY by CDP contract and those authorized in the DAO.
 
-.. autosolcontract:: stableCoin
+.. autosolcontract:: flatCoin
     :members:
 
 CDP
@@ -19,7 +19,7 @@ CDP
 
 .. note::
 
-    This contract is one of the most important contracts of the DAO. It mints Dotflat coins, holds all the collateral and the stabilization fund in Dotflat coins, and burns Dotflat stablecoins when the position is closed.
+    This contract is one of the most important contracts of the DAO. It mints Dotflat coins, holds all the collateral and the stabilization fund in Dotflat coins, and burns Dotflat coins when the position is closed.
 
 .. note::
 
@@ -31,22 +31,22 @@ CDP
 
     .. code-block::
 
-                struct Position {
-                    uint128 coinsMinted;
-                    uint128 wethAmountLocked;
-                    uint128 interestAmountRecorded;
-                    uint32 timeOpened;
-                    uint32 lastTimeUpdated;
-                    uint24 interestRate;
-                    uint32 markedOnLiquidationTimestamp;
-                    uint24 liquidationStatus;
-                    uint32 liquidationAuctionID;
-                    bool restrictInterestWithdrawal;
-                    address owner;
-                }
+        struct Position {
+            uint128 coinsMinted;
+            uint128 ethAmountLocked;
+            uint128 interestAmountRecorded;
+            uint32 timeOpened;
+            uint32 lastTimeUpdated;
+            uint24 interestRate;
+            uint32 markedOnLiquidationTimestamp;
+            uint24 liquidationStatus;
+            uint32 liquidationAuctionID;
+            bool restrictInterestWithdrawal;
+            address owner;
+        }
 
     | ***coinsMinted*** - number of minted coins for now.
-    | ***wethAmountLocked*** - collateral.
+    | ***ethAmountLocked*** - collateral.
     | ***interestAmountRecorded*** -  the amount of interest to pay until last position update.
     | ***timeOpened*** - when the position was opened.
     | ***lastTimeUpdated*** - when it was last updated.
@@ -126,7 +126,7 @@ Auction
 .. note::
     There are 3 types of auctions, that may be created:
     - Selling the collateral of debt position if the holder of the position has not provided sufficient collateral for
-    the stablecoins he has minted.
+    the flatcoins he has minted.
     - Rule tokens buyout if the stabilization fund exceeds its limit to reduce Rule total supply.
     - Dotflat buyout to top up stabilization fund with newly Rule token minted as a reward.
 
@@ -139,7 +139,7 @@ Deposit
 ---------------
 .. note::
 
-    This contract is used for depositing stablecoins and earning annual interest. The amount of interest is renewed
+    This contract is used for depositing flatcoins and earning annual interest. The amount of interest is renewed
     every block.
     Inside the contract each deposit is stored as the following structure.
 

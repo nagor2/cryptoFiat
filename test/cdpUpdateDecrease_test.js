@@ -3,7 +3,7 @@ const { time } = require('@openzeppelin/test-helpers');
 
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
-var StableCoin = artifacts.require("./stableCoin.sol");
+var FlatCoin = artifacts.require("./flatCoin.sol");
 const { getContractAddress } = require('@ethersproject/address');
 
 
@@ -12,7 +12,7 @@ const truffleAssert = require('truffle-assertions');
 contract('CDP Update Decrease', (accounts) => {
     let dao;
     let cdp;
-    let stableCoin;
+    let flatCoin;
     let position;
     let positionTx;
     let positionUpdate;
@@ -21,10 +21,10 @@ contract('CDP Update Decrease', (accounts) => {
     before('should setup the contracts instance', async () => {
         const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-5)})
 
-        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        flatCoin = await FlatCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, 0x0, 0x0, flatCoin.address, 0x0]);
 
         await cdp.renewContracts();
 
@@ -50,7 +50,7 @@ contract('CDP Update Decrease', (accounts) => {
     it("should emit PositionUpdated", async () => {
         truffleAssert.eventEmitted(positionUpdate, 'PositionUpdated', async (ev) => {
             assert.equal(ev.posID.toNumber(), posId, 'positionID is wrong');
-            assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('100', 'ether'), 'amount is wrong');
+            assert.equal(ev.newFlatCoinsAmount, web3.utils.toWei('100', 'ether'), 'amount is wrong');
         });
     });
 
@@ -60,11 +60,12 @@ contract('CDP Update Decrease', (accounts) => {
     });
 
     it("should decrease owner's balance", async () => {
-        const balance = await stableCoin.balanceOf(position.owner);
-        assert.equal(balance, web3.utils.toWei('100', 'ether'), "owner's balance should be 100 stableCoin");
+        const balance = await flatCoin.balanceOf(position.owner);
+        assert.equal(balance, web3.utils.toWei('100', 'ether'), "owner's balance should be 100 flatCoin");
     });
 
     it("should decrease coinsMinted", async () => {
-        assert.equal(position.coinsMinted, web3.utils.toWei('100', 'ether'), "coinsMinted should be 100 stableCoin");
+        assert.equal(position.coinsMinted, web3.utils.toWei('100', 'ether'), "coinsMinted should be 100 flat" +
+            "Coin");
     });
 });

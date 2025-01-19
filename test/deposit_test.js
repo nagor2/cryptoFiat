@@ -4,14 +4,14 @@ const { getContractAddress } = require('@ethersproject/address');
 
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
-var StableCoin = artifacts.require("./stableCoin.sol");
+var FlatCoin = artifacts.require("./flatCoin.sol");
 var Deposit = artifacts.require("./DepositContract.sol");
 
 contract('Deposit', (accounts) => {
 
     let dao;
     let cdp;
-    let coin;
+    let flatCoin;
     let deposit;
     const owner = accounts[0];
     const amount = web3.utils.toWei('100');
@@ -19,16 +19,16 @@ contract('Deposit', (accounts) => {
     before('should setup the contracts instance', async () => {
         const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
 
-        coin = await StableCoin.deployed(futureDaoAddress);
+        flatCoin = await FlatCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
         deposit = await Deposit.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([0x0, cdp.address, 0x0, deposit.address, 0x0, 0x0, coin.address, 0x0]);
+        dao = await INTDAO.deployed([0x0, cdp.address, 0x0, deposit.address, 0x0, 0x0, flatCoin.address, 0x0]);
 
         await cdp.renewContracts();
         await deposit.renewContracts();
         await cdp.openCDP(web3.utils.toWei('1000'), {from: accounts[1], value: web3.utils.toWei('1')});
-        await coin.transfer(cdp.address, web3.utils.toWei('10', 'ether'), {from: accounts[1]}); //topUp stabFund
+        await flatCoin.transfer(cdp.address, web3.utils.toWei('10', 'ether'), {from: accounts[1]}); //topUp stabFund
     });
 
     it("should fail, because nothing to deposit", async () => {
@@ -37,30 +37,30 @@ contract('Deposit', (accounts) => {
             truffleAssert.ErrorType.REVERT,
             "you have to approve coins first");
 
-        await coin.approve(deposit.address, 100, {from: owner});
+        await flatCoin.approve(deposit.address, 100, {from: owner});
 
         await truffleAssert.fails(
             deposit.deposit({from: owner}),
             truffleAssert.ErrorType.REVERT,
             "transfer amount exceeds balance");
 
-        await coin.transfer(owner, 50, {from: accounts[1]});
+        await flatCoin.transfer(owner, 50, {from: accounts[1]});
 
         await truffleAssert.fails(
             deposit.deposit({from: owner}),
             truffleAssert.ErrorType.REVERT,
             "transfer amount exceeds balance");
 
-        await coin.transfer(accounts[1], 50, {from: owner});
-        await coin.approve(deposit.address, 0, {from: owner});
+        await flatCoin.transfer(accounts[1], 50, {from: owner});
+        await flatCoin.approve(deposit.address, 0, {from: owner});
     });
 
     it("should deposit", async () => {
-        await coin.transfer(owner, amount, {from: accounts[1]});
-        await coin.approve(deposit.address, amount, {from: owner});
+        await flatCoin.transfer(owner, amount, {from: accounts[1]});
+        await flatCoin.approve(deposit.address, amount, {from: owner});
 
-        assert.equal((await coin.balanceOf(deposit.address)).toString(), web3.utils.toWei('0'), "initial balance should be 0");
-        assert.equal(await coin.balanceOf(owner), amount, "initial balance should be 100 coins");
+        assert.equal((await flatCoin.balanceOf(deposit.address)).toString(), web3.utils.toWei('0'), "initial balance should be 0");
+        assert.equal(await flatCoin.balanceOf(owner), amount, "initial balance should be 100 coins");
 
         let tx = await deposit.deposit({from: owner});
         let expectedRate = await dao.params("depositRate");
@@ -71,10 +71,8 @@ contract('Deposit', (accounts) => {
             expect(ev.rate).to.eql(expectedRate, "rate should be " + expectedRate);
         });
 
-        let contractBallance = await coin.balanceOf(deposit.address);
-
-        assert.equal(contractBallance, amount, "contract balance should increase");
-        assert.equal(await coin.balanceOf(owner), web3.utils.toWei('0'), "balance should decrease");
+        assert.equal(await flatCoin.balanceOf(deposit.address), amount, "contract balance should increase");
+        assert.equal(await flatCoin.balanceOf(owner), web3.utils.toWei('0'), "balance should decrease");
     });
 
     it("should create valid deposit", async () => {
@@ -89,7 +87,7 @@ contract('Deposit', (accounts) => {
         let interest = await deposit.overallInterest(1);
         assert.equal(parseFloat(interest/10**18).toFixed(5), parseFloat("8").toFixed(5), "interest should increase");
         await deposit.claimInterest(1);
-        let balance = await coin.balanceOf(owner);
+        let balance = await flatCoin.balanceOf(owner);
         assert.equal(parseFloat(balance/10**18).toFixed(5), parseFloat("8").toFixed(5), "balance should decrease");
     });
 
@@ -99,51 +97,70 @@ contract('Deposit', (accounts) => {
         assert.equal(parseFloat(interest/10**18).toFixed(5), parseFloat("8").toFixed(5), "interest should increase");
 
         await deposit.claimInterest(1);
-        let balance = await coin.balanceOf(owner);
+        let balance = await flatCoin.balanceOf(owner);
         assert.equal(parseFloat(balance/10**18).toFixed(3), parseFloat("10").toFixed(3), "balance should decrease");
-        let allowance = await coin.allowance(cdp.address, owner);
+        let allowance = await flatCoin.allowance(cdp.address, owner);
         assert.equal(parseFloat(allowance/10**18).toFixed(3), parseFloat("6").toFixed(3), "balance should decrease");
     });
 
     it("should topUp deposit", async () => {
-        await coin.approve(deposit.address, web3.utils.toWei('10'), {from: owner});
-        await deposit.topUp(1, {from: owner});
+        await flatCoin.approve(deposit.address, web3.utils.toWei('10'), {from: owner});
+        await deposit.topUp(1, {from: owner, gas: 5000000, gasPrice: 500000000, gasLimit: 3000000});
         let d = await deposit.deposits(1);
         assert.equal(d.coinsDeposited, web3.utils.toWei('110', "ether"), "incorrect coinsDeposited");
-        let balance = await coin.balanceOf(deposit.address);
+        let balance = await flatCoin.balanceOf(deposit.address);
         assert.equal(balance, web3.utils.toWei("110"), "balance should increase");
         await time.increase(time.duration.years(1));
         await deposit.claimInterest(1);
-        let allowance = await coin.allowance(cdp.address, owner);
+        let allowance = await flatCoin.allowance(cdp.address, owner);
         assert.equal(parseFloat(allowance/10**18).toFixed(4), parseFloat("14.8").toFixed(4), "allowance should increase");
     });
 
     it("should withdraw funds", async () => {
-        await deposit.withdraw(1, web3.utils.toWei('110', "ether"), {from:owner});
-        let d = await deposit.deposits(1, {from:owner});
+        await deposit.withdraw(1, web3.utils.toWei('100', "ether"), {from: owner, gas: 5000000, gasPrice: 500000000, gasLimit: 3000000});
+        let d = await deposit.deposits(1);
+        assert.equal(d.coinsDeposited, web3.utils.toWei('10', "ether"), "incorrect coinsDeposited");
+        let balance = await flatCoin.balanceOf(deposit.address);
+        assert.equal(parseFloat(balance/10**18), parseFloat("10"), "balance should decrease");
+        balance = await flatCoin.balanceOf(owner);
+        assert.equal(parseFloat(balance/10**18).toFixed(5), parseFloat("100").toFixed(5), "balance should increase");
+    });
+
+    it("should withdraw funds, close deposit and increase allowance", async () => {
+        await time.increase(time.duration.years(1));
+        await deposit.withdraw(1, web3.utils.toWei('10', "ether"), {from:owner});
+        let d = await deposit.deposits(1);
         assert.equal(d.coinsDeposited, web3.utils.toWei('0', "ether"), "incorrect coinsDeposited");
-        let balance = await coin.balanceOf(deposit.address);
-        assert.equal(parseFloat(balance/10**18), parseFloat("0"), "balance should decrease");
-        balance = await coin.balanceOf(owner);
-        assert.equal(parseFloat(balance/10**18).toFixed(5), parseFloat("110").toFixed(5), "balance should increase");
+        assert.equal(d.closed, true, "should close deposit");
+        let allowance = await flatCoin.allowance(cdp.address, owner);
+        assert.equal(parseFloat(allowance/10**18).toFixed(4), parseFloat("15.6").toFixed(4), "allowance should increase");
     });
 
     it("should pay the interest as deposit is closed", async () => {
-        await coin.transfer(cdp.address, web3.utils.toWei('20', 'ether'), {from: accounts[1]}); //topUp stabFund
-        await coin.approve(deposit.address, web3.utils.toWei('100'), {from: owner});
+        await flatCoin.transfer(cdp.address, web3.utils.toWei('30', 'ether'), {from: accounts[1]}); //topUp stabFund
+        await flatCoin.approve(deposit.address, web3.utils.toWei('100'), {from: owner});
         await deposit.deposit({from: owner})
         await time.increase(time.duration.years(1));
-        let balanceBefore = parseInt(await coin.balanceOf(owner)/10**18);
+        let balanceBefore = parseInt(await flatCoin.balanceOf(owner)/10**18);
         await deposit.withdraw(2, web3.utils.toWei('100', "ether"), {from:owner});
-        let balanceAfter = await coin.balanceOf(owner);
+        let balanceAfter = await flatCoin.balanceOf(owner);
         assert.equal(balanceBefore+108, parseInt(balanceAfter/10**18), "balance should increase");
     });
+
+    it("should pay the interest as CDP balance is enough", async () => {
+        let allowance = await flatCoin.allowance(cdp.address, owner);
+        assert.equal(parseFloat(allowance/10**18).toFixed(4), parseFloat("15.6").toFixed(4), "allowance should increase");
+        let balance = await flatCoin.balanceOf(owner);
+        assert.equal(parseFloat(balance/10**18).toFixed(4), parseFloat("118").toFixed(4), "balance should decrease");
+        await flatCoin.transferFrom(cdp.address, owner, allowance, {from: owner});
+        balance = await flatCoin.balanceOf(owner);
+        assert.equal(parseFloat(balance/10**18).toFixed(4), parseFloat("133.6").toFixed(4), "balance should increase");
+    });
+
 
     //TODO: check depositOpened event
 
     /*TODO: Тут возникают вопросы! Периодичность выплат, как быть со сложным процентом? – пока что решил не углубляться
        Смена «ключевой ставки»
        Пока что ставка фиксируется на первые 91 день. А что потом?*/
-
-
 });

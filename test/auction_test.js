@@ -2,7 +2,7 @@ const { time } = require('@openzeppelin/test-helpers');
 const { getContractAddress } = require('@ethersproject/address')
 
 var INTDAO = artifacts.require("./INTDAO.sol");
-var StableCoin = artifacts.require("./stableCoin.sol");
+var flatCoin = artifacts.require("./flatCoin.sol");
 var Auction = artifacts.require("./Auction.sol");
 var CDP = artifacts.require("./CDP.sol");
 var Rule = artifacts.require("./Rule.sol");
@@ -28,7 +28,7 @@ contract('Auction', (accounts) => {
 
     before('should setup the contracts instance', async () => {
         const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
-        stableCoin = await StableCoin.deployed(futureDaoAddress, {from: accounts[0]});
+        stableCoin = await flatCoin.deployed(futureDaoAddress, {from: accounts[0]});
         rule = await Rule.deployed(futureDaoAddress, {from:ruleHolder});
         auction = await Auction.deployed(futureDaoAddress, {from: accounts[0]});
         cdp = await CDP.deployed(futureDaoAddress, {from: accounts[0]});
@@ -42,7 +42,7 @@ contract('Auction', (accounts) => {
         await truffleAssert.fails(
             auction.initRuleBuyOut(),
             truffleAssert.ErrorType.REVERT,
-            "not enough rule balance");
+            "not enough rule");
     });
 
     it("should throw if little money on balance", async () => {
@@ -51,7 +51,7 @@ contract('Auction', (accounts) => {
         await truffleAssert.fails(
             auction.initRuleBuyOut({from:bidder}),
             truffleAssert.ErrorType.REVERT,
-            "Can not transfer surplus from CDP");
+            "nothing allowed");
     });
 
     it("should initAuction", async () => {
@@ -82,7 +82,7 @@ contract('Auction', (accounts) => {
         await truffleAssert.fails(
             auction.makeBid(100, 100),
             truffleAssert.ErrorType.REVERT,
-            "auctionID is wrong or it is already finished");
+            "wrong ID");
     });
 
     it("should not allow to make a little bid", async () => {
@@ -90,7 +90,7 @@ contract('Auction', (accounts) => {
         await truffleAssert.fails(
             auction.makeBid(1, 0),
             truffleAssert.ErrorType.REVERT,
-            "your bid is not high enough");
+            "not enough");
     });
 
     it("should make a bid", async () => {
@@ -115,12 +115,12 @@ contract('Auction', (accounts) => {
         await truffleAssert.fails(
             auction.cancelBid(1, {from: accounts[1]}),
             truffleAssert.ErrorType.REVERT,
-            "Only bid owner may cancel it, if it wasn't canceled earlier");
+            "not owner");
 
         await truffleAssert.fails(
             auction.cancelBid(1, {from: bidder}),
             truffleAssert.ErrorType.REVERT,
-            "You can not cancel a bid if it is a best one");
+            "cancel failed - best bid");
 
     });
 
@@ -149,18 +149,18 @@ contract('Auction', (accounts) => {
         await truffleAssert.fails(
             auction.claimToFinalizeAuction(0),
             truffleAssert.ErrorType.REVERT,
-            "the auction is finished or non-existent");
+            "wrong auction");
         await truffleAssert.fails(
             auction.claimToFinalizeAuction(1),
             truffleAssert.ErrorType.REVERT,
-            "it is too early to finalize, wait a bit");
+            "too early");
 
         await time.increase(890);
 
         await truffleAssert.fails(
             auction.claimToFinalizeAuction(1),
             truffleAssert.ErrorType.REVERT,
-            "it is too early to finalize, wait a bit");
+            "too early");
     });
 
     it("should finilize auction and pass assets", async () => {

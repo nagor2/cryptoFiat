@@ -41,6 +41,8 @@ interface IBasket {
 
 /// @title Collateral debt position contract
 contract CDP is ReentrancyGuard{
+    /// @notice contract address
+    address public immutable address_this;
 
     /// @notice Positions counter
     uint32 public numPositions;
@@ -51,7 +53,7 @@ contract CDP is ReentrancyGuard{
     /// @notice Cart interface
     IBasket basket;
 
-    /// @notice Stablecoin interface
+    /// @notice flatcoin interface
     IERC20MintableAndBurnable coin;
 
     /// @notice Auction interface
@@ -70,9 +72,9 @@ contract CDP is ReentrancyGuard{
 
     /// @notice This event is emitted when a position is updated.
     /// @param posID ID of the position.
-    /// @param newStableCoinsAmount New amount of stablecoins borrowed.
+    /// @param newFlatCoinsAmount New amount of flatcoins borrowed.
     /// @param ethLocked Current collateral amount.
-    event PositionUpdated (uint32 indexed posID, uint256 newStableCoinsAmount, uint256 ethLocked);
+    event PositionUpdated (uint32 indexed posID, uint256 newFlatCoinsAmount, uint256 ethLocked);
 
     /// @notice This event is emitted when the position’s liquidation status is updated.
     /// @param posID ID of the position.
@@ -85,39 +87,46 @@ contract CDP is ReentrancyGuard{
     /// @param collateral Amount of collateral to sell.
     event liquidateCollateral(uint32 indexed auctionID, uint32 indexed posID, uint256 collateral);
 
+    // @notice Modifier to check that the caller is authorized by the DAO
+    modifier isAuthorized() {
+        require(dao.isAuthorized(msg.sender), "authorized only");
+        _;
+    }
+
     /// @notice Constructor for the CDP contract.
     /// @param _INTDAOaddress Address of the main DAO contract.
-    constructor(address _INTDAOaddress){
+    constructor(address _INTDAOaddress) payable{
         dao = IDAO(_INTDAOaddress);
+        address_this = address(this);
     }
 
     /// @notice This method is used to reinitialize the needed interfaces when the addresses of contracts are changed by voting or to initialize interfaces just after deployment.
     function renewContracts() external{
-        coin = IERC20MintableAndBurnable(dao.addresses("stableCoin"));
+        coin = IERC20MintableAndBurnable(dao.addresses("flatCoin"));
         rule = IERC20MintableAndBurnable(dao.addresses("rule"));
         basket = IBasket(dao.addresses("basket"));
         auction = IAuction(dao.addresses("auction"));
     }
 
-    /// @notice Use this method to borrow stablecoins. To use it, you must provide sufficient collateral in Ether. The collateral is converted to WETH (wrapped ether) and stored as a wrapped Ether token in the contract address. The newly minted stablecoins will be sent to the caller's account.
-    /// @param stableCoinsToMint Number of stablecoins to mint.
+    /// @notice Use this method to borrow flatcoins. To use it, you must provide sufficient collateral in Ether. The newly minted flatcoins will be sent to the caller's account.
+    /// @param flatCoinsToMint Number of flatcoins to mint.
     /// @return The ID of your collateral debt position is returned.
-    function openCDP(uint256 stableCoinsToMint) nonReentrant external payable returns (uint256){
-        stableCoinsToMint = (stableCoinsToMint > getMaxStableCoinsToMint(msg.value))
-            ?getMaxStableCoinsToMint(msg.value)
-            :stableCoinsToMint;
+    function openCDP(uint256 flatCoinsToMint) nonReentrant external payable returns (uint256){
+        flatCoinsToMint = (flatCoinsToMint > getMaxFlatCoinsToMint(msg.value))
+            ?getMaxFlatCoinsToMint(msg.value)
+            :flatCoinsToMint;
 
-        require (stableCoinsToMint >= dao.params("minCoinsToMint")*10**18, "you can not mint less than 1 coin");
+        require (flatCoinsToMint >= dao.params("minCoinsToMint")*10**18, "too little coins");
 
         Position storage p = positions[numPositions];
 
-        p.coinsMinted = uint128(stableCoinsToMint);
+        p.coinsMinted = uint128(flatCoinsToMint);
         p.ethAmountLocked = uint128(msg.value);
         p.owner = msg.sender;
         p.timeOpened = uint32(block.timestamp);
         p.lastTimeUpdated = uint32(block.timestamp);
         p.interestRate = uint24(dao.params("interestRate"));
-        coin.mint(msg.sender, stableCoinsToMint);
+        coin.mint(msg.sender, flatCoinsToMint);
 
         emit PositionOpened(p.owner, numPositions);
         return numPositions++;
@@ -140,8 +149,8 @@ contract CDP is ReentrancyGuard{
 
     /// @notice Shows how many coins can be minted with a given Ether collateral according to the current prices and collateral discount.
     /// @param ethValue Amount of collateral.
-    /// @return amount The maximum amount of stablecoins one can mint with a given collateral.
-    function getMaxStableCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
+    /// @return amount The maximum amount of flatcoins one can mint with a given collateral.
+    function getMaxFlatCoinsToMint(uint256 ethValue) public view returns (uint256 amount) {
         uint256 price = basket.getEthereumVSCommoditiesPriceChange();
         uint256 decimals = basket.getDecimals("eth");
         return ethValue * price * (100 - dao.params("collateralDiscount"))/(10**decimals)/100;
@@ -149,31 +158,29 @@ contract CDP is ReentrancyGuard{
 
     /// @notice Shows how many coins can be minted for a specific position considering changes in collateral amount or price. It accounts for the accumulated fee for the debt.
     /// @param posID ID of the position.
-    /// @return maxAmount The maximum amount of stablecoins one can mint for this position.
-    function getMaxStableCoinsToMintForPos(uint32 posID) public view returns (uint256 maxAmount){
-        return getMaxStableCoinsToMint(positions[posID].ethAmountLocked) - totalCurrentFee(posID);
+    /// @return maxAmount The maximum amount of flatcoins one can mint for this position.
+    function getMaxFlatCoinsToMintForPos(uint32 posID) public view returns (uint256 maxAmount){
+        return getMaxFlatCoinsToMint(positions[posID].ethAmountLocked) - totalCurrentFee(posID);
     }
 
     /// @notice This method is for contracts authorized by the DAO only. For example, a Deposit contract may claim interest for the deposit owner, and the interest will be transferred from the stabilization fund.
     /// If there are not enough funds, all available funds are transferred, and an allowance is given for the remaining amount for future spending.
     /// @param amount Amount of interest to transfer.
     /// @param beneficiary Address of the beneficiary.
-    function claimInterest(uint256 amount, address beneficiary) nonReentrant external{
-        require(dao.isAuthorized(msg.sender), "only authorized address may do this");
-        if (coin.balanceOf(address(this))>amount)
-            coin.transfer(beneficiary, amount);
+    function claimInterest(uint256 amount, address beneficiary) nonReentrant external isAuthorized{
+        if (coin.balanceOf(address_this)>=amount)
+            require(coin.transfer(beneficiary, amount),"transfer failed");
         else {
-            uint256 difference = amount - coin.balanceOf(address(this));
-            coin.transfer(beneficiary, coin.balanceOf(address(this)));
-            coin.approve(beneficiary, difference+coin.allowance(address(this), beneficiary));
+            uint256 difference = amount - coin.balanceOf(address_this);
+            require(coin.transfer(beneficiary, coin.balanceOf(address_this)),"transfer failed");
+            coin.approve(beneficiary, difference+coin.allowance(address_this, beneficiary));
         }
     }
 
     /// @notice This method is for authorized contracts by the DAO only. For example, a new contract may claim emission according to its terms.
-    /// @param amount Amount of stablecoins to mint.
+    /// @param amount Amount of flatcoins to mint.
     /// @param beneficiary Address of the beneficiary.
-    function claimEmission(uint256 amount, address beneficiary) nonReentrant external{
-        require(dao.isAuthorized(msg.sender), "only authorized address may do this");
+    function claimEmission(uint256 amount, address beneficiary) nonReentrant external isAuthorized{
         coin.mint(beneficiary,amount);
     }
 
@@ -181,12 +188,12 @@ contract CDP is ReentrancyGuard{
     /// @param posID ID of the position.
     function closeCDP(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
-        require(p.owner == msg.sender, "Only owner may close his position");
-        require(p.liquidationStatus < 2, "This position is on liquidation or already liquidated/closed");
+        require(p.owner == msg.sender, "only owner");
+        require(p.liquidationStatus < 2, "position is on liquidation or already liquidated/closed");
         uint256 overallDebt = totalCurrentFee(posID)+p.coinsMinted;
-        require(coin.transferFrom(p.owner, address(this), overallDebt), "Could not transfer coins for some reason. You have to allow coins first");
-        require (payable(p.owner).send(p.ethAmountLocked), "Could not transfer collateral for some reason");
-        coin.burn(address(this), p.coinsMinted);
+        require(coin.transferFrom(p.owner, address_this, overallDebt), "transfer failed, allow first");
+        require (payable(p.owner).send(p.ethAmountLocked), "transfer failed");
+        coin.burn(address_this, p.coinsMinted);
         changeStatus(posID, 4);
     }
 
@@ -195,10 +202,10 @@ contract CDP is ReentrancyGuard{
     function transferInterest(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
         if (p.restrictInterestWithdrawal){
-            require(p.owner == msg.sender, "Only owner may transfer interest");
+            require(p.owner == msg.sender, "only owner");
         }
-        require(p.liquidationStatus < 2, "This position is on liquidation or liquidated");
-        require(coin.transferFrom(p.owner, address(this), totalCurrentFee(posID)), "Was not able to transfer fee. Insufficient balance or allowance. Try to allow spending first");
+        require(p.liquidationStatus < 2, "position on liquidation/liquidated");
+        require(coin.transferFrom(p.owner, address_this, totalCurrentFee(posID)), "transfer failed. low balance or allowance");
         p.interestAmountRecorded = 0;
         p.lastTimeUpdated = uint32(block.timestamp);
     }
@@ -207,26 +214,26 @@ contract CDP is ReentrancyGuard{
     /// @param posID ID of the position.
     function switchRestrictInterestWithdrawal(uint32 posID) external{
         Position storage p = positions[posID];
-        require (p.owner == msg.sender, "Only owner may set this property");
+        require (p.owner == msg.sender, "only owner");
             p.restrictInterestWithdrawal = !p.restrictInterestWithdrawal;
     }
 
-    /// @notice If the stabilization fund exceeds a certain percentage (stabilizationFundPercent DAO param) of the total Dotflat stablecoin emission, anyone can allow spending to the Auction contract for further governance token buyouts.
+    /// @notice If the stabilization fund exceeds a certain percentage (stabilizationFundPercent DAO param) of the total Dotflat flatcoin emission, anyone can allow spending to the Auction contract for further governance token buyouts.
     function allowSurplusToAuction() nonReentrant external{
         uint256 stabilizationFundAmount = dao.params("stabilizationFundPercent")*coin.totalSupply()/100;
-        require (coin.balanceOf(address(this)) >= stabilizationFundAmount, "insufficient funds on CDP contract");
-        uint256 surplus = coin.balanceOf(address(this)) - stabilizationFundAmount;
-        require (surplus >= dao.params("minCDPBalanceToInitBuyOut"), "not enough surplus to start buyOut");
-        require (coin.approve(dao.addresses("auction"), surplus), "could not approve coins for some reason");
+        require (coin.balanceOf(address_this) >= stabilizationFundAmount, "low CDP balance");
+        uint256 surplus = coin.balanceOf(address_this) - stabilizationFundAmount;
+        require (surplus >= dao.params("minCDPBalanceToInitBuyOut"), "not enough surplus");
+        require (coin.approve(dao.addresses("auction"), surplus), "approve failed");
     }
 
     /// @notice If a debt position lacks collateral and is marked for liquidation, anyone may claim a margin call for it and sell the collateral through the auction.
     /// @param posID ID of the position.
     function claimMarginCall(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
-        require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp >= dao.params("marginCallTimeLimit"), "Position is not marked on liquidation or owner still has time");
-        require(p.liquidationStatus == 1, "Wrong liquidation status");
-        require(getMaxStableCoinsToMintForPos(posID) < p.coinsMinted, "Collateral is enough, should erase mark");
+        require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp >= dao.params("marginCallTimeLimit"), "position not on liquidation or owner still has time");
+        require(p.liquidationStatus == 1, "wrong liquidation status");
+        require(getMaxFlatCoinsToMintForPos(posID) < p.coinsMinted, "collateral is enough, should erase mark");
         changeStatus(posID, 2);
         p.liquidationAuctionID = auction.initCoinsBuyOut{value: p.ethAmountLocked}();
         emit liquidateCollateral(p.liquidationAuctionID, posID, p.ethAmountLocked);
@@ -237,29 +244,29 @@ contract CDP is ReentrancyGuard{
     /// @param posID ID of the position.
     function finishMarginCall(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
-        require(p.liquidationStatus == 2 && p.liquidationAuctionID !=0, "Position is not on liquidation or was already liquidated or auction was already started");
+        require(p.liquidationStatus == 2 && p.liquidationAuctionID !=0, "not on liquidation or liquidated/auction started");
         if (!auction.isFinalized(p.liquidationAuctionID))
-            require(auction.claimToFinalizeAuction(p.liquidationAuctionID), "could not finalize auction");
+            require(auction.claimToFinalizeAuction(p.liquidationAuctionID), "finalize failed");
 
         uint256 paymentAmount = auction.getPaymentAmount(p.liquidationAuctionID);
 
         if (paymentAmount >=p.coinsMinted){
             uint256 overallDebt = p.coinsMinted + totalCurrentFee(posID) + p.coinsMinted * dao.params("liquidationFee") / 100;
             if (paymentAmount > overallDebt)
-                coin.transfer(p.owner, paymentAmount - overallDebt);
-            coin.burn(address(this), p.coinsMinted);
+                require(coin.transfer(p.owner, paymentAmount - overallDebt),"transfer failed");
+            coin.burn(address_this, p.coinsMinted);
             changeStatus(posID, 3);
             return;
         }
         else {
-            uint256 balance = coin.balanceOf(address(this));
+            uint256 balance = coin.balanceOf(address_this);
             if (balance >= p.coinsMinted){
-                coin.burn(address(this), p.coinsMinted);
+                coin.burn(address_this, p.coinsMinted);
                 changeStatus(posID, 3);
                 return;
             }
             else {
-                coin.burn(address(this), balance);
+                coin.burn(address_this, balance);
                 p.coinsMinted -= uint128(balance);
                 auction.initCoinsBuyOutForStabilization(p.coinsMinted);
             }
@@ -278,30 +285,30 @@ contract CDP is ReentrancyGuard{
     function markToLiquidate(uint32 posID) external{
         Position storage p = positions[posID];
         require (p.markedOnLiquidationTimestamp == 0 && p.liquidationStatus == 0, "wrong liquidationStatus");
-        require(getMaxStableCoinsToMintForPos(posID) < p.coinsMinted, "collateral is enough");
+        require(getMaxFlatCoinsToMintForPos(posID) < p.coinsMinted, "collateral is enough");
         p.markedOnLiquidationTimestamp = uint32(block.timestamp);
         changeStatus(posID, 1);
     }
 
     /// @notice If a debt position has enough collateral but was previously marked for liquidation, anyone may remove this mark.
     /// @param posID ID of the position.
-    function eraseMarkToLiquidate(uint32 posID) public{
+    function eraseMarkToLiquidate(uint32 posID) external{
         Position storage p = positions[posID];
-        require (p.markedOnLiquidationTimestamp >0 && p.liquidationStatus == 1, "This position is not marked or on liquidation/liquidated");
-        require(getMaxStableCoinsToMintForPos(posID) > p.coinsMinted);
+        require (p.markedOnLiquidationTimestamp >0 && p.liquidationStatus == 1, "not marked or on liquidation/liquidated");
+        require(getMaxFlatCoinsToMintForPos(posID) > p.coinsMinted);
         p.markedOnLiquidationTimestamp = 0;
         changeStatus(posID, 0);
     }
 
-    /// @notice Change the amount of minted stablecoins or increase the amount of collateral. To withdraw collateral, use the withdrawEther function.
+    /// @notice Change the amount of minted flatcoins or increase the amount of collateral. To withdraw collateral, use the withdrawEther function.
     /// @param posID ID of the position.
-    /// @param newStableCoinsAmount New amount of stablecoins.
+    /// @param newFlatCoinsAmount New amount of flatcoins.
     /// @return success Whether or not the operation succeeded.
-    function updateCDP(uint32 posID, uint newStableCoinsAmount) nonReentrant external payable returns (bool success){
+    function updateCDP(uint32 posID, uint newFlatCoinsAmount) nonReentrant external payable returns (bool success){
         Position storage p = positions[posID];
-        require(p.liquidationStatus<2, "Wrong liquidationStatus");
-        require(p.owner == msg.sender, "Only owner may update the position");
-        require (newStableCoinsAmount >= dao.params("minCoinsToMint"), "you can not mint less than 1 coin");
+        require(p.liquidationStatus<2, "wrong liquidationStatus");
+        require(p.owner == msg.sender, "only owner");
+        require (newFlatCoinsAmount >= dao.params("minCoinsToMint"), "too little coins");
 
         p.interestAmountRecorded += uint128(interestAmountUnrecorded(posID));
         p.lastTimeUpdated = uint32(block.timestamp);
@@ -310,20 +317,20 @@ contract CDP is ReentrancyGuard{
             p.ethAmountLocked += uint128(msg.value);
         }
 
-        require(getMaxStableCoinsToMintForPos(posID) >= newStableCoinsAmount, "not enough collateral to mint amount");
+        require(getMaxFlatCoinsToMintForPos(posID) >= newFlatCoinsAmount, "not enough collateral");
 
-        if (newStableCoinsAmount > p.coinsMinted) {
-            uint256 difference = newStableCoinsAmount - p.coinsMinted;
+        if (newFlatCoinsAmount > p.coinsMinted) {
+            uint256 difference = newFlatCoinsAmount - p.coinsMinted;
             coin.mint(p.owner, difference);
-            p.coinsMinted = uint128(newStableCoinsAmount);
+            p.coinsMinted = uint128(newFlatCoinsAmount);
         }
-        if (newStableCoinsAmount < p.coinsMinted) {
-            uint256 difference = p.coinsMinted - newStableCoinsAmount;
+        if (newFlatCoinsAmount < p.coinsMinted) {
+            uint256 difference = p.coinsMinted - newFlatCoinsAmount;
             require(coin.balanceOf(p.owner)>=difference);
             coin.burn(p.owner, difference);
-            p.coinsMinted = uint128(newStableCoinsAmount);
+            p.coinsMinted = uint128(newFlatCoinsAmount);
         }
-        emit PositionUpdated(posID, newStableCoinsAmount, p.ethAmountLocked);
+        emit PositionUpdated(posID, newFlatCoinsAmount, p.ethAmountLocked);
         return true;
     }
 
@@ -332,12 +339,12 @@ contract CDP is ReentrancyGuard{
     /// @param etherToWithdraw Amount of ether to withdraw.
     function withdrawEther(uint32 posID, uint128 etherToWithdraw) nonReentrant external{
         Position storage p = positions[posID];
-        require(p.liquidationStatus == 0, "Wrong liquidationStatus");
-        require(p.owner == msg.sender, "Only owner may update the position");
-        require (etherToWithdraw<p.ethAmountLocked, "You dont have enough eth locked on this pos");
+        require(p.liquidationStatus == 0, "wrong liquidationStatus");
+        require(p.owner == msg.sender, "only owner");
+        require (etherToWithdraw<p.ethAmountLocked, "too many eth claimed");
         uint256 ethToLeave = p.ethAmountLocked - etherToWithdraw;
-        uint256 maxCoins = getMaxStableCoinsToMint(ethToLeave) - totalCurrentFee(posID);
-        require (maxCoins>p.coinsMinted, "you want to keep not enough eth to cover emission and current fee");
+        uint256 maxCoins = getMaxFlatCoinsToMint(ethToLeave) - totalCurrentFee(posID);
+        require (maxCoins>p.coinsMinted, "not enough eth");
         p.ethAmountLocked -= etherToWithdraw;
         require(payable(p.owner).send(etherToWithdraw));
         emit PositionUpdated (posID, p.coinsMinted, p.ethAmountLocked);
@@ -346,15 +353,14 @@ contract CDP is ReentrancyGuard{
     /// @notice Anyone can burn (eliminate) all Rule tokens held by the CDP contract. If not done accidentally,
     ///Rule tokens can only be on the contract's balance after a Rule buyout auction.
     function burnRule() external{
-        rule.burn(address(this), rule.balanceOf(address(this)));
+        rule.burn(address_this, rule.balanceOf(address_this));
     }
 
-    /// @notice If the stabilization fund lacks sufficient funds, one may initiate an auction to top it up with dotflat stablecoins.
+    /// @notice If the stabilization fund lacks sufficient funds, one may initiate an auction to top it up with dotflat flatcoins.
     /// The auction winner receives their reward in Rule tokens minted by the CDP contract.
     function mintRule(address to, uint256 amount) external returns (bool success){
-        require (msg.sender == dao.addresses("auction"), "Only auction is allowed to claim mint");
+        require (msg.sender == dao.addresses("auction"), "only auction");
         rule.mint(to, amount);
         return true;
     }
 }
-

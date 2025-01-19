@@ -8,21 +8,21 @@ contract('CDP withdraw and close position', (accounts) => {
     var CDP = artifacts.require("./CDP.sol");
     var INTDAO = artifacts.require("./INTDAO.sol");
     var Oracle = artifacts.require("./exchangeRateContract.sol");
-    var StableCoin = artifacts.require("./stableCoin.sol");
+    var FlatCoin = artifacts.require("./flatCoin.sol");
 
     let posId;
     const owner = accounts[6];
 
-    let coin;
+    let flatCoin;
 
     before('should setup the contracts and open pos', async () => {
         const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-2)})
 
         oracle = await Oracle.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
-        coin = await StableCoin.deployed(futureDaoAddress);
+        flatCoin = await FlatCoin.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, oracle.address, 0x0, coin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, oracle.address, 0x0, flatCoin.address, 0x0]);
 
         await cdp.renewContracts();
         
@@ -57,7 +57,7 @@ contract('CDP withdraw and close position', (accounts) => {
         await truffleAssert.fails(
             cdp.withdrawEther(posId, web3.utils.toWei('0.91', 'ether'), {from:owner}),
             truffleAssert.ErrorType.REVERT,
-            "You dont have enough eth locked on this pos"
+            "too many eth claimed"
         );
 
         await time.increase(time.duration.years(1));
@@ -65,7 +65,7 @@ contract('CDP withdraw and close position', (accounts) => {
         await truffleAssert.fails(
             cdp.withdrawEther(posId, web3.utils.toWei('0.4', 'ether'), {from:owner}),
             truffleAssert.ErrorType.REVERT,
-            "you want to keep not enough eth to cover emission and current fee"
+            "not enough eth"
         );
 
         await oracle.updateSinglePrice(1, 5100000000, {from: accounts[5]});
@@ -74,7 +74,7 @@ contract('CDP withdraw and close position', (accounts) => {
 
         truffleAssert.eventEmitted(posTx, 'PositionUpdated', async (ev) => {
             assert.equal(posId, ev.posID.toNumber(), "id is wrong");
-            assert.equal(web3.utils.toWei('1000', 'ether'), ev.newStableCoinsAmount, "newStableCoinsAmount is wrong");
+            assert.equal(web3.utils.toWei('1000', 'ether'), ev.newFlatCoinsAmount, "newFlatCoinsAmount is wrong");
             assert.equal(web3.utils.toWei('0.5', 'ether'), ev.ethLocked, "ethLocked is wrong");
         });
 
@@ -88,11 +88,11 @@ contract('CDP withdraw and close position', (accounts) => {
             value: web3.utils.toWei('0.2', 'ether')
         });
 
-        await coin.transfer(owner, web3.utils.toWei('100', 'ether'), {from:accounts[3]});
+        await flatCoin.transfer(owner, web3.utils.toWei('100', 'ether'), {from:accounts[3]});
 
-        await coin.approve(cdp.address, web3.utils.toWei('1100', 'ether'),{from:owner});
+        await flatCoin.approve(cdp.address, web3.utils.toWei('1100', 'ether'),{from:owner});
 
-        assert.equal(await coin.totalSupply(), web3.utils.toWei('1200', 'ether'), "wrong totalSupply");
+        assert.equal(await flatCoin.totalSupply(), web3.utils.toWei('1200', 'ether'), "wrong totalSupply");
 
         let currentFee = await cdp.totalCurrentFee(posId);
 
@@ -102,17 +102,17 @@ contract('CDP withdraw and close position', (accounts) => {
         await truffleAssert.fails(
             cdp.closeCDP(posId),
             truffleAssert.ErrorType.REVERT,
-            "Only owner may close his position"
+            "only owner"
         );
         let ownerBalanceBefore = await web3.eth.getBalance(owner);
         let tx = await cdp.closeCDP(posId,{from:owner});
 
         assert.equal(await web3.eth.getBalance(owner), web3.utils.toBN(ownerBalanceBefore).sub(web3.utils.toBN(tx.receipt.gasUsed*tx.receipt.effectiveGasPrice)).add(web3.utils.toBN(web3.utils.toWei('0.5', 'ether'))).toString(), "weth on balance is wrong");
 
-        assert.equal(parseFloat(await coin.totalSupply()/10**18).toFixed(4), 200.0000, "wrong totalSupply");
+        assert.equal(parseFloat(await flatCoin.totalSupply()/10**18).toFixed(4), 200.0000, "wrong totalSupply");
 
-        assert.equal(parseFloat(await coin.balanceOf(owner)/10**18).toFixed(3), 10.000, "wrong totalSupply");
-        assert.equal(parseFloat(await coin.balanceOf(await dao.addresses('cdp'))/10**18).toFixed(3), 90.000, "wrong totalSupply");
-        assert.equal(parseFloat(await coin.balanceOf(accounts[3])/10**18).toFixed(4), 100.0000, "wrong totalSupply");
+        assert.equal(parseFloat(await flatCoin.balanceOf(owner)/10**18).toFixed(3), 10.000, "wrong totalSupply");
+        assert.equal(parseFloat(await flatCoin.balanceOf(await dao.addresses('cdp'))/10**18).toFixed(3), 90.000, "wrong totalSupply");
+        assert.equal(parseFloat(await flatCoin.balanceOf(accounts[3])/10**18).toFixed(4), 100.0000, "wrong totalSupply");
     });
 });

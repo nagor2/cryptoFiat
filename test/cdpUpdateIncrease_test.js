@@ -3,14 +3,14 @@ const { getContractAddress } = require('@ethersproject/address');
 
 var CDP = artifacts.require("./CDP.sol");
 var INTDAO = artifacts.require("./INTDAO.sol");
-var StableCoin = artifacts.require("./stableCoin.sol");
+var FlatCoin = artifacts.require("./flatCoin.sol");
 
 const truffleAssert = require('truffle-assertions');
 
 contract('CDP Update Increase', (accounts) => {
     let dao;
     let cdp;
-    let stableCoin;
+    let flatCoin;
     let positionBefore;
     let positionAfter;
     let positionTx;
@@ -23,10 +23,10 @@ contract('CDP Update Increase', (accounts) => {
 
     before('should setup the contracts instance', async () => {
         const futureDaoAddress = await getContractAddress({from: accounts[0],nonce: ((await web3.eth.getTransactionCount(accounts[0]))-5)})
-        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        flatCoin = await FlatCoin.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
 
-        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, 0x0, 0x0, stableCoin.address, 0x0]);
+        dao = await INTDAO.deployed([cdp.address, 0x0, 0x0, 0x0, 0x0, flatCoin.address, 0x0]);
 
         await cdp.renewContracts();
 
@@ -53,12 +53,12 @@ contract('CDP Update Increase', (accounts) => {
     it("should emit PositionUpdated with right parameters", async () => {
         await truffleAssert.eventEmitted(positionUpdate, 'PositionUpdated', async (ev) => {
             assert.equal(ev.posID, posId.toNumber(), 'positionID is wrong');
-            assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('2100', 'ether'), 'amount is wrong');
+            assert.equal(ev.newFlatCoinsAmount, web3.utils.toWei('2100', 'ether'), 'amount is wrong');
         });
     });
 
     it("should properly calculate maxCoins to mint", async () => {
-        const coins = await cdp.getMaxStableCoinsToMintForPos(posId);
+        const coins = await cdp.getMaxFlatCoinsToMintForPos(posId);
         assert.equal(parseFloat(coins/10**18).toFixed(3), parseFloat(4160).toFixed(3), "should decrease amount as fee is growing");
     });
 
@@ -71,21 +71,21 @@ contract('CDP Update Increase', (accounts) => {
     });
 
     it("should increase owner balance", async () => {
-        const balance = await stableCoin.balanceOf(positionBefore.owner);
-        assert.equal(balance, web3.utils.toWei('2100', 'ether'), "owner's balance should be 2100 stableCoin");
+        const balance = await flatCoin.balanceOf(positionBefore.owner);
+        assert.equal(balance, web3.utils.toWei('2100', 'ether'), "owner's balance should be 2100 flatCoin");
     });
 
     it("should transfer fee to CDP, increase stability fund and decrease owners balance", async () => {
-        const balanceBefore = await stableCoin.balanceOf(cdp.address);
-        var ownerBalance = await stableCoin.balanceOf(positionBefore.owner);
-        assert.equal(ownerBalance, web3.utils.toWei('2100', 'ether'), "owner's balance should be 2100 stableCoins before");
-        await stableCoin.approve(cdp.address, fee+1000, {from: owner});
+        const balanceBefore = await flatCoin.balanceOf(cdp.address);
+        var ownerBalance = await flatCoin.balanceOf(positionBefore.owner);
+        assert.equal(ownerBalance, web3.utils.toWei('2100', 'ether'), "owner's balance should be 2100 flatCoins before");
+        await flatCoin.approve(cdp.address, fee+1000, {from: owner});
         await cdp.transferInterest(posId);
-        ownerBalance = await stableCoin.balanceOf(positionBefore.owner);
+        ownerBalance = await flatCoin.balanceOf(positionBefore.owner);
 
-        assert.equal(parseFloat(ownerBalance/10**18).toFixed(3), parseFloat(1920).toFixed(3), "owner's balance should be 1920 stableCoins after");
+        assert.equal(parseFloat(ownerBalance/10**18).toFixed(3), parseFloat(1920).toFixed(3), "owner's balance should be 1920 flatCoins after");
 
-        const balanceAfter = await stableCoin.balanceOf(cdp.address);
+        const balanceAfter = await flatCoin.balanceOf(cdp.address);
         assert.equal(parseFloat(balanceBefore/10**18).toFixed(3), parseFloat(0).toFixed(3), "should be empty CDP contract balance");
         assert.equal(parseFloat(balanceAfter/10**18).toFixed(3), parseFloat(fee/10**18).toFixed(3), "should put fee on CDP contract balance");
     });
@@ -123,13 +123,13 @@ contract('CDP Update Increase', (accounts) => {
         await truffleAssert.fails(
             cdp.updateCDP(id, web3.utils.toWei('2100', 'ether'), {from: account}),
             truffleAssert.ErrorType.REVERT,
-            "not enough collateral to mint amount");
+            "not enough collateral");
 
         truffleAssert.eventEmitted(
             await cdp.updateCDP(id, web3.utils.toWei('2079'), {from: account}),
             'PositionUpdated', async (ev) => {
             assert.equal(ev.posID.toString(), id.toString(), 'positionID is wrong');
-            assert.equal(ev.newStableCoinsAmount, web3.utils.toWei('2079'), 'amount is wrong');
+            assert.equal(ev.newFlatCoinsAmount, web3.utils.toWei('2079'), 'amount is wrong');
         });
     });
 

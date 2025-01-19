@@ -3,7 +3,7 @@ const decimals = 18;
 var ethereum;
 var dao;
 var rule;
-var stableCoin;
+var flatCoin;
 var cart;
 var cdp;
 var deposit;
@@ -71,7 +71,7 @@ function initGlobals() {
     });
 
     daoStatic.methods.addresses("stableCoin").call().then(function (result) {
-        stableCoin = new web3.eth.Contract(stableCoinABI,result);
+        flatCoin = new web3.eth.Contract(stableCoinABI,result);
         stableCoinBalance();
     });
 
@@ -79,7 +79,7 @@ function initGlobals() {
         cdpAddress = result;
         cdp = new web3.eth.Contract(cdpABI,result);
         getMyDebtPositions();
-        stableCoin.methods.allowance(userAddress, cdpAddress).call().then(function (result) {
+        flatCoin.methods.allowance(userAddress, cdpAddress).call().then(function (result) {
             document.getElementById('cdpAllowance').innerText = (result/(10**18)).toFixed(5);
         });
     });
@@ -93,10 +93,10 @@ function initGlobals() {
         deposit = new web3.eth.Contract(depositABI,result);
         depositAddress = result;
         getMyDeposits();
-        stableCoin.methods.allowance(userAddress, depositAddress).call().then(function (result) {
+        flatCoin.methods.allowance(userAddress, depositAddress).call().then(function (result) {
             document.getElementById('depositAllowance').innerText = (result/(10**18)).toFixed(5);
         });
-        stableCoin.methods.allowance(cdpAddress, userAddress).call().then(function (result) {
+        flatCoin.methods.allowance(cdpAddress, userAddress).call().then(function (result) {
             document.getElementById('myCDPAllowance').innerText = (result/(10**18)).toFixed(5);
         });
     });
@@ -172,7 +172,7 @@ function openCDP(){
 }
 
 function stableCoinBalance(){
-stableCoin.methods.balanceOf(userAddress).call().then(function (result){
+flatCoin.methods.balanceOf(userAddress).call().then(function (result){
     document.getElementById("stableCoinBalance").innerText = parseFloat(result/10**18).toFixed(2);
 });
 }
@@ -408,7 +408,7 @@ function cancelBid(id){
 
 function approveForAuction(){
     let amount = document.getElementById("bidAmount").value;
-    stableCoin.methods.approve(auctionAddress,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+    flatCoin.methods.approve(auctionAddress,web3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
         alert('approved');
     });
 }
@@ -481,7 +481,7 @@ function getMyDeposits(){
 
 function allowToDeposit (){
     let amount = document.getElementById('stableCoinsToDeposit').value;
-    stableCoin.methods.approve(depositAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+    flatCoin.methods.approve(depositAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
         alert('allowed');
     });
 }
@@ -496,7 +496,7 @@ function updateCDP(id){
 
 function allowCoinsToCDP(){
     let amount = document.getElementById('stableCoinsAmount').value;
-    stableCoin.methods.approve(cdpAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
+    flatCoin.methods.approve(cdpAddress, localWeb3.utils.toWei(amount)).send({from:userAddress}).then(function (result) {
         alert('success');
     });
 }
@@ -545,8 +545,8 @@ function initRuleBuyOut(){
 }
 
 function transferFromCDP() {
-    stableCoin.methods.allowance(cdpAddress, userAddress).call().then(function (approved) {
-        stableCoin.methods.transferFrom(cdpAddress, userAddress, approved).send({from:userAddress});
+    flatCoin.methods.allowance(cdpAddress, userAddress).call().then(function (approved) {
+        flatCoin.methods.transferFrom(cdpAddress, userAddress, approved).send({from:userAddress});
     })
 }
 

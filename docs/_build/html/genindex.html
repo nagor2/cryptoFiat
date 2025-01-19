@@ -140,6 +140,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pages/contracts.html#Auction">Auction (contract)</a>
 </li>
+      <li><a href="pages/contracts.html#Auction.address_this">Auction.address_this (statevar)</a>
+</li>
       <li><a href="pages/contracts.html#Auction.auctionFinished(uint32,uint256,uint32)">Auction.auctionFinished (event)</a>
 </li>
       <li><a href="pages/contracts.html#Auction.auctionNum">Auction.auctionNum (statevar)</a>
@@ -148,15 +150,21 @@
 </li>
       <li><a href="pages/contracts.html#Auction.constructor">Auction.constructor (constructor)</a>
 </li>
+      <li><a href="pages/contracts.html#CDP.address_this">CDP.address_this (statevar)</a>
+</li>
       <li><a href="pages/contracts.html#CDP.allowSurplusToAuction()">CDP.allowSurplusToAuction (function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pages/contracts.html#CDP.auction">CDP.auction (statevar)</a>
 </li>
+      <li><a href="pages/contracts.html#DepositContract.address_this">DepositContract.address_this (statevar)</a>
+</li>
       <li><a href="pages/contracts.html#INTDAO.activeVoting">INTDAO.activeVoting (statevar)</a>
 </li>
       <li><a href="pages/contracts.html#INTDAO.addVoting(uint8,string,uint,address,bool)">INTDAO.addVoting (function)</a>
+</li>
+      <li><a href="pages/contracts.html#INTDAO.address_this">INTDAO.address_this (statevar)</a>
 </li>
       <li><a href="pages/contracts.html#INTDAO.addresses">INTDAO.addresses (statevar)</a>
 </li>
@@ -192,7 +200,7 @@
 </li>
       <li><a href="pages/contracts.html#exchangeRateContract.beneficiary">exchangeRateContract.beneficiary (statevar)</a>
 </li>
-      <li><a href="pages/contracts.html#stableCoin.burn(address,uint256)">stableCoin.burn (function)</a>
+      <li><a href="pages/contracts.html#flatCoin.burn(address,uint256)">flatCoin.burn (function)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -274,7 +282,7 @@
 </li>
       <li><a href="pages/contracts.html#exchangeRateContract.dictionary">exchangeRateContract.dictionary (statevar)</a>
 </li>
-      <li><a href="pages/contracts.html#stableCoin.dao">stableCoin.dao (statevar)</a>
+      <li><a href="pages/contracts.html#flatCoin.dao">flatCoin.dao (statevar)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -298,11 +306,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pages/contracts.html#CDP.finishMarginCall(uint32)">CDP.finishMarginCall (function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pages/contracts.html#exchangeRateContract.finalize()">exchangeRateContract.finalize (function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pages/contracts.html#exchangeRateContract.finalized">exchangeRateContract.finalized (statevar)</a>
+</li>
+      <li><a href="pages/contracts.html#flatCoin">flatCoin (contract)</a>
+</li>
+      <li><a href="pages/contracts.html#flatCoin.constructor">flatCoin.constructor (constructor)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -314,9 +326,9 @@
 </li>
       <li><a href="pages/contracts.html#Auction.getPaymentAmount(uint32)">Auction.getPaymentAmount (function)</a>
 </li>
-      <li><a href="pages/contracts.html#CDP.getMaxStableCoinsToMint(uint256)">CDP.getMaxStableCoinsToMint (function)</a>
+      <li><a href="pages/contracts.html#CDP.getMaxFlatCoinsToMint(uint256)">CDP.getMaxFlatCoinsToMint (function)</a>
 </li>
-      <li><a href="pages/contracts.html#CDP.getMaxStableCoinsToMintForPos(uint32)">CDP.getMaxStableCoinsToMintForPos (function)</a>
+      <li><a href="pages/contracts.html#CDP.getMaxFlatCoinsToMintForPos(uint32)">CDP.getMaxFlatCoinsToMintForPos (function)</a>
 </li>
       <li><a href="pages/contracts.html#DepositContract.getInterest(uint32)">DepositContract.getInterest (function)</a>
 </li>
@@ -362,13 +374,17 @@
 </li>
       <li><a href="pages/contracts.html#CDP.interestAmountUnrecorded(uint32)">CDP.interestAmountUnrecorded (function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pages/contracts.html#CDP.isAuthorized">CDP.isAuthorized (modifier)</a>
+</li>
       <li><a href="pages/contracts.html#INTDAO">INTDAO (contract)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pages/contracts.html#INTDAO.constructor">INTDAO.constructor (constructor)</a>
 </li>
       <li><a href="pages/contracts.html#INTDAO.isAuthorized">INTDAO.isAuthorized (statevar)</a>
+</li>
+      <li><a href="pages/contracts.html#Rule.isAuthorized">Rule.isAuthorized (modifier)</a>
 </li>
       <li><a href="pages/contracts.html#basketContract.instrumentAdded(uint16)">basketContract.instrumentAdded (event)</a>
 </li>
@@ -379,6 +395,8 @@
       <li><a href="pages/contracts.html#exchangeRateContract.instruments">exchangeRateContract.instruments (statevar)</a>
 </li>
       <li><a href="pages/contracts.html#exchangeRateContract.instrumentsCount">exchangeRateContract.instrumentsCount (statevar)</a>
+</li>
+      <li><a href="pages/contracts.html#flatCoin.isAuthorized">flatCoin.isAuthorized (modifier)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -408,7 +426,7 @@
 </li>
       <li><a href="pages/contracts.html#Rule.mint(address,uint256)">Rule.mint (function)</a>
 </li>
-      <li><a href="pages/contracts.html#stableCoin.mint(address,uint256)">stableCoin.mint (function)</a>
+      <li><a href="pages/contracts.html#flatCoin.mint(address,uint256)">flatCoin.mint (function)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -514,17 +532,13 @@
 </li>
       <li><a href="pages/contracts.html#basketContract.setShare(uint16,uint16)">basketContract.setShare (function)</a>
 </li>
-      <li><a href="pages/contracts.html#basketContract.shareChanged(uint16)">basketContract.shareChanged (event)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pages/contracts.html#basketContract.shareChanged(uint16)">basketContract.shareChanged (event)</a>
+</li>
       <li><a href="pages/contracts.html#basketContract.sharesCount">basketContract.sharesCount (statevar)</a>
 </li>
       <li><a href="pages/contracts.html#exchangeRateContract.severalPricesUpdateRequest(uint16[])">exchangeRateContract.severalPricesUpdateRequest (event)</a>
-</li>
-      <li><a href="pages/contracts.html#stableCoin">stableCoin (contract)</a>
-</li>
-      <li><a href="pages/contracts.html#stableCoin.constructor">stableCoin.constructor (constructor)</a>
 </li>
   </ul></td>
 </tr></table>

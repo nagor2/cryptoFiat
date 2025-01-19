@@ -32,7 +32,7 @@ contract('Rule', (accounts) => {
         await truffleAssert.fails(
             rule.mint(account, 1, {from: account}),
             truffleAssert.ErrorType.REVERT,
-            "only authorized address may do this"
+            "authorized only"
         );
     });
 
@@ -41,7 +41,7 @@ contract('Rule', (accounts) => {
         await truffleAssert.fails(
             rule.burn(account, 1, {from: account}),
             truffleAssert.ErrorType.REVERT,
-            "only authorized address may do this"
+            "authorized only"
         );
     });
 

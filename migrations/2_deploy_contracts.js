@@ -1,5 +1,5 @@
 var rule = artifacts.require("Rule");
-var stableCoin = artifacts.require ("stableCoin");
+var flatCoin = artifacts.require ("flatCoin");
 var exchangeRateContract = artifacts.require("exchangeRateContract");
 var INTDAO = artifacts.require("INTDAO");
 var cdp = artifacts.require("CDP");
@@ -22,7 +22,7 @@ module.exports = async function(deployer, network, accounts) {
         //let daoAddress = '0xd1c5A469191E45a4D06D725681F2B73a402737b4';
         //await deployer.deploy(exchangeRateContract, daoAddress);
         //await deployer.deploy(basketContract, daoAddress);
-        //await deployer.deploy(stableCoin, daoAddress);
+        //await deployer.deploy(flatCoin, daoAddress);
         //await deployer.deploy(Rule, daoAddress);
         //await deployer.deploy(auction, daoAddress);
         //await deployer.deploy(cdp, daoAddress);
@@ -36,7 +36,7 @@ module.exports = async function(deployer, network, accounts) {
         })
         console.log("futureAddress INTDAO: "+daofutureAddress);
         //await deployer.deploy(weth);
-        await deployer.deploy(stableCoin, daofutureAddress);
+        await deployer.deploy(flatCoin, daofutureAddress);
         await deployer.deploy(basketContract, daofutureAddress);
         const auctionContract = await deployer.deploy(auction, daofutureAddress);
         const cdpContract = await deployer.deploy(cdp, daofutureAddress);
@@ -45,7 +45,7 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(rule, daofutureAddress);
         const basket = await basketContract.deployed();
 
-        await deployer.deploy(INTDAO, [cdp.address, auction.address, deposit.address, exchangeRateContract.address, rule.address, stableCoin.address, basket.address],{from: accounts[0]});
+        await deployer.deploy(INTDAO, [cdp.address, auction.address, deposit.address, exchangeRateContract.address, rule.address, flatCoin.address, basket.address],{from: accounts[0]});
         await basket.renewContracts();
         await auctionContract.renewContracts();
         await cdpContract.renewContracts();
@@ -60,7 +60,7 @@ module.exports = async function(deployer, network, accounts) {
         })
 
         const exRAuthour = accounts[5];
-        await deployer.deploy(stableCoin, daofutureAddress,{from: accounts[0]});
+        await deployer.deploy(flatCoin, daofutureAddress,{from: accounts[0]});
         await deployer.deploy(basketContract, daofutureAddress,{from: exRAuthour});
         const auctionContract = await deployer.deploy(auction, daofutureAddress,{from: accounts[0]});
         const cdpContract = await deployer.deploy(cdp, daofutureAddress,{from: accounts[0]});
@@ -70,7 +70,7 @@ module.exports = async function(deployer, network, accounts) {
 
 
 
-        await deployer.deploy(INTDAO, [cdp.address, auction.address, deposit.address, exchangeRateContract.address, rule.address, stableCoin.address, basketContract.address],{from: accounts[0]});
+        await deployer.deploy(INTDAO, [cdp.address, auction.address, deposit.address, exchangeRateContract.address, rule.address, flatCoin.address, basketContract.address],{from: accounts[0]});
 
         //console.log (INTDAO.address + " " + daofutureAddress);
 

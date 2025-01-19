@@ -18,11 +18,13 @@ import "./ICDP.sol";
 
 /// @title Deposit contract
 contract DepositContract is ReentrancyGuard{
+    /// @notice contract address
+    address public immutable address_this;
 
     /// @notice DAO interface.
     IDAO immutable dao;
 
-    /// @notice stablecoin interface.
+    /// @notice flatcoin interface.
     IERC20 coin;
 
     /// @notice CDP interface.
@@ -36,28 +38,29 @@ contract DepositContract is ReentrancyGuard{
 
     /// @notice Emitted when a new deposit is opened.
     /// @param id ID of the deposit.
-    /// @param amount Amount of stablecoins deposited.
+    /// @param amount Amount of flatcoins deposited.
     /// @param rate Annual interest rate on the deposit.
     /// @param owner Address of the deposit owner.
     event DepositOpened(uint32 indexed id, uint256 amount, uint256 rate, address indexed owner);
 
     /// @notice Constructor for the Deposit contract.
     /// @param _INTDAOaddress Address of the main DAO contract.
-    constructor(address _INTDAOaddress){
+    constructor(address _INTDAOaddress) payable{
         dao = IDAO(_INTDAOaddress);
+        address_this = address(this);
     }
 
     /// @notice Reinitialize the needed interfaces when the addresses of contracts are changed by voting or initialize interfaces just after deployment.
     function renewContracts() external {
-        coin = IERC20(dao.addresses("stableCoin"));
+        coin = IERC20(dao.addresses("flatCoin"));
         cdp = ICDP(dao.addresses("cdp"));
     }
 
-    /// @notice Deposits stablecoins into the contract. Ensure that spending is allowed for this contract address before calling this function. A DepositOpened event is emitted with the owner and other relevant parameters.
+    /// @notice Deposits flatcoins into the contract. Ensure that spending is allowed for this contract address before calling this function. A DepositOpened event is emitted with the owner and other relevant parameters.
     function deposit() nonReentrant external{
-        uint256 amount = coin.allowance(msg.sender, address(this));
+        uint256 amount = coin.allowance(msg.sender, address_this);
         require (amount>0, "you have to approve coins first");
-        coin.transferFrom(msg.sender, address(this), amount);
+        require(coin.transferFrom(msg.sender, address_this, amount),"failed to transfer");
         Deposit storage d = deposits[++depositsCounter];
         d.owner = msg.sender;
         d.lastTimeUpdated = block.timestamp;
@@ -68,7 +71,7 @@ contract DepositContract is ReentrancyGuard{
         emit DepositOpened(depositsCounter, d.coinsDeposited, d.currentInterestRate, d.owner);
     }
 
-    /// @notice Withdraws stablecoins from the deposit. Only the owner of the deposit can withdraw funds. If the deposit balance reaches zero, it is considered closed.
+    /// @notice Withdraws flatcoins from the deposit. Only the owner of the deposit can withdraw funds. If the deposit balance reaches zero, it is considered closed.
     /// @param id The ID of the deposit.
     /// @param amount The amount of funds to withdraw.
     function withdraw(uint32 id, uint256 amount) nonReentrant external{
@@ -77,14 +80,12 @@ contract DepositContract is ReentrancyGuard{
         require(msg.sender == d.owner, "only owner may init withdrawal");
         require (!d.closed, "deposit is closed");
         require (amount<=d.coinsDeposited, "not enough coins on deposit");
-        coin.transfer(d.owner, amount);
+        require (coin.transfer(d.owner, amount),"could not transfer");
         d.coinsDeposited -= amount;
         if (d.coinsDeposited==0){
             getInterest(id);
             d.closed = true;
         }
-        if (block.timestamp>d.period)
-            d.currentInterestRate = dao.params("depositRate");
     }
 
     /// @notice  Tops up an existing deposit if it is not closed. Ensure that you are the owner of the deposit and that you have allowed spending for the contract. You may accidentally top up someone else's deposit, so verify the deposit ID carefully.
@@ -92,12 +93,10 @@ contract DepositContract is ReentrancyGuard{
     function topUp(uint32 id) nonReentrant external{
         updateInterest(id);
         Deposit storage d = deposits[id];
-        require (!d.closed, "deposit is closed, open a new one, please");
-        uint256 amount = coin.allowance(msg.sender, address(this));
+        require (!d.closed, "deposit is closed");
+        uint256 amount = coin.allowance(msg.sender, address_this);
         require (amount>0, "You should approve first");
-        require (coin.transferFrom(msg.sender, address(this), amount), "Could not transfer coins for some reason");
-        if (block.timestamp>d.period)
-            d.currentInterestRate = dao.params("depositRate");
+        require (coin.transferFrom(msg.sender, address_this, amount), "transfer failed");
         d.coinsDeposited += amount;
     }
 
@@ -116,12 +115,12 @@ contract DepositContract is ReentrancyGuard{
         Deposit storage d = deposits[id];
         d.accumulatedInterest = overallInterest(id);
         d.lastTimeUpdated = block.timestamp;
-        if (block.timestamp>d.period)
+        if (block.timestamp>=d.period)
             d.currentInterestRate = dao.params("depositRate");
         return d.accumulatedInterest;
     }
 
-    /// @notice Claims the accumulated interest while keeping the principal funds in the deposit. The owner's earnings will be transferred from the stabilization fund (CDP balance of stablecoins) if available. If the CDP balance is insufficient, the contract will transfer all available funds to the user and provide an allowance to spend the remaining amount. To top up the stabilization fund, one can initiate an auction using the initCoinsBuyOutForStabilization function in the Auction contract.
+    /// @notice Claims the accumulated interest while keeping the principal funds in the deposit. The owner's earnings will be transferred from the stabilization fund (CDP balance of flatcoins) if available. If the CDP balance is insufficient, the contract will transfer all available funds to the user and provide an allowance to spend the remaining amount. To top up the stabilization fund, one can initiate an auction using the initCoinsBuyOutForStabilization function in the Auction contract.
     /// @param id The ID of the deposit.
     function claimInterest(uint32 id) nonReentrant external{
         updateInterest(id);

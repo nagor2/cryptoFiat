@@ -63,7 +63,7 @@ contract('DAO', (accounts) => {
         await truffleAssert.fails(
             dao.addVoting(1, "", 0, accounts[1], false,{from: ruleHolder}),
             truffleAssert.ErrorType.REVERT,
-            "Too little tokens to init voting");
+            "Too little to init");
     });
 
     it('should init voting', async () => {
@@ -92,7 +92,7 @@ contract('DAO', (accounts) => {
         await truffleAssert.fails(
             dao.vote(true,{from: ruleHolder}),
             truffleAssert.ErrorType.REVERT,
-            "Voting is already inactive");
+            "inactive");
     });
 
     it('should be able to finalize voting', async () => {

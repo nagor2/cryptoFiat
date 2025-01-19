@@ -2,7 +2,7 @@ const { time } = require('@openzeppelin/test-helpers');
 const { getContractAddress } = require('@ethersproject/address')
 
 var INTDAO = artifacts.require("./INTDAO.sol");
-var StableCoin = artifacts.require("./stableCoin.sol");
+var flatCoin = artifacts.require("./flatCoin.sol");
 var Auction = artifacts.require("./Auction.sol");
 var CDP = artifacts.require("./CDP.sol");
 var Rule = artifacts.require("./Rule.sol");
@@ -26,7 +26,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         }
 */
 
-        stableCoin = await StableCoin.deployed(futureDaoAddress);
+        stableCoin = await flatCoin.deployed(futureDaoAddress);
         auction = await Auction.deployed(futureDaoAddress);
         cdp = await CDP.deployed(futureDaoAddress);
         rule = await Rule.deployed(futureDaoAddress);
@@ -93,7 +93,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         await truffleAssert.fails(
             auction.makeBid(auctionId, web3.utils.toWei('10001'), {from:bidder}),
             truffleAssert.ErrorType.REVERT,
-            "too many rules for one emission");
+            "too many rules");
 
         let bidTx = await auction.makeBid(auctionId, web3.utils.toWei('1000'), {from:bidder});
 
@@ -111,12 +111,12 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         await truffleAssert.fails(
             auction.makeBid(auctionId, web3.utils.toWei('1100'), {from:bidder2}),
             truffleAssert.ErrorType.REVERT,
-            "your bid is not low enough");
+            "not low enough");
 
         await truffleAssert.fails(
             auction.makeBid(auctionId, web3.utils.toWei('998'), {from:bidder2}),
             truffleAssert.ErrorType.REVERT,
-            "your bid is not low enough");
+            "not low enough");
 
         bidTx = await auction.makeBid(auctionId, web3.utils.toWei('950'), {from:bidder2});
 
@@ -132,7 +132,7 @@ contract('Auction initCoinsBuyOutForStabilization', (accounts) => {
         await truffleAssert.fails(
             auction.improveBid(bidIdToImprove, web3.utils.toWei('902.5'), {from:bidder2}),
             truffleAssert.ErrorType.REVERT,
-            "You may improve only your personal bids");
+            "not owner");
 
         await time.increase(time.duration.seconds(30));
 

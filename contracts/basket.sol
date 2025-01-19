@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.19 <0.9.0;
+pragma solidity >=0.8.10 <0.9.0;
 import "./IDAO.sol";
 
 interface IOracle{
@@ -45,14 +45,20 @@ contract basketContract{
     /// @param id Item ID.
     event shareChanged(uint16 id);
 
+    // @notice Modifier to check that the caller is authorized by the DAO
+    modifier updaterOnly() {
+        require(msg.sender == oracle.updater(), "updater only");
+        _;
+    }
+
     /// @notice Constructor for the basket contract.
     /// @param _INTDAOaddress The address of the main DAO contract.
-    constructor(address payable _INTDAOaddress){
+    constructor(address payable _INTDAOaddress) payable{
         dao = IDAO(_INTDAOaddress);
     }
 
     /// @notice This method is used when the addresses of contracts to use are changed by voting or just after deployment.
-    function renewContracts() external {
+    function renewContracts() external{
         oracle = IOracle(dao.addresses("oracle"));
     }
 
@@ -60,9 +66,8 @@ contract basketContract{
     /// @param symbol The symbol of the new item. For example, ‘Copper’.
     /// @param share The share of the new item. The share is used to estimate the weight of a certain item in the basket, so the price change of gold may be more significant for the whole basket than the orange juice price change.
     /// @param initialPrice Initial price of an item. For instance, 2500 USD for gold.
-    function addItem(string memory symbol, uint16 share, uint256 initialPrice) external{
-        require(msg.sender == oracle.updater(), "only authorized address may addItem");
-        require (dictionary[symbol]==0, "instrument already exists, please, use setShare");
+    function addItem(string memory symbol, uint16 share, uint256 initialPrice) external updaterOnly{
+        require (dictionary[symbol]==0, "instrument exists");
         uint16 itemId = ++itemsCount;
         basketItem storage c = items[itemId];
         c.share = share;
@@ -76,8 +81,7 @@ contract basketContract{
     /// @notice This method is used to change the share (or weight) of a particular item in the basket.
     /// @param id Item ID.
     /// @param share New share of the item in the basket. To delete a particular item from the basket, you may set a 0 share.
-    function setShare(uint16 id, uint16 share) external{
-        require(msg.sender == oracle.updater(), "only authorized address may setShare");
+    function setShare(uint16 id, uint16 share) external updaterOnly{
         basketItem storage c = items[id];
         sharesCount -= c.share;
         sharesCount += share;

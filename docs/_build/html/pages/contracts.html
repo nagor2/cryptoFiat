@@ -121,14 +121,14 @@
 <h2>Dotflat<a class="headerlink" href="#dotflat" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This is a stablecoin token. It is a simple ERC-20 token, which can be minted and burned ONLY by CDP contract and those authorized in the DAO.</p>
+<p>This is a flatcoin token. It is a simple ERC-20 token, which can be minted and burned ONLY by CDP contract and those authorized in the DAO.</p>
 </div>
 <dl class="sol contract">
-<dt class="sig sig-object sol" id="stableCoin">
-<em><span class="pre">contract</span> </em><span class="sig-name descname"><span class="pre">stableCoin</span></span> <span class="pre">is</span> <span class="pre">ERC20</span><a class="headerlink" href="#stableCoin" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="flatCoin">
+<em><span class="pre">contract</span> </em><span class="sig-name descname"><span class="pre">flatCoin</span></span> <span class="pre">is</span> <span class="pre">ERC20</span><a class="headerlink" href="#flatCoin" title="Link to this definition"></a></dt>
 <dd><dl class="sol statevar">
-<dt class="sig sig-object sol" id="stableCoin.dao">
-<span class="pre">IDAO</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">dao</span></span><a class="headerlink" href="#stableCoin.dao" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="flatCoin.dao">
+<span class="pre">IDAO</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">dao</span></span><a class="headerlink" href="#flatCoin.dao" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>DAO interface.</p>
@@ -137,11 +137,11 @@
 </dd></dl>
 
 <dl class="sol constructor">
-<dt class="sig sig-object sol" id="stableCoin.constructor">
-<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#stableCoin.constructor" title="Link to this definition"></a><br /> <span class="pre">ERC20</span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">&quot;dot</span> <span class="pre">Flat</span> <span class="pre">coin&quot;</span></em>, <em class="sig-param"><span class="pre">&quot;DFC&quot;</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#stableCoin.constructor" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="flatCoin.constructor">
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#flatCoin.constructor" title="Link to this definition"></a><br /> <span class="pre">ERC20</span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">&quot;dotFlat</span> <span class="pre">coin&quot;</span></em>, <em class="sig-param"><span class="pre">&quot;DFC&quot;</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#flatCoin.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constructor for stableCoin contract.</p>
+<dd class="field-odd"><p>Constructor for flatCoin contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -151,33 +151,38 @@
 </dl>
 </dd></dl>
 
+<dl class="sol modifier">
+<dt class="sig sig-object sol" id="flatCoin.isAuthorized">
+<em><span class="pre">modifier</span> </em><span class="sig-name descname"><span class="pre">isAuthorized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flatCoin.isAuthorized" title="Link to this definition"></a><br /><a class="headerlink" href="#flatCoin.isAuthorized" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="sol function">
-<dt class="sig sig-object sol" id="stableCoin.mint(address,uint256)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#stableCoin.mint(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#stableCoin.mint(address,uint256)" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="flatCoin.mint(address,uint256)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#flatCoin.mint(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">isAuthorized</span><br /><a class="headerlink" href="#flatCoin.mint(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Minting additional stablecoins. Only an authorized address can execute this function.</p>
+<dd class="field-odd"><p>Minting additional flatcoins. Only an authorized address can execute this function.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>to</strong> – Address to receive newly minted stablecoins.</p></li>
-<li><p><strong>amount</strong> – Amount of stablecoins to mint.</p></li>
+<li><p><strong>to</strong> – Address to receive newly minted flatcoins.</p></li>
+<li><p><strong>amount</strong> – Amount of flatcoins to mint.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="sol function">
-<dt class="sig sig-object sol" id="stableCoin.burn(address,uint256)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">from</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#stableCoin.burn(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#stableCoin.burn(address,uint256)" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="flatCoin.burn(address,uint256)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">from</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#flatCoin.burn(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">isAuthorized</span><br /><a class="headerlink" href="#flatCoin.burn(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Burning stablecoins. Only an authorized address can execute this function.</p>
+<dd class="field-odd"><p>Burning flatcoins. Only an authorized address can execute this function.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>from</strong> – Address to burn stablecoins from.</p></li>
-<li><p><strong>amount</strong> – Amount of stablecoins to burn.</p></li>
+<li><p><strong>from</strong> – Address to burn flatcoins from.</p></li>
+<li><p><strong>amount</strong> – Amount of flatcoins to burn.</p></li>
 </ul>
 </dd>
 </dl>
@@ -190,7 +195,7 @@
 <h2>CDP<a class="headerlink" href="#cdp" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This contract is one of the most important contracts of the DAO. It mints Dotflat coins, holds all the collateral and the stabilization fund in Dotflat coins, and burns Dotflat stablecoins when the position is closed.</p>
+<p>This contract is one of the most important contracts of the DAO. It mints Dotflat coins, holds all the collateral and the stabilization fund in Dotflat coins, and burns Dotflat coins when the position is closed.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -201,7 +206,7 @@
 <p>Inside the contract, each debt position is stored as the following structure.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Position</span> <span class="p">{</span>
     <span class="n">uint128</span> <span class="n">coinsMinted</span><span class="p">;</span>
-    <span class="n">uint128</span> <span class="n">wethAmountLocked</span><span class="p">;</span>
+    <span class="n">uint128</span> <span class="n">ethAmountLocked</span><span class="p">;</span>
     <span class="n">uint128</span> <span class="n">interestAmountRecorded</span><span class="p">;</span>
     <span class="n">uint32</span> <span class="n">timeOpened</span><span class="p">;</span>
     <span class="n">uint32</span> <span class="n">lastTimeUpdated</span><span class="p">;</span>
@@ -216,7 +221,7 @@
 </div>
 <div class="line-block">
 <div class="line"><strong>*coinsMinted*</strong> - number of minted coins for now.</div>
-<div class="line"><strong>*wethAmountLocked*</strong> - collateral.</div>
+<div class="line"><strong>*ethAmountLocked*</strong> - collateral.</div>
 <div class="line"><strong>*interestAmountRecorded*</strong> -  the amount of interest to pay until last position update.</div>
 <div class="line"><strong>*timeOpened*</strong> - when the position was opened.</div>
 <div class="line"><strong>*lastTimeUpdated*</strong> - when it was last updated.</div>
@@ -247,6 +252,16 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 <dd class="field-odd"><p>Collateral debt position contract</p>
 </dd>
 </dl>
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="CDP.address_this">
+<span class="pre">address</span> <span class="pre">public</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">address_this</span></span><a class="headerlink" href="#CDP.address_this" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Notice<span class="colon">:</span></dt>
+<dd class="field-odd"><p>contract address</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="sol statevar">
 <dt class="sig sig-object sol" id="CDP.numPositions">
 <span class="pre">uint32</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">numPositions</span></span><a class="headerlink" href="#CDP.numPositions" title="Link to this definition"></a></dt>
@@ -282,7 +297,7 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 <span class="pre">IERC20MintableAndBurnable</span> <span class="sig-name descname"><span class="pre">coin</span></span><a class="headerlink" href="#CDP.coin" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Stablecoin interface</p>
+<dd class="field-odd"><p>flatcoin interface</p>
 </dd>
 </dl>
 </dd></dl>
@@ -335,7 +350,7 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 
 <dl class="sol event">
 <dt class="sig sig-object sol" id="CDP.PositionUpdated(uint32,uint256,uint256)">
-<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">PositionUpdated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">newStableCoinsAmount</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">ethLocked</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Link to this definition"></a></dt>
+<em><span class="pre">event</span> </em><span class="sig-name descname"><span class="pre">PositionUpdated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">indexed</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">newFlatCoinsAmount</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">ethLocked</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.PositionUpdated(uint32,uint256,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This event is emitted when a position is updated.</p>
@@ -343,7 +358,7 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>posID</strong> – ID of the position.</p></li>
-<li><p><strong>newStableCoinsAmount</strong> – New amount of stablecoins borrowed.</p></li>
+<li><p><strong>newFlatCoinsAmount</strong> – New amount of flatcoins borrowed.</p></li>
 <li><p><strong>ethLocked</strong> – Current collateral amount.</p></li>
 </ul>
 </dd>
@@ -383,6 +398,11 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 </dl>
 </dd></dl>
 
+<dl class="sol modifier">
+<dt class="sig sig-object sol" id="CDP.isAuthorized">
+<em><span class="pre">modifier</span> </em><span class="sig-name descname"><span class="pre">isAuthorized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CDP.isAuthorized" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.isAuthorized" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="sol constructor">
 <dt class="sig sig-object sol" id="CDP.constructor">
 <span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.constructor" title="Link to this definition"></a></dt>
@@ -410,14 +430,14 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 
 <dl class="sol function">
 <dt class="sig sig-object sol" id="CDP.openCDP(uint256)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">openCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">stableCoinsToMint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.openCDP(uint256)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.openCDP(uint256)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">openCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">flatCoinsToMint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.openCDP(uint256)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.openCDP(uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Use this method to borrow stablecoins. To use it, you must provide sufficient collateral in Ether. The collateral is converted to WETH (wrapped ether) and stored as a wrapped Ether token in the contract address. The newly minted stablecoins will be sent to the caller’s account.</p>
+<dd class="field-odd"><p>Use this method to borrow flatcoins. To use it, you must provide sufficient collateral in Ether. The newly minted flatcoins will be sent to the caller’s account.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>stableCoinsToMint</strong> – Number of stablecoins to mint.</p></li>
+<li><p><strong>flatCoinsToMint</strong> – Number of flatcoins to mint.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
@@ -463,8 +483,8 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 </dd></dl>
 
 <dl class="sol function">
-<dt class="sig sig-object sol" id="CDP.getMaxStableCoinsToMint(uint256)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getMaxStableCoinsToMint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">ethValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.getMaxStableCoinsToMint(uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.getMaxStableCoinsToMint(uint256)" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="CDP.getMaxFlatCoinsToMint(uint256)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getMaxFlatCoinsToMint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">ethValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.getMaxFlatCoinsToMint(uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.getMaxFlatCoinsToMint(uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Shows how many coins can be minted with a given Ether collateral according to the current prices and collateral discount.</p>
@@ -475,14 +495,14 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>amount The maximum amount of stablecoins one can mint with a given collateral.</p>
+<dd class="field-odd"><p>amount The maximum amount of flatcoins one can mint with a given collateral.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="sol function">
-<dt class="sig sig-object sol" id="CDP.getMaxStableCoinsToMintForPos(uint32)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getMaxStableCoinsToMintForPos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.getMaxStableCoinsToMintForPos(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">maxAmount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.getMaxStableCoinsToMintForPos(uint32)" title="Link to this definition"></a></dt>
+<dt class="sig sig-object sol" id="CDP.getMaxFlatCoinsToMintForPos(uint32)">
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">getMaxFlatCoinsToMintForPos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.getMaxFlatCoinsToMintForPos(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <em><span class="pre">view</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">maxAmount</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.getMaxFlatCoinsToMintForPos(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Shows how many coins can be minted for a specific position considering changes in collateral amount or price. It accounts for the accumulated fee for the debt.</p>
@@ -493,14 +513,14 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>maxAmount The maximum amount of stablecoins one can mint for this position.</p>
+<dd class="field-odd"><p>maxAmount The maximum amount of flatcoins one can mint for this position.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="sol function">
 <dt class="sig sig-object sol" id="CDP.claimInterest(uint256,address)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">beneficiary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimInterest(uint256,address)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.claimInterest(uint256,address)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">beneficiary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimInterest(uint256,address)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <span class="pre">isAuthorized</span><br /><a class="headerlink" href="#CDP.claimInterest(uint256,address)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This method is for contracts authorized by the DAO only. For example, a Deposit contract may claim interest for the deposit owner, and the interest will be transferred from the stabilization fund.
@@ -517,14 +537,14 @@ If there are not enough funds, all available funds are transferred, and an allow
 
 <dl class="sol function">
 <dt class="sig sig-object sol" id="CDP.claimEmission(uint256,address)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimEmission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">beneficiary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimEmission(uint256,address)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.claimEmission(uint256,address)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimEmission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em>, <em class="sig-param"><span class="pre">address</span> <span class="pre">beneficiary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.claimEmission(uint256,address)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <span class="pre">isAuthorized</span><br /><a class="headerlink" href="#CDP.claimEmission(uint256,address)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This method is for authorized contracts by the DAO only. For example, a new contract may claim emission according to its terms.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>amount</strong> – Amount of stablecoins to mint.</p></li>
+<li><p><strong>amount</strong> – Amount of flatcoins to mint.</p></li>
 <li><p><strong>beneficiary</strong> – Address of the beneficiary.</p></li>
 </ul>
 </dd>
@@ -581,7 +601,7 @@ If there are not enough funds, all available funds are transferred, and an allow
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">allowSurplusToAuction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CDP.allowSurplusToAuction()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.allowSurplusToAuction()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If the stabilization fund exceeds a certain percentage (stabilizationFundPercent DAO param) of the total Dotflat stablecoin emission, anyone can allow spending to the Auction contract for further governance token buyouts.</p>
+<dd class="field-odd"><p>If the stabilization fund exceeds a certain percentage (stabilizationFundPercent DAO param) of the total Dotflat flatcoin emission, anyone can allow spending to the Auction contract for further governance token buyouts.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -633,7 +653,7 @@ If there are not enough funds, all available funds are transferred, and an allow
 
 <dl class="sol function">
 <dt class="sig sig-object sol" id="CDP.eraseMarkToLiquidate(uint32)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">eraseMarkToLiquidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.eraseMarkToLiquidate(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /><a class="headerlink" href="#CDP.eraseMarkToLiquidate(uint32)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">eraseMarkToLiquidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.eraseMarkToLiquidate(uint32)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#CDP.eraseMarkToLiquidate(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>If a debt position has enough collateral but was previously marked for liquidation, anyone may remove this mark.</p>
@@ -648,15 +668,15 @@ If there are not enough funds, all available funds are transferred, and an allow
 
 <dl class="sol function">
 <dt class="sig sig-object sol" id="CDP.updateCDP(uint32,uint)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">updateCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint</span> <span class="pre">newStableCoinsAmount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.updateCDP(uint32,uint)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.updateCDP(uint32,uint)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">updateCDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">posID</span></em>, <em class="sig-param"><span class="pre">uint</span> <span class="pre">newFlatCoinsAmount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.updateCDP(uint32,uint)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">payable</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.updateCDP(uint32,uint)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Change the amount of minted stablecoins or increase the amount of collateral. To withdraw collateral, use the withdrawEther function.</p>
+<dd class="field-odd"><p>Change the amount of minted flatcoins or increase the amount of collateral. To withdraw collateral, use the withdrawEther function.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>posID</strong> – ID of the position.</p></li>
-<li><p><strong>newStableCoinsAmount</strong> – New amount of stablecoins.</p></li>
+<li><p><strong>newFlatCoinsAmount</strong> – New amount of flatcoins.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
@@ -697,7 +717,7 @@ ule tokens can only be on the contract’s balance after a Rule buyout auction.<
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mintRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.mintRule(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">bool</span> <span class="pre">success</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#CDP.mintRule(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If the stabilization fund lacks sufficient funds, one may initiate an auction to top it up with dotflat stablecoins.
+<dd class="field-odd"><p>If the stabilization fund lacks sufficient funds, one may initiate an auction to top it up with dotflat flatcoins.
 The auction winner receives their reward in Rule tokens minted by the CDP contract.</p>
 </dd>
 </dl>
@@ -760,7 +780,7 @@ Inside the contract each auction is stored as the following structure.</p>
 <p class="admonition-title">Note</p>
 <p>There are 3 types of auctions, that may be created:
 - Selling the collateral of debt position if the holder of the position has not provided sufficient collateral for
-the stablecoins he has minted.
+the flatcoins he has minted.
 - Rule tokens buyout if the stabilization fund exceeds its limit to reduce Rule total supply.
 - Dotflat buyout to top up stabilization fund with newly Rule token minted as a reward.</p>
 </div>
@@ -769,9 +789,19 @@ the stablecoins he has minted.
 <em><span class="pre">contract</span> </em><span class="sig-name descname"><span class="pre">Auction</span></span> <span class="pre">is</span> <span class="pre">ReentrancyGuard</span><a class="headerlink" href="#Auction" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Title<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A Contract for Different Types of Auctions</p>
+<dd class="field-odd"><p>A Contract for Different Types of Auctions  asdfasdf</p>
 </dd>
 </dl>
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="Auction.address_this">
+<span class="pre">address</span> <span class="pre">public</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">address_this</span></span><a class="headerlink" href="#Auction.address_this" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Notice<span class="colon">:</span></dt>
+<dd class="field-odd"><p>contract address</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="sol statevar">
 <dt class="sig sig-object sol" id="Auction.auctionNum">
 <span class="pre">uint32</span> <em><span class="pre">public</span> </em><span class="sig-name descname"><span class="pre">auctionNum</span></span><a class="headerlink" href="#Auction.auctionNum" title="Link to this definition"></a></dt>
@@ -797,7 +827,7 @@ the stablecoins he has minted.
 <span class="pre">IERC20</span> <span class="sig-name descname"><span class="pre">coin</span></span><a class="headerlink" href="#Auction.coin" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Stablecoin interface</p>
+<dd class="field-odd"><p>flatcoin interface</p>
 </dd>
 </dl>
 </dd></dl>
@@ -882,12 +912,12 @@ the stablecoins he has minted.
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>auctionType</strong> – Type of the auction 1 - Rule buyout, 2 - stablecoins buyout, 3 - collateral liquidation</p></li>
+<li><p><strong>auctionType</strong> – Type of the auction 1 - Rule buyout, 2 - flatcoins buyout, 3 - collateral liquidation</p></li>
 <li><p><strong>auctionID</strong> – The ID of the new auction.</p></li>
 <li><p><strong>lotAmount</strong> – The amount of the asset that the winner will receive.</p></li>
 <li><p><strong>lotAddress</strong> – Token address of the asset.</p></li>
 <li><p><strong>paymentAmount</strong> – The minimum amount of payment required for the lot.
-This is non-zero only if topping up the stabilization fund with a certain amount of stablecoins.</p></li>
+This is non-zero only if topping up the stabilization fund with a certain amount of flatcoins.</p></li>
 </ul>
 </dd>
 </dl>
@@ -986,11 +1016,11 @@ This is non-zero only if topping up the stabilization fund with a certain amount
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">initCoinsBuyOutForStabilization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint256</span> <span class="pre">coinsAmountNeeded</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.initCoinsBuyOutForStabilization(uint256)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /> <em><span class="pre">returns</span> </em><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">auctionID</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Auction.initCoinsBuyOutForStabilization(uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Initiates a stablecoin buyout for the stabilization fund if it is low. The stabilization fund should always be a certain percentage of the total stablecoin supply (as defined by the stabilizationFundPercent parameter in the DAO contract). The maximum stablecoins per auction is regulated by the maxCoinsForStabilization parameter in the DAO contract.</p>
+<dd class="field-odd"><p>Initiates a flatcoin buyout for the stabilization fund if it is low. The stabilization fund should always be a certain percentage of the total flatcoin supply (as defined by the stabilizationFundPercent parameter in the DAO contract). The maximum flatcoins per auction is regulated by the maxCoinsForStabilization parameter in the DAO contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>coinsAmountNeeded</strong> – The amount of stablecoins needed.</p></li>
+<li><p><strong>coinsAmountNeeded</strong> – The amount of flatcoins needed.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return<span class="colon">:</span></dt>
@@ -1129,7 +1159,7 @@ This is non-zero only if topping up the stabilization fund with a certain amount
 <h2>Deposit<a class="headerlink" href="#deposit" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This contract is used for depositing stablecoins and earning annual interest. The amount of interest is renewed
+<p>This contract is used for depositing flatcoins and earning annual interest. The amount of interest is renewed
 every block.
 Inside the contract each deposit is stored as the following structure.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Deposit</span> <span class="p">{</span>
@@ -1164,6 +1194,16 @@ Inside the contract each deposit is stored as the following structure.</p>
 </dd>
 </dl>
 <dl class="sol statevar">
+<dt class="sig sig-object sol" id="DepositContract.address_this">
+<span class="pre">address</span> <span class="pre">public</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">address_this</span></span><a class="headerlink" href="#DepositContract.address_this" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Notice<span class="colon">:</span></dt>
+<dd class="field-odd"><p>contract address</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="sol statevar">
 <dt class="sig sig-object sol" id="DepositContract.dao">
 <span class="pre">IDAO</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">dao</span></span><a class="headerlink" href="#DepositContract.dao" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -1178,7 +1218,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 <span class="pre">IERC20</span> <span class="sig-name descname"><span class="pre">coin</span></span><a class="headerlink" href="#DepositContract.coin" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>stablecoin interface.</p>
+<dd class="field-odd"><p>flatcoin interface.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1223,7 +1263,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>id</strong> – ID of the deposit.</p></li>
-<li><p><strong>amount</strong> – Amount of stablecoins deposited.</p></li>
+<li><p><strong>amount</strong> – Amount of flatcoins deposited.</p></li>
 <li><p><strong>rate</strong> – Annual interest rate on the deposit.</p></li>
 <li><p><strong>owner</strong> – Address of the deposit owner.</p></li>
 </ul>
@@ -1261,7 +1301,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">deposit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.deposit()" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#DepositContract.deposit()" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Deposits stablecoins into the contract. Ensure that spending is allowed for this contract address before calling this function. A DepositOpened event is emitted with the owner and other relevant parameters.</p>
+<dd class="field-odd"><p>Deposits flatcoins into the contract. Ensure that spending is allowed for this contract address before calling this function. A DepositOpened event is emitted with the owner and other relevant parameters.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1271,7 +1311,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">withdraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">id</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.withdraw(uint32,uint256)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#DepositContract.withdraw(uint32,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Withdraws stablecoins from the deposit. Only the owner of the deposit can withdraw funds. If the deposit balance reaches zero, it is considered closed.</p>
+<dd class="field-odd"><p>Withdraws flatcoins from the deposit. Only the owner of the deposit can withdraw funds. If the deposit balance reaches zero, it is considered closed.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1338,7 +1378,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 <em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">claimInterest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint32</span> <span class="pre">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.claimInterest(uint32)" title="Link to this definition"></a><br /> <span class="pre">nonReentrant</span><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#DepositContract.claimInterest(uint32)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Claims the accumulated interest while keeping the principal funds in the deposit. The owner’s earnings will be transferred from the stabilization fund (CDP balance of stablecoins) if available. If the CDP balance is insufficient, the contract will transfer all available funds to the user and provide an allowance to spend the remaining amount. To top up the stabilization fund, one can initiate an auction using the initCoinsBuyOutForStabilization function in the Auction contract.</p>
+<dd class="field-odd"><p>Claims the accumulated interest while keeping the principal funds in the deposit. The owner’s earnings will be transferred from the stabilization fund (CDP balance of flatcoins) if available. If the CDP balance is insufficient, the contract will transfer all available funds to the user and provide an allowance to spend the remaining amount. To top up the stabilization fund, one can initiate an auction using the initCoinsBuyOutForStabilization function in the Auction contract.</p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1421,6 +1461,16 @@ Inside the contract each deposit is stored as the following structure.</p>
 <dd class="field-odd"><p>Interest DAO</p>
 </dd>
 </dl>
+<dl class="sol statevar">
+<dt class="sig sig-object sol" id="INTDAO.address_this">
+<span class="pre">address</span> <span class="pre">public</span> <span class="pre">immutable</span> <span class="sig-name descname"><span class="pre">address_this</span></span><a class="headerlink" href="#INTDAO.address_this" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Notice<span class="colon">:</span></dt>
+<dd class="field-odd"><p>contract address</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="sol statevar">
 <dt class="sig sig-object sol" id="INTDAO.ruleToken">
 <span class="pre">IERC20</span> <span class="sig-name descname"><span class="pre">ruleToken</span></span><a class="headerlink" href="#INTDAO.ruleToken" title="Link to this definition"></a></dt>
@@ -2380,9 +2430,14 @@ Inside the contract each deposit is stored as the following structure.</p>
 </dl>
 </dd></dl>
 
+<dl class="sol modifier">
+<dt class="sig sig-object sol" id="Rule.isAuthorized">
+<em><span class="pre">modifier</span> </em><span class="sig-name descname"><span class="pre">isAuthorized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Rule.isAuthorized" title="Link to this definition"></a><br /><a class="headerlink" href="#Rule.isAuthorized" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="sol function">
 <dt class="sig sig-object sol" id="Rule.mint(address,uint256)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.mint(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /><a class="headerlink" href="#Rule.mint(address,uint256)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">mint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">to</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.mint(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <span class="pre">isAuthorized</span><br /><a class="headerlink" href="#Rule.mint(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Mint additional Rule tokens. Only an authorized address can execute it.</p>
@@ -2398,7 +2453,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 
 <dl class="sol function">
 <dt class="sig sig-object sol" id="Rule.burn(address,uint256)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">from</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.burn(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /><a class="headerlink" href="#Rule.burn(address,uint256)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">from</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">amount</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.burn(address,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">public</span></em><br /> <span class="pre">isAuthorized</span><br /><a class="headerlink" href="#Rule.burn(address,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Burn Rule tokens. Only an authorized address can execute it.</p>
