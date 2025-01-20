@@ -189,7 +189,7 @@ contract CDP is ReentrancyGuard{
     function closeCDP(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
         require(p.owner == msg.sender, "only owner");
-        require(p.liquidationStatus < 2, "position is on liquidation or already liquidated/closed");
+        require(p.liquidationStatus < 2, "on liquidation or liquidated/closed");
         uint256 overallDebt = totalCurrentFee(posID)+p.coinsMinted;
         require(coin.transferFrom(p.owner, address_this, overallDebt), "transfer failed, allow first");
         require (payable(p.owner).send(p.ethAmountLocked), "transfer failed");
@@ -204,8 +204,8 @@ contract CDP is ReentrancyGuard{
         if (p.restrictInterestWithdrawal){
             require(p.owner == msg.sender, "only owner");
         }
-        require(p.liquidationStatus < 2, "position on liquidation/liquidated");
-        require(coin.transferFrom(p.owner, address_this, totalCurrentFee(posID)), "transfer failed. low balance or allowance");
+        require(p.liquidationStatus < 2, "on liquidation/liquidated");
+        require(coin.transferFrom(p.owner, address_this, totalCurrentFee(posID)), "low balance/allowance");
         p.interestAmountRecorded = 0;
         p.lastTimeUpdated = uint32(block.timestamp);
     }
@@ -231,9 +231,9 @@ contract CDP is ReentrancyGuard{
     /// @param posID ID of the position.
     function claimMarginCall(uint32 posID) nonReentrant external{
         Position storage p = positions[posID];
-        require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp >= dao.params("marginCallTimeLimit"), "position not on liquidation or owner still has time");
+        require (p.markedOnLiquidationTimestamp >0 && block.timestamp - p.markedOnLiquidationTimestamp >= dao.params("marginCallTimeLimit"), "not on liquidation/owner still has time");
         require(p.liquidationStatus == 1, "wrong liquidation status");
-        require(getMaxFlatCoinsToMintForPos(posID) < p.coinsMinted, "collateral is enough, should erase mark");
+        require(getMaxFlatCoinsToMintForPos(posID) < p.coinsMinted, "enough collateral");
         changeStatus(posID, 2);
         p.liquidationAuctionID = auction.initCoinsBuyOut{value: p.ethAmountLocked}();
         emit liquidateCollateral(p.liquidationAuctionID, posID, p.ethAmountLocked);

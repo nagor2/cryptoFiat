@@ -45,7 +45,6 @@ CDP
             address owner;
         }
 
-
     | ***coinsMinted*** - number of minted coins for now.
     | ***ethAmountLocked*** - collateral.
     | ***interestAmountRecorded*** -  the amount of interest to pay until last position update.

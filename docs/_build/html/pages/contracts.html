@@ -138,7 +138,7 @@
 
 <dl class="sol constructor">
 <dt class="sig sig-object sol" id="flatCoin.constructor">
-<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#flatCoin.constructor" title="Link to this definition"></a><br /> <span class="pre">ERC20</span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">&quot;dotFlat</span> <span class="pre">coin&quot;</span></em>, <em class="sig-param"><span class="pre">&quot;DFC&quot;</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#flatCoin.constructor" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#flatCoin.constructor" title="Link to this definition"></a><br /> <span class="pre">ERC20</span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">&quot;dotFlat&quot;</span></em>, <em class="sig-param"><span class="pre">&quot;DFC&quot;</span></em><span class="sig-paren">)</span><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#flatCoin.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Constructor for flatCoin contract.</p>
@@ -405,7 +405,7 @@ A margin call has a 13% fee, set in the DAO contract (liquidationFee).</p>
 
 <dl class="sol constructor">
 <dt class="sig sig-object sol" id="CDP.constructor">
-<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#CDP.constructor" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CDP.constructor" title="Link to this definition"></a><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#CDP.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Constructor for the CDP contract.</p>
@@ -975,7 +975,7 @@ This is non-zero only if topping up the stabilization fund with a certain amount
 
 <dl class="sol constructor">
 <dt class="sig sig-object sol" id="Auction.constructor">
-<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#Auction.constructor" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Auction.constructor" title="Link to this definition"></a><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#Auction.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Constructor for the auction contract.</p>
@@ -1273,7 +1273,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 
 <dl class="sol constructor">
 <dt class="sig sig-object sol" id="DepositContract.constructor">
-<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#DepositContract.constructor" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DepositContract.constructor" title="Link to this definition"></a><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#DepositContract.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Constructor for the Deposit contract.</p>
@@ -1630,7 +1630,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 
 <dl class="sol constructor">
 <dt class="sig sig-object sol" id="INTDAO.constructor">
-<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address[]</span> <span class="pre">memory</span> <span class="pre">_addresses</span></em><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#INTDAO.constructor" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address[]</span> <span class="pre">memory</span> <span class="pre">_addresses</span></em><span class="sig-paren">)</span><a class="headerlink" href="#INTDAO.constructor" title="Link to this definition"></a><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#INTDAO.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Constructor of the Interest DAO contract, where all the parameters of the system are initialized</p>
@@ -1849,9 +1849,14 @@ Inside the contract each deposit is stored as the following structure.</p>
 </dl>
 </dd></dl>
 
+<dl class="sol modifier">
+<dt class="sig sig-object sol" id="basketContract.updaterOnly">
+<em><span class="pre">modifier</span> </em><span class="sig-name descname"><span class="pre">updaterOnly</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.updaterOnly" title="Link to this definition"></a><br /><a class="headerlink" href="#basketContract.updaterOnly" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="sol constructor">
 <dt class="sig sig-object sol" id="basketContract.constructor">
-<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">addresspayable</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.constructor" title="Link to this definition"></a><br /><a class="headerlink" href="#basketContract.constructor" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">addresspayable</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.constructor" title="Link to this definition"></a><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#basketContract.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Constructor for the basket contract.</p>
@@ -1876,7 +1881,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 
 <dl class="sol function">
 <dt class="sig sig-object sol" id="basketContract.addItem(string,uint16,uint256)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">addItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em>, <em class="sig-param"><span class="pre">uint16</span> <span class="pre">share</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">initialPrice</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.addItem(string,uint16,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#basketContract.addItem(string,uint16,uint256)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">addItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">string</span> <span class="pre">memory</span> <span class="pre">symbol</span></em>, <em class="sig-param"><span class="pre">uint16</span> <span class="pre">share</span></em>, <em class="sig-param"><span class="pre">uint256</span> <span class="pre">initialPrice</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.addItem(string,uint16,uint256)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">updaterOnly</span><br /><a class="headerlink" href="#basketContract.addItem(string,uint16,uint256)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This method is to add an additional commodity to the basket by the authorized address only. An event with a new item ID is emitted.</p>
@@ -1893,7 +1898,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 
 <dl class="sol function">
 <dt class="sig sig-object sol" id="basketContract.setShare(uint16,uint16)">
-<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">setShare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em>, <em class="sig-param"><span class="pre">uint16</span> <span class="pre">share</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.setShare(uint16,uint16)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /><a class="headerlink" href="#basketContract.setShare(uint16,uint16)" title="Link to this definition"></a></dt>
+<em><span class="pre">function</span> </em><span class="sig-name descname"><span class="pre">setShare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uint16</span> <span class="pre">id</span></em>, <em class="sig-param"><span class="pre">uint16</span> <span class="pre">share</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basketContract.setShare(uint16,uint16)" title="Link to this definition"></a><br /> <em><span class="pre">external</span></em><br /> <span class="pre">updaterOnly</span><br /><a class="headerlink" href="#basketContract.setShare(uint16,uint16)" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This method is used to change the share (or weight) of a particular item in the basket.</p>
@@ -2417,7 +2422,7 @@ Inside the contract each deposit is stored as the following structure.</p>
 
 <dl class="sol constructor">
 <dt class="sig sig-object sol" id="Rule.constructor">
-<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.constructor" title="Link to this definition"></a><br /> <span class="pre">ERC20</span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">&quot;Rule</span> <span class="pre">token&quot;</span></em>, <em class="sig-param"><span class="pre">&quot;RLE&quot;</span></em><span class="sig-paren">)</span><br /><a class="headerlink" href="#Rule.constructor" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">constructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">address</span> <span class="pre">_INTDAOaddress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Rule.constructor" title="Link to this definition"></a><br /> <span class="pre">ERC20</span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">&quot;Rule</span> <span class="pre">token&quot;</span></em>, <em class="sig-param"><span class="pre">&quot;RLE&quot;</span></em><span class="sig-paren">)</span><br /> <em><span class="pre">payable</span></em><br /><a class="headerlink" href="#Rule.constructor" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Notice<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Constructor for the Rule contract. It mints the initial Rule supply to the creator.</p>

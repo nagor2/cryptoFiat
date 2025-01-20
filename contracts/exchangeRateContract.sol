@@ -59,12 +59,12 @@ contract exchangeRateContract{
     }
 
     modifier onlyAuthor{
-        require(msg.sender == author, "This function is for author only");
+        require(msg.sender == author, "author only");
         _;
     }
 
     modifier onlyUpdater{
-        require(msg.sender == updater, "This function is for updater only");
+        require(msg.sender == updater, "updater only");
         _;
     }
 
@@ -110,14 +110,14 @@ contract exchangeRateContract{
     /// @notice Request a price update. A payable function.
     /// @param id ID of the instrument.
     function requestPriceUpdate(uint16 id) external payable {
-        require (msg.value>=2*updOnePriceGasCost*tx.gasprice, "You need to pass more ether to request new price.");
+        require (msg.value>=2*updOnePriceGasCost*tx.gasprice, "need more ether");
         emit priceUpdateRequest(id);
     }
 
     /// @notice Request multiple prices update.
     /// @param ids Array of IDs.
     function requestMultiplePricesUpdate(uint16[] memory ids) external payable {
-        require (msg.value>= 2 * (ids.length * updAdditionalPrice + updSeveralPricesCost) * tx.gasprice, "You need to pass more ether to request new price.");
+        require (msg.value>= 2 * (ids.length * updAdditionalPrice + updSeveralPricesCost) * tx.gasprice, "need more ether");
         emit severalPricesUpdateRequest(ids);
     }
 
@@ -171,7 +171,7 @@ contract exchangeRateContract{
     /// @return id ID of the new instrument.
     function addInstrument(string memory symbol, string memory name, uint8 decimals) external onlyUpdater returns (uint16 id){
         InstrumentDescription storage newInstrumentDescription = dictionary[symbol];
-        require (bytes(newInstrumentDescription.name).length == 0, "Symbol already exist, use updateInstrument");
+        require (bytes(newInstrumentDescription.name).length == 0, "symbol already exist, use updateInstrument");
         newInstrumentDescription.id = ++instrumentsCount;
         newInstrumentDescription.name = name;
         newInstrumentDescription.decimals = decimals;
