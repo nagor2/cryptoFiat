@@ -88,7 +88,7 @@ contract('CDP margin call', (accounts) => {
         await truffleAssert.fails(
             cdp.claimMarginCall(posId),
             truffleAssert.ErrorType.REVERT,
-            "position not on liquidation or owner still has time"
+            "not on liquidation/owner still has time"
         );
 
         await time.increase(await dao.params("marginCallTimeLimit"));
