@@ -1,0 +1,67 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Build artifacts
+build/
+dist/
+cache/
+artifacts/
+typechain/
+typechain-types/
+
+# Документация
+docs/_build/
+docs-ru/_build/
+*.md
+README.md
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Тесты и покрытие
+coverage/
+coverage.json
+.nyc_output/
+
+# Разное
+.DS_Store
+Thumbs.db
+.env.local
+.env.*.local
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Архивы
+*.rar
+*.zip
+*.tar.gz
+
+# Временные файлы
+tmp/
+temp/
+.tmp/
+
+# СЛК контекст (не нужен в контейнере)
+.context/
+slc
+

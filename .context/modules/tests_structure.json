@@ -1,0 +1,371 @@
+{
+  "module": "tests_structure",
+  "version": "1.0.0",
+  "description": "Структура и стандарты тестирования Hardhat",
+  
+  "test_framework": {
+    "framework": "Hardhat",
+    "test_runner": "Mocha",
+    "assertion_library": "Chai",
+    "ethers_version": "6.x",
+    "helpers": "@nomicfoundation/hardhat-network-helpers"
+  },
+  
+  "test_files": {
+    "flatCoin-hardhat.test.js": {
+      "tests": 5,
+      "coverage": "100%",
+      "description": "Тесты основного стейблкоина",
+      "key_tests": [
+        "deploys successfully - проверка деплоя и DAO интеграции",
+        "should set params name and symbol - проверка DFC/dotFlat",
+        "should not mint from unauthorized - авторизация минта",
+        "should not burn from unauthorized - авторизация берна",
+        "should check DAO configuration - проверка адреса в DAO"
+      ]
+    },
+    
+    "rule-hardhat.test.js": {
+      "tests": 5,
+      "coverage": "100%",
+      "description": "Тесты governance токена",
+      "key_tests": [
+        "deploys successfully - деплой с future DAO address",
+        "should mint initial supply for creator - 1M токенов создателю",
+        "authorization checks - минт/берн только авторизованными"
+      ]
+    },
+    
+    "cdp-hardhat.test.js": {
+      "tests": 8,
+      "coverage": "100%",
+      "description": "Основные тесты CDP контракта",
+      "key_tests": [
+        "should create a valid Position - открытие позиции",
+        "should mint max 2170 coins per 1 ether - расчет максимума",
+        "should mint coins - создание flatCoin",
+        "time rewind and increase interest fee - начисление процентов",
+        "should throw if update from another account - права доступа"
+      ],
+      "critical_calculations": {
+        "maxCoinsPerEth": "2170 flatCoin (с учетом collateralDiscount 30%)",
+        "interestFee": "Начисляется ежегодно на coinsMinted"
+      }
+    },
+    
+    "cdpUpdateIncrease-hardhat.test.js": {
+      "tests": 9,
+      "coverage": "100%",
+      "description": "Увеличение CDP позиции",
+      "key_tests": [
+        "should properly calculate maxCoins to mint - 4340 для 2 ETH",
+        "should increase overall fee - накопление процентов",
+        "should transfer fee to CDP - перевод процентов в стаб фонд",
+        "should not allow to mint coins due to feeGenerated - проверка лимитов"
+      ]
+    },
+    
+    "cdpUpdateDecrease-hardhat.test.js": {
+      "tests": 4,
+      "coverage": "100%",
+      "description": "Уменьшение CDP позиции",
+      "key_tests": [
+        "should emit PositionUpdated - событие обновления",
+        "should decrease coinsMinted - уменьшение долга",
+        "should decrease owner's balance - сжигание flatCoin"
+      ]
+    },
+    
+    "cdpWithdrawAndClose-hardhat.test.js": {
+      "tests": 3,
+      "coverage": "100%",
+      "description": "Вывод ETH и закрытие позиций",
+      "key_tests": [
+        "should withdrawEther - вывод части залога",
+        "should fail if claimed amount is too big - проверка лимитов",
+        "should close position - полное закрытие с возвратом ETH"
+      ],
+      "important_checks": {
+        "collateral_validation": "Нельзя вывести больше, чем позволяет collateralDiscount",
+        "oracle_price_impact": "Изменение цены ETH влияет на доступный для вывода объем"
+      }
+    },
+    
+    "cdpFee-hardhat.test.js": {
+      "tests": 5,
+      "coverage": "100%",
+      "description": "Управление процентами CDP",
+      "key_tests": [
+        "should properly increase fee - накопление за год",
+        "should transfer interest to CDP - перевод в стаб фонд",
+        "should allow and transfer surplus to auction - избыток на аукцион"
+      ],
+      "critical_flows": {
+        "fee_accumulation": "10% годовых на coinsMinted",
+        "surplus_calculation": "cdpBalance - (totalSupply * stabilizationFundPercent)"
+      }
+    },
+    
+    "cdpMarginCall-hardhat.test.js": {
+      "tests": 6,
+      "coverage": "100%",
+      "description": "Ликвидация недостаточно обеспеченных позиций",
+      "key_tests": [
+        "should mark pos on liquidation - маркировка позиции",
+        "should claim margin call - запуск аукциона ликвидации",
+        "should finishMarginCall - завершение с аукционами",
+        "should receive rule tokens - RuleBuyOut для дефицита"
+      ],
+      "liquidation_flow": [
+        "1. Цена ETH падает -> позиция недостаточно обеспечена",
+        "2. markPosOnLiquidation() - маркировка",
+        "3. claimMarginCall() - запуск ETH аукциона",
+        "4. finishMarginCall() - закрытие долга, RuleBuyOut если нужно"
+      ]
+    },
+    
+    "cdpSeveralAuctionsToClose-hardhat.test.js": {
+      "tests": 4,
+      "coverage": "100%",
+      "description": "Сложные сценарии ликвидации с несколькими аукционами",
+      "key_tests": [
+        "should mark to liquidate position - падение цены ETH",
+        "should liquidate position - ETH аукцион",
+        "should bid and finish auction - CoinsBuyOut после ETH аукциона"
+      ]
+    },
+    
+    "deposit-hardhat.test.js": {
+      "tests": 10,
+      "coverage": "100%",
+      "description": "Депозиты с процентами",
+      "key_tests": [
+        "should deposit - создание депозита",
+        "should pay interest - начисление 8% годовых",
+        "should topUp deposit - пополнение",
+        "should withdraw funds - частичный вывод",
+        "should close deposit - полное закрытие с процентами"
+      ],
+      "interest_calculation": {
+        "rate": "8% годовых из DAO.depositRate",
+        "formula": "amount * rate * timeElapsed / (365 days * 100)"
+      }
+    },
+    
+    "dao-hardhat.test.js": {
+      "tests": 11,
+      "coverage": "100%",
+      "description": "Тесты DAO и голосования",
+      "key_tests": [
+        "should pool tokens - внесение Rule в пул",
+        "should init voting - создание голосования",
+        "should vote - голосование токенами",
+        "should finalize voting - завершение после истечения срока",
+        "should get back pooled tokens - возврат токенов"
+      ],
+      "voting_requirements": {
+        "minTokensToInit": "1% от totalSupply Rule токенов",
+        "votingDuration": "По умолчанию в параметрах DAO",
+        "quorum": "Необходимо для успеха голосования"
+      }
+    },
+    
+    "auction-hardhat.test.js": {
+      "tests": 10,
+      "coverage": "100%",
+      "description": "Система аукционов",
+      "key_tests": [
+        "should initAuction - RuleBuyOut аукцион",
+        "should make a bid - создание ставки",
+        "should cancel a bid - отмена ставки",
+        "should finalize auction - завершение аукциона"
+      ],
+      "auction_mechanics": {
+        "RuleBuyOut": "Продажа излишков стейблов за Rule токены (на повышение)",
+        "CoinsBuyOut": "Продажа Rule токенов за стейблы (на понижение)",
+        "ETH_auction": "Продажа ETH залога за стейблы (на повышение)"
+      }
+    },
+    
+    "auctionStubFund-hardhat.test.js": {
+      "tests": 1,
+      "coverage": "100%",
+      "description": "Комплексный тест CoinsBuyOut для стабилизационного фонда",
+      "scenario": "Открытие CDP -> дефицит стаб фонда -> CoinsBuyOut аукцион -> ставки -> финализация -> минт Rule"
+    },
+    
+    "exchangeRate-hardhat.test.js": {
+      "tests": 5,
+      "coverage": "100%",
+      "description": "Оракул цен",
+      "key_tests": [
+        "should add and update instrument - добавление ETH2",
+        "should change price - обновление цены",
+        "should change several prices - batch update",
+        "should emit highVolatility - события волатильности"
+      ]
+    },
+    
+    "basket-hardhat.test.js": {
+      "tests": 5,
+      "coverage": "100%",
+      "description": "Корзина commodities",
+      "key_tests": [
+        "should return valid share/stb price - расчет цены доли",
+        "ETH vs commodities price - соотношение ETH к корзине",
+        "price updates - влияние изменения цен",
+        "share changes - изменение долей в корзине"
+      ],
+      "default_basket": "10 Gold + 5 Lumber = 15 shares"
+    }
+  },
+  
+  "test_helpers": {
+    "contracts_helper": {
+      "path": "test/helpers/contracts.js",
+      "functions": {
+        "deployFullSystem()": {
+          "description": "Деплой всей системы с future address",
+          "options": {
+            "useFutureAddress": "Использовать future address для DAO (обязательно!)",
+            "renewContracts": "Вызвать renewContracts() после деплоя DAO",
+            "initializeBasket": "Инициализировать корзину с Gold/Lumber",
+            "ruleHolder": "Адрес получателя Rule токенов",
+            "oracleAuthor": "Адрес автора Oracle (по умолчанию accounts[4])"
+          },
+          "returns": {
+            "dao": "INTDAO контракт",
+            "flatCoin": "flatCoin контракт",
+            "rule": "Rule контракт",
+            "cdp": "CDP контракт",
+            "auction": "Auction контракт",
+            "deposit": "Deposit контракт",
+            "oracle": "exchangeRateContract контракт",
+            "basket": "basketContract контракт",
+            "owner": "Deployer signer",
+            "accounts": "Массив signers",
+            "oracleAuthor": "Oracle author signer"
+          }
+        },
+        
+        "deployMinimalSystem(contractNames)": {
+          "description": "Деплой только DAO + указанных контрактов",
+          "example": "deployMinimalSystem(['Rule', 'FlatCoin'])"
+        },
+        
+        "openCDP(cdp, params)": {
+          "description": "Открытие CDP позиции",
+          "params": {
+            "signer": "Кто открывает позицию",
+            "coinsToMint": "Количество flatCoin для минта",
+            "ethValue": "Количество ETH в залог"
+          },
+          "returns": "positionID (BigInt)"
+        },
+        
+        "formatFixed(value, decimals)": {
+          "description": "Форматирование BigInt для сравнения",
+          "default_decimals": 4
+        },
+        
+        "getEvent(tx, contract, eventName)": {
+          "description": "Извлечение события из транзакции",
+          "returns": "Parsed event или null"
+        }
+      }
+    }
+  },
+  
+  "testing_standards": {
+    "assertion_precision": {
+      "closeTo_delta": "0.01 для всех числовых сравнений (1% погрешность)",
+      "reason": "Учет округлений в Solidity и временных погрешностей"
+    },
+    
+    "event_testing": {
+      "method": "Manual parsing через receipt.logs.find()",
+      "reason": "withArgs() не всегда корректно работает с indexed параметрами",
+      "example": "const event = receipt.logs.find(log => contract.interface.parseLog(log)?.name === 'EventName');"
+    },
+    
+    "future_address": {
+      "critical": "Всегда использовать future address для DAO",
+      "nonce_calculation": "startNonce + количество контрактов до DAO",
+      "verification": "Проверять actualAddress === futureDAOAddress после деплоя"
+    },
+    
+    "time_manipulation": {
+      "import": "const { time } = require('@nomicfoundation/hardhat-network-helpers');",
+      "usage": "await time.increase(365 * 24 * 60 * 60); // 1 year"
+    },
+    
+    "gas_handling": {
+      "eth_balance_checks": "Учитывать gasUsed при проверке баланса ETH",
+      "calculation": "const gasUsed = receipt.gasUsed * receipt.gasPrice;"
+    },
+    
+    "authorization": {
+      "rule_tokens_required": "Для initRuleBuyOut нужно 1% от totalSupply Rule",
+      "oracle_updates": "Только oracleAuthor может обновлять цены",
+      "cdp_operations": "Только owner позиции может изменять её"
+    }
+  },
+  
+  "common_patterns": {
+    "opening_cdp": [
+      "1. const tx = await cdp.connect(user).openCDP(coinsToMint, { value: ethValue });",
+      "2. const receipt = await tx.wait();",
+      "3. Extract positionID from PositionOpened event"
+    ],
+    
+    "checking_fees": [
+      "1. await time.increase(365 * 24 * 60 * 60); // advance time",
+      "2. const fee = await cdp.totalCurrentFee(posId);",
+      "3. expect(formatFixed(fee)).to.be.closeTo(expectedFee, 0.01);"
+    ],
+    
+    "auction_flow": [
+      "1. Transfer Rule tokens to bidder (если RuleBuyOut)",
+      "2. await auction.connect(bidder).initRuleBuyOut();",
+      "3. await rule.approve(auction.address, bidAmount);",
+      "4. await auction.makeBid(auctionID, bidAmount);",
+      "5. await time.increase(auctionTurnDuration);",
+      "6. await auction.claimToFinalizeAuction(auctionID);"
+    ],
+    
+    "margin_call": [
+      "1. await oracle.updateSinglePrice(1, lowPrice); // drop ETH price",
+      "2. await cdp.markPosOnLiquidation(posId);",
+      "3. await time.increase(marginCallTimeLimit);",
+      "4. await cdp.claimMarginCall(posId); // starts ETH auction",
+      "5. Bidding on auction...",
+      "6. await cdp.finishMarginCall(posId); // close position"
+    ]
+  },
+  
+  "critical_values": {
+    "eth_price": "3100 (3100000000 с decimals 6)",
+    "gold_price": "1867.65 (1867650000 с decimals 6)",
+    "lumber_price": "414.1 (414100000 с decimals 6)",
+    "max_coins_per_eth": "2170 flatCoin при collateralDiscount 30%",
+    "interest_rate": "10% годовых (параметр interestFee)",
+    "deposit_rate": "8% годовых (параметр depositRate)"
+  },
+  
+  "test_execution": {
+    "single_test": "npx hardhat test test/filename.test.js",
+    "all_tests": "npx hardhat test test/*-hardhat.test.js",
+    "with_gas_reporter": "REPORT_GAS=true npx hardhat test",
+    "coverage": "npx hardhat coverage",
+    "docker": "docker compose exec hardhat npx hardhat test"
+  },
+  
+  "statistics": {
+    "total_tests": 90,
+    "total_test_files": 15,
+    "success_rate": "100%",
+    "average_execution_time": "3-4 seconds",
+    "migration_status": "Completed - all Truffle tests migrated to Hardhat"
+  }
+}
+

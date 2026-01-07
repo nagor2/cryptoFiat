@@ -1,0 +1,276 @@
+{
+  "name": "Phase 2 Template Selection Template",
+  "version": "1.0.0",
+  "type": "openevolve_integration_template",
+  "phase": "phase_2",
+  "category": "template_selection",
+  "created": "2025-01-16T00:00:00Z",
+  "description": "Template for Phase 2: Intelligent template selection and matching for multi-template fusion",
+  "domain": "integration",
+  "language": "python",
+  "complexity": "high",
+  "framework": "openevolve",
+  "performance": "intelligent",
+  "integrations": ["slc", "openevolve", "python", "ai_ml"],
+  "requirements": {
+    "slc_version": ">=4.3.0",
+    "openevolve_version": ">=0.0.10",
+    "python_version": ">=3.9",
+    "dependencies": ["pyyaml", "asyncio", "pathlib", "numpy", "scikit-learn"]
+  },
+  "architecture": {
+    "selection_pipeline": {
+      "requirement_analysis": {
+        "description": "Analyze project requirements and constraints",
+        "components": ["requirement_extractor", "constraint_analyzer", "domain_classifier"]
+      },
+      "template_matching": {
+        "description": "Match requirements with available templates",
+        "components": ["template_loader", "compatibility_scorer", "ranking_engine"]
+      },
+      "fusion_planning": {
+        "description": "Plan multi-template fusion strategy",
+        "components": ["fusion_planner", "conflict_resolver", "strategy_generator"]
+      }
+    },
+    "matching_algorithms": {
+      "domain_matching": {
+        "algorithm": "keyword_based_classification",
+        "weights": {
+          "exact_match": 0.4,
+          "partial_match": 0.3,
+          "semantic_similarity": 0.3
+        }
+      },
+      "complexity_matching": {
+        "algorithm": "hierarchical_classification",
+        "levels": ["low", "medium", "high"],
+        "scoring": "distance_based"
+      },
+      "feature_matching": {
+        "algorithm": "cosine_similarity",
+        "features": ["language", "framework", "performance", "integrations"],
+        "normalization": "min_max"
+      }
+    }
+  },
+  "workflow": {
+    "steps": [
+      {
+        "step": 1,
+        "name": "Requirement Analysis",
+        "description": "Analyze project requirements and extract key features",
+        "command": "./slc evolve-analyze-requirements {project_name}",
+        "output": "requirements_analyzed"
+      },
+      {
+        "step": 2,
+        "name": "Template Discovery",
+        "description": "Discover and load available templates",
+        "command": "./slc evolve-discover-templates",
+        "output": "templates_discovered"
+      },
+      {
+        "step": 3,
+        "name": "Compatibility Scoring",
+        "description": "Score template compatibility with requirements",
+        "command": "./slc evolve-score-templates {project_name}",
+        "output": "templates_scored"
+      },
+      {
+        "step": 4,
+        "name": "Template Ranking",
+        "description": "Rank templates by compatibility score",
+        "command": "./slc evolve-rank-templates {project_name}",
+        "output": "templates_ranked"
+      },
+      {
+        "step": 5,
+        "name": "Fusion Planning",
+        "description": "Plan multi-template fusion strategy",
+        "command": "./slc evolve-plan-fusion {project_name}",
+        "output": "fusion_planned"
+      }
+    ],
+    "validation": {
+      "requirement_coverage": {
+        "minimum_coverage": 0.7,
+        "critical_features": ["domain", "language", "complexity"],
+        "optional_features": ["framework", "performance", "integrations"]
+      },
+      "template_quality": {
+        "minimum_score": 0.5,
+        "quality_metrics": ["completeness", "accuracy", "relevance"],
+        "validation_method": "cross_reference"
+      }
+    }
+  },
+  "selection_criteria": {
+    "primary_criteria": {
+      "domain_match": {
+        "weight": 0.3,
+        "scoring": "exact_match: 1.0, partial_match: 0.7, related: 0.3"
+      },
+      "language_compatibility": {
+        "weight": 0.2,
+        "scoring": "exact_match: 1.0, compatible: 0.8, convertible: 0.5"
+      },
+      "complexity_alignment": {
+        "weight": 0.2,
+        "scoring": "exact_match: 1.0, adjacent: 0.8, distant: 0.4"
+      }
+    },
+    "secondary_criteria": {
+      "framework_support": {
+        "weight": 0.15,
+        "scoring": "exact_match: 1.0, compatible: 0.7, none: 0.0"
+      },
+      "performance_requirements": {
+        "weight": 0.1,
+        "scoring": "exact_match: 1.0, compatible: 0.8, incompatible: 0.2"
+      },
+      "integration_needs": {
+        "weight": 0.05,
+        "scoring": "all_supported: 1.0, partial: 0.6, none: 0.0"
+      }
+    },
+    "bonus_criteria": {
+      "template_popularity": {
+        "weight": 0.05,
+        "scoring": "high_usage: 1.0, medium_usage: 0.7, low_usage: 0.4"
+      },
+      "maintenance_status": {
+        "weight": 0.05,
+        "scoring": "actively_maintained: 1.0, occasionally_updated: 0.7, deprecated: 0.3"
+      }
+    }
+  },
+  "fusion_strategies": {
+    "primary_dominant": {
+      "description": "Primary template provides core architecture, secondary templates enhance specific aspects",
+      "weight_distribution": {
+        "primary": 0.7,
+        "secondary": [0.2, 0.1]
+      },
+      "conflict_resolution": "primary_wins"
+    },
+    "consensus_based": {
+      "description": "All templates contribute equally, conflicts resolved through consensus",
+      "weight_distribution": {
+        "primary": 0.4,
+        "secondary": [0.3, 0.3]
+      },
+      "conflict_resolution": "majority_vote"
+    },
+    "feature_specific": {
+      "description": "Each template contributes to specific features based on expertise",
+      "weight_distribution": "dynamic_based_on_feature",
+      "conflict_resolution": "feature_owner_decides"
+    }
+  },
+  "domain_classification": {
+    "web_development": {
+      "keywords": ["web", "site", "app", "frontend", "backend", "api"],
+      "templates": ["web_framework", "api_service", "frontend_app"],
+      "complexity_levels": ["static_site", "dynamic_app", "enterprise_platform"]
+    },
+    "ai_ml": {
+      "keywords": ["ai", "ml", "neural", "model", "training", "prediction"],
+      "templates": ["neural_network", "data_pipeline", "model_training"],
+      "complexity_levels": ["simple_model", "complex_network", "distributed_training"]
+    },
+    "data_processing": {
+      "keywords": ["data", "analytics", "processing", "pipeline", "etl"],
+      "templates": ["data_pipeline", "analytics_dashboard", "etl_process"],
+      "complexity_levels": ["simple_processing", "batch_processing", "streaming"]
+    },
+    "mobile_development": {
+      "keywords": ["mobile", "app", "ios", "android", "cross_platform"],
+      "templates": ["mobile_app", "cross_platform", "native_app"],
+      "complexity_levels": ["simple_app", "feature_rich", "enterprise_app"]
+    }
+  },
+  "constraints": {
+    "performance_requirements": "intelligent",
+    "style_requirements": "adaptive",
+    "security_requirements": "standard",
+    "compatibility_requirements": "python_3_9_plus",
+    "selection_limits": {
+      "max_templates": 5,
+      "min_compatibility_score": 0.3,
+      "max_fusion_complexity": "high"
+    }
+  },
+  "best_practices": [
+    "Use multiple criteria for comprehensive template evaluation",
+    "Consider template popularity and maintenance status",
+    "Balance between template specificity and flexibility",
+    "Plan fusion strategy before template selection",
+    "Validate template compatibility through testing",
+    "Document selection rationale for future reference"
+  ],
+  "domain_knowledge": {
+    "description": "Phase 2 template selection focuses on intelligent matching and fusion planning",
+    "key_concepts": [
+      "Multi-criteria decision making",
+      "Template compatibility analysis",
+      "Fusion strategy planning",
+      "Conflict resolution mechanisms",
+      "Quality assessment metrics"
+    ],
+    "common_patterns": [
+      "Requirement-driven selection",
+      "Score-based ranking",
+      "Fusion strategy selection",
+      "Conflict resolution planning",
+      "Validation and testing"
+    ],
+    "selection_strategies": [
+      "Exhaustive search with filtering",
+      "Heuristic-based selection",
+      "Machine learning classification",
+      "Hybrid approach combining multiple methods"
+    ]
+  },
+  "error_handling": {
+    "common_issues": [
+      {
+        "issue": "No suitable templates found",
+        "solution": "Relax selection criteria or create custom template",
+        "command": "./slc evolve-relax-criteria {project_name}"
+      },
+      {
+        "issue": "Low compatibility scores",
+        "solution": "Analyze requirements and adjust template expectations",
+        "command": "./slc evolve-analyze-requirements {project_name} --detailed"
+      },
+      {
+        "issue": "Template conflicts",
+        "solution": "Use conflict resolution strategies or manual selection",
+        "command": "./slc evolve-resolve-conflicts {project_name}"
+      },
+      {
+        "issue": "Fusion complexity too high",
+        "solution": "Reduce number of templates or simplify fusion strategy",
+        "command": "./slc evolve-simplify-fusion {project_name}"
+      }
+    ]
+  },
+  "navigation_system": {
+    "purpose": "Phase 2 Template Selection Template - Intelligent template matching and fusion planning",
+    "recovery_path": ".context/modules/integrations/openevolve_integration.json",
+    "current_file": ".context/templates/openevolve/phase2_template_selection.json",
+    "file_role": "INTEGRATION_TEMPLATE",
+    "related_files": [
+      ".context/templates/openevolve/phase2_fusion_strategy.json",
+      ".context/tools/integrations/openevolve/template_evolver.py"
+    ],
+    "quick_navigation": {
+      "🏠 Главная": ".context/modules/integrations/openevolve_integration.json",
+      "🔗 Стратегия": ".context/templates/openevolve/phase2_fusion_strategy.json",
+      "📋 CLI": "./slc evolve-select [project_name]"
+    },
+    "usage_hint": "./slc evolve-select [project_name] для выбора шаблонов",
+    "ai_context": "Шаблон выбора шаблонов Phase 2: phase2_template_selection.json"
+  }
+} 

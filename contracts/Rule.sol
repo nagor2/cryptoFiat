@@ -6,6 +6,12 @@ import "./IDAO.sol";
 contract Rule is ERC20{
     /// @notice DAO interface.
     IDAO immutable dao;
+    
+    /// @notice Emitted when new Rule tokens are minted
+    event Mint(address indexed to, uint256 amount);
+    
+    /// @notice Emitted when Rule tokens are burned
+    event Burn(address indexed from, uint256 amount);
 
     /// @notice Constructor for the Rule contract. It mints the initial Rule supply to the creator.
     /// @param _INTDAOaddress Address of the main DAO contract.
@@ -25,6 +31,7 @@ contract Rule is ERC20{
     /// @param amount Amount of tokens to mint.
     function mint(address to, uint256 amount) public isAuthorized{
         _mint(to, amount);
+        emit Mint(to, amount);
     }
 
     /// @notice Burn Rule tokens. Only an authorized address can execute it.
@@ -32,5 +39,6 @@ contract Rule is ERC20{
     /// @param amount Amount of tokens to burn.
     function burn(address from, uint256 amount) public isAuthorized{
         _burn(from, amount);
+        emit Burn(from, amount);
     }
 }

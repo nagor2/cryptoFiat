@@ -1,0 +1,23 @@
+services:
+  hardhat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cryptofiat_hardhat
+    ports:
+      - "8545:8545"  # Hardhat Network RPC
+    volumes:
+      - .:/app
+      - /app/node_modules  # Исключаем node_modules из монтирования
+      - /app/cache
+      - /app/artifacts
+    environment:
+      # Переменные окружения из .env файла
+      - NODE_ENV=development
+    env_file:
+      - .env
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    command: tail -f /dev/null
+    restart: unless-stopped

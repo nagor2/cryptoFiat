@@ -1,22 +1,67 @@
 {
+  "name": "cryptofiat",
+  "version": "1.0.0",
+  "description": "CryptoFiat - Decentralized Stablecoin Platform",
   "type": "commonjs",
-  "dependencies": {
-    "@drizzle/store": "^1.5.3",
-    "@neos1/truffle-plugin-docs": "github:neos1/truffle-plugin-docs",
-    "@openzeppelin/contracts": "^4.9.6",
-    "debug": "^4.3.4",
-    "path-exists": "^5.0.0",
-    "truffle": "^5.11.5",
-    "truffle-assertions": "^0.9.2",
-    "web3": "^4.0.3",
-    "web3-core": "^4.5.0",
-    "web3-errors": "^1.2.1"
-  },
-  "devDependencies": {
-    "@openzeppelin/test-helpers": "^0.5.15",
-    "truffle-plugin-verify": "^0.6.7"
+  "main": "index.js",
+  "directories": {
+    "test": "test"
   },
   "scripts": {
-    "docify": "node docify.js"
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:coverage": "hardhat coverage",
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "node": "hardhat node",
+    "console": "hardhat console",
+    "clean": "hardhat clean",
+    "deploy:local": "hardhat run scripts/deploy-hardhat.js --network localhost",
+    "deploy:sepolia": "hardhat run scripts/deploy-hardhat.js --network sepolia",
+    "verify": "hardhat verify",
+    "docify": "node docify.js",
+    "docker:start": "./docker-scripts/start.sh",
+    "docker:stop": "./docker-scripts/stop.sh",
+    "docker:shell": "./docker-scripts/shell.sh",
+    "docker:compile": "./docker-scripts/compile.sh",
+    "docker:test": "./docker-scripts/test.sh"
+  },
+  "keywords": [
+    "ethereum",
+    "smart-contracts",
+    "defi",
+    "stablecoin",
+    "hardhat"
+  ],
+  "author": "CryptoFiat Dev Team",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.6",
+    "debug": "^4.3.4",
+    "path-exists": "^5.0.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.6",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.4",
+    "@typechain/ethers-v6": "^0.5.1",
+    "@typechain/hardhat": "^9.1.0",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.19",
+    "chai": "^4.4.1",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.11.1",
+    "hardhat": "^2.20.1",
+    "hardhat-gas-reporter": "^1.0.10",
+    "solidity-coverage": "^0.8.8",
+    "ts-node": "^10.9.2",
+    "typechain": "^8.3.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }

@@ -1,0 +1,263 @@
+{
+  "module": "contracts_architecture",
+  "version": "1.0.0",
+  "description": "Архитектура смарт-контрактов CryptoFiat",
+  
+  "core_contracts": {
+    "INTDAO": {
+      "path": "contracts/INTDAO.sol",
+      "description": "Децентрализованная автономная организация (DAO)",
+      "key_features": [
+        "Управление адресами всех контрактов системы",
+        "Хранение глобальных параметров",
+        "Система голосования с Rule токенами",
+        "Авторизация контрактов",
+        "Пулинг Rule токенов для голосования"
+      ],
+      "main_functions": [
+        "setAddress(string, address) - установка адреса контракта",
+        "setParam(string, uint256) - установка параметра",
+        "addVoting() - создание голосования",
+        "vote(bool) - голосование",
+        "poolTokens() - внесение токенов в пул",
+        "returnTokens() - возврат токенов из пула"
+      ],
+      "events": [
+        "NewVoting(uint256 id, string name)",
+        "VotingSucceed(uint256 id)",
+        "VotingFailed(uint256 id)"
+      ]
+    },
+    
+    "CDP": {
+      "path": "contracts/CDP.sol",
+      "description": "Collateralized Debt Position - система залоговых позиций",
+      "key_features": [
+        "Открытие позиций с ETH залогом",
+        "Минтинг flatCoin токенов",
+        "Управление процентными ставками",
+        "Ликвидация недостаточно обеспеченных позиций",
+        "Margin call механизм"
+      ],
+      "main_functions": [
+        "openCDP(uint256 coinsToMint) - открытие позиции",
+        "updateCDP(uint32 posID, uint256 newAmount) - обновление позиции",
+        "closeCDP(uint32 posID) - закрытие позиции",
+        "withdrawEther(uint32 posID, uint256 amount) - вывод ETH",
+        "transferInterest(uint32 posID) - перевод процентов",
+        "markPosOnLiquidation(uint32 posID) - маркировка на ликвидацию",
+        "claimMarginCall(uint32 posID) - запуск margin call",
+        "finishMarginCall(uint32 posID) - завершение margin call"
+      ],
+      "events": [
+        "PositionOpened(uint32 posID, address owner, uint256 ethLocked, uint256 coinsMinted)",
+        "PositionUpdated(uint32 posID, uint256 newFlatCoinsAmount, uint256 ethLocked)",
+        "liquidationStatusChanged(uint32 posID, uint8 liquidationStatus)",
+        "liquidateCollateral(uint32 auctionID, uint32 posID, uint256 collateral)"
+      ],
+      "important_params": {
+        "collateralDiscount": "Дисконт залога (30%)",
+        "interestFee": "Процентная ставка (10%)",
+        "liquidationPenalty": "Штраф за ликвидацию (10%)",
+        "minEthCollateral": "Минимальный залог в ETH"
+      }
+    },
+    
+    "flatCoin": {
+      "path": "contracts/flatCoin.sol",
+      "description": "Основной стейблкоин системы",
+      "key_features": [
+        "ERC20 токен с именем 'dotFlat' и символом 'DFC'",
+        "Минт только авторизованными контрактами (CDP, Deposit)",
+        "Burn только авторизованными контрактами",
+        "Интеграция с DAO для проверки авторизации"
+      ],
+      "main_functions": [
+        "mint(address to, uint256 amount) - создание токенов",
+        "burn(address from, uint256 amount) - сжигание токенов"
+      ]
+    },
+    
+    "Rule": {
+      "path": "contracts/Rule.sol",
+      "description": "Governance токен системы",
+      "key_features": [
+        "ERC20 токен с именем 'Rule token' и символом 'RLE'",
+        "Начальный supply: 1,000,000 RLE",
+        "Используется для голосования в DAO",
+        "Минтится при RuleBuyOut аукционах"
+      ],
+      "main_functions": [
+        "mint(address to, uint256 amount) - создание токенов",
+        "burn(address from, uint256 amount) - сжигание токенов"
+      ]
+    },
+    
+    "Auction": {
+      "path": "contracts/Auction.sol",
+      "description": "Система аукционов для ликвидации и выкупа",
+      "key_features": [
+        "ETH аукционы для ликвидации залогов",
+        "RuleBuyOut аукционы (стейблы -> Rule токены)",
+        "CoinsBuyOut аукционы (Rule токены -> стейблы)",
+        "Bid improvement механизм",
+        "Автоматическая финализация"
+      ],
+      "auction_types": {
+        "0": "ETH auction - продажа ETH за стейблы",
+        "1": "RuleBuyOut - продажа стейблов за Rule токены",
+        "2": "CoinsBuyOut - продажа Rule токенов за стейблы"
+      },
+      "main_functions": [
+        "initRuleBuyOut() - запуск RuleBuyOut аукциона",
+        "initCoinsBuyOutForStabilization(uint256 amount) - запуск CoinsBuyOut",
+        "makeBid(uint32 auctionID, uint256 amount) - создание ставки",
+        "improveBid(uint32 bidID, uint256 newAmount) - улучшение ставки",
+        "cancelBid(uint32 bidID) - отмена ставки",
+        "claimToFinalizeAuction(uint32 auctionID) - финализация аукциона"
+      ],
+      "events": [
+        "newAuction(uint8 auctionType, uint32 auctionID, uint256 lotAmount, address lotAddress, uint256 paymentAmount)",
+        "newBid(uint32 auctionID, uint32 bidID, uint256 bidAmount, address owner)",
+        "auctionFinished(uint32 auctionID, uint256 lotAmount, uint32 bestBidID)",
+        "bidCanceled(uint32 bidID)"
+      ]
+    },
+    
+    "DepositContract": {
+      "path": "contracts/DepositContract.sol",
+      "description": "Депозиты с процентами",
+      "key_features": [
+        "Депонирование flatCoin с начислением процентов",
+        "Процентная ставка из DAO параметра depositRate",
+        "Top-up и частичный вывод средств",
+        "Автоматическое начисление процентов"
+      ],
+      "main_functions": [
+        "deposit() - создание депозита",
+        "withdraw(uint32 depositID, uint256 amount) - вывод средств",
+        "topUp(uint32 depositID) - пополнение депозита",
+        "claimInterest(uint32 depositID) - получение процентов",
+        "close(uint32 depositID) - закрытие депозита"
+      ],
+      "events": [
+        "DepositOpened(uint32 id, uint256 amount, uint256 rate)"
+      ]
+    },
+    
+    "exchangeRateContract": {
+      "path": "contracts/exchangeRateContract.sol",
+      "description": "Оракул цен для commodities",
+      "key_features": [
+        "Хранение цен на commodities (Gold, Lumber, ETH)",
+        "Обновление цен авторизованным автором",
+        "Поддержка decimals для точности",
+        "High volatility события"
+      ],
+      "instruments": {
+        "eth": "Ethereum - основной актив системы",
+        "Gold": "Золото - commodity для корзины",
+        "Lumber": "Пиломатериалы - commodity для корзины"
+      },
+      "main_functions": [
+        "addInstrument(string ticker, string name, uint8 decimals) - добавление инструмента",
+        "updateSinglePrice(uint8 id, uint256 price) - обновление цены",
+        "updateSeveralPrices(uint8[] ids, uint256[] prices) - обновление нескольких цен",
+        "getPrice(string ticker) - получение цены"
+      ],
+      "events": [
+        "highVolatility(uint8 id) - высокая волатильность"
+      ]
+    },
+    
+    "basketContract": {
+      "path": "contracts/basketContract.sol",
+      "description": "Корзина commodities для стабилизации",
+      "key_features": [
+        "Корзина из нескольких commodities с долями (shares)",
+        "Расчет цены корзины относительно ETH",
+        "Динамическое изменение долей",
+        "Интеграция с Oracle для получения цен"
+      ],
+      "default_basket": {
+        "Gold": "10 shares",
+        "Lumber": "5 shares"
+      },
+      "main_functions": [
+        "addItem(string ticker, uint256 share, uint256 price) - добавление commodity",
+        "setShare(uint8 itemID, uint256 newShare) - изменение доли",
+        "getCurrentSharePriceChange() - изменение цены доли",
+        "getEthereumVSCommoditiesPriceChange() - ETH vs commodities"
+      ]
+    }
+  },
+  
+  "system_architecture": {
+    "deployment_order": [
+      "1. Rule токен (с future DAO address)",
+      "2. FlatCoin (с future DAO address)",
+      "3. CDP (с future DAO address)",
+      "4. Auction (с future DAO address)",
+      "5. Deposit (с future DAO address)",
+      "6. exchangeRateContract (с future DAO address)",
+      "7. basketContract (с future DAO address)",
+      "8. INTDAO (с адресами всех контрактов)",
+      "9. renewContracts() на всех контрактах"
+    ],
+    
+    "future_address_calculation": {
+      "description": "Используется для циркулярных зависимостей",
+      "formula": "ethers.getCreateAddress({ from: deployer, nonce: currentNonce + offset })",
+      "nonce_offset": "4 (количество контрактов до DAO)"
+    },
+    
+    "authorization_flow": {
+      "CDP_authorized_by_DAO": "Может минтить и бёрнить flatCoin",
+      "Deposit_authorized_by_DAO": "Может минтить flatCoin (проценты)",
+      "Auction_authorized_by_DAO": "Может взаимодействовать с CDP и Rule"
+    }
+  },
+  
+  "key_parameters": {
+    "collateralDiscount": {
+      "default": 30,
+      "description": "Дисконт залога в процентах (30% = можно занять 70% от стоимости ETH)"
+    },
+    "interestFee": {
+      "default": 10,
+      "description": "Годовая процентная ставка по займам (10%)"
+    },
+    "depositRate": {
+      "default": 8,
+      "description": "Годовая процентная ставка по депозитам (8%)"
+    },
+    "stabilizationFundPercent": {
+      "default": 5,
+      "description": "Процент от totalSupply для стабилизационного фонда (5%)"
+    },
+    "liquidationPenalty": {
+      "default": 10,
+      "description": "Штраф за ликвидацию позиции (10%)"
+    },
+    "minRuleTokensToInitVotingPercent": {
+      "default": 1,
+      "description": "Минимум Rule токенов для инициации голосования (1% от supply)"
+    },
+    "auctionTurnDuration": {
+      "default": 900,
+      "description": "Длительность раунда аукциона в секундах (15 минут)"
+    },
+    "marginCallTimeLimit": {
+      "default": 259200,
+      "description": "Время на margin call в секундах (3 дня)"
+    }
+  },
+  
+  "testing_notes": {
+    "future_address_critical": "Все тесты должны использовать future address для DAO",
+    "renewContracts_required": "После деплоя DAO нужно вызвать renewContracts() на всех контрактах",
+    "oracle_author": "Oracle требует специального автора для обновления цен",
+    "rule_holder": "Rule токены изначально минтятся создателю контракта"
+  }
+}
+

@@ -30,6 +30,20 @@ Contents
    pages/voting-bot.rst
    pages/seealso.rst
 
+Marketing & Growth Strategy
+============================
+
+.. toctree::
+   :maxdepth: 3
+   
+   pages/marketing-strategy.rst
+   pages/fundraising-strategy.rst
+   pages/launch-plan.rst
+   pages/phase1-bootstrap.rst
+   pages/phase2-growth.rst
+   pages/phase3-scale.rst
+   pages/phase4-institutional.rst
+
 Indices and tables
 ==================
 

@@ -1,0 +1,228 @@
+{
+  "name": "Phase 1 Optimization Template",
+  "version": "1.0.0",
+  "type": "openevolve_integration_template",
+  "phase": "phase_1",
+  "category": "optimization",
+  "created": "2025-01-16T00:00:00Z",
+  "description": "Template for Phase 1: Run OpenEvolve optimization and process results",
+  "domain": "integration",
+  "language": "python",
+  "complexity": "medium",
+  "framework": "openevolve",
+  "performance": "optimized",
+  "integrations": ["slc", "openevolve", "python"],
+  "requirements": {
+    "slc_version": ">=4.3.0",
+    "openevolve_version": ">=0.0.10",
+    "python_version": ">=3.9",
+    "dependencies": ["pyyaml", "asyncio", "pathlib", "numpy"]
+  },
+  "architecture": {
+    "optimization_pipeline": {
+      "initialization": {
+        "description": "Initialize OpenEvolve with project configuration",
+        "components": ["config_loader", "openevolve_initializer", "path_validator"]
+      },
+      "evolution": {
+        "description": "Run evolutionary optimization process",
+        "components": ["llm_ensemble", "evaluator_pool", "program_database", "checkpoint_manager"]
+      },
+      "result_processing": {
+        "description": "Process and integrate optimization results",
+        "components": ["result_analyzer", "metrics_calculator", "integration_handler"]
+      }
+    },
+    "file_structure": {
+      "evolution_output": {
+        "description": "OpenEvolve output directory",
+        "files": ["best_program.py", "evolution_log.json", "metrics_summary.json"],
+        "directories": ["checkpoints/", "programs/", "artifacts/"]
+      },
+      "integration_results": {
+        "description": "Integration results directory",
+        "files": ["optimized_version.py", "evolution_report.md", "integration_metadata.json"],
+        "directories": ["reports/", "analysis/"]
+      }
+    }
+  },
+  "workflow": {
+    "steps": [
+      {
+        "step": 1,
+        "name": "Environment Validation",
+        "description": "Validate OpenEvolve installation and configuration",
+        "command": "./slc evolve-validate-env",
+        "output": "environment_validated"
+      },
+      {
+        "step": 2,
+        "name": "Optimization Execution",
+        "description": "Run OpenEvolve optimization process",
+        "command": "./slc evolve-optimize {project_name} --iterations {iterations}",
+        "output": "optimization_completed"
+      },
+      {
+        "step": 3,
+        "name": "Result Analysis",
+        "description": "Analyze optimization results and metrics",
+        "command": "./slc evolve-analyze {project_name}",
+        "output": "results_analyzed"
+      },
+      {
+        "step": 4,
+        "name": "Integration",
+        "description": "Integrate optimized code into project",
+        "command": "./slc evolve-integrate {project_name}",
+        "output": "integration_completed"
+      }
+    ],
+    "monitoring": {
+      "checkpoints": {
+        "interval": 10,
+        "location": "evolution/output/checkpoints/",
+        "content": ["best_program.py", "metrics.json", "evolution_state.json"]
+      },
+      "metrics": {
+        "tracked": ["fitness_score", "generation", "improvement_rate", "diversity"],
+        "visualization": "evolution/output/metrics_plot.png"
+      },
+      "logging": {
+        "level": "INFO",
+        "file": "evolution/output/evolution.log",
+        "format": "timestamp,generation,fitness,improvement"
+      }
+    }
+  },
+  "optimization_config": {
+    "llm": {
+      "primary_model": "gpt-4",
+      "secondary_model": "gpt-3.5-turbo",
+      "temperature": 0.7,
+      "max_tokens": 2048,
+      "ensemble_size": 3
+    },
+    "evolution": {
+      "population_size": 100,
+      "num_islands": 3,
+      "mutation_rate": 0.1,
+      "crossover_rate": 0.8,
+      "selection_pressure": 0.7
+    },
+    "evaluation": {
+      "timeout_seconds": 30,
+      "enable_artifacts": true,
+      "multi_objective": true,
+      "metrics": ["performance", "readability", "maintainability"]
+    },
+    "termination": {
+      "max_iterations": 1000,
+      "target_score": 0.95,
+      "stagnation_limit": 50,
+      "improvement_threshold": 0.001
+    }
+  },
+  "result_processing": {
+    "analysis": {
+      "performance_metrics": ["execution_time", "memory_usage", "accuracy"],
+      "quality_metrics": ["code_complexity", "test_coverage", "documentation"],
+      "evolution_metrics": ["generations", "improvement_rate", "diversity"]
+    },
+    "integration": {
+      "code_placement": "src/optimized_version.py",
+      "backup_original": true,
+      "update_documentation": true,
+      "generate_report": true
+    },
+    "validation": {
+      "functional_tests": true,
+      "performance_tests": true,
+      "regression_tests": true,
+      "compatibility_checks": true
+    }
+  },
+  "constraints": {
+    "performance_requirements": "optimized",
+    "style_requirements": "pep8",
+    "security_requirements": "standard",
+    "compatibility_requirements": "python_3_9_plus",
+    "resource_limits": {
+      "max_memory": "8GB",
+      "max_cpu_time": "3600s",
+      "max_disk_space": "1GB"
+    }
+  },
+  "best_practices": [
+    "Monitor evolution progress through checkpoints",
+    "Use appropriate termination criteria to avoid overfitting",
+    "Validate results before integration",
+    "Maintain backup of original code",
+    "Document optimization parameters and results",
+    "Consider multi-objective optimization for complex problems"
+  ],
+  "domain_knowledge": {
+    "description": "Phase 1 optimization focuses on evolutionary code improvement",
+    "key_concepts": [
+      "Evolutionary algorithm principles",
+      "LLM-based code generation",
+      "Multi-objective optimization",
+      "Checkpoint management",
+      "Result validation and integration"
+    ],
+    "common_patterns": [
+      "Population-based evolution",
+      "Fitness-based selection",
+      "Mutation and crossover operations",
+      "Elitism preservation",
+      "Convergence monitoring"
+    ],
+    "optimization_strategies": [
+      "Gradient-based evolution",
+      "Diversity maintenance",
+      "Adaptive mutation rates",
+      "Island model parallelism",
+      "Artifact-enhanced evaluation"
+    ]
+  },
+  "error_handling": {
+    "common_issues": [
+      {
+        "issue": "OpenEvolve not found",
+        "solution": "Install OpenEvolve: pip install openevolve",
+        "command": "pip install openevolve"
+      },
+      {
+        "issue": "Configuration errors",
+        "solution": "Validate config.yaml syntax and parameters",
+        "command": "./slc evolve-validate-config {project_name}"
+      },
+      {
+        "issue": "Memory exhaustion",
+        "solution": "Reduce population size or enable garbage collection",
+        "command": "./slc evolve-configure {project_name} --population-size 50"
+      },
+      {
+        "issue": "Stagnation",
+        "solution": "Increase mutation rate or diversity pressure",
+        "command": "./slc evolve-configure {project_name} --mutation-rate 0.2"
+      }
+    ]
+  },
+  "navigation_system": {
+    "purpose": "Phase 1 Optimization Template - Evolutionary code optimization with OpenEvolve",
+    "recovery_path": ".context/modules/integrations/openevolve_integration.json",
+    "current_file": ".context/templates/openevolve/phase1_optimization_template.json",
+    "file_role": "INTEGRATION_TEMPLATE",
+    "related_files": [
+      ".context/templates/openevolve/phase1_setup_template.json",
+      ".context/tools/integrations/openevolve/setup_optimization.py"
+    ],
+    "quick_navigation": {
+      "🏠 Главная": ".context/modules/integrations/openevolve_integration.json",
+      "📁 Настройка": ".context/templates/openevolve/phase1_setup_template.json",
+      "📋 CLI": "./slc evolve-optimize [project_name]"
+    },
+    "usage_hint": "./slc evolve-optimize [project_name] для запуска оптимизации",
+    "ai_context": "Шаблон оптимизации Phase 1: phase1_optimization_template.json"
+  }
+} 
