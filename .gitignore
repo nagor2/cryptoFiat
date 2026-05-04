@@ -1,7 +1,7 @@
 build/
 /env/
 /sp/
-/node_modules/
+node_modules/
 /dapp/
 /docs/_build/latex/
 
@@ -31,6 +31,18 @@ yarn-error.log*
 # IDE
 .vscode/
 .idea/
+.context/
+
+# Claude
+.claude/
+
+# Legacy
+.legacy/
+
+# Project directories
+tokenList/
+docker-scripts/
+test/
 *.swp
 *.swo
 *~
