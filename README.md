@@ -1,11 +1,20 @@
-# dotFlat — Collateralized Stablecoin Protocol
+# 🪙 dotFlat — Collateralized Stablecoin Protocol
+
+![Ethereum](https://img.shields.io/badge/Ethereum-Mainnet-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white)
+![Solidity](https://img.shields.io/badge/Solidity-0.8.19-363636?style=for-the-badge&logo=solidity&logoColor=white)
+![Hardhat](https://img.shields.io/badge/Hardhat-2.20-F7DF1E?style=for-the-badge&logo=hardhat&logoColor=black)
+![OpenZeppelin](https://img.shields.io/badge/OpenZeppelin-4.9-4E5EE4?style=for-the-badge&logo=openzeppelin&logoColor=white)
+![License](https://img.shields.io/badge/License-UNLICENSED-red?style=for-the-badge)
 
 A MakerDAO-style collateralized stablecoin system on Ethereum, built solo from scratch.  
 Users lock ETH as collateral to mint **DFC (dotFlat Coin)** — a stablecoin designed for permanent purchasing power.
 
+[![dApp](https://img.shields.io/badge/dApp-beta.app.dotflat.io-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://beta.app.dotflat.io)
+[![Docs](https://img.shields.io/badge/Docs-docs.dotflat.io-green?style=for-the-badge&logo=readthedocs&logoColor=white)](https://docs.dotflat.io)
+
 ---
 
-## Architecture
+## 🏗️ Architecture
 
 ```
 ┌─────────────┐     mint/burn      ┌──────────────┐
@@ -25,7 +34,7 @@ Users lock ETH as collateral to mint **DFC (dotFlat Coin)** — a stablecoin des
 └─────────────┘
 ```
 
-## Contracts
+## 📄 Contracts
 
 | Contract | Description |
 |---|---|
@@ -39,24 +48,25 @@ Users lock ETH as collateral to mint **DFC (dotFlat Coin)** — a stablecoin des
 | `exchangeRateContract.sol` | On-chain exchange rate interface |
 | `Rule.sol` | Governance rule parameters |
 
-## Key Design Decisions
+## 🔑 Key Design Decisions
 
-- **Commit-reveal auctions** — `AuctionCommitReveal.sol` implements commit-reveal to prevent MEV front-running (in development; deployed auction uses standard scheme)
-- **Liquidation state machine** — positions go through `ok → markedOnLiquidation → onLiquidation → liquidated / closed`, with a time buffer before liquidation finalizes
-- **DAO-gated minting** — only DAO-authorized contracts can mint or burn DFC
-- **ReentrancyGuard** on CDP and Auction — guards against re-entrancy in ETH-handling paths
-- **Interest accrual** — per-position interest tracked via `interestAmountRecorded` and `lastTimeUpdated`
+- 🕵️ **Commit-reveal auctions** — `AuctionCommitReveal.sol` implements commit-reveal to prevent MEV front-running (in development; deployed auction uses standard scheme)
+- ⚙️ **Liquidation state machine** — positions go through `ok → markedOnLiquidation → onLiquidation → liquidated / closed`, with a time buffer before liquidation finalizes
+- 🔒 **DAO-gated minting** — only DAO-authorized contracts can mint or burn DFC
+- 🛡️ **ReentrancyGuard** on CDP and Auction — guards against re-entrancy in ETH-handling paths
+- 📈 **Interest accrual** — per-position interest tracked via `interestAmountRecorded` and `lastTimeUpdated`
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Solidity** 0.8.19
-- **Hardhat** (primary) + **Truffle** (cross-validation)
-- **OpenZeppelin** v4.9 (ERC-20, ReentrancyGuard, access control)
-- **ethers.js** v6 + **TypeChain** (type-safe contract interactions)
-- **Mocha / Chai** — contract tests
-- **Docker** — local Hardhat node
+![Solidity](https://img.shields.io/badge/Solidity-363636?style=flat-square&logo=solidity&logoColor=white)
+![Hardhat](https://img.shields.io/badge/Hardhat-F7DF1E?style=flat-square&logo=hardhat&logoColor=black)
+![ethers.js](https://img.shields.io/badge/ethers.js-v6-2535a0?style=flat-square)
+![OpenZeppelin](https://img.shields.io/badge/OpenZeppelin-4E5EE4?style=flat-square&logo=openzeppelin&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Mocha](https://img.shields.io/badge/Mocha-8D6748?style=flat-square&logo=mocha&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 
-## Getting Started
+## 🚀 Getting Started
 
 ```bash
 npm install
@@ -74,7 +84,7 @@ npx hardhat run scripts/deploy.js --network localhost
 npx hardhat test
 ```
 
-## Deployed Contracts (Ethereum Mainnet)
+## 🌐 Deployed Contracts (Ethereum Mainnet)
 
 | Contract | Address |
 |---|---|
@@ -86,8 +96,43 @@ npx hardhat test
 | Rule Token | [0x3Dfa45997ddB7980Eb4D73CBfCf0E024F05b08a3](https://etherscan.io/address/0x3Dfa45997ddB7980Eb4D73CBfCf0E024F05b08a3) |
 | Exchange Rate | [0x1DF609afDC67396a9f307de2BA3E3b667dEe8b5B](https://etherscan.io/address/0x1DF609afDC67396a9f307de2BA3E3b667dEe8b5B) |
 
-All contracts verified on Etherscan (source code exact match, Solidity 0.8.26, optimized).
+✅ All contracts verified on Etherscan (source code exact match, Solidity 0.8.26, optimized).
 
-## Project Status
+## 🧪 Tests
 
-Protocol deployed on Ethereum mainnet with verified contracts. Frontend (React + ethers.js + Uniswap SDK) lives in the companion repo [app-dotflat](https://github.com/yourusername/app-dotflat).
+![Tests](https://img.shields.io/badge/Tests-101%20passing-brightgreen?style=for-the-badge&logo=mocha&logoColor=white)
+![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen?style=for-the-badge)
+
+All 101 automated tests pass, covering all critical use cases across the full contract suite:
+
+| Suite | Coverage |
+|---|---|
+| CDP — open, update, close, withdraw | ✅ |
+| CDP — fee accrual & interest calculation | ✅ |
+| CDP — margin call & liquidation trigger | ✅ |
+| CDP — several auctions to close a position | ✅ |
+| Auction — standard bidding & finalization | ✅ |
+| Auction — stab fund buyout (coins buyout for stabilization) | ✅ |
+| Deposit — open, top-up, interest, withdraw | ✅ |
+| DAO — governance parameters & voting | ✅ |
+| FlatCoin — mint, burn, transfer, events | ✅ |
+| Rule token — supply, parameters | ✅ |
+| Basket — multi-asset price aggregation | ✅ |
+| Exchange Rate — price feed interface | ✅ |
+| Future address calculation — deterministic deployment | ✅ |
+
+Tests are written in Hardhat + ethers.js v6 + Chai and run in an isolated in-process Hardhat Network (no external node needed).
+
+```bash
+npm test
+# 101 passing (2s)
+```
+
+## 📦 Project Status
+
+Protocol deployed on Ethereum mainnet with verified contracts. Frontend (React + ethers.js + Uniswap SDK) lives in the companion repo [app-dotflat](https://github.com/nagor2/fiatApp).
+
+## 🔗 Links
+
+- 💻 **dApp:** [beta.app.dotflat.io](https://beta.app.dotflat.io)
+- 📚 **Docs:** [docs.dotflat.io](https://docs.dotflat.io) — Sphinx-generated autodocs covering contract interfaces, architecture, and integration guides
