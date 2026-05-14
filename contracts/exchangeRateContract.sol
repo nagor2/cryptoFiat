@@ -43,11 +43,20 @@ contract exchangeRateContract{
         uint8 decimals;
     }
 
+    /// @notice Pending price waiting for time-lock to expire before becoming live.
+    struct PendingPrice {
+        uint256 price;
+        uint256 effectiveAt;
+    }
+
     /// @notice Instrument storage.
     mapping(uint16 => Instrument) public instruments;
 
     /// @notice InstrumentDescription dictionary.
     mapping(string => InstrumentDescription) public dictionary;
+
+    /// @notice Pending prices submitted by updater but not yet applied.
+    mapping(uint16 => PendingPrice) public pending;
 
     /// @notice Constructor for the exchangeRateContract contract.
     /// @param _INTDAOaddress The address of the main DAO contract.
@@ -76,7 +85,13 @@ contract exchangeRateContract{
     /// @param ids Array of IDs.
     event severalPricesUpdateRequest (uint16[] ids);
 
-    /// @notice Emitted when the price of a certain instrument is updated.
+    /// @notice Emitted when a price is submitted to the pending queue.
+    /// @param id ID of the instrument.
+    /// @param price Submitted price value.
+    /// @param effectiveAt Timestamp when the price can be applied.
+    event PriceSubmitted (uint16 indexed id, uint256 price, uint256 effectiveAt);
+
+    /// @notice Emitted when a pending price is applied and becomes live.
     /// @param id ID of the instrument.
     event priceUpdated (uint16 id);
 
@@ -121,14 +136,14 @@ contract exchangeRateContract{
         emit severalPricesUpdateRequest(ids);
     }
 
-    /// @notice Update several prices. Only the updater address may invoke it.
-    /// @param ids Array of IDs
-    /// @param ids Array of prices
+    /// @notice Submit several prices to the pending queue. Only the updater address may invoke it.
+    /// @param ids Array of instrument IDs
+    /// @param prices Array of prices
     function updateSeveralPrices(uint16[] memory ids, uint256[] memory prices) external onlyUpdater{
         uint length = ids.length;
         require(length==prices.length, "arrays length");
         for (uint16 i = 0; i < length;) {
-            updPrice(ids[i], prices[i]);
+            _submitPrice(ids[i], prices[i]);
             unchecked {
                 ++i;
             }
@@ -141,27 +156,75 @@ contract exchangeRateContract{
         emit profit(address(this).balance);
     }
 
-    /// @notice Method to update a single price.
+    /// @notice Submit a single price to the pending queue.
     /// @param id ID of the instrument.
     /// @param newPrice New price.
     function updateSinglePrice(uint16 id, uint256 newPrice) external onlyUpdater{
-        updPrice (id, newPrice);
+        _submitPrice(id, newPrice);
     }
 
-    function updPrice(uint16 id, uint256 newPrice) internal {
-        instruments[id].timeStamp = uint128(block.timestamp);
+    /// @notice Validates and stores a new price in the pending queue.
+    /// Reverts if the move from the current live price exceeds priceBoundForRevert.
+    /// Emits highVolatility if the move exceeds highVolatilityEventBarrierPercent.
+    function _submitPrice(uint16 id, uint256 newPrice) internal {
+        require(newPrice > 0, "price must be positive");
+
         uint256 prevPrice = instruments[id].price;
-        uint256 move;
-        if (prevPrice!=0){
-            if (prevPrice >= newPrice)
-                move = prevPrice - newPrice;
-            else
-                move = newPrice - prevPrice;
-            if ((move * 100) / prevPrice > dao.params("highVolatilityEventBarrierPercent"))
+
+        if (prevPrice != 0) {
+            uint256 move = prevPrice >= newPrice
+                ? prevPrice - newPrice
+                : newPrice - prevPrice;
+
+            uint256 movePct = (move * 100) / prevPrice;
+
+            uint256 bound = dao.params("priceBoundForRevert");
+            if (bound == 0) bound = 10;
+            require(movePct <= bound, "price move exceeds bound");
+
+            if (movePct > dao.params("highVolatilityEventBarrierPercent"))
                 emit highVolatility(id);
         }
-        instruments[id].price = newPrice;
+
+        uint256 delay = dao.params("oraclePriceDelay");
+        if (delay == 0) delay = 1 hours;
+
+        pending[id] = PendingPrice({
+            price: newPrice,
+            effectiveAt: block.timestamp + delay
+        });
+
+        emit PriceSubmitted(id, newPrice, block.timestamp + delay);
+    }
+
+    /// @notice Apply a single pending price once the time-lock has expired. Anyone may call this.
+    /// @param id ID of the instrument.
+    function applyPendingPrice(uint16 id) external {
+        PendingPrice memory p = pending[id];
+        require(p.effectiveAt > 0, "no pending price");
+        require(block.timestamp >= p.effectiveAt, "time-lock not expired");
+
+        instruments[id].price = p.price;
+        instruments[id].timeStamp = uint128(block.timestamp);
+        delete pending[id];
+
         emit priceUpdated(id);
+    }
+
+    /// @notice Apply multiple pending prices in one transaction. Silently skips entries
+    /// that have no pending price or whose time-lock has not yet expired.
+    /// @param ids Array of instrument IDs to apply.
+    function applyPendingPrices(uint16[] memory ids) external {
+        for (uint16 i = 0; i < ids.length;) {
+            PendingPrice memory p = pending[ids[i]];
+            if (p.effectiveAt > 0 && block.timestamp >= p.effectiveAt) {
+                instruments[ids[i]].price = p.price;
+                instruments[ids[i]].timeStamp = uint128(block.timestamp);
+                delete pending[ids[i]];
+                emit priceUpdated(ids[i]);
+            }
+            unchecked { ++i; }
+        }
     }
 
     /// @notice Method to add an instrument to storage. It is for updater only.

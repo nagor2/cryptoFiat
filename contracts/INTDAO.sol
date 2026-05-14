@@ -86,6 +86,8 @@ contract INTDAO is ReentrancyGuard{
         params["maxCoinsForStabilization"] = 50*10**18;
         params["maxRuleEmissionPercent"] = 1;
         params["highVolatilityEventBarrierPercent"] = 5;
+        params["priceBoundForRevert"] = 10;
+        params["oraclePriceDelay"] = 1 hours;
         params["minCoinsToMint"] = 1;
 
         addresses["cdp"] = _addresses[0];
